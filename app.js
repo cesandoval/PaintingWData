@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var recipes = require('./routes/paintingWithData.js');
+// var recipes = require('./routes/paintingWithData.js');
 
 var app = express();
 
@@ -28,7 +28,8 @@ app.use('/users', users);
 
 //default route
 // app.get('/', routes.index);
-// app.get('/recipes/:id', recipes.list);
+// app.get('/paintingWithData/:id', recipies.list);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
