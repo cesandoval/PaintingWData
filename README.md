@@ -14,11 +14,11 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 
 * `git clone https://github.com/cesandoval/PaintingWithData.git`
 * Install [node & npm](https://nodejs.org/en/)
-* Install [bower](http://bower.io/)
 * `cd` into the webapp directory
 * `npm install` will install all the node and bower modules needed locally for development.
+* Download and install PostgreSQL [here](https://www.postgresql.org/download/). [Install](http://postgis.net/install/) the postGIS extension for PostgreSQL. Username should be `postgres`, ans password `postgrespass`.
+* Using the PostgreSQL's UI pgAdminIII, or the command line, create a DB based on a postGIS template. The user should be `postgres`, the pw `postgrespass`, and the DB name should be `PaintingWithData_Riyadh`. 
 * `npm start` to view website locally
-* Here goes some info about how to enable the postgres DB.
 
 ## Starting
 * Run on browser `http://localhost:3000/`
