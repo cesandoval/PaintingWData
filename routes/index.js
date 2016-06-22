@@ -1,18 +1,26 @@
 var express = require('express');
 var router = express.Router();
+
+// psql package import
 var pg = require('pg');
 
-// var pgp = require("pg-promise")(/*options*/);
-// var db = pgp("postgres://postgres:postgrespass@host:5432/PaintingWithData_Riyadh");
+// var conString = "postgres://postgres:postgrespass@localhost/PaintingWithData_Riyadh";
+// var client = new pg.Client(conString);
+// client.connect();
 
-// db.one("SELECT $1 AS value", 123)
-//     .then(function (data) {
-//         console.log("DATA:", data.value);
-//     })
-//     .catch(function (error) {
-//         console.log("ERROR:", error);
-//     });
-// var connectionString = require(path.join(__dirname, '../', '../', 'config'));
+// Postgress connection client
+var client = new pg.Client({
+    user: 'postgres',
+    password: 'postgrespass',
+    database: 'PaintingWithData_Riyadh',
+});
+client.connect();
+
+// Some example queries
+// client.query("CREATE TABLE IF NOT EXISTS emps(firstname varchar(64), lastname varchar(64))");
+// client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Ronald', 'McDonald']);
+// client.query("INSERT INTO emps(firstname, lastname) values($1, $2)", ['Mayor', 'McCheese']);
+
 
 // route middleware that will happen on every request
 router.use(function(req, res, next) {
