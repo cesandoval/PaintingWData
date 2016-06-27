@@ -1,8 +1,64 @@
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*padding: 50px;*/
+  font-family: 'Ubuntu', sans-serif;
+  color: rgb(76,76,76);
 }
 
-a {
-  color: #00B7FF;
+
+/* navbar */
+.navbar-inverse {
+    background: rgb(245,165,3);
+    border-color: rgb(245,165,3);
+}
+
+/* title */
+.navbar-inverse .navbar-brand {
+    color: rgba(255, 255,255, 1);
+}
+.navbar-inverse .navbar-brand:hover {
+    color: rgb(100,100,100);
+}
+/* link */
+.navbar-inverse .navbar-nav > li > a {
+    color: rgba(255, 255,255, 1);
+}
+.navbar-inverse .navbar-nav > li > a:hover{
+    color: rgb(100,100,100);
+}
+
+/* mobile version */
+.navbar-inverse .navbar-toggle {
+    border-color: rgb(245,165,3);
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+    background-color: rgb(245,165,3);
+}
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: rgb(245,165,3);
+}
+
+/*body*/
+.jumbotron {
+    background-color: rgba(253, 232,172, 1);;
+}
+
+/*button login*/
+.btn-success {
+    color: rgb(76,76,76);
+    background-color: rgba(233, 241,223, 1);
+    border-color: rgba(233, 241,223, 1);
+}
+
+.btn-success:hover {
+    background-color: rgb(245,165,3);
+    border-color: rgb(245,165,3);
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: rgb(245,165,3);
+    border-color: rgb(245,165,3);
 }

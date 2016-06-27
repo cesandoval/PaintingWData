@@ -12,9 +12,7 @@ html
     meta(name="author", content="")
     link(rel="icon", href="/favicon.ico")
     
-    //reference our site-specific css
-    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+
 
     //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //on our web server and will be delivered faster to the client than our own server.
@@ -22,6 +20,10 @@ html
     script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
   
+    //reference our site-specific css
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
   body
     block navBar
       nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
