@@ -8,17 +8,20 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "cookie-parser": "~1.4.3",
+    "dbgeo": "*",
     "debug": "~2.2.0",
     "es6-promise": "^3.2.1",
     "express": "~4.13.4",
     "jade": "~1.11.0",
     "jquery": "^3.0.0",
+    "jsonwebtoken": "^7.0.1",
     "morgan": "~1.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
     "pg": "*",
-    "dbgeo": "*",
-    "sequelize": "*",
-    "passport": "*",
     "pg-promise": "^4.7.5",
+    "sequelize": "*",
     "serve-favicon": "~2.3.0",
     "supervisor": "0.11.0"
   }
