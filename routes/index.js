@@ -49,21 +49,9 @@ router.get('/app', function (req, res) {
   res.render('app');
 });
 
-router.get('/signup', function (req, res) {
+router.get('/users/signup', function (req, res) {
   res.render('signUp');
 });
-
-router.route('/login')
-  // show the form (GET http://localhost:8080/login)
-  .get(function(req, res) {
-    res.send('this is the login form');
-  })
-
-    // process the form (POST http://localhost:8080/login)
-  .post(function(req, res) {
-    console.log('processing');
-    res.send('processing the login form!');
-  });
 
 // route with parameters (http://localhost:8080/hello/:name)
 router.get('/hello/:name', function(req, res) {

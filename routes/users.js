@@ -9,6 +9,10 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+router.get('/login', function(req, res, next) {
+  res.render('login');
+});
+
 router.post('/signup', function(req, res) {
     User.register(new User({ username : req.body.username }),
       req.body.password, function(err, user) {
@@ -22,7 +26,9 @@ router.post('/signup', function(req, res) {
 });
 
 router.post('/login', function(req, res, next) {
+  console.log(req.body);
   passport.authenticate('local', function(err, user, info) {
+    console.log(user)
     if (err) {
       return next(err);
     }

@@ -9,8 +9,9 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-//This part is to setup a MongoDB, which we don't need if we are going to use PostGIS
-var config = require('./config');
+// //This part is to setup a MongoDB, which we don't need if we are going to use PostGIS
+var config = require('./bin/config');
+var mongoose = require('mongoose');
 
 mongoose.connect(config.mongoUrl);
 var db = mongoose.connection;
@@ -19,11 +20,10 @@ db.once('open', function () {
     // we're connected!
     console.log("Connected correctly to server");
 });
-//----------------------------
+// //----------------------------
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-// var recipes = require('./routes/paintingWithData.js');
 
 var app = express();
 

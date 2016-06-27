@@ -53,12 +53,32 @@ body {
 }
 
 .btn-success:hover {
-    background-color: rgb(245,165,3);
-    border-color: rgb(245,165,3);
+    background-color: rgb(76,76,76);
+    border-color: rgb(76,76,76);
 }
 
 .btn-primary {
     color: #fff;
     background-color: rgb(245,165,3);
     border-color: rgb(245,165,3);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: rgb(76,76,76);
+    border-color: rgb(76,76,76);
+}
+
+/*login*/
+body {
+  background-color:#fff;
+
+}
+
+.form-control {
+    border-radius: 10px;
+}
+
+.wrapper {
+    text-align: center;
 }
