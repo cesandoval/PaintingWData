@@ -26,6 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 
+var router = express.Router();  
+app.use('/api', router);
+
 //default route
 // app.get('/', routes.index);
 // app.get('/paintingWithData/:id', recipies.list);
