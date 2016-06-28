@@ -20,7 +20,8 @@ router.post('/signup', function(req, res) {
             return res.status(500).json({err: err});
         }
         passport.authenticate('local')(req, res, function () {
-            return res.status(200).json({status: 'Registration Successful!'});
+            res.render('./login/registration_success')
+            // return res.status(200).json({status: 'Registration Successful!'});
         });
     });
 });
@@ -39,6 +40,8 @@ router.post('/login', function(req, res, next) {
     }
     req.logIn(user, function(err) {
       if (err) {
+        console.log(err)
+        console.log(user)
         return res.status(500).json({
           err: 'Could not log in user'
         });
