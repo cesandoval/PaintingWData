@@ -1,25 +1,30 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express = require('express'),
+    path = require('path');
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser');
 
 //--------User-Auth----------
+// var flash = require("flash");
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+    setupPassport = require('./app/setupPassport'),
+    flash = require('connect-flash'),
+    session = require('express-session'),
+    jsonParser = bodyParser.json();
+// var LocalStrategy = require('passport-local').Strategy;
 
 // //This part is to setup a MongoDB, which we don't need if we are going to use PostGIS
-var config = require('./bin/config');
-var mongoose = require('mongoose');
+// var config = require('./bin/config');
+// var mongoose = require('mongoose');
 
-mongoose.connect(config.mongoUrl);
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-    // we're connected!
-    console.log("Connected correctly to server");
-});
+// mongoose.connect(config.mongoUrl);
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function () {
+//     // we're connected!
+//     console.log("Connected correctly to server");
+// });
 // //----------------------------
 
 var routes = require('./routes/index');
@@ -32,31 +37,45 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //--------User-Auth----------
+app.use(cookieParser())
+app.use(session({ secret: '4564f6s4fdsfdfd', resave: false, saveUninitialized: false }))
+
+app.use(flash())
+app.use(function(req, res, next) {
+    res.locals.errorMessage = req.flash('error')
+    next()
+});
+
+app.use(jsonParser)
+app.use(bodyParser.urlencoded({
+  extended: true
+}))
+
+setupPassport(app)
+
 var User = require('./models/user');
 app.use(passport.initialize());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+app.use(passport.session());
+
+// passport.use(new LocalStrategy(User.authenticate()));
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 //----------------------------
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
 app.use('/users', users);
 
-var router = express.Router();  
-app.use('/api', router);
-
-//default route
-// app.get('/', routes.index);
-// app.get('/paintingWithData/:id', recipies.list);
+// This is for PostGRES
+var appRouter = require('./app/routers/appRouter.js')(express);
+app.use('/', appRouter)
 
 
 // catch 404 and forward to error handler
