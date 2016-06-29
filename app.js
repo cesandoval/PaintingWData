@@ -12,23 +12,8 @@ var passport = require('passport');
     flash = require('connect-flash'),
     session = require('express-session'),
     jsonParser = bodyParser.json();
-// var LocalStrategy = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
-// //This part is to setup a MongoDB, which we don't need if we are going to use PostGIS
-// var config = require('./bin/config');
-// var mongoose = require('mongoose');
-
-// mongoose.connect(config.mongoUrl);
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function () {
-//     // we're connected!
-//     console.log("Connected correctly to server");
-// });
-// //----------------------------
-
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -59,8 +44,7 @@ app.use(bodyParser.urlencoded({
 }))
 
 setupPassport(app)
-
-var User = require('./models/user');
+var User = require('./app/models/models');
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -70,8 +54,6 @@ app.use(passport.session());
 //----------------------------
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', routes);
-app.use('/users', users);
 
 // This is for PostGRES
 var appRouter = require('./app/routers/appRouter.js')(express);
