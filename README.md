@@ -24,7 +24,7 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * Run on browser `http://localhost:3000/`
 
 ## Adding Sample Data to DB in the CMD
-* [Sample Queries](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/sample_data/queries.md) 
+* [Sample Queries](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/sample_data/readme.md) 
 
 ### Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
 
