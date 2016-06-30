@@ -23,7 +23,10 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 ## Starting
 * Run on browser `http://localhost:3000/`
 
-### Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL, KACST. All rights reserved.
+## Adding Sample Data to DB in the CMD
+* [Sample Queries](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/sample_data/queries.md) 
+
+### Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
 
 Redistribution and use in source form, with or without
 modification, are permitted provided that the following conditions are met:
