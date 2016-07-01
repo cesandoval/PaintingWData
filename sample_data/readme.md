@@ -1,3 +1,9 @@
+# Creating PostGIS Tables
+#### SQL Query
+```
+CREATE TABLE DATALAYER ( ID int4, LAYER_NAME varchar(50), geom geometry);
+```
+
 # Loading geospatial files manually into the PostGIS DB
 All the files are located in `sample data`
 ## SRID: 2263

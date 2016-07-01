@@ -1,4 +1,3 @@
-// app/model/User.js
 var Sequelize = require('sequelize')
 
 var attributes = {
