@@ -1,6 +1,8 @@
 var passport = require('passport'),
     signupController = require('../controllers/signupController.js')
 
+// var Verify = require('./verify');
+
 module.exports = function(express) {
   var router = express.Router()
 
@@ -83,11 +85,12 @@ module.exports = function(express) {
         }
           
         // var token = Verify.getToken(user);
-        //         res.status(200).json({
-        //   status: 'Login successful!',
-        //   success: true,
-        //   token: token
-        // });
+        var token = 'some'
+        res.status(200).json({
+        status: 'Login successful!',
+        success: true,
+        token: token
+        });
       });
     })(req,res,next);
   });

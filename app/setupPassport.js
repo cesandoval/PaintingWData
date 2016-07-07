@@ -23,8 +23,14 @@ module.exports = function(app) {
         // if (user.password === hashedPassword) {
         //   return done(null, user)
         // }
+        if (user.password === password) {
+          console.log('this worked.....')
+          return done(null, user, { message: 'Checking the login funcs, it actually logs in' })
+        }
         
-        return done(null, false, { message: 'Incorrect credentials.' })
+        console.log(user);
+        return done(null, false, { message: 'Checking the login funcs' })
+        // return done(null, user)
       })
     }
   ))
