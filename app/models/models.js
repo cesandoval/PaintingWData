@@ -13,14 +13,14 @@ connection.sync(
     // {force: true, match: /_Riyadh$/}
 )
 
-User.findAll(
-    // {where: { 
-    //     name: 'A Project' 
-    // }}
-  ).then(function(users){
-    console.log(users)
-    console.log('testing some get queries 1')
-})
+// User.findAll(
+//     // {where: { 
+//     //     name: 'A Project' 
+//     // }}
+//   ).then(function(users){
+//     console.log(users)
+//     console.log('testing some get queries 1')
+// })
 
 // sequelize.query('SELECT...').spread(function (results, metadata) {
 //   // Raw query - use spread
