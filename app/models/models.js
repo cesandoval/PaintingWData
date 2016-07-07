@@ -9,7 +9,9 @@ var DataLayer = connection.define('datalayer', DataLayerMeta.attributes, DataLay
 // you can define relationships here
 
 
-connection.sync({force: true, match: /_Riyadh$/})
+connection.sync(
+    // {force: true, match: /_Riyadh$/}
+)
 
 User.findAll(
     // {where: { 
