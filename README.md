@@ -45,7 +45,7 @@ SELECT p.gid, ST_AsGeoJSON(p.geom) AS geoJSON, ST_Value(r.rast, 1, p.geom, false
 		WHERE ST_Intersects(r.rast,p.geom);
 ```
 
-### Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
+## Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
 
 Redistribution and use in source form, with or without
 modification, are permitted provided that the following conditions are met:

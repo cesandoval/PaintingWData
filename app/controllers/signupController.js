@@ -32,7 +32,10 @@ module.exports.signup = function(req, res) {
     password: password//hashedPassword
   }
 
-  Model.User.sync({force: true}).then(function () {
+  Model.User.sync(
+    {
+      // force: true
+    }).then(function () {
     // Table created
     return Model.User.create(newUser).then(function() {
       console.log(4444444)
@@ -45,4 +48,11 @@ module.exports.signup = function(req, res) {
       res.redirect('/users/signup')
     })
   })
+  Model.User.findAll(
+      // {where: { name: 'A Project' }}
+    ).then(function(users){
+      console.log(users)
+      console.log('adding and returning users')
+  })
+
 }
