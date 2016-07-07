@@ -26,6 +26,25 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 ## Adding Sample Data to DB in the CMD
 * [Sample Queries](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/sample_data/readme.md) 
 
+## Setting up some spatial data for the API
+### Sample Raster Data: Two Steps
+#### Cancer Dataset
+`raster2pgsql -s 2263 -I -C -M sample_data/raster/cancer.tif -F -t 10x10 public.cancer_raster2 > raster_c.sql`
+
+`psql -U postgres -d PaintingWithData_Riyadh -f raster_c.sql`
+
+#### Saving a PtFishnet into the DB
+`shp2pgsql -I -s 2263 sample_data/shp/cancer_pt3.shp public.cancer_pts | psql -U postgres -d PaintingWithData_Riyadh`
+
+### Sample a Raster With a Point Net
+#### Get all values in band 1, and save them as a new table
+```
+CREATE TABLE cancer_pt_values AS 
+SELECT p.gid, ST_AsGeoJSON(p.geom) AS geoJSON, ST_Value(r.rast, 1, p.geom, false) As rastervalue
+	FROM public.cancer_pts AS p, public.cancer_raster2 AS r
+		WHERE ST_Intersects(r.rast,p.geom);
+```
+
 ### Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
 
 Redistribution and use in source form, with or without

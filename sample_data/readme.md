@@ -10,8 +10,12 @@ All the files are located in `sample data`
 
 ## Load the shapefile into the database in one step
 `shp2pgsql -I -s <SRID> <PATH/TO/SHAPEFILE> <SCHEMA>.<DBTABLE> | psql -U postgres -d <DBNAME>`
+
 ### Sample Query 
 `shp2pgsql -I -s 2263 sample_data/shp/Risk_cancerresp.shp public.cancer_risk | psql -U postgres -d PaintingWithData_Riyadh`
+
+### Sample Query PTS
+`shp2pgsql -I -s 2263 sample_data/shp/cancer_pt3.shp public.cancer_pts | psql -U postgres -d PaintingWithData_Riyadh`
 
 #### If you want to capture the SQL commands, pipe the output to a file:
 `shp2pgsql -I -s <SRID> <PATH/TO/SHAPEFILE> <DBTABLE> > SHAPEFILE.sql`
@@ -39,9 +43,58 @@ raster2pgsql  -s <srid>       #The srid you chose.
 `raster2pgsql -s 2263 -I -C -M sample_data/raster/asthma_3.tif -F -t 100x100 public.asthma_raster | psql -d PaintingWithData_Riyadh`
 
 
+## Sample a Raster With a Point Net
+### Get all values in band 1
+```
+SELECT ST_AsGeoJSON(p.geom), ST_Value(r.rast, 1, p.geom, false) As rastervalue
+	FROM public.cancer_pts AS p, public.cancer_raster2 AS r
+		WHERE ST_Intersects(r.rast,p.geom);
+```
+### Get all values in band 1, and save them as a new table
+```
+CREATE TABLE cancer_pt_values AS 
+SELECT p.gid, ST_AsGeoJSON(p.geom) AS geoJSON, ST_Value(r.rast, 1, p.geom, false) As rastervalue
+	FROM public.cancer_pts AS p, public.cancer_raster2 AS r
+		WHERE ST_Intersects(r.rast,p.geom);
+```
+
+```
+SELECT row_to_json(fc)
+ FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
+ FROM (SELECT 'Feature' As type
+    , ST_AsGeoJSON(lg.geom)::json As geometry
+    , row_to_json(lp) As properties
+   FROM public.cancer_pts As lg 
+         INNER JOIN (SELECT rastervalu FROM public.cancer_pts) As lp 
+       ON lg.id = lp.id  ) As f )  As fc;
+```
+
+### Testing to convert a query into a single geoJSON
+```
+SELECT row_to_json(fc)
+ FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features
+ FROM (SELECT 'Feature' As type
+    , ST_AsGeoJSON(lg.geom)::json As geometry
+    , row_to_json((SELECT l FROM (SELECT rastervalu) As l
+      )) As properties
+   FROM public.cancer_pts As lg   ) As f )  As fc;
+```
+
+```
+SELECT row_to_json(featcoll)
+   FROM 
+    (SELECT 'FeatureCollection' As type, array_to_json(array_agg(feat)) As features
+     FROM (SELECT 'Feature' As type,
+        ST_AsGeoJSON(tbl.geom)::json As geometry,
+       row_to_json((SELECT l FROM (SELECT gid, id) As l)
+  ) As properties
+  FROM public.cancer_pts As tbL   
+ )  As feat 
+)  As featcoll; 
+```
+
 ## Sample a Raster into Points and Values
 ### Get all values in bands 1,2,3 of each pixel same as above but returning the upper left point point of each pixel --
-
 ```
 SELECT ST_AsText(ST_SetSRID(
 	ST_Point(ST_UpperLeftX(rast) + ST_ScaleX(rast)*x, 
@@ -58,6 +111,18 @@ WHERE rid =  2 AND x <= ST_Width(rast) AND y <= ST_Height(rast);
  POINT(3427929.25 5793247)   |   253 
  POINT(3427929.25 5793248.5) |   250 
 :
+```
+
+```
+--- Get all values in bands 1,2,3 of each pixel --
+SELECT x, y, ST_Value(rast, 1, x, y) As b1val
+FROM public.asthma_raster5 CROSS JOIN
+generate_series(1, 10000) As x CROSS JOIN generate_series(1, 10000) As y
+WHERE rid =  2 AND x <= ST_Width(rast) AND y <= ST_Height(rast);
+```
+
+```
+ST_Value(public.cancer_raster2, 1, 1, false);
 ```
 
 ```
@@ -103,3 +168,4 @@ FROM public.cancer_raster2 CROSS JOIN
 generate_series(1,1000) As x CROSS JOIN generate_series(1,1000) As y
 WHERE rid =  2 AND x <= ST_Width(rast) AND y <= ST_Height(rast);
 ```
+
