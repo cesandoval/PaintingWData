@@ -22,9 +22,6 @@ connection.sync(
 //     console.log('testing some get queries 1')
 // })
 
-// sequelize.query('SELECT...').spread(function (results, metadata) {
-//   // Raw query - use spread
-// });
 
 
 module.exports.User = User

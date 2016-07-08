@@ -6,15 +6,16 @@
     "start": "supervisor ./bin/www"
   },
   "dependencies": {
-    "body-parser": "^1.15.2",
     "bcrypt": "~0.8.5",
-    "cookie-parser": "~1.4.3",
+    "body-parser": "^1.15.2",
     "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.4.3",
     "dbgeo": "*",
     "debug": "~2.2.0",
     "es6-promise": "^3.2.1",
     "express": "~4.13.4",
     "express-session": "~1.11.3",
+    "gdal": "^0.9.2",
     "jade": "~1.11.0",
     "jquery": "^3.0.0",
     "jsonwebtoken": "^7.0.1",
@@ -23,6 +24,7 @@
     "passport-local": "^1.0.0",
     "sequelize": "*",
     "serve-favicon": "~2.3.0",
+    "shpjs": "^3.3.2",
     "supervisor": "0.11.0"
   }
 }

@@ -24,11 +24,11 @@ module.exports = function(app) {
         //   return done(null, user)
         // }
         if (user.password === password) {
-          console.log('this worked.....')
+          // console.log('this worked.....')
           return done(null, user, { message: 'Checking the login funcs, it actually logs in' })
         }
         
-        console.log(user);
+        // console.log(user);
         return done(null, false, { message: 'Checking the login funcs' })
         // return done(null, user)
       })

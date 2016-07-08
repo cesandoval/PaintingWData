@@ -1,5 +1,6 @@
 var passport = require('passport'),
-    signupController = require('../controllers/signupController.js')
+    signupController = require('../controllers/signupController.js'),
+    appController = require('../controllers/appController.js')
 
 // var Verify = require('./verify');
 
@@ -9,7 +10,7 @@ module.exports = function(express) {
   // route middleware that will happen on every request
   router.use(function(req, res, next) {
       // log each request to the console
-      console.log(req.method, req.url);
+      // console.log(req.method, req.url);
 
       // continue doing what we were doing and go to the route
       next(); 
@@ -28,9 +29,7 @@ module.exports = function(express) {
     res.render('documentation');
   });
 
-  router.get('/app', function (req, res) {
-    res.render('app');
-  });
+  router.get('/app', appController.show);
 
   // route with parameters (http://localhost:8080/hello/:name)
   router.get('/hello/:name', function(req, res) {
@@ -51,6 +50,7 @@ module.exports = function(express) {
 
   router.get('/users/login', function (req, res) {
     res.render('users/login');
+
   });
 
   // router.post('/users/login', passport.authenticate('local', {
@@ -61,24 +61,24 @@ module.exports = function(express) {
 
   router.post('/users/login', function(req, res, next) {
     // this gives a json with the username and pwd
-    console.log(req.body);
+    // console.log(req.body);
     passport.authenticate('local', function(err, user, info) {
-      console.log(111111)
-      console.log(user)
-      console.log(info)
+      // console.log(111111)
+      // console.log(user)
+      // console.log(info)
       if (err) {
         return next(err);
       }
       if (!user) {
-        console.log(2323232323);
+        // console.log(2323232323);
         return res.status(401).json({
           err: info
         });
       }
       req.logIn(user, function(err) {
         if (err) {
-          console.log(err)
-          console.log(user)
+          // console.log(err)
+          // console.log(user)
           return res.status(500).json({
             err: 'Could not log in user'
           });
