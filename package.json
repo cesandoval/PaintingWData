@@ -21,6 +21,7 @@
     "morgan": "~1.7.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "passport-local-authenticate": "^1.2.0",
     "sequelize": "*",
     "serve-favicon": "~2.3.0",
     "shpjs": "^3.3.2",
