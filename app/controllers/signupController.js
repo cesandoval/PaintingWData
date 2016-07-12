@@ -1,5 +1,7 @@
 // var bcrypt = require('bcrypt'),
 var Model = require('../models/models.js')
+var auth = require('passport-local-authenticate');
+
 
 module.exports.show = function(req, res) {
   res.render('users/signUp')
@@ -22,11 +24,17 @@ module.exports.signup = function(req, res) {
   
   // var salt = bcrypt.genSaltSync(10)
   // var hashedPassword = bcrypt.hashSync(password, salt)
-  
+var hashed_pass;
+auth.hash(password, function(err, hashed) {
+  hashed_pass = hashed.hash;
+  console.log(hashed.hash); // Hashed password
+  console.log(hashed.salt); // Salt
+});
+
   var newUser = {
     username: username,
     salt: 'some', //salt
-    password: password//hashedPassword
+    password: hashed_pass//hashedPassword
   }
 
   Model.User.sync(
