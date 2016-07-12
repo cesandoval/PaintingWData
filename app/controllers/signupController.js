@@ -43,4 +43,13 @@ module.exports.signup = function(req, res) {
       res.redirect('/users/signup')
     })
   })
+  Model.User.findAll(
+  {
+    // where: { username: 'a' }
+  }
+  ).then(function(users){
+      console.log('controller queries')
+      console.log(users)
+      console.log('adding and returning users')
+  })
 }

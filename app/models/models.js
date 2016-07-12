@@ -25,4 +25,4 @@ connection.sync(
 
 
 module.exports.User = User
-module.exports.Datalayer = DataLayer
+module.exports.DataLayer = DataLayer

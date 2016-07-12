@@ -1,4 +1,5 @@
-var Sequelize = require('sequelize')
+var Sequelize = require('sequelize'),
+    Model = require('../models/models.js');
 
 var attributes = {
   id: {
@@ -6,17 +7,34 @@ var attributes = {
     type: Sequelize.INTEGER,
     primaryKey: true
   },
+  // userId: {
+  //   type: Sequelize.INTEGER,
+  //   references: {
+  //     // This is a reference to another model
+  //     model: 'users',
+  //     // This is the column name of the referenced model
+  //     key: 'id',
+  //     // This declares when to check the foreign key constraint. PostgreSQL only.
+  //     deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+  //   },
+  //   allowNull: false
+  // },
   layerName: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
+    // unique: true,
   },
   geometry: {
     type: Sequelize.GEOMETRY,
     allowNull: false
   },
-  srs: {
+  properties: {
+    type: Sequelize.STRING,
+    allowNull: true
+  },
+  epsg: {
     type: Sequelize.INTEGER,
+    allowNull: true
   },
 }
 
