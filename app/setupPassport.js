@@ -29,7 +29,7 @@ module.exports = function(app) {
         }
         
         // console.log(user);
-        return done(null, false, { message: 'Checking the login funcs' })
+        return done(null, false, { message: 'Some' })
         // return done(null, user)
       })
     }

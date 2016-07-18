@@ -17,7 +17,7 @@ var attributes = {
       deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
     }
   },
-  layerName: {
+  layername: {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
@@ -31,7 +31,7 @@ var attributes = {
   },
   getterMethods: {
     layerRelationship: function()  { 
-        return 'DataRaster ' + this.layerName + ' is related to DataLayer' + this.layerId 
+        return 'DataRaster ' + this.layername + ' is related to DataLayer' + this.layerId 
     }
   },
 }

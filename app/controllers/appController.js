@@ -1,11 +1,29 @@
 var Model = require('../models/models.js'),
     connection = require('../sequelize.js'),
     gdal = require("gdal"),
-    shp = require("shpjs");
+    shapefile = require("shapefile"),
+    async = require('async'),
+    request = require('request');
 
-// var fs = require('fs');
-// var obj;
+// var raw_query = 'SELECT g.layername FROM public.datalayer AS g'
+// //, WHERE g.layername='+layer.name;
+// connection.query(raw_query).spread(function(results, metadata){
+//     console.log(11111111);
+//     console.log(results[0]);
+//     console.log(22222222);
+//     console.log(metadata);
+//     console.log(33333333);
+// })
 
+// var raw_query = 'SELECT pg_typeof(g.geometry) FROM public.datalayer AS g'
+
+// connection.query(raw_query).spread(function(results, metadata){
+//     console.log(11111111);
+//     console.log(results[0]);
+//     console.log(22222222);
+//     console.log(metadata);
+//     console.log(33333333);
+// })
 
 module.exports.show = function(req, res) {
     // var raw_query = 'SELECT ST_AsGeoJSON(p.geom), ST_Value(r.rast, 1, p.geom) As rastervalue FROM public.cancer_pts AS p, public.cancer_raster2 AS r WHERE ST_Intersects(r.rast,p.geom);'
@@ -18,105 +36,126 @@ module.exports.show = function(req, res) {
     //     console.log(33333333);
     // })
 
-    // fs.readFile('./app/controllers/points.json', 'utf8', function (err, data) {
-    //     if (err) throw err;
-    //     obj = JSON.parse(data);
-    //     // console.log(obj)
-    // });
-
     // var dataset = gdal.open("./app/controllers/raster/cancer.tif");
-
-
     // console.log("number of bands: " + dataset.bands.count());
     // console.log("width: " + dataset.rasterSize.x);
     // console.log("height: " + dataset.rasterSize.y);
     // console.log("geotransform: " + dataset.geoTransform);
     // console.log("srs: " + (dataset.srs ? dataset.srs.toWKT() : 'null'));
-    var file = "./app/controllers/shp/cancer_pt.shp";
+
+    // var file = "./app/controllers/shp/cancer_pt3.shp";
+    var file = "./app/controllers/shp/cancer_pt_part.shp";
+    
     var dataset = gdal.open(file);
     var layer = dataset.layers.get(0);
+    var epsg;
+
+    var nraw_query = "SELECT exists (SELECT 1 FROM public.datalayer AS g WHERE g.layername = '"+layer.name+"' LIMIT 1);"
+    connection.query(nraw_query).spread(function(results, metadata){
+        console.log(11111111);
+        console.log(results);
+        console.log(22222222);
+        console.log(metadata);
+        console.log(33333333);
+    })//
+
+    // console.log("fields: " + layer.fields.getNames());
+    // console.log('type :' + layer.geomType )
+
+    // TODO
+    // if name is in db add a different one
+
+    var reader = shapefile.reader(file, {'ignore-properties': false});
+    var testing = getLayerName(layer.name);
+    console.log(8585849833838383)
+    console.log(testing)
     
-    console.log("fields: " + layer.fields.getNames());
-    // console.log("features: " + layer.features.get(0).getGeometry().toJSON());
-    console.log('type :' + layer.geomType )
-
-    function toGeoJSON(features) {
-        var geoms = []
-        features.forEach(function(feature, i) {
-            geoms.push(JSON.parse(feature.getGeometry().toJSON()))
+    
+    if (layer.srs.getAttrValue("AUTHORITY",1)==null){
+        request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                epsg = JSON.parse(body)['codes'][0]['code'];  
+                
+                // console.log(getLayerName(layer.name))
+                // reader.readHeader(shapeLoader);
+            }
         })
+    } else {
+        epsg = layer.srs.getAttrValue("AUTHORITY",1);
+        // reader.readHeader(shapeLoader);
+    }
 
-        var geojson = {
-            type: "GeometryCollection",
-            geometries: JSON.parse(JSON.stringify(geoms.slice(0,50)))
+    function getLayerName(layerName){
+        Model.DataLayer.findAll(
+        {
+        where: { layername: layerName }
+        }
+        ).then(function(datalayers){
+            var newName;
+            if (datalayers.length != 0) {
+                var prevName = datalayers[0].dataValues.layername;
+                    isNumber = prevName.slice(-1).value;
+
+                if (isNaN(isNumber)){
+                    var newName = prevName+'_1';
+                    // console.log(33333333)
+                    // console.log(newName)
+                    console.log('repeated layers!!!!')
+                } else {
+                    var newName = prevName+'_'+isNumber+1;
+                    console.log('we must add a number to the count')
+                }
+            } else {
+                var newName = layerName;
+            }
+            console.log(newName);
+            // return newName;
+        })
+    }
+
+    var cargo = async.cargo(function(tasks, callback) {
+        Model.DataLayer.bulkCreate(tasks, { validate: true }).catch(function(errors) 
+        {
+            console.log(errors);
+            req.flash('error', "whoa")
+            // res.redirect('app')
+        }).then(function() { 
+            return Model.DataLayer.findAll();
+        }).then(function(layers) {
+            // console.log(layers) 
+        }).then(function () {
+            callback();
+        })
+    }, 1000);
+
+    function shapeLoader( error, record ) {
+        var geom = record.geometry;
+        if (geom != null){ 
+            geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
         }
 
-        return geojson;
+        var newDataLayer = {
+            layername: layer.name,
+            userId: 1,
+            epsg: epsg,
+            geometry: geom,
+            properties: JSON.stringify(record.properties)
+        }
+        cargo.push(newDataLayer, function(err) {
+            // some
+        });
+
+        if( record !== shapefile.end ) reader.readRecord( shapeLoader );
+        if(record == shapefile.end) {
+            cargo.drain = function () {
+                console.log('All Items have been processed!')
+            }
+        }
     }
-
-    // function IndGeoJSON(features) {
-    //     features.forEach(function(feature, i) {
-    //         var newDataLayer = {
-    //             layerName: layer.name,
-    //             userId: 1,
-    //             epsg: layer.srs.getAttrValue("AUTHORITY",1),
-    //             geometry: JSON.parse(feature.getGeometry().toJSON())
-    //         }
-
-    //         Model.DataLayer.create(newDataLayer)
-    //         // Model.DataLayer.sync(
-    //         // {
-    //         //     // force: true
-    //         // }).then(function () {
-    //         //     // Table created
-    //         //     return Model.DataLayer.create(newDataLayer).catch(function(error) {
-    //         //         console.log(error)
-    //         //         req.flash('error', "whoa")
-    //         //         // res.redirect('app')
-    //         //     })
-    //         // })
-    //     })
-    //     return;
-    // }
-
-    // var geoJSON = IndGeoJSON(layer.features);
-
-
+    // reader.close();
     // TODO: Add spatial index
-
-    var test = JSON.parse(layer.features.get(0).getGeometry().toJSON());
-    console.log(test);
-    console.log(typeof(test))
-    var geoJSON = toGeoJSON(layer.features);
-    console.log(geoJSON)
-    console.log(typeof(geoJSON))
-
-    var newDataLayer = {
-        layerName: layer.name,
-        userId: 1,
-        epsg: layer.srs.getAttrValue("AUTHORITY",1),
-        geometry: geoJSON,
-        // geometry: test
-        // userId: 1
-    }
-    console.log(newDataLayer);
-
-    Model.DataLayer.sync(
-    {
-        force: true
-    }).then(function () {
-        // Table created
-        return Model.DataLayer.create(newDataLayer).then(function() {
-            res.render('app')
-        }).catch(function(error) {
-            console.log(error)
-            req.flash('error', "whoa")
-            res.redirect('app')
-        })
-    })
-
-
-    // res.render('app')
+    res.render('app')
 }
 
 // Model.DataLayer.findAll(

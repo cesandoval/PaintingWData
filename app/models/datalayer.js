@@ -19,14 +19,14 @@ var attributes = {
   //   },
   //   allowNull: false
   // },
-  layerName: {
+  layername: {
     type: Sequelize.STRING,
     allowNull: false,
     // unique: true,
   },
   geometry: {
     type: Sequelize.GEOMETRY,
-    allowNull: false
+    allowNull: true
   },
   properties: {
     type: Sequelize.STRING,
