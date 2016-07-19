@@ -5,26 +5,6 @@ var Model = require('../models/models.js'),
     async = require('async'),
     request = require('request');
 
-// var raw_query = 'SELECT g.layername FROM public.datalayer AS g'
-// //, WHERE g.layername='+layer.name;
-// connection.query(raw_query).spread(function(results, metadata){
-//     console.log(11111111);
-//     console.log(results[0]);
-//     console.log(22222222);
-//     console.log(metadata);
-//     console.log(33333333);
-// })
-
-// var raw_query = 'SELECT pg_typeof(g.geometry) FROM public.datalayer AS g'
-
-// connection.query(raw_query).spread(function(results, metadata){
-//     console.log(11111111);
-//     console.log(results[0]);
-//     console.log(22222222);
-//     console.log(metadata);
-//     console.log(33333333);
-// })
-
 module.exports.show = function(req, res) {
     // var raw_query = 'SELECT ST_AsGeoJSON(p.geom), ST_Value(r.rast, 1, p.geom) As rastervalue FROM public.cancer_pts AS p, public.cancer_raster2 AS r WHERE ST_Intersects(r.rast,p.geom);'
 
@@ -43,121 +23,109 @@ module.exports.show = function(req, res) {
     // console.log("geotransform: " + dataset.geoTransform);
     // console.log("srs: " + (dataset.srs ? dataset.srs.toWKT() : 'null'));
 
-    // var file = "./app/controllers/shp/cancer_pt3.shp";
-    var file = "./app/controllers/shp/cancer_pt_part.shp";
-    
-    var dataset = gdal.open(file);
-    var layer = dataset.layers.get(0);
-    var epsg;
+    async.waterfall([
+        loadData,
+        queryLayerName,
+        getEPSG,
+    ], function (err, result) {
+        var file = "./app/controllers/shp/cancer_pt_part.shp";
 
-    var nraw_query = "SELECT exists (SELECT 1 FROM public.datalayer AS g WHERE g.layername = '"+layer.name+"' LIMIT 1);"
-    connection.query(nraw_query).spread(function(results, metadata){
-        console.log(11111111);
-        console.log(results);
-        console.log(22222222);
-        console.log(metadata);
-        console.log(33333333);
-    })//
+        var epsg = result[0],
+            newName = result[1],
+            reader = shapefile.reader(file, {'ignore-properties': false});
+        reader.readHeader(shapeLoader);
 
-    // console.log("fields: " + layer.fields.getNames());
-    // console.log('type :' + layer.geomType )
+        var cargo = async.cargo(function(tasks, callback) {
+            Model.DataLayer.bulkCreate(tasks, { validate: true }).catch(function(errors) 
+            {
+                console.log(errors);
+                req.flash('error', "whoa")
+                // res.redirect('app')
+            }).then(function() { 
+                return Model.DataLayer.findAll();
+            }).then(function(layers) {
+                // console.log(layers) 
+            }).then(function () {
+                callback();
+            })
+        }, 1000);
 
-    // TODO
-    // if name is in db add a different one
-
-    var reader = shapefile.reader(file, {'ignore-properties': false});
-    var testing = getLayerName(layer.name);
-    console.log(8585849833838383)
-    console.log(testing)
-    
-    
-    if (layer.srs.getAttrValue("AUTHORITY",1)==null){
-        request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
-        function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                epsg = JSON.parse(body)['codes'][0]['code'];  
-                
-                // console.log(getLayerName(layer.name))
-                // reader.readHeader(shapeLoader);
+        function shapeLoader( error, record ) {
+            var geom = record.geometry;
+            if (geom != null){ 
+                geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
             }
-        })
-    } else {
-        epsg = layer.srs.getAttrValue("AUTHORITY",1);
-        // reader.readHeader(shapeLoader);
+
+            var newDataLayer = {
+                layername: newName,
+                userId: 1,
+                epsg: epsg,
+                geometry: geom,
+                properties: JSON.stringify(record.properties)
+            }
+            cargo.push(newDataLayer, function(err) {
+                // some
+            });
+
+            if( record !== shapefile.end ) reader.readRecord( shapeLoader );
+            if(record == shapefile.end) {
+                cargo.drain = function () {
+                    console.log('All Items have been processed!!!!!!')
+                }
+            }
+        }
+    });
+
+    function loadData(callback) {
+        var file = "./app/controllers/shp/cancer_pt_part.shp";
+        var dataset = gdal.open(file);
+        var layer = dataset.layers.get(0);
+        callback(null, layer);
     }
 
-    function getLayerName(layerName){
-        Model.DataLayer.findAll(
-        {
-        where: { layername: layerName }
-        }
-        ).then(function(datalayers){
+    function queryLayerName(layer, callback) {
+        var nraw_query = "SELECT exists (SELECT 1 FROM public.datalayer AS g WHERE g.layername = '"+layer.name+"' LIMIT 1);"
+        connection.query(nraw_query).spread(function(results, metadata){
             var newName;
-            if (datalayers.length != 0) {
-                var prevName = datalayers[0].dataValues.layername;
+            var exists = results[0].exists;
+            if (exists) {
+                var prevName = layer.name;
                     isNumber = prevName.slice(-1).value;
 
                 if (isNaN(isNumber)){
-                    var newName = prevName+'_1';
-                    // console.log(33333333)
-                    // console.log(newName)
+                    newName = prevName+'_1';
                     console.log('repeated layers!!!!')
                 } else {
-                    var newName = prevName+'_'+isNumber+1;
-                    console.log('we must add a number to the count')
+                    newName = prevName+'_'+isNumber+1;
+                    console.log('repeated layers!!!! we must add a number to the count')
                 }
+
             } else {
-                var newName = layerName;
+                newName = layerName;
             }
-            console.log(newName);
-            // return newName;
+            callback(null, layer, newName);
         })
     }
 
-    var cargo = async.cargo(function(tasks, callback) {
-        Model.DataLayer.bulkCreate(tasks, { validate: true }).catch(function(errors) 
-        {
-            console.log(errors);
-            req.flash('error', "whoa")
-            // res.redirect('app')
-        }).then(function() { 
-            return Model.DataLayer.findAll();
-        }).then(function(layers) {
-            // console.log(layers) 
-        }).then(function () {
-            callback();
-        })
-    }, 1000);
-
-    function shapeLoader( error, record ) {
-        var geom = record.geometry;
-        if (geom != null){ 
-            geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
-        }
-
-        var newDataLayer = {
-            layername: layer.name,
-            userId: 1,
-            epsg: epsg,
-            geometry: geom,
-            properties: JSON.stringify(record.properties)
-        }
-        cargo.push(newDataLayer, function(err) {
-            // some
-        });
-
-        if( record !== shapefile.end ) reader.readRecord( shapeLoader );
-        if(record == shapefile.end) {
-            cargo.drain = function () {
-                console.log('All Items have been processed!')
-            }
-        }
+    function getEPSG(layer, newName, callback) {
+        var epsg;
+        if (layer.srs.getAttrValue("AUTHORITY",1)==null){
+            request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
+            function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    epsg = JSON.parse(body)['codes'][0]['code'];
+                    callback(null, [epsg, newName]);
+                }
+            })
+        } else {
+            epsg = layer.srs.getAttrValue("AUTHORITY",1);
+            callback(null, [epsg, newName]);
+        }        
     }
-    // reader.close();
+
     // TODO: Add spatial index
     res.render('app')
 }
-
 // Model.DataLayer.findAll(
 // {
 // // where: { username: 'a' }
