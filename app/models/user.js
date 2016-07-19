@@ -11,6 +11,7 @@ var attributes = {
   },
   email: {
     type: Sequelize.STRING,
+    allowNull: false,
     validate: {
       isEmail: true
     }
@@ -22,10 +23,12 @@ var attributes = {
     type: Sequelize.STRING,
   },
   password: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
+    allowNull: false
   },
   salt: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
+    allowNull: false
   }
 }
 

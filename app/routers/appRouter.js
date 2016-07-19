@@ -1,6 +1,7 @@
 var passport = require('passport'),
+    auth = require('passport-local-authenticate'),
     signupController = require('../controllers/signupController.js'),
-    appController = require('../controllers/appController.js')
+    appController = require('../controllers/appController.js');
 
 // var Verify = require('./verify');
 
@@ -70,7 +71,7 @@ module.exports = function(express) {
         return next(err);
       }
       if (!user) {
-        // console.log(2323232323);
+        console.log(user);
         return res.status(401).json({
           err: info
         });
@@ -85,11 +86,9 @@ module.exports = function(express) {
         }
           
         // var token = Verify.getToken(user);
-        var token = 'some'
         res.status(200).json({
         status: 'Login successful!',
-        success: true,
-        token: token
+        success: true
         });
       });
     })(req,res,next);

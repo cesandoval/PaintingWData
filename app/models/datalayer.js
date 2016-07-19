@@ -29,7 +29,7 @@ var attributes = {
     allowNull: true
   },
   properties: {
-    type: Sequelize.STRING,
+    type: Sequelize.TEXT,
     allowNull: true
   },
   epsg: {

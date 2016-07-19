@@ -1,7 +1,7 @@
 var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
-    // bcrypt = require('bcrypt'),
-    Model = require('./models/models.js')
+    auth = require('passport-local-authenticate'),
+    Model = require('./models/models.js');
 
 module.exports = function(app) {
   app.use(passport.initialize())
@@ -17,20 +17,21 @@ module.exports = function(app) {
         if (user == null) {
           return done(null, false, { message: 'Incorrect credentials.' })
         }
-        
-        // var hashedPassword = bcrypt.hashSync(password, user.salt)
-        
-        // if (user.password === hashedPassword) {
-        //   return done(null, user)
-        // }
-        if (user.password === password) {
-          // console.log('this worked.....')
-          return done(null, user, { message: 'Checking the login funcs, it actually logs in' })
+        var vals = user.dataValues;
+        var preHashed = {
+          salt: vals.salt,
+          hash: vals.password
         }
+
+        auth.verify(password, preHashed, function(err, verified) {
+          if (verified) {
+            console.log('this worked.....')
+            return done(null, user, { message: 'Checking the login funcs, it actually logs in' })
+          } else {
+            return done(null, false, { message: 'Please try again' })
+          }
+        });
         
-        // console.log(user);
-        return done(null, false, { message: 'Some' })
-        // return done(null, user)
       })
     }
   ))

@@ -4,7 +4,7 @@ var Model = require('../models/models.js'),
     shapefile = require("shapefile"),
     async = require('async'),
     request = require('request');
-
+ 
 module.exports.show = function(req, res) {
     // var raw_query = 'SELECT ST_AsGeoJSON(p.geom), ST_Value(r.rast, 1, p.geom) As rastervalue FROM public.cancer_pts AS p, public.cancer_raster2 AS r WHERE ST_Intersects(r.rast,p.geom);'
 
@@ -23,6 +23,8 @@ module.exports.show = function(req, res) {
     // console.log("geotransform: " + dataset.geoTransform);
     // console.log("srs: " + (dataset.srs ? dataset.srs.toWKT() : 'null'));
 
+    // TODO
+    // Add properties to spatial features so they behave like GIS
     async.waterfall([
         loadData,
         queryLayerName,
@@ -33,6 +35,7 @@ module.exports.show = function(req, res) {
         var epsg = result[0],
             newName = result[1],
             reader = shapefile.reader(file, {'ignore-properties': false});
+        
         reader.readHeader(shapeLoader);
 
         var cargo = async.cargo(function(tasks, callback) {
@@ -92,18 +95,25 @@ module.exports.show = function(req, res) {
                 var prevName = layer.name;
                     isNumber = prevName.slice(-1).value;
 
-                if (isNaN(isNumber)){
-                    newName = prevName+'_1';
-                    console.log('repeated layers!!!!')
-                } else {
-                    newName = prevName+'_'+isNumber+1;
-                    console.log('repeated layers!!!! we must add a number to the count')
-                }
+                var raw_query = "SELECT g.layername FROM public.datalayer AS g WHERE g.layername LIKE '"+prevName+"_%'"
+                connection.query(raw_query).spread(function(results, metadata){
+                    if (results.length > 0) {
+                        var hashedName = results[results.length-1].layername;
+                        var n = hashedName.lastIndexOf("_");
+                        var newLayerIndex = parseInt(hashedName.slice(n+1))+1;
 
+                        console.log('repeated layers!!!! we must add a number to the count')
+                        newName = hashedName.slice(0,n+1)+newLayerIndex;
+                    } else {
+                        newName = prevName+'_1';
+                        console.log('repeated layers!!!!')
+                    } 
+                    callback(null, layer, newName);
+                });
             } else {
-                newName = layerName;
-            }
-            callback(null, layer, newName);
+                newName = layer.name;
+                callback(null, layer, newName);
+            }            
         })
     }
 
