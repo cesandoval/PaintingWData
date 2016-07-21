@@ -22,14 +22,14 @@ var attributes = {
   layername: {
     type: Sequelize.STRING,
     allowNull: false,
-    // unique: true,
+    unique: true,
   },
   geometry: {
     type: Sequelize.GEOMETRY,
     allowNull: true
   },
   properties: {
-    type: Sequelize.TEXT,
+    type: Sequelize.JSON,
     allowNull: true
   },
   epsg: {
@@ -77,22 +77,3 @@ module.exports.options = options
 //     }
 //   });
 // };
-
-
-// // In your DB Start Config file
-//     sequelize.sync({
-//       force: true
-//     }).then(function () {
-//       // Add the geometry column
-//       sequelize.query('SELECT AddGeometryColumn(\'public\',\'Snapshots\',\'geom\',\'0\',\'MULTIPOLYGON\',2);').then(function () {
-//         console.log('DEV: Postgres Database is synced.');
-//         // Populate DB with sample data
-//         if (config.database.seedDB) {
-//           require('./seed');
-//         }
-//       }).catch(function (err) {
-//         console.log('DEV: Error adding geometry column');
-//       });
-//     }).catch(function (err) {
-//       console.log('DEV: Postgres Database is not synced.', err);
-//     });

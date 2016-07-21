@@ -25,13 +25,12 @@ module.exports = function(app) {
 
         auth.verify(password, preHashed, function(err, verified) {
           if (verified) {
-            console.log('this worked.....')
+            console.log('this user worked.....')
             return done(null, user, { message: 'Checking the login funcs, it actually logs in' })
           } else {
             return done(null, false, { message: 'Please try again' })
           }
         });
-        
       })
     }
   ))

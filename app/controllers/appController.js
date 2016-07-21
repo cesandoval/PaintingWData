@@ -30,6 +30,7 @@ module.exports.show = function(req, res) {
         queryLayerName,
         getEPSG,
     ], function (err, result) {
+        // var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
         var file = "./app/controllers/shp/cancer_pt_part.shp";
 
         var epsg = result[0],
@@ -64,11 +65,14 @@ module.exports.show = function(req, res) {
                 userId: 1,
                 epsg: epsg,
                 geometry: geom,
-                properties: JSON.stringify(record.properties)
+                properties: record.properties
             }
-            cargo.push(newDataLayer, function(err) {
-                // some
-            });
+
+            if (geom != null) {
+                cargo.push(newDataLayer, function(err) {
+                    // some
+                });
+            }
 
             if( record !== shapefile.end ) reader.readRecord( shapeLoader );
             if(record == shapefile.end) {
@@ -80,6 +84,7 @@ module.exports.show = function(req, res) {
     });
 
     function loadData(callback) {
+        // var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
         var file = "./app/controllers/shp/cancer_pt_part.shp";
         var dataset = gdal.open(file);
         var layer = dataset.layers.get(0);
@@ -133,6 +138,8 @@ module.exports.show = function(req, res) {
         }        
     }
 
+
+
     // TODO: Add spatial index
     res.render('app')
 }
@@ -145,3 +152,99 @@ module.exports.show = function(req, res) {
 //     console.log(datalayers)
 //     console.log('adding and returning users')
 // })
+
+// var netFunctionQuery = `DROP FUNCTION IF EXISTS makegrid(geometry, integer);
+// CREATE OR REPLACE FUNCTION makegrid(geometry, integer)
+// RETURNS geometry AS
+// 'SELECT ST_Collect(ST_SetSRID(ST_POINT(x,y),ST_SRID($1))) FROM 
+// generate_series(floor(st_xmin($1))::int, ceiling(st_xmax($1)-st_xmin($1))::int, $2) as x
+// ,generate_series(floor(st_ymin($1))::int, ceiling(st_ymax($1)-st_ymin($1))::int,$2) as y 
+// where st_intersects($1,ST_SetSRID(ST_POINT(x,y),ST_SRID($1)))'
+// LANGUAGE sql;
+// SELECT makegrid(geometry, 10) from public.datalayer;
+// `;
+
+// var netFunctionQuery = `CREATE OR REPLACE FUNCTION ST_CreateFishnet(nrow integer, ncol integer,xsize float8, ysize float8,x0 float8 DEFAULT 0, y0 float8 DEFAULT 0,OUT "row" integer, OUT col integer,OUT geom geometry)
+// RETURNS SETOF record AS
+// $$
+// SELECT i + 1 AS row, j + 1 AS col, ST_Translate(cell, j * $3 + $5, i * $4 + $6) AS geom
+// FROM generate_series(0, $1 - 1) AS i,
+//      generate_series(0, $2 - 1) AS j,
+// (
+// SELECT ('POLYGON((0 0, 0 '||$4||', '||$3||' '||$4||', '||$3||' 0,0 0))')::geometry AS cell
+// ) AS foo;
+// $$ LANGUAGE sql IMMUTABLE STRICT;`
+// var netFunctionQuery = `CREATE OR REPLACE FUNCTION makegrid(geometry, integer) RETURNS geometry AS 'SELECT ST_Collect(ST_SetSRID(ST_POINT(x,y),ST_SRID($1))) FROM generate_series(floor(st_xmin($1))::int, ceiling(st_xmax($1)-st_xmin($1))::int, $2) as x,generate_series(floor(st_ymin($1))::int, ceiling(st_ymax($1)-st_ymin($1))::int,$2) as y where st_intersects($1,ST_SetSRID(ST_POINT(x,y),ST_SRID($1)))'LANGUAGE sql;`
+
+// console.log(netFunctionQuery);
+
+// var newQuery = "SELECT makegrid(ST_GeomFromText('Polygon((35.099577 45.183417,47.283415 45.183417,47.283415 49.640445,35.099577 49.640445,35.099577 45.183417))', 4326), 10) from public.datalayer;"
+// var newQuery = `SELECT *
+// FROM ST_CreateFishnet(2, 2, 10, 10) AS cells;`
+
+var netFunctionQuery = `
+CREATE OR REPLACE FUNCTION public.makegrid_2d (
+  bound_polygon public.geometry,
+  grid_step integer,
+  metric_srid integer = 28408 --metric SRID (this particular is optimal for the Western Russia)
+)
+RETURNS public.geometry AS
+$body$
+DECLARE
+  BoundM public.geometry; --Bound polygon transformed to the metric projection (with metric_srid SRID)
+  Xmin DOUBLE PRECISION;
+  Xmax DOUBLE PRECISION;
+  Ymax DOUBLE PRECISION;
+  X DOUBLE PRECISION;
+  Y DOUBLE PRECISION;
+  sectors public.geometry[];
+  i INTEGER;
+BEGIN
+  BoundM := ST_Transform($1, $3); --From WGS84 (SRID 4326) to the metric projection, to operate with step in meters
+  Xmin := ST_XMin(BoundM);
+  Xmax := ST_XMax(BoundM);
+  Ymax := ST_YMax(BoundM);
+
+  Y := ST_YMin(BoundM); --current sector's corner coordinate
+  i := -1;
+  <<yloop>>
+  LOOP
+    IF (Y > Ymax) THEN  --Better if generating polygons exceeds the bound for one step. You always can crop the result. But if not you may get not quite correct data for outbound polygons (e.g. if you calculate frequency per sector)
+        EXIT;
+    END IF;
+
+    X := Xmin;
+    <<xloop>>
+    LOOP
+      IF (X > Xmax) THEN
+          EXIT;
+      END IF;
+
+      i := i + 1;
+      sectors[i] := ST_GeomFromText('POLYGON(('||X||' '||Y||', '||(X+$2)||' '||Y||', '||(X+$2)||' '||(Y+$2)||', '||X||' '||(Y+$2)||', '||X||' '||Y||'))', $3);
+
+      X := X + $2;
+    END LOOP xloop;
+    Y := Y + $2;
+  END LOOP yloop;
+
+  RETURN ST_Transform(ST_Collect(sectors), ST_SRID($1));
+END;
+$body$
+LANGUAGE 'plpgsql';
+SELECT cell FROM 
+(SELECT (
+ST_Dump(makegrid_2d(ST_GeomFromText('Polygon((35.099577 45.183417,47.283415 45.183417,47.283415 49.640445,35.099577 49.640445,35.099577 45.183417))',
+ 4326), -- WGS84 SRID
+ 10000) -- cell step in meters
+)).geom AS cell) AS q_grid
+`
+
+connection.query(netFunctionQuery).spread(function(results, metadata){
+    console.log(11111111);
+    console.log(results);
+    console.log(22222222);
+    console.log(metadata);
+    console.log(33333333);
+})
+
