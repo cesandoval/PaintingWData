@@ -22,7 +22,7 @@ var attributes = {
   layername: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
+    unique: false,
   },
   geometry: {
     type: Sequelize.GEOMETRY,
@@ -34,6 +34,10 @@ var attributes = {
   },
   epsg: {
     type: Sequelize.INTEGER,
+    allowNull: true
+  },
+  rasterval: {
+    type: Sequelize.FLOAT,
     allowNull: true
   },
 }
