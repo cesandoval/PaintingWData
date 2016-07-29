@@ -18,14 +18,14 @@
   background: rgba(100, 100, 100, 0.9);
 }
 
-body 
+/*body 
 {
     font-family: Monospace;
     font-weight: bold;
     background-color: #ccccff;
     margin: 0px;
     overflow: hidden;
-}
+}*/
 
 #graphMaker{
     position: absolute;
@@ -122,9 +122,10 @@ body
     z-index: 5;
     width: 20%;
     right: 80%;
-    bottom: 30px;
-    top: 100px;
+    /*bottom: 30px;*/
+    top: 50px;
     background-color: rgb(245,165,3);
+    border-top: 1px solid rgba(233, 241,223, 1);
 }
 
 #accordion .ui-accordion-content {

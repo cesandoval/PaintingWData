@@ -11,8 +11,10 @@ html
     meta(name="description", content="")
     meta(name="author", content="")
     link(rel="icon", href="/favicon.ico")
-    
 
+    style
+      body { margin:0; padding:0; }
+      .map { position:absolute; top:0; bottom:0; width:100%; }
 
     //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //on our web server and will be delivered faster to the client than our own server.
@@ -23,6 +25,37 @@ html
     //reference our site-specific css
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+
+
+    // D3 libs
+    script(src="javascripts/js/d3.js")
+    
+    // Parallel Coords UI libs
+    script(src="javascripts/js/d3.parcoords.js")
+    link(rel="stylesheet", type="text/css", href="/stylesheets/d3.parcoords.css")
+    
+    // THREEjs libs
+    script(src="javascripts/js/three.js")
+    script(src="javascripts/js/Detector.js")
+    script(src="javascripts/js/Stats.js")
+    script(src="javascripts/js/OrbitControls.js")
+    script(src="javascripts/js/THREEx.KeyboardState.js")
+    script(src="javascripts/js/THREEx.FullScreen.js")
+    script(src="javascripts/js/THREEx.WindowResize.js")
+    script(type='text/javascript', src='javascripts/js/DAT.GUI.min.js')
+    
+    // Color Widget UI libs
+    script(src="javascripts/js/jquery-1.11.3.js")
+    script(src='javascripts/js/spectrum.js')
+    link(rel='stylesheet', href='/stylesheets/spectrum.css')
+    
+    // JQuery UI libs
+    script(src="javascripts/js/jquery-ui.js")
+    link(rel="stylesheet", href="/stylesheets/jquery-ui.css")
+
+    // PaintingWithData CSS
+    link(rel='stylesheet', href='/stylesheets/base.css')
+
 
   body
     block navBar

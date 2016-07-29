@@ -239,14 +239,14 @@ function pushDataRaster(epsg, layername, callback) {
 }
 
 
-async.waterfall([
-    stValue,
-    parseGeoJSON
-], function (err, result) {
-    Model.DataJSON.sync().then(function(){
-        return Model.DataJSON.create(result);
-    });
-});
+// async.waterfall([
+//     stValue,
+//     parseGeoJSON
+// ], function (err, result) {
+//     Model.DataJSON.sync().then(function(){
+//         return Model.DataJSON.create(result);
+//     });
+// });
 
 function stValue(callback) {
     var layername = 'Risk_cancerresp_rep_part_11'

@@ -3,7 +3,7 @@
 // Functions for Options Accordion //
 var tabHeights = $('#accordion').find('h3').outerHeight(true)+($('.bottom').outerHeight()*2);
 console.log(tabHeights)
-var screenHeight = $(window).height()-tabHeights-70;//259;
+var screenHeight = $(window).height()-tabHeights+10;//259;
 
 $("#graphLayers").css("height", screenHeight);
 $("#graphControls").css("height", screenHeight);

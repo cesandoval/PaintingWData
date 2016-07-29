@@ -1,7 +1,131 @@
 extends layout
 
-block pageTitle
-  div(class='jumbotron')
-    div(class='container')
-      h1 App
-      p This contains the app
+//- block pageTitle
+//-   div(class='container')
+//-     h1 App
+//-     p This contains the app
+
+append content
+    //- div(class = "bar top")
+    //- div(id='appTittle').
+    //-     PAINTING <br> <font weight="300">with data
+    div(class = "bar bottom")
+    div(class="options")
+    
+    dic(class="bottomWidgets")
+        span(class = "gridStatus")
+            label.
+                Grid
+            input(type="checkbox", id="gridBox", class="bottomBox")
+        span(class = "threeD")
+            label.
+                3d
+            input(type="checkbox", id="threeDBox", class="bottomBox")
+ 
+    // button(id="show", class='buttons').
+    //     DATA 
+    // button(id="graphShow", class='buttons').
+    //     GRAPH
+    // button(id="somShow", class='buttons').
+    //     SOM       
+    ul
+        p(id="show", class="buttons").
+        p(class="buttonsText", id="dataText").
+            Data
+    ul
+        p(id="graphShow", class="buttons").
+        p(class="buttonsText", id="graphText").
+            Graph
+    ul
+        p(id="somShow", class="buttons").
+        p(class="buttonsText", id="somText").
+            SOM
+
+    div(id="parallelData", class="parcoords")
+    script(src="javascripts/parallel_coordinates.js")
+    
+    script(src="javascripts/voxel/PixelGrid.js")
+    div(id="ThreeJS")
+    div(class='moveGUI')
+    
+    script(type='x-shader/x-vertex', id='vertexshader').
+        attribute float size;
+        attribute vec3 customColor;
+        
+        varying vec3 vColor;
+        
+        uniform vec3 viewVector;
+        uniform float c;
+        uniform float p;
+        varying float intensity;
+        
+        attribute float customOpacity;
+        varying float vOpacity;
+        
+        void main() {
+        
+            vColor = customColor;
+            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+            gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) );
+            gl_Position = projectionMatrix * mvPosition;
+          
+            vOpacity = customOpacity;
+        }
+    
+    script(type='x-shader/x-fragment', id='fragmentshader').
+    
+        uniform vec3 color;
+        uniform sampler2D texture;
+        varying vec3 vColor;
+        varying float vOpacity;
+      
+        void main() {
+            gl_FragColor = vec4( color * vColor,  vOpacity );
+            gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+            if ( gl_FragColor.a < ALPHATEST ) discard;
+        }
+    //    //script.
+    //    //  console.log(L);
+    //    //  L.mapbox.accessToken = 'pk.eyJ1IjoiY2VzYW5kb3ZhbCIsImEiOiJjaWptNjI4ejAwMGEwdXlseGppYjlrNGhjIn0.1Go1vzivLKpS1tiwS20KuQ';
+    //    //  L.mapbox.map('map-one', 'mapbox.streets').setView([38.8929,-77.0252], 14);
+    //
+
+    div(id="accordion")
+        h3.
+            Layers
+        div(id='graphLayers')
+            div(id='allOpacity' class='sliderCell')
+            // div(id='allNeighbors' class='sliderCell')
+        h3.
+            Node Types
+        div(id='graphControls')
+            // div(id='allOpacity' class='sliderCell')
+            // div(id='allNeighbors' class='sliderCell')
+            div(id='nodeTypes' class='nodes')
+            
+    div(id='allNeighbors' class='sliderCell')
+            
+    //- div(id="nodeLibrary")
+    //-     h3.
+    //-         NODES
+    //-     div(id='nodeTypes')
+            
+    script(src='javascripts/uiVoxel.js')
+
+    script(src='javascripts/three_voxel.js')
+    
+    link(rel="stylesheet", href="stylesheets/d3.slider.css")
+    script(src="javascripts/js/d3.slider.js")
+    div(id='slider1')
+    div(id='graphTools')
+        div(id='graphMaker')
+        div(id='graphMakerControls')
+    link(rel="stylesheet", href="stylesheets/graph-creator.css")
+    // <div id="toolbox">
+    //   <input type="file" id="hidden-file-upload"><input id="upload-input" type="image" title="upload graph" src="upload-icon.png" alt="upload graph"> <input type="image" id="download-input" title="download graph" src="download-icon.png" alt="download graph"> <input type="image" id="delete-graph" title="delete graph" src="trash-icon.png" alt="delete graph"> 
+    // </div>
+    script(src="javascripts/graph-creator.js")
+
+    div(class='copyright').
+        © 2016 Carlos Sandoval Olascoaga, MIT, KACST
+    
