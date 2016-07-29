@@ -1,0 +1,532 @@
+/*@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,300);
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
+@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+
+::-webkit-scrollbar
+{
+  width: 12px;  /* for vertical scrollbars */
+  height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(50, 50, 50, 0.3);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(100, 100, 100, 0.9);
+}
+
+body 
+{
+    font-family: Monospace;
+    font-weight: bold;
+    background-color: #ccccff;
+    margin: 0px;
+    overflow: hidden;
+}
+
+#graphMaker{
+    position: absolute;
+    top: 0px;
+    bottom: 30px;
+    left: 20%;
+    width: 80%;
+    z-index: 2; 
+    background-color: rgb(255,255,255);
+    opacity: .25;   
+}
+
+#graphMakerControls{
+    position: absolute;
+    top: 0px;
+    bottom: 30px;
+    left: 20%;
+    width: 80%;
+    z-index: 3;
+    opacity: 1; 
+}
+
+#slider1 {
+    position: absolute;
+    bottom: 300px;
+    left: 400px;    
+    width: 150px;
+}
+
+#title {
+    position: absolute;
+    z-index: 1;
+}
+
+#ThreeJS {
+    position: absolute;
+    left: 20%;
+    top: 0px;
+    /*bottom: 30px;*/
+}
+
+#parallelData {
+    position: absolute;
+    width:80%;
+    height:200px;
+    z-index:2;
+    bottom: 30px;
+    left:20%;
+    opacity: .70;
+}
+
+#show {
+    width:100px;
+    position: absolute;
+    z-index: 4;
+    right: 0px;
+}
+
+#graphShow {
+    position: absolute;
+    /*bottom: 10px;*/
+    width:100px;
+    z-index: 10;
+    right: 102px;
+}
+
+#somShow {
+    position: absolute;
+    width:100px;
+    z-index: 4;
+    right: 204px;
+}
+
+#appTittle {
+    position: absolute;
+    z-index: 5;
+    font-size: 30px;
+    width: 20%;
+    /*left: 8px;*/
+    /*line-height: 85%;*/
+    top: 25px;
+    left: 7px;
+    /*font-family: "Source Sans Pro", san-sarif;*/
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: bolder;
+    color: rgba(255, 255,255, 1);
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+    text-align: left;
+    vertical-align: middle;
+}
+
+#accordion {
+    position: absolute;
+    z-index: 5;
+    width: 20%;
+    right: 80%;
+    bottom: 30px;
+    top: 100px;
+    background-color: rgb(245,165,3);
+}
+
+#accordion .ui-accordion-content {
+    /*background-color: rgb(240,240,240);*/
+    background-color: rgba(253, 232,172, 1);
+    line-height:  14pt;
+    margin: 0;
+    padding: 8px;
+}
+
+#accordion .ui-accordion-header {
+    background-color: rgb(245,165,3);
+    margin: 0px;
+    height: 27px;
+    text-align: left;
+    font-size: 18px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    padding:0px;
+    padding-left: 8px;
+    padding-top: 4px;
+    vertical-align: middle;
+    
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+    border-right: 1px solid rgba(233, 241,223, 1);
+    border-left: 1px solid rgba(233, 241,223, 1);
+    border-bottom: 1px solid rgba(233, 241,223, 1);
+    border-top: 1px solid rgba(233, 241,223, 1);
+}
+
+#graphLayers {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+#allNeighbors {
+    position: absolute;
+    right: 310px;
+    bottom: 2px;
+    z-index: 10;
+}
+
+#textNeighbors{
+    position: relative;
+    right: 161px;
+    bottom: 3px;
+    color: rgb(76,76,76);
+}
+
+#dataText{
+    right: 32px;
+}
+
+#graphText{
+    right: 127px;  
+}
+
+#somText{
+    right: 238px;  
+}
+
+.top{
+    /*background: rgb(210,210,210);*/
+    background: rgb(245,165,3);
+    position: absolute;
+    top: 0;
+    width: 19.9%;
+    height:100px;
+    z-index: 4;
+    border-right: 1px solid rgba(233, 241,223, 1);
+    /*border-left: 1px solid rgba(0, 0, 0, .2);*/
+    border-bottom: 1px solid rgba(233, 241,223, 1);
+    border-top: 1px solid rgba(233, 241,223, 1);
+}
+
+.bottom{
+    background: rgb(245,165,3);
+    opacity: .4;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 80%;
+    height:30px;
+    z-index: 4;
+    border-right: 1px solid rgba(233, 241,223, 1);
+    border-left: 1px solid rgba(233, 241,223, 1);
+    border-bottom: 1px solid rgba(233, 241,223, 1);
+    border-top: 1px solid rgba(233, 241,223, 1);
+}
+
+.options {
+    background: rgb(210,210,210);
+    position: absolute;
+    width: 20%;
+    left: 0;
+    top: 30px;
+    bottom: 0px;
+    z-index: 2;
+}
+
+.layerBoxes{
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
+
+.resetLayer{
+    font-size: .08em;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
+    color: rgb(0,0,0);
+    line-height: 8pt;
+}
+
+.showPaletteOnly {
+    position: absolute;
+    float: right;
+}
+
+.sp-palette {
+    max-width: 10px;
+}
+
+.bottomWidgets {
+    position: absolute;
+    left: 20%;
+    bottom: -5px;
+    width: 80%;
+    height: 30px;
+    z-index: 4;
+}
+
+.gridStatus {
+    position: relative;
+    z-index: 2;
+    left: 0%;
+    padding-left: 13px;
+}
+
+.gridStatus label{
+    position: relative;
+    font-size: 16px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
+    color: rgb(76,76,76);
+
+}
+
+.threeD {
+    position: relative;
+    z-index: 2;
+    left: 0px;
+    padding-left: 9px;
+}
+
+.threeD label{
+    position: relative;
+    font-size: 17px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
+    color: rgb(76,76,76);
+    bottom: 0px;
+    padding-left: 7px;
+}
+
+.bottomBox {
+    position: relative;
+    left: 7px;
+    bottom: -1px;
+}
+
+.sliderCell {
+    position: relative;
+}
+
+.basicSliders {
+    position: relative;
+    width: 55%;
+    height: 12px;
+    right: 0px;
+    float: right;
+}
+
+.slidersBottom {
+    position: absolute;
+    width: 150%;
+    height: 12px;
+    right: 0px;
+    float: right;
+}
+
+.neighborSliders {
+    position: relative;
+    width: 150px;
+    height: 12px;
+    right: 0px;
+    float: right;
+}
+
+.slidersText {
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+    color: rgb(76,76,76);
+}
+
+.sliderName {
+    display: inline;
+    float: left;
+    line-height: 20px;
+}
+
+.sliderValue{
+    display: inline;
+    /*padding-left: 5px;*/
+    font-size: 13px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
+    color: rgb(140,140,140);
+    line-height: 20px;
+    float: none;
+}
+
+.rangeSliders  {
+    position: relative;
+    width: 55%;
+    height: 10px;
+    right: 0px;
+    float: right;
+}
+
+.slidersOpacity  {
+    position: relative;
+    width: 55%;
+    height: 7px;
+    top: 4px;
+    right: 0px;
+    float: right;
+}
+
+.slidersOpacity.ui-slider .ui-slider-handle {
+    width:.62em;
+    height: .62em;
+}
+
+.slidersOpacity.ui-slider-horizontal .ui-slider-handle {
+    top: -.15em;
+}
+
+.layerName {
+    position: center;
+    /*float: left;*/
+    line-height: 20px;
+}
+
+.ui-slider .ui-slider-handle {
+    width:1em;
+    height: 1em;
+    /*text-decoration:none;*/
+    /*text-align:center;*/
+}
+
+.ui-slider-horizontal .ui-slider-handle {
+    top: -.17em;
+    /*margin-left: -.6em;*/
+}
+
+.nodes {
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    color: rgb(100,100,100);
+    position: relative;
+    width: 80%;
+    text-align: center;
+    margin: 0px;
+}
+
+.nodes ul p {
+    border-bottom: 2px solid rgba(0,0,0,0);
+    margin-bottom: -10px;
+    margin-top: -10px;
+
+}
+
+.nodeNamesSelected {
+	border-bottom: 2px solid #f55 !important;
+	width: 100%;
+	margin:0 auto;
+}
+
+.nodes ul p:hover {
+	background-color: rgba(100,100,100,0.3);
+	cursor: pointer;
+}
+
+.copyright {
+	font-size: 10px;
+	color: rgb(100,100,100);;
+    bottom: 35px;
+    position: absolute;
+    right: 10px;
+    z-index: 10;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    /*border: 1px solid #003eff;*/
+    /* background: #007fff; */
+    font-weight: normal;
+    color: #ffffff;
+}
+
+ul p.buttons {
+    height:30px;
+    bottom: 0px;
+    z-index: 5;
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    vertical-align: middle;
+    color: rgb(0,0,0);
+    border: 1px solid rgb(245,165,3);
+    border-top: 1px solid rgba(233, 241,223, 1);
+    margin-bottom: 0px;
+    margin-top: 0px;
+    background-color: rgba(233, 241,223, 1);
+    opacity: .65;
+}
+
+ul p:hover.buttons {
+	background-color: rgb(245,165,3);
+	cursor: pointer;
+    
+}
+
+.mydiv {
+    width: 44%;
+    float: left;
+    margin: 0px;
+    height: 22px;
+    margin-top: 10px;
+    transform: translateY(-18%);
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.layerBoxes {
+    display: block;
+    float: left;
+    width: 100%;
+    border-top: 1px solid white;
+    padding-top: 1px;
+    margin-top: -2px;
+}
+
+.layerBoxes button {
+    padding: 0px !important;
+    height: 18px !important;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    margin: 0px;
+    width: 17%;
+    text-align: center;
+    margin-top: 10px
+}
+
+.layerBoxes input {
+    padding: 0px !important;
+    height: 15px !important;
+    width: 16%;
+    margin-top: 10px
+}
+
+.buttonsText {
+    position: absolute;
+    z-index: 10;
+    bottom: -8px;
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 500;
+    vertical-align: middle;
+    color: rgb(76,76,76);
+    text-align: center;
+}
+
+.sp-replacer{
+    margin-top: 5px;
+    width: 11%;
+    margin-top: 13px
+}
+
+.sliderCell.opacity {
+    position: relative;
+    padding-bottom: 10px;
+}
+

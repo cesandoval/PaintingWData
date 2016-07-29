@@ -1,0 +1,54 @@
+.btn {
+    margin-right: 7px;
+    margin-left: 7px;
+    margin-bottom: 14px;
+}
+
+.btn-success{
+    background-color: #373A33;
+    border-color: #77b300;
+    margin-left: 7px;
+}
+
+.btn-primary{
+    background-color: #303E44;
+    border-color: #2a9fd6;
+}
+
+.btn-danger{
+    background-color:#622D2D ;
+    border-color: border-color;
+    margin-right: 7px;
+}
+.angular-ui-tree-handle {
+    
+    background: rgba(0,0,0,.2);
+    border: 1px solid  rgba(250, 250, 250, 0.2); 
+    color: #7c9eb2;
+    padding: 10px 10px;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: rgba(70,130,180, .75);
+    border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.glyphicon {
+    float: right;
+}
+

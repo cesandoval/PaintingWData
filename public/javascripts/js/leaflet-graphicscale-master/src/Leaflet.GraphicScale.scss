@@ -1,0 +1,174 @@
+@mixin leaflet-graphicscale-transition($transition-property, $transition-time, $method) {
+    -webkit-transition: $transition-property $transition-time $method;
+    -moz-transition: $transition-property $transition-time $method;
+    -ms-transition: $transition-property $transition-time $method;
+    -o-transition: $transition-property $transition-time $method;
+    transition: $transition-property $transition-time $method;
+}
+
+$lineHeight: 6px;
+$borderWidth: 1px;
+$color: #000;
+$fillLineHeight: 2px;
+$fillHollowPadding: 1px;
+
+.leaflet-control-graphicscale-inner {
+
+	margin: 6px 16px;
+
+	.units {
+		display: inline-block;
+	}
+
+	.subunits {
+		display: none;
+	}
+
+	.label {
+		width: 100px;
+	  	text-align: center;
+    	margin-bottom: 10px;
+		position: absolute;
+	  	opacity: 1;
+	  	@include leaflet-graphicscale-transition(opacity, .4s, linear);
+	}
+
+	//labels are on top
+	.leaflet-bottom &.labelPlacement-auto, &.labelPlacement-top {
+		margin-top: 20px;
+		.label {
+			bottom: 0;
+		}
+	}
+
+	.leaflet-top &.labelPlacement-auto, &.labelPlacement-bottom {
+		margin-bottom: 20px;
+	}
+
+	.divisionLabel {
+	  	right: 0;
+	    margin-right: -50px;
+	}
+
+	.zeroLabel, .subunitsLabel {
+		left: 0;
+	    margin-left: -50px;
+	}
+
+	.division {
+		display: inline-block;
+		position: relative;
+		width: 40px;
+		@include leaflet-graphicscale-transition(width, 0.4s, ease-in-out);
+
+		.line, .line2 {
+			border-style: solid;
+			position: relative;
+		}
+
+		.line2 {
+			height: 0;
+			border-width: 0;
+		}
+
+		.line {
+			height: $lineHeight;
+			border-width: $borderWidth $borderWidth $borderWidth 0;
+		}
+
+	}
+
+	.units .division:first-child .line {
+		border-left-width: $borderWidth;
+	}
+
+	.subunits .division .line {
+		border-width: $borderWidth 0 $borderWidth $borderWidth;
+	}
+
+	.fill {
+		position: relative;
+	}
+
+	&.showsubunits {
+		.subunits {
+			display: inline-block;
+		}
+	}
+
+	&.double {
+		.division {
+			.line2 {
+				height: $lineHeight;
+				border-width: 0 $borderWidth $borderWidth 0;
+			}
+		}
+
+		.units .division:first-child .line2 {
+			border-left-width: $borderWidth;
+		}
+
+		.subunits .division .line2 {
+			border-width: 0 0 $borderWidth $borderWidth;
+		}
+
+		.label {
+	    	margin-bottom: 14px;
+		}
+	}
+
+
+	&.filled {
+		.fill {
+			background-color: $color;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+
+	}
+
+	&.filled-line {
+
+		@mixin leaflet-graphicscale-fill-line {
+			height: 2px;
+			top: $lineHeight/2 - $fillLineHeight/2;
+		}
+
+		.line .fill {
+			@include leaflet-graphicscale-fill-line;
+		}
+
+		&.double .fill {
+			@include leaflet-graphicscale-fill-line;
+		}
+	}
+
+	&.filled-hollow {
+		.fill {
+			position: absolute;
+			top: $fillHollowPadding;
+			left: $fillHollowPadding;
+			right: $fillHollowPadding;
+			bottom: $fillHollowPadding;
+		}
+
+	}
+
+	.division.hidden {
+		width: 0;
+
+		.line, .line2 {
+			height: 0;
+			border-width: 0;
+		}
+
+		.label:not(.subunitsLabel) {
+			opacity: 0;
+		}
+	}
+}
+
+

@@ -243,7 +243,6 @@ async.waterfall([
     stValue,
     parseGeoJSON
 ], function (err, result) {
-    console.log(result);
     Model.DataJSON.sync().then(function(){
         return Model.DataJSON.create(result);
     });
