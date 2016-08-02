@@ -28,8 +28,9 @@ module.exports.show = function(req, res) {
 // });
 
 function loadData(callback) {
-    var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
+    // var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
     // var file = "./app/controllers/shp/cancer_pt_part.shp";
+    var file = "./app/controllers/shp/Riyadh_Neighborhoods.shp";
     var dataset = gdal.open(file);
     var layer = dataset.layers.get(0);
 
@@ -87,8 +88,9 @@ function getEPSG(layer, newName, callback) {
 }
 
 function pushDataLayer(epsg, newName, callback) {
-    var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
+    // var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
     // var file = "./app/controllers/shp/cancer_pt_part.shp";
+    var file = "./app/controllers/shp/Riyadh_Neighborhoods.shp";
 
     var reader = shapefile.reader(file, {'ignore-properties': false});
     
@@ -114,7 +116,7 @@ function pushDataLayer(epsg, newName, callback) {
             rasterVal = null;
         if (geom != null){ 
             geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
-            rasterVal = record.properties['Total_Resp']
+            rasterVal = record.properties['AGG_AGE_GE']
         }
 
         var newDataLayer = {
@@ -155,7 +157,7 @@ function getBbox(epsg, newName, callback) {
 }
 
 function getNet(bbox, layername, epsg, callback) {
-    var stepSize = 1000;
+    var stepSize = 700;
 
     var netFunctionQuery = `
     CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
