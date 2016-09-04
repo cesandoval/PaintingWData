@@ -38,7 +38,7 @@ var attributes = {
     allowNull: true
   }
 }
-
+//
 var options = {
   freezeTableName: true
 }
