@@ -3,13 +3,13 @@ var UserMeta = require('./user.js'),
     DataNetMeta = require('./datanet.js'),
     DataJSONMeta = require('./datajson.js'),
     // DataRasterMeta = require('./dataraster.js'),
-    connection = require('../sequelize.js')   
+    connection = require('../sequelize.js');   
 
-var User = connection.define('users', UserMeta.attributes, UserMeta.options)
-var DataLayer = connection.define('datalayer', DataLayerMeta.attributes, DataLayerMeta.options)
-var DataNet = connection.define('datanet', DataNetMeta.attributes, DataNetMeta.options)
+var User = connection.define('users', UserMeta.attributes, UserMeta.options);
+var DataLayer = connection.define('datalayer', DataLayerMeta.attributes, DataLayerMeta.options);
+var DataNet = connection.define('datanet', DataNetMeta.attributes, DataNetMeta.options);
 // var DataRaster = connection.define('dataraster', DataRasterMeta.attributes, DataRasterMeta.options)
-var DataJSON = connection.define('datajson', DataJSONMeta.attributes, DataJSONMeta.options)
+var DataJSON = connection.define('datajson', DataJSONMeta.attributes, DataJSONMeta.options);
 
 // you can define relationships here
 
