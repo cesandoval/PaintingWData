@@ -18,36 +18,14 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * Install [node & npm](https://nodejs.org/en/)
 * `cd` into the webapp directory
 * `npm install` will install all the node and bower modules needed locally for development.
-* Download and install PostgreSQL [here](https://www.postgresql.org/download/). [Install](http://postgis.net/install/) the postGIS extension for PostgreSQL. Username should be `postgres`, ans password `postgrespass`.
-* Using the PostgreSQL's UI pgAdminIII, or the command line, create a DB based on a postGIS template. The user should be `postgres`, the pw `postgrespass`, and the DB name should be `PaintingWithData_Riyadh`. 
+* Download and install PostgreSQL [here](https://www.postgresql.org/download/). [Install](http://postgis.net/install/) the postGIS extension for PostgreSQL. Username should be `postgres`, and password `postgrespass`. An installation guide can be found [here](http://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01).
+* Using the PostgreSQL's UI pgAdminIII, or the [command line](http://gis.stackexchange.com/questions/71130/how-to-create-a-new-gis-database-in-postgis), create a DB based on a postGIS template. The user should be `postgres`, the pw `postgrespass`, and the DB name should be `PaintingWithData_Riyadh`. 
 * `npm start` to view website locally
 
 ## Starting
 * Run on browser `http://localhost:3000/`
 
-## Adding Sample Data to DB in the CMD
-* [Sample Queries](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/sample_data/readme.md) 
-
-## Setting up some spatial data for the API
-### Sample Raster Data: Two Steps
-#### Cancer Dataset
-`raster2pgsql -s 2263 -I -C -M sample_data/raster/cancer.tif -F -t 10x10 public.cancer_raster2 > raster_c.sql`
-
-`psql -U postgres -d PaintingWithData_Riyadh -f raster_c.sql`
-
-#### Saving a PtFishnet into the DB
-`shp2pgsql -I -s 2263 sample_data/shp/cancer_pt3.shp public.cancer_pts | psql -U postgres -d PaintingWithData_Riyadh`
-
-### Sample a Raster With a Point Net
-#### Get all values in band 1, and save them as a new table
-```
-CREATE TABLE cancer_pt_values AS 
-SELECT p.gid, ST_AsGeoJSON(p.geom) AS geoJSON, ST_Value(r.rast, 1, p.geom, false) As rastervalue
-	FROM public.cancer_pts AS p, public.cancer_raster2 AS r
-		WHERE ST_Intersects(r.rast,p.geom);
-```
-
-## Copyright (c) 2016, Carlos Sandoval Olascoaga, Tariq Alhindi, CDDL, KACST. All rights reserved.
+## Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL, KACST. All rights reserved.
 
 Redistribution and use in source form, with or without
 modification, are permitted provided that the following conditions are met:
