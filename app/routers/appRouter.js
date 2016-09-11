@@ -3,7 +3,8 @@ var passport = require('passport'),
     signupController = require('../controllers/signupController.js'),
     appController = require('../controllers/appController.js');
 
-// var Verify = require('./verify');
+//var jwt = require('jsonwebtoken');
+//var verify = require('./verify');
 
 module.exports = function(express) {
   var router = express.Router()
@@ -22,7 +23,7 @@ module.exports = function(express) {
     res.render('index');
   });
 
-  router.get('/about', function (req, res) {
+  router.get('/about',authenticationMiddleware(), function (req, res) {
     res.render('about');
   });
 
@@ -78,20 +79,23 @@ module.exports = function(express) {
       }
       req.logIn(user, function(err) {
         if (err) {
-          // console.log(err)
-          // console.log(user)
           return res.status(500).json({
             err: 'Could not log in user'
           });
         }
           
-        // var token = Verify.getToken(user);
-        res.status(200).json({
-        status: 'Login successful!',
-        success: true
+        //var token = verify.getToken(user);
+        //var token = jwt.sign(user, 'shhhhh');
+        //console.log(token)
+        
+        return res.status(200).json({
+          status: 'Login successful!',
+          success: true,
+          //token: token
         });
       });
-    })(req,res,next);
+    }) (req,res,next);
+    //res.redirect('/');
   });
 
   // router.get('/dashboard', isAuthenticated, function(req, res) {
@@ -107,4 +111,14 @@ module.exports = function(express) {
   });
 
   return router
+}
+
+
+function authenticationMiddleware () {  
+  return function (req, res, next) {
+    if (req.isAuthenticated()) {
+      return next()
+    }
+    res.redirect('/')
+  }
 }

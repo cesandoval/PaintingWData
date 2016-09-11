@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //--------User-Auth----------
-app.use(cookieParser())
+setupPassport(app)
 app.use(session({ secret: '4564f6s4fdsfdfd', resave: false, saveUninitialized: false }))
 
 app.use(flash())
@@ -43,7 +43,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }))
 
-setupPassport(app)
+
 var User = require('./app/models/models');
 app.use(passport.initialize());
 app.use(passport.session());
@@ -75,22 +75,22 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     console.log(err)
-    res.render('error', {
+    res.json({
       message: err.message,
       error: err
     });
   });
 }
 
-// // production error handler
-// // no stacktraces leaked to user
-// app.use(function(err, req, res, next) {
-//   res.status(err.status || 500);
-//   res.render('error', {
-//     message: err.message,
-//     error: {}
-//   });
-// });
+ // production error handler
+ // no stacktraces leaked to user
+ app.use(function(err, req, res, next) {
+   res.status(err.status || 500);
+   res.json({
+     message: err.message,
+     error: {}
+   });
+ });
 
 
 module.exports = app;
