@@ -1,0 +1,21 @@
+extends layout
+
+block pageTitle
+  div(class='jumbotron')
+    div(class='container')
+      h3 Upload Data Layers
+
+  div.container
+      p SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
+      p .dbf file
+      p .shp file
+      p .shx files
+      p Do not include /shd.xml file in the ZIP
+
+      label(class="btn btn-primary btn-block", for="file-selector").
+        Choose File
+      input(id="file-selector", class="btn btn-primary btn-block", type="file", style="display:none;", onchange="$('#upload-file-info').html($(this).val());").   
+      span(class='label label-info', id="upload-file-info")
+      //input(id="my-file-selector", type="file", style="display:none;")
+      input(type='submit', class="btn btn-default btn-block", value="Upload", name="upload", data-transition="fade", data-theme="c")
+//- <input type="submit" value="Sign Up" data-transition="fade" data-theme="c" class="btn btn-primary btn-md">            
