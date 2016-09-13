@@ -34,9 +34,10 @@ module.exports = function(express) {
 
   router.get('/upload', fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
-  // router.post('/upload', function (req, res) {
-  //   res.render('about');
-  // });
+
+  router.get('/uploadViewer', function (req, res) {
+    res.render('uploadViewer');
+  });
 
   router.get('/app', appController.show);
 

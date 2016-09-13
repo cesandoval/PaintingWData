@@ -1,16 +1,53 @@
+
+  
 extends layout
+div(id="map", style="width: 600px; height: 400px")
+
+link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
+script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
 
 block pageTitle
   div(class='jumbotron')
     div(class='container')
-      h1 About
-      
-      div(class='about_images')
-        img(src="http://localhost:3000/images/(1).jpg", style="width:33.3%; display: inline-block;")
-        img(src="http://localhost:3000/images/(2).jpg", style="width:33.3%; display: inline-block;")
-        img(src="http://localhost:3000/images/(3).jpg", style="width:33.3%; display: inline-block;")
+      h1 Layer Viewer
 
-      p Painting with Data, an open-source web-application is proposed as a first step to constructing urban computing tools that are transparent, open-ended, collective, visual, and non-deterministic, considering the city as a problem of organized complexity. Painting with Data proposes an urban computing tool that moves beyond quantification mechanisms as the primary driver of urban modeling. Alternatively, this thesis proposes an iterative process between the world, its abstractions and representations, and the designer. In this sense, the representational models are generative: they provide a reflective interface that integrates personal perception, cognition, and notation.
+  script.
+    var map = L.map('map').setView([39.74739, -105], 13);
 
-  div.container
-    p Painting with Data, utilizes voxels, a computer graphics technique, combined with a graph database as an alternative data representation. Its technological and theoretical features propose a hybrid approach to urban computing, combining functional and representational modeling to provide users with an agency in representation, an ability to compute visually, and to lower the barriers of entry to urban modeling through real-time user interaction. Such models can create intuitions of the relational structures among urban dynamics, providing personal and contextual transparency to the modeling process, and motivating civic engagement in policy-making. 
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+      maxZoom: 18,
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+      id: 'mapbox.light'
+    }).addTo(map);
+
+
+
+
+  div(class="container")
+    div(class="row")
+      div(class="col-md-offset-5 col-md-3")
+        form(method="post", action="/uploadViewer")
+          h4 Upload Data Layers
+          div(data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="layername").
+                Layer Name
+              input(type="text", id="layername", class="form-control input-sm chat-input", name="layername")
+              br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="location").
+                Project Location
+              input(type="text", id="location", class="form-control input-sm chat-input", name="location")
+              br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="description").
+                Project Description
+              input(type="text", id="description", class="form-control input-sm chat-input", name="description")
+              br
+          div(data-role='fieldcontain')   
+            input(type='submit',value='Compute Voxels',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
+

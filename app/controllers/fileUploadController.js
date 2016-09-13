@@ -14,7 +14,7 @@ module.exports.upload = function(req, res) {
     // TODO: Add spatial index
     // res.redirect('uploadViewer')
     console.log(12345689999);
-    res.render('about');
+    res.redirect('/uploadViewer');
 }
 
 // TODO
