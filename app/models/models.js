@@ -1,4 +1,5 @@
 var UserMeta = require('./user.js'),
+    DataFileMeta = require('./datafile.js'),
     DataLayerMeta = require('./datalayer.js'),
     DataNetMeta = require('./datanet.js'),
     DataJSONMeta = require('./datajson.js'),
@@ -6,13 +7,14 @@ var UserMeta = require('./user.js'),
     connection = require('../sequelize.js');   
 
 var User = connection.define('users', UserMeta.attributes, UserMeta.options);
+var DataFile = connection.define('datafile', DataFileMeta.attributes, DataFileMeta.options);
 var DataLayer = connection.define('datalayer', DataLayerMeta.attributes, DataLayerMeta.options);
 var DataNet = connection.define('datanet', DataNetMeta.attributes, DataNetMeta.options);
 // var DataRaster = connection.define('dataraster', DataRasterMeta.attributes, DataRasterMeta.options)
 var DataJSON = connection.define('datajson', DataJSONMeta.attributes, DataJSONMeta.options);
 
 // you can define relationships here
-
+User.hasMany(DataFile);
 
 connection.sync(
     // {force: true, match: /_Riyadh$/}
@@ -43,6 +45,7 @@ var vacumm = 'VACUUM ANALYZE datalayer;'
 
 
 module.exports.User = User;
+module.exports.DataFile = DataFile;
 module.exports.DataLayer = DataLayer;
 module.exports.DataNet = DataNet;
 module.exports.DataJSON = DataJSON;
