@@ -1,8 +1,9 @@
 var passport = require('passport'),
     auth = require('passport-local-authenticate'),
     signupController = require('../controllers/signupController.js'),
-    appController = require('../controllers/appController.js')
-    fileUploadController = require('../controllers/fileUploadController.js');
+    appController = require('../controllers/appController.js'),
+    fileUploadController = require('../controllers/fileUploadController.js'),
+    fileViewerController = require('../controllers/fileViewerController.js');
 
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
@@ -35,9 +36,7 @@ module.exports = function(express) {
   router.get('/upload', fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
 
-  router.get('/uploadViewer', function (req, res) {
-    res.render('uploadViewer');
-  });
+  router.get('/uploadViewer', fileViewerController.show);
 
   router.get('/app', appController.show);
 

@@ -13,7 +13,6 @@ module.exports.show = function(req, res) {
 module.exports.upload = function(req, res) {
     // TODO: Add spatial index
     // res.redirect('uploadViewer')
-    console.log(12345689999);
     res.redirect('/uploadViewer');
 }
 
