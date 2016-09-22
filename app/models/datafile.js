@@ -17,6 +17,11 @@ var attributes = {
     allowNull: false,
     unique: true,
   },
+  epsg: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    unique: true,
+  },
 
 }
 
