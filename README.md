@@ -29,7 +29,7 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 $ cd app
 $ sequelize db:migrate
 ```
-* run `npm start` to start the server 
+* Navigate back to the root directory (`cd ..`) and run `npm start` to start the server 
 * Run on browser `http://localhost:3000/` to view the website locally
 
 ## Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL, KACST. All rights reserved.
