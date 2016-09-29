@@ -1,47 +1,24 @@
-var Sequelize = require('sequelize'),
-    Model = require('../models/models.js');
-
-var attributes = {
-  id: {
-    autoIncrement: true,
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  // userId: {
-  //   type: Sequelize.INTEGER,
-  //   references: {
-  //     // This is a reference to another model
-  //     model: 'users',
-  //     // This is the column name of the referenced model
-  //     key: 'id',
-  //     // This declares when to check the foreign key constraint. PostgreSQL only.
-  //     deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-  //   },
-  //   allowNull: false
-  // },
-  layername: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    // unique: true,
-  },
-  layerids: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    // unique: true,
-  },
-  geojson: {
-    type: Sequelize.JSON,
-    allowNull: true
-  },
-  epsg: {
-    type: Sequelize.INTEGER,
-    allowNull: true
-  }
-}
-//
-var options = {
-  freezeTableName: true
-}
-
-module.exports.attributes = attributes
-module.exports.options = options
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var Datajson = sequelize.define('Datajson', {
+    layername: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      
+      },
+    layerids: {
+        type: DataTypes.STRING,
+        allowNull: false,
+       
+      },
+    geojson: DataTypes.JSON,
+    epsg: DataTypes.INTEGER
+  }, {
+    classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+      }
+    }
+  });
+  return Datajson;
+};

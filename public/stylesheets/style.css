@@ -75,6 +75,14 @@ body {
 
 }
 
+.fa-spinner{
+    margin: 45% 45%;
+}
+.temporary_map_visuals{
+    border: 1px solid #CCC;
+    background: #EEE;
+}
+
 .form-control {
     border-radius: 10px;
 }

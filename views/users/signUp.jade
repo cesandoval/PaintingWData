@@ -2,21 +2,11 @@ extends ../layout
 
 block pageTitle
   div(class='jumbotron')
-    div(class='container')
-      h1 Sign Up
-      p Get a user account! 
-
   div(class="container")
     div(class="row")
       div(class="col-md-offset-5 col-md-3")
         form(method="post", action="/users/signup")
-          h4 Get an account.
-          div(data-role='fieldcontain')
-            fieldset(data-role='controlgroup')
-              label(for="username").
-                Username
-              input(type="text", id="username", class="form-control input-sm chat-input", name="username")
-              br
+          h4 Create an account.
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               label(for="email").
