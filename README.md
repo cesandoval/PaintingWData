@@ -18,12 +18,19 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * Install [node & npm](https://nodejs.org/en/)
 * `cd` into the webapp directory
 * `npm install` will install all the node and bower modules needed locally for development.
-* Download and install PostgreSQL [here](https://www.postgresql.org/download/). [Install](http://postgis.net/install/) the postGIS extension for PostgreSQL. Username should be `postgres`, and password `postgrespass`. An installation guide can be found [here](http://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01).
+* Download and install PostgreSQL [here](https://www.postgresql.org/download/). [Install](http://postgis.net/install/) the postGIS extension for PostgreSQL.
+* Username should be `postgres`, and password `postgrespass`. An installation guide can be found [here](http://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01).
 * Using the PostgreSQL's UI pgAdminIII, or the [command line](http://gis.stackexchange.com/questions/71130/how-to-create-a-new-gis-database-in-postgis), create a DB based on a postGIS template. The user should be `postgres`, the pw `postgrespass`, and the DB name should be `PaintingWithData_Riyadh`. 
-* `npm start` to view website locally
+
 
 ## Starting
-* Run on browser `http://localhost:3000/`
+* Run the following command to create the datbase files:
+```
+$ cd app
+$ sequelize db:migrate
+```
+* run `npm start` to start the server 
+* Run on browser `http://localhost:3000/` to view the website locally
 
 ## Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL, KACST. All rights reserved.
 
