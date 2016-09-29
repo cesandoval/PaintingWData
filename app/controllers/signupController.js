@@ -1,6 +1,6 @@
 var User = require('../models').User,
     LocalStrategy = require('passport-local').Strategy,
-    bcrypt = require('bcrypt'),
+    bcrypt = require('bcrypt-nodejs'),
     async = require('async');
 
 
