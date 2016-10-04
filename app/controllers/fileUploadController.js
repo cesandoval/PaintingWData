@@ -85,22 +85,21 @@ function extractZip(zipFile, callback){
   var fileName = path.parse(zipFile).name;
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
+  console.log(targetPath);
+  console.log(targetName);
+  console.log(fileName);
+
   var filePath = path.join(__dirname, `./shape_files/${targetName}`);
-  extract(zipFile, {dir: targetPath}, function(err){
+  console.log(filePath);
+  extract(zipFile, {dir: filePath}, function(err){
     if(err){  
       callback(err, null);
     }
     else{
-      fs.rename(targetPath +"/" +fileName, filePath, function(err){
-        if(err){
-          callback(err, null)
-        }
-        else{
-          callback(null, filePath);
-        }
-      });
+      callback(null, filePath);
+      };
     }
-  });
+  );
 }
 // returns a list of shapefiles in the uploaded directory.
 function getShapeFiles(directory, callback){
