@@ -1,40 +1,23 @@
-var Sequelize = require('sequelize')
-
-var attributes = {
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      is: /^[a-z0-9\_\-]+$/i,
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: true
+        }
+      },
+    password: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      }
+  }, {
+    classMethods: {
+      associate: function(models) {
+        User.hasMany(models.Datafile, {foreignKey: 'userId'});
+      }
     }
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      isEmail: true
-    }
-  },
-  firstName: {
-    type: Sequelize.STRING,
-  },
-  lastName: {
-    type: Sequelize.STRING,
-  },
-  password: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
-  salt: {
-    type: Sequelize.STRING,
-    allowNull: false
-  }
-}
-
-var options = {
-  freezeTableName: true
-}
-
-module.exports.attributes = attributes
-module.exports.options = options
+  });
+  return User;
+};

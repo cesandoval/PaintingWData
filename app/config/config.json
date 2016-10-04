@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgrespass",
+    "database": "PaintingWithData_Riyadh",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "postgrespass",
+    "database": "PaintingWithData_Riyadh_test",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "postgrespass",
+    "database": "PaintingWithData_Riyadh_prod",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+
+
+}

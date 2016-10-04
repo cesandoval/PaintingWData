@@ -16,41 +16,40 @@ html
       body { margin:0; padding:0; }
       .map { position:absolute; top:0; bottom:0; width:100%; }
 
-    //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
-    //on our web server and will be delivered faster to the client than our own server.
+    //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
+    //- //on our web server and will be delivered faster to the client than our own server.
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
-    script(src='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js')
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
-  
-    //reference our site-specific css
+    link(rel='stylesheet', href='stylesheets/font-awesome.min.css')
+    //- //reference our site-specific css
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
 
 
-    // D3 libs
-    script(src="javascripts/js/d3.js")
+    //- // D3 libs
+    script(type='text/javascript', src="/javascripts/js/d3.js")
     
-    // Parallel Coords UI libs
-    script(src="javascripts/js/d3.parcoords.js")
+    //- // Parallel Coords UI libs
+    script(type='text/javascript', src="/javascripts/js/d3.parcoords.js")
     link(rel="stylesheet", type="text/css", href="/stylesheets/d3.parcoords.css")
     
-    // THREEjs libs
-    script(src="javascripts/js/three.js")
-    script(src="javascripts/js/Detector.js")
-    script(src="javascripts/js/Stats.js")
-    script(src="javascripts/js/OrbitControls.js")
-    script(src="javascripts/js/THREEx.KeyboardState.js")
-    script(src="javascripts/js/THREEx.FullScreen.js")
-    script(src="javascripts/js/THREEx.WindowResize.js")
-    script(type='text/javascript', src='javascripts/js/DAT.GUI.min.js')
+    //- // THREEjs libs
+    script(type='text/javascript', src="/javascripts/js/three.js")
+    script(type='text/javascript', src="/javascripts/js/Detector.js")
+    script(type='text/javascript', src="/javascripts/js/Stats.js")
+    script(type='text/javascript', src="/javascripts/js/OrbitControls.js")
+    script(type='text/javascript', src="/javascripts/js/THREEx.KeyboardState.js")
+    script(type='text/javascript', src="/javascripts/js/THREEx.FullScreen.js")
+    script(type='text/javascript', src="/javascripts/js/THREEx.WindowResize.js")
+    script(type='text/javascript', src='/javascripts/js/DAT.GUI.min.js')
     
     // Color Widget UI libs
-    script(src="javascripts/js/jquery-1.11.3.js")
-    script(src='javascripts/js/spectrum.js')
+    script(type='text/javascript', src="/javascripts/js/jquery-1.11.3.js")
+    script(type='text/javascript', src='/javascripts/js/spectrum.js')
     link(rel='stylesheet', href='/stylesheets/spectrum.css')
     
     // JQuery UI libs
-    script(src="javascripts/js/jquery-ui.js")
+    script(type='text/javascript', src="/javascripts/js/jquery-ui.js")
     link(rel="stylesheet", href="/stylesheets/jquery-ui.css")
 
     // PaintingWithData CSS

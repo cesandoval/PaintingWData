@@ -1,38 +1,39 @@
-var Model = require('../models/models.js'),
+var Model = require('../models'),
     connection = require('../sequelize.js'),
     gdal = require("gdal"),
     shapefile = require("shapefile"),
     async = require('async'),
     request = require('request');
 
-module.exports.show = function(req, res) {
+module.exports.serveMapData = function(req, res) {
     async.waterfall([
-        loadData,
+        async.apply(loadData, req.params.id),
         getGeoJSON,
     ], function (err, result) {
-        res.render('uploadViewer', {
+        res.send({
             bBox : result[0], 
             geoJSON: result[1],
-            centroid: result[2]
+            centroid: result[2],
+            fields : result[3]
         })
     });  
 }
 
-function loadData(callback) {
-    // var file = "./app/controllers/shp/Risk_cancerresp_rep_part.shp";
-    // var file = "./app/controllers/shp/cancer_pt_part.shp";
-    var file = "./app/controllers/shp/Riyadh_Neighborhoods.shp";
-    var dataset = gdal.open(file);
-    var layer = dataset.layers.get(0);
-    
-    // This will be the EPSG coming from the fileLoader
-    //var epsg = 2263;
-    var epsg = 32638;
 
-    callback(null, file, layer, epsg);
+function loadData(id, callback) {
+    Model.Datafile.findById(id).then(function(datafile){
+        var filePath = datafile.location;
+        var dataset = gdal.open(filePath);
+        var layer = dataset.layers.get(0);
+        var epsg = datafile.epsg;
+        var fields = layer.fields.getNames();
+
+        callback(null, filePath, layer, epsg, fields);
+    } );
+    
 }
 
-function getGeoJSON(file, layer, epsg, callback) {
+function getGeoJSON(file, layer, epsg, fields, callback) {
     var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
         d_srs = gdal.SpatialReference.fromEPSGA(4326);
     var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
@@ -48,5 +49,5 @@ function getGeoJSON(file, layer, epsg, callback) {
 
     bBox.transform(transformation);
     centroid.transform(transformation);
-    callback(null, [bBox.toJSON(), jsonGeoms, centroid.toJSON()])
+    callback(null, [bBox.toJSON(), jsonGeoms, centroid.toJSON(), fields])
 }

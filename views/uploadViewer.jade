@@ -2,6 +2,7 @@ extends layout
 
 block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
+  link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
 
   div(class='jumbotron')
@@ -11,12 +12,8 @@ block pageTitle
   div(id="map", style="width: 400px; height: 400px; margin:0 auto;")
 
   script.
-    var bBox = !{JSON.stringify(bBox)};
-    var geoJSON = !{JSON.stringify(geoJSON)};
-    var centroid = !{JSON.stringify(centroid)};
-
-  script(src="javascripts/layer_viewer.js")
-
+    var id = #{id};
+    console.log('in the view ----------------');
   div(class="container")
     div(class="row")
       div(class="col-md-offset-5 col-md-3")
@@ -40,6 +37,16 @@ block pageTitle
                 Project Description
               input(type="text", id="description", class="form-control input-sm chat-input", name="description")
               br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="location").
+                Project Location
+              select
+                
+
+
+              br
           div(data-role='fieldcontain')   
             input(type='submit',value='Compute Voxels',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
-
+   
+   script(src="/javascripts/layer_viewer.js") 

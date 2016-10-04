@@ -1,44 +1,29 @@
-var Sequelize = require('sequelize')
-
-var attributes = {
-  id: {
-    autoIncrement: true,
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
-  layerId: {
-    type: Sequelize.INTEGER,
-    references: {
-      // This is a reference to another model
-      model: 'Datalayer',
-      // This is the column name of the referenced model
-      key: 'id',
-      // This declares when to check the foreign key constraint. PostgreSQL only.
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var Dataraster = sequelize.define('Dataraster', {
+    layername: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    raster: {
+      type: "raster",
+      allowNull: false
+    },
+    srs: {
+      type: DataTypes.INTEGER,
+    },
+  }, {
+    getterMethods: {
+      layerRelationship: function()  { 
+          return 'DataRaster ' + this.layername + ' is related to DataLayer' + this.layerId 
+      }
+    },
+    classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+      }
     }
-  },
-  layername: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  raster: {
-    type: Sequelize.RASTER,
-    allowNull: false
-  },
-  srs: {
-    type: Sequelize.INTEGER,
-  },
-  getterMethods: {
-    layerRelationship: function()  { 
-        return 'DataRaster ' + this.layername + ' is related to DataLayer' + this.layerId 
-    }
-  },
-}
-
-var options = {
-  freezeTableName: true
-}
-
-module.exports.attributes = attributes
-module.exports.options = options
+  });
+  return Dataraster;
+};
