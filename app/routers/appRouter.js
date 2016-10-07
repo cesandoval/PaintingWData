@@ -29,6 +29,7 @@ var passport = require('passport'),
   router.get('/uploadViewer/:id', function(req, res) {
     res.render('uploadViewer', {id: req.params.id});
   });
+  router.post('/uploadViewer', fileViewerController.saveShapes);
 
   router.get('/getMapData/:id', fileViewerController.serveMapData);
 

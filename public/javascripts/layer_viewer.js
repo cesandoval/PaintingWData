@@ -2,6 +2,7 @@ var id = id;
 console.log("--------------");
 console.log(id)
 var $dropdown = $($('select')[0]);
+var $epsg= $('#epsg');
 var $map = $('#map');
 $map.addClass('temporary_map_visuals');
 $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
@@ -20,11 +21,13 @@ function requestMap(callback){
             if(typeof data.error === 'undefined')
             {
                 console.log("success");
+                console.log(data.epsg);
                 $map.removeClass('temporary_map_visuals');
                 $map.empty();
                 var bBox = JSON.parse(data.bBox);
                 var geoJSON = JSON.stringify(data.geoJSON);
                 renderFields(data.fields);
+                renderEPSG(data.epsg);
 
                 var centroid = JSON.stringify(data.centroid);
                 callback(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
@@ -79,6 +82,9 @@ function render(boundingBox, geoJSON, centroid){
     L.geoJson(parsedGeoJSON, {
         style: myStyle
     }).addTo(map);
+}
+function renderEPSG(epsg){
+    $epsg.val(epsg);
 }
 function renderFields(fields){
     fields.forEach(function(field, index){

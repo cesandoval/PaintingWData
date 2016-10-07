@@ -28,6 +28,12 @@ block pageTitle
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               label(for="location").
+                SRS Code
+              input(type="text", id="epsg", class="form-control input-sm chat-input", name="epsg")
+              br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="location").
                 Project Location
               input(type="text", id="location", class="form-control input-sm chat-input", name="location")
               br
@@ -35,18 +41,23 @@ block pageTitle
             fieldset(data-role='controlgroup')
               label(for="description").
                 Project Description
-              input(type="text", id="description", class="form-control input-sm chat-input", name="description")
+              textarea(id="description", class="form-control input-sm chat-input", rows = "3", name="description")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               label(for="location").
                 Project Location
+              input(type="text", id="location", class="form-control input-sm chat-input", name="location")
+              br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="location").
+                Selected Data Property
+              br
               select
-                
-
-
+              br
               br
           div(data-role='fieldcontain')   
-            input(type='submit',value='Compute Voxels',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
+            input(type='submit',value='Save Shapefiles',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
    
    script(src="/javascripts/layer_viewer.js") 
