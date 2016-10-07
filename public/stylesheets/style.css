@@ -1,31 +1,47 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+@import 'https://fonts.googleapis.com/css?family=EB+Garamond';
+@import 'https://fonts.googleapis.com/css?family=Montserrat:400,700';
 
 body {
-  /*padding: 50px;*/
-  font-family: 'Ubuntu', sans-serif;
-  color: rgb(76,76,76);
+  color: #1A1A1A;
 }
 
+p {
+    font-family: 'EB Garamond', serif;
+    color: #1A1A1A;
+    font-size: 20px;
+}
 
-/* navbar */
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+/**************************/
+/* NAVBAR */
 .navbar-inverse {
-    background: rgb(245,165,3);
-    border-color: rgb(245,165,3);
+    background: #FA7951;
+    border-color: transparent;
+    height: 10vh;
+    padding-top:2vh;
 }
 
 /* title */
 .navbar-inverse .navbar-brand {
-    color: rgba(255, 255,255, 1);
+    color: #1A1A1A;
 }
 .navbar-inverse .navbar-brand:hover {
-    color: rgb(100,100,100);
+    color: black;
 }
 /* link */
 .navbar-inverse .navbar-nav > li > a {
-    color: rgba(255, 255,255, 1);
+    color: #1A1A1A;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+    text-shadow: none;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
-    color: rgb(100,100,100);
+    color: black;
+    text-decoration:underline;
 }
 
 /* mobile version */
@@ -40,9 +56,73 @@ body {
     background-color: rgb(245,165,3);
 }
 
+/**************************/
+/* INDEX */
+
+.brand-title {
+    height: 100vh;
+    margin: 0;
+    background-image: url(/images/circle_background_1.svg), url(/images/red_circles.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100vw auto;
+    background-position: 0 0;
+
+    -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 5s; /* Chrome, Safari, Opera */
+    animation-name: move-in;
+    animation-duration: 5s;
+
+    -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
+    animation-timing-function: ease-out;
+}
+
+.red-circle-bg {
+    background-image: url(/images/red_circles.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100vw auto;
+    background-position: 0 0;
+
+    -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 5s; /* Chrome, Safari, Opera */
+    animation-name: move-in;
+    animation-duration: 5s;
+
+    -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
+    animation-timing-function: ease-out;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes move-in {
+    from {background-position: 0 100px;}
+    to {background-position: 0 0;}
+}
+
+/* Standard syntax */
+@keyframes move-in {
+    from {background-position: 0 100px;}
+    to {background-position: 0 0;}
+}
+
+.spacing {
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+.site-title {
+    padding-top:20vh;
+    padding-bottom: 5vh;
+    font-weight: 700;
+}
+
 /*body*/
 .jumbotron {
-    background-color: rgba(253, 232,172, 1);;
+    background-color: #F1B74B;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    text-shadow: none;
 }
 
 /*button login*/
