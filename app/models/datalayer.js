@@ -22,6 +22,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    userlayername: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     classMethods: {
       associate: function(models) {

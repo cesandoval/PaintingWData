@@ -13,20 +13,21 @@ module.exports.saveShapes = function(req, res) {
     var newEpsg = req.body.epsg,
         location = req.body.location,
         layerName = req.body.layername,
-        description = req.body.description;
-        // dataProp = req.body.sele
+        description = req.body.description,
+        dataProp = req.body.rasterProperty;
 
     async.waterfall([
-        async.apply(loadData, id),
+        async.apply(loadData, id, req.body),
         queryRepeatedLayer,
         pushDataLayer,
+        pushDataRaster
     ], function (err, result) {
         console.log(result)
         res.redirect('/uploadViewer/4');
     });
 }
 
-function queryRepeatedLayer(file, layer, epsg, fields, callback) {
+function queryRepeatedLayer(file, layer, epsg, fields, reqBody, callback) {
     Model.Datalayer.findAll({
         limit: 1,
         where: {
@@ -47,23 +48,23 @@ function queryRepeatedLayer(file, layer, epsg, fields, callback) {
 
                         console.log('repeated layers!!!! we must add a number to the count')
                         var newName = oldName.slice(0,n+1)+newLayerIndex;
-                        callback(null, file, epsg, newName);                    
+                        callback(null, file, epsg, newName, reqBody);                    
                     })
                 } else {
                     var newName = layer.name+'_1';
                     console.log('repeated layers!!!!')
                     console.log(newName)
-                    callback(null, file, epsg, newName);
+                    callback(null, file, epsg, newName, reqBody);
                 }
             })
         } else {
             var newName = layer.name;
-            callback(null, file, epsg, newName);
+            callback(null, file, epsg, newName, reqBody);
         }
     })
 }
 
-function pushDataLayer(file, epsg, newName, callback) {
+function pushDataLayer(file, epsg, newName, reqBody, callback) {
     // var fileNames = gdal.open(file).getFileList()
     var fileNames = fs.readdirSync(file);
     fileNames.forEach(function(fileName, i) {
@@ -92,10 +93,8 @@ function pushDataLayer(file, epsg, newName, callback) {
                 if (geom != null){ 
                     geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
 
-                    /////////////////////////////////////////////////
-                    // This should be the one picked by the user...... or not, 
-                    // I can just pass it to the raster saver...
-                    rasterVal = record.properties['AGG_AGE_GE']
+                    var rasterProperty = reqBody.rasterProperty;
+                    rasterVal = record.properties[rasterProperty]
                 }
 
                 var newDatalayer = {
@@ -117,7 +116,7 @@ function pushDataLayer(file, epsg, newName, callback) {
                 if(record == shapefile.end) {
                     cargo.drain = function () {
                         console.log('All Items have been processed!!!!!!')
-                        callback(null, [epsg, newName]);
+                        callback(null, epsg, newName);
                     }
                 }
             }
@@ -125,9 +124,25 @@ function pushDataLayer(file, epsg, newName, callback) {
     });
 }
 
+function pushDataRaster(epsg, layername, callback) {
+    console.log("=========================================");
+    console.log(`in pushDataRaster`);
+    console.log("\n\n\n");
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text);';
+
+    var bboxQuery = tableQuery + 
+                    "INSERT INTO public.dataraster (rast, layername) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', rasterval, -999999), "+
+                    epsg+"), p.layername FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
+
+    connection.query(bboxQuery).spread(function(results, metadata){
+            console.log('Rasters Pushed!!!!')
+            callback(null, [epsg, layername])
+        })
+}
+
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
-        async.apply(loadData, req.params.id),
+        async.apply(loadData, req.params.id, req.body),
         getGeoJSON,
     ], function (err, result) {
         res.send({
@@ -141,7 +156,7 @@ module.exports.serveMapData = function(req, res) {
 }
 
 
-function loadData(id, callback) {
+function loadData(id, reqBody, callback) {
     Model.Datafile.findById(id).then(function(datafile){
         var filePath = datafile.location;
         var dataset = gdal.open(filePath);
@@ -149,12 +164,12 @@ function loadData(id, callback) {
         var epsg = datafile.epsg;
         var fields = layer.fields.getNames();
 
-        callback(null, filePath, layer, epsg, fields);
+        callback(null, filePath, layer, epsg, fields, reqBody);
     } );
     
 }
 
-function getGeoJSON(file, layer, epsg, fields, callback) {
+function getGeoJSON(file, layer, epsg, fields, reqBody, callback) {
     var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
         d_srs = gdal.SpatialReference.fromEPSGA(4326);
     var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
