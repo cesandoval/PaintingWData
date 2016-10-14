@@ -47,7 +47,7 @@ app.use(bodyParser.urlencoded({
 // var User = require('./app/models/models');
 app.use(passport.initialize());
 app.use(passport.session());
-var Strategies = require('./app/controllers/signUpController');
+var Strategies = require('./app/controllers/signupController.js');
 passport.use('signup', Strategies.SignUpStrategy);
 passport.use('login', Strategies.LoginStrategy);
 // passport.use(new LocalStrategy(User.authenticate()));
@@ -60,10 +60,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // This is for PostGRES
 var appRouter = require('./app/routers/appRouter');
 var users = require('./app/routers/users');
+var datajson = require('./app/routers/datajson');
 
 
 app.use('/users', users);
 app.use('/', appRouter);
+app.use('/datajson', datajson);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
