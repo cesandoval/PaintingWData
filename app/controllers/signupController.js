@@ -1,6 +1,7 @@
 var User = require('../models').User,
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
+    passport = require('passport'),
     async = require('async');
 
 
@@ -8,15 +9,27 @@ module.exports.show = function(req, res) {
   res.render('users/signUp')
 }
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+ 
+passport.deserializeUser(function(id, done) {
+  User.findById(id).then(
+    function(user){
+      done(null, user);
+    },
+    function(err){
+      done(err, null);
+    }
+    );
+});
+
 
 var signUpStrategy = 
   new LocalStrategy({
       passReqToCallback : true
     },
-    function(req, email, password, done) {
-       console.log('Here ===========================')
-       console.log();
-        
+    function(req, email, password, done) {  
         User.findOne({
           where: {
             email: req.body.email
@@ -27,11 +40,11 @@ var signUpStrategy =
             return done(null, false, req.flash('error',"Email is already in use."));
            }
            else{
-            console.log('Here ===========================')
             var newUser = User.build();
-            newUser.email = req.body.email
+            newUser.email = email
             // generate hash by doing 10 rounds of salt. Is blocking.
-            var hash = bcrypt.hashSync(req.body.password, 10); 
+            var salt = bcrypt.genSaltSync(10);
+            var hash = bcrypt.hashSync(req.body.password, salt); 
             newUser.password = hash;
             //console.log(newUser);
             newUser.save().then(function(){
@@ -55,26 +68,17 @@ var loginStrategy = new LocalStrategy({
       where: {email: email},
       
     }).then(function(user) {
-       if(user){
-          console.log("===========================================");
-          console.log("User was found");
-         
+       if(user){  
          if (bcrypt.compareSync(password, user.password)){
-          console.log("===========================================");
-          console.log("and password was correct");
           return done(null, user, req.flash('message', "user successfully logged in"));
          }
          else{
-          console.log("===========================================");
-          console.log("But password was invalid");
           return done(null, false, req.flash('error', "invalid password"));
          }
        }
        else{
-        console.log("===========================================");
-        console.log("no the user wasnt found");
-        return done(null, false, req.flash('error', "invalid email"));
-       }
+          return done(null, false, req.flash('error', "invalid email"));
+        }
        },  // do the above if succeeded 
        function(error){
         return done(null, false, req.flash('error', "login failed"));
@@ -86,6 +90,7 @@ var loginStrategy = new LocalStrategy({
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated())
     return next();
+  req.session.returnTo = req.url;
   res.redirect('/users/login');
 }
 

@@ -43,7 +43,7 @@ module.exports.upload = function(req, res) {
           console.log("Error: ", err);
         }
         else{
-          if(verifyFiles(target_path, whitelist)){
+          verifyFiles(target_path, whitelist, function(areRightFileTypes){
             getShapeFiles(target_path, function(err, shapeFiles){
               if(err){
                 console.log("Error: ", err);
@@ -51,6 +51,7 @@ module.exports.upload = function(req, res) {
               else{
                 getEPSG(target_path, function(err, epsg){
                   var dataFile = Models.Datafile.build();
+                  dataFile.userId = req.user.id;
                   dataFile.location = target_path;
                   dataFile.filename = shapeFiles[0];
                   dataFile.epsg = epsg;
@@ -60,7 +61,7 @@ module.exports.upload = function(req, res) {
                 })  
               }
             });
-          }
+          });
         }
       });
     }
@@ -85,18 +86,14 @@ function extractZip(zipFile, callback){
   var fileName = path.parse(zipFile).name;
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
-  console.log(targetPath);
-  console.log(targetName);
-  console.log(fileName);
-
   var filePath = path.join(__dirname, `./shape_files/${targetName}`);
-  console.log(filePath);
+  
   extract(zipFile, {dir: filePath}, function(err){
     if(err){  
       callback(err, null);
     }
     else{
-      callback(null, filePath);
+      callback(null, `${filePath}/${fileName}`);
       };
     }
   );
@@ -111,7 +108,6 @@ function getShapeFiles(directory, callback){
     }
     else{
       files.forEach(function(file, index){
-        console.log(path.extname(file)==".shp");
         if(path.extname(file) == ".shp") {
           shapeFiles.push(file);
         }
@@ -121,14 +117,34 @@ function getShapeFiles(directory, callback){
   });
 
 }
-// Goes through the files in the path to verify that they are all 
-function verifyFiles(targetPath, whiteList){
-  console.log("Some verification here ... ");
-  return true;
+// Goes through the files in the path to verify that they all have the 
+// specified extensions.
+function verifyFiles(directory, whiteList, callback){
+  var areRightFileTypes = true;
+  fs.readdir(directory, function(err, files){
+    if (err) {
+      console.log("Error:  ", err);
+      callback(err, null);
+    }
+    else{
+      files.forEach(function(file, index){
+          ext = path.extname(file);
+          areRightFileTypes = areRightFileTypes && (ext === ".shp" || ext === ".shx" || ext === ".dbf" );
+      });
+    if(!areRightFileTypes){
+      callback(null, directory);
+    }
+    else{
+      console.log("Error:  not the right type of files");
+      callback("wrong file type", null);
+    }
+    }
+  });
 }
 
 
 function getEPSG(file, callback) {
+  
   var dataset = gdal.open(file);
   var layer = dataset.layers.get(0);
   var epsg;

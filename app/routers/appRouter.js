@@ -4,7 +4,7 @@ var passport = require('passport'),
     appController = require('../controllers/appController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
-
+    isAuthenticated = require('../controllers/signupController').isAuthenticated,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
@@ -23,15 +23,17 @@ var passport = require('passport'),
     res.render('documentation');
   });
 
-  router.get('/upload', fileUploadController.show);
+  router.get('/upload', isAuthenticated, fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
   
-  router.get('/uploadViewer/:id', function(req, res) {
+  router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     res.render('uploadViewer', {id: req.params.id});
   });
-  router.post('/uploadViewer', fileViewerController.saveShapes);
+  router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
 
-  router.get('/getMapData/:id', fileViewerController.serveMapData);
+  router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
+
+  router.get('/layers/:id', isAuthenticated, fileViewerController.show);  
 
   router.get('/app', appController.show);
 

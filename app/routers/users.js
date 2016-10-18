@@ -4,14 +4,22 @@ var passport = require('passport');
 var isAuthenticated = require('../controllers/signupController').isAuthenticated;
 
 router.get('/login', function(req, res, next){
-  console.log("handled here---------------");
   res.render('users/login', { title: 'Express', flash: req.flash });
 });
-router.post('/login', passport.authenticate('login', {
-    successRedirect: '/users/login',
-    failureRedirect: '/users/signup',
+router.post('/login', 
+  passport.authenticate('login', {
+    failureRedirect: '/users/login',
     failureFlash : true 
-  }));
+  }),
+  function(req, res){
+    if(req.session.returnTo){
+      res.redirect(req.session.returnTo);
+    }
+    else{
+      res.redirect('/');
+    }
+  }
+);
 router.get('/signup', function(req, res, next){
   res.render('users/signup', { title: 'Express', });
 });

@@ -9,8 +9,8 @@ var Model = require('../models'),
 
 module.exports.saveShapes = function(req, res) {
     // This will instead have to be the id of the file we just uploaded
-    var id = 4; 
-    var newEpsg = req.body.epsg,
+    var id = req.user.id
+        newEpsg = req.body.epsg,
         location = req.body.location,
         layerName = req.body.layername,
         description = req.body.description,
@@ -23,9 +23,14 @@ module.exports.saveShapes = function(req, res) {
         pushDataRaster
     ], function (err, result) {
         console.log(result)
-        res.redirect('/uploadViewer/4');
+        res.redirect(`/layer/${req.user.id}`);
     });
 }
+
+module.exports.show = function(req, res) {
+    res.render('layers', {id: req.params.id});
+}
+
 
 function queryRepeatedLayer(file, layer, epsg, fields, reqBody, callback) {
     Model.Datalayer.findAll({
@@ -125,8 +130,6 @@ function pushDataLayer(file, epsg, newName, reqBody, callback) {
 }
 
 function pushDataRaster(epsg, layername, callback) {
-    console.log("=========================================");
-    console.log(`in pushDataRaster`);
     console.log("\n\n\n");
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text);';
 
