@@ -1,6 +1,9 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Datalayer = sequelize.define('Datalayer', {
+    userId: {
+      type: DataTypes.INTEGER,
+    },
     layername: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -22,10 +25,22 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
+    userlayername: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    location: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {
     classMethods: {
       associate: function(models) {
-        
+        Datalayer.belongsTo(models.User, {foreignKey: 'userId'});
       }
     }
   });

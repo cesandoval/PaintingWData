@@ -5,7 +5,6 @@ $(function() {
   var $file_info = $('#upload-file-info');
   var $upload_btn = $('#upload');
   var $progress_bar = $('.progress-bar');
-  console.log($progress_bar);
   $zip_file.on('change', prepareForUpload);
 
   function prepareForUpload(event)

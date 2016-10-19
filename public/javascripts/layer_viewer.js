@@ -2,45 +2,11 @@ var id = id;
 console.log("--------------");
 console.log(id)
 var $dropdown = $($('select')[0]);
+var $epsg= $('#epsg');
 var $map = $('#map');
 $map.addClass('temporary_map_visuals');
 $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
-requestMap(render);
-
-
-function requestMap(callback){
-    $.ajax({
-        url: '/getMapData/'+id ,
-        type: 'GET',
-        cache: false,
-        processData: false, 
-        contentType: false, 
-        success: function(data)
-        {
-            if(typeof data.error === 'undefined')
-            {
-                console.log("success");
-                $map.removeClass('temporary_map_visuals');
-                $map.empty();
-                var bBox = JSON.parse(data.bBox);
-                var geoJSON = JSON.stringify(data.geoJSON);
-                renderFields(data.fields);
-
-                var centroid = JSON.stringify(data.centroid);
-                callback(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
-            }
-            else
-            {
-                console.log('ERRORS: ' + data.error);
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown)
-        {
-            console.log("the errors happened here");
-            console.log('ERRORS: ' + textStatus);
-        }
-    });
-}
+requestMap(id, render);
 
 function render(boundingBox, geoJSON, centroid){
     var centroid = centroid;
@@ -79,6 +45,9 @@ function render(boundingBox, geoJSON, centroid){
     L.geoJson(parsedGeoJSON, {
         style: myStyle
     }).addTo(map);
+}
+function renderEPSG(epsg){
+    $epsg.val(epsg);
 }
 function renderFields(fields){
     fields.forEach(function(field, index){

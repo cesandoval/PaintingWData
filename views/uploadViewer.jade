@@ -4,7 +4,7 @@ block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
-
+  script(src="/javascripts/js/layers.js")
   div(class='jumbotron')
     div(class='container')
       h1 Layer Viewer
@@ -13,17 +13,28 @@ block pageTitle
 
   script.
     var id = #{id};
-    console.log('in the view ----------------');
   div(class="container")
     div(class="row")
       div(class="col-md-offset-5 col-md-3")
         form(method="post", action="/uploadViewer")
           h4 Upload Data Layers
+          div(class= 'hidden' data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="layername").
+                Layer Name
+              input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="layername" value = "#{id}")
+              br
           div(data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               label(for="layername").
                 Layer Name
               input(type="text", id="layername", class="form-control input-sm chat-input", name="layername")
+              br
+          div(id='hiddendiv',data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+              label(for="location").
+                SRS Code
+              input(type="text", id="epsg", class="form-control input-sm chat-input", name="epsg")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
@@ -35,18 +46,18 @@ block pageTitle
             fieldset(data-role='controlgroup')
               label(for="description").
                 Project Description
-              input(type="text", id="description", class="form-control input-sm chat-input", name="description")
+              textarea(id="description", class="form-control input-sm chat-input", rows = "3", name="description")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               label(for="location").
-                Project Location
-              select
-                
-
-
+                Selected Data Property
+              br
+              select(id='rasterProperty', name='rasterProperty')
+              br
               br
           div(data-role='fieldcontain')   
-            input(type='submit',value='Compute Voxels',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
-   
+            input(type='submit',value='Save Shapefiles',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
+  
    script(src="/javascripts/layer_viewer.js") 
+

@@ -3,24 +3,163 @@ var Model = require('../models'),
     gdal = require("gdal"),
     shapefile = require("shapefile"),
     async = require('async'),
+    fs = require('fs'),
+    path = require('path'),
     request = require('request');
+
+module.exports.saveShapes = function(req, res) {
+    // This will instead have to be the id of the file we just uploaded
+    var id = req.user.id
+        newEpsg = req.body.epsg,
+        location = req.body.location,
+        layerName = req.body.layername,
+        description = req.body.description,
+        dataProp = req.body.rasterProperty;
+
+    async.waterfall([
+        async.apply(loadData, id, req.body),
+        queryRepeatedLayer,
+        pushDataLayer,
+        pushDataRaster
+    ], function (err, result) {
+        console.log(result)
+        res.redirect(`/layer/${req.user.id}`);
+    });
+}
+
+module.exports.show = function(req, res) {
+    res.render('layers', {id: req.params.id});
+}
+
+
+function queryRepeatedLayer(file, layer, epsg, fields, reqBody, callback) {
+    Model.Datalayer.findAll({
+        limit: 1,
+        where: {
+            layername: layer.name
+        }
+    }).then(function(datalayers){
+        if (datalayers.length > 0) {
+            Model.Datalayer.max('id', {
+                where: {
+                    layername: {$like: layer.name+"_%"}
+                }
+            }).then(function(maxId) {
+                if (!isNaN(maxId)) {
+                    Model.Datalayer.findById(maxId).then(function(repeatedLayer){
+                        var oldName = repeatedLayer.dataValues.layername;
+                        var n = oldName.lastIndexOf("_");
+                        var newLayerIndex = parseInt(oldName.slice(n+1))+1;
+
+                        console.log('repeated layers!!!! we must add a number to the count')
+                        var newName = oldName.slice(0,n+1)+newLayerIndex;
+                        callback(null, file, epsg, newName, reqBody);                    
+                    })
+                } else {
+                    var newName = layer.name+'_1';
+                    console.log('repeated layers!!!!')
+                    console.log(newName)
+                    callback(null, file, epsg, newName, reqBody);
+                }
+            })
+        } else {
+            var newName = layer.name;
+            callback(null, file, epsg, newName, reqBody);
+        }
+    })
+}
+
+function pushDataLayer(file, epsg, newName, reqBody, callback) {
+    // var fileNames = gdal.open(file).getFileList()
+    var fileNames = fs.readdirSync(file);
+    fileNames.forEach(function(fileName, i) {
+        if (fileName.endsWith('.shp')) {
+            var filePath = path.join(file, fileName);
+            var reader = shapefile.reader(filePath, {'ignore-properties': false});
+            reader.readHeader(shapeLoader);
+
+            var cargo = async.cargo(function(tasks, callback) {
+                Model.Datalayer.bulkCreate(tasks, { validate: true }).catch(function(errors) 
+                {
+                    console.log(errors);
+                    req.flash('error', "whoa")
+                }).then(function() { 
+                    return Model.Datalayer.findAll();
+                }).then(function(layers) {
+                    // console.log(layers) 
+                }).then(function () {
+                    callback();
+                })
+            }, 1000);
+
+            function shapeLoader( error, record ) {
+                var geom = record.geometry,
+                    rasterVal = null;
+                if (geom != null){ 
+                    geom.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
+
+                    var rasterProperty = reqBody.rasterProperty;
+                    rasterVal = record.properties[rasterProperty]
+                }
+
+                var newDatalayer = {
+                    layername: newName,
+                    userId: 1,
+                    epsg: epsg,
+                    geometry: geom,
+                    properties: record.properties,
+                    rasterval: rasterVal
+                }
+
+                if (geom != null) {
+                    cargo.push(newDatalayer, function(err) {
+                        // some
+                    });
+                }
+
+                if( record !== shapefile.end ) reader.readRecord( shapeLoader );
+                if(record == shapefile.end) {
+                    cargo.drain = function () {
+                        console.log('All Items have been processed!!!!!!')
+                        callback(null, epsg, newName);
+                    }
+                }
+            }
+        }
+    });
+}
+
+function pushDataRaster(epsg, layername, callback) {
+    console.log("\n\n\n");
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text);';
+
+    var bboxQuery = tableQuery + 
+                    "INSERT INTO public.dataraster (rast, layername) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', rasterval, -999999), "+
+                    epsg+"), p.layername FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
+
+    connection.query(bboxQuery).spread(function(results, metadata){
+            console.log('Rasters Pushed!!!!')
+            callback(null, [epsg, layername])
+        })
+}
 
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
-        async.apply(loadData, req.params.id),
+        async.apply(loadData, req.params.id, req.body),
         getGeoJSON,
     ], function (err, result) {
         res.send({
             bBox : result[0], 
             geoJSON: result[1],
             centroid: result[2],
-            fields : result[3]
+            fields : result[3],
+            epsg: result[4]
         })
     });  
 }
 
 
-function loadData(id, callback) {
+function loadData(id, reqBody, callback) {
     Model.Datafile.findById(id).then(function(datafile){
         var filePath = datafile.location;
         var dataset = gdal.open(filePath);
@@ -28,12 +167,12 @@ function loadData(id, callback) {
         var epsg = datafile.epsg;
         var fields = layer.fields.getNames();
 
-        callback(null, filePath, layer, epsg, fields);
+        callback(null, filePath, layer, epsg, fields, reqBody);
     } );
     
 }
 
-function getGeoJSON(file, layer, epsg, fields, callback) {
+function getGeoJSON(file, layer, epsg, fields, reqBody, callback) {
     var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
         d_srs = gdal.SpatialReference.fromEPSGA(4326);
     var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
@@ -49,5 +188,5 @@ function getGeoJSON(file, layer, epsg, fields, callback) {
 
     bBox.transform(transformation);
     centroid.transform(transformation);
-    callback(null, [bBox.toJSON(), jsonGeoms, centroid.toJSON(), fields])
+    callback(null, [bBox.toJSON(), jsonGeoms, centroid.toJSON(), fields, epsg])
 }
