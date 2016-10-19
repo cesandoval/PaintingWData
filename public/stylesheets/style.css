@@ -36,7 +36,7 @@ h1, h2, h3 {
 .navbar-inverse .navbar-nav > li > a {
     color: #1A1A1A;
     font-family: 'Montserrat', sans-serif;
-    font-size: 22px;
+    font-size: 2vh;
     text-shadow: none;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
@@ -69,9 +69,9 @@ h1, h2, h3 {
     background-position: 0 0;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 5s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 10s; /* Chrome, Safari, Opera */
     animation-name: move-in;
-    animation-duration: 5s;
+    animation-duration: 10s;
 
     -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
     animation-timing-function: ease-out;
@@ -85,9 +85,9 @@ h1, h2, h3 {
     background-position: 0 0;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 5s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 10s; /* Chrome, Safari, Opera */
     animation-name: move-in;
-    animation-duration: 5s;
+    animation-duration: 10s;
 
     -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
     animation-timing-function: ease-out;
@@ -118,7 +118,7 @@ h1, h2, h3 {
 
 /*body*/
 .jumbotron {
-    background-color: #F1B74B;
+    background-color: #E8E8E8;
 }
 
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
@@ -138,9 +138,47 @@ h1, h2, h3 {
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: rgb(245,165,3);
-    border-color: rgb(245,165,3);
+    border-color: none;
+}
+
+.btn-jumbotron {
+    height: 20vh;
+    width: 20vw;
+    font-size: 3vh;
+    line-height: 17vh;
+}
+
+.btn-gray {
+    color: black;
+    font-family: 'Montserrat', sans-serif;
+    background-image: url(/images/circle.svg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    text-align: center;
+    text-anchor: middle;
+    alignment-baseline: middle;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-small {
+    height: 14vh;
+    width: 14vw;
+    font-size: 2vh;
+    line-height: 12vh;
+}
+
+.btn-jumbotron-text {
+    height: 20vh;
+    vertical-align: middle;
+}
+
+.btn-jumbotron:hover {
+    background-image: url(/images/dark_circle.svg);
+}
+
+.btn-gray:hover {
+    background-image: url(/images/dark_circle.svg);
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
