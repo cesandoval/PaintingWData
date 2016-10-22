@@ -34,7 +34,7 @@ var passport = require('passport'),
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
 
   router.get('/layers/:id', isAuthenticated, fileViewerController.show);  
-
+  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app', appController.show);
 
 module.exports = router;

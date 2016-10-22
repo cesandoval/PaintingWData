@@ -86,6 +86,10 @@ function extractZip(zipFile, callback){
   var fileName = path.parse(zipFile).name;
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
+  console.log("===========================");
+  console.log(targetPath);
+  console.log(targetName);
+  console.log(fileName);
   var filePath = path.join(__dirname, `./shape_files/${targetName}`);
   
   extract(zipFile, {dir: filePath}, function(err){
@@ -100,6 +104,8 @@ function extractZip(zipFile, callback){
 }
 // returns a list of shapefiles in the uploaded directory.
 function getShapeFiles(directory, callback){
+  console.log("=========================== get shape file");
+  console.log(directory);
   var shapeFiles = [];
   fs.readdir(directory, function(err, files){
     if (err) {

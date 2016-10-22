@@ -20,9 +20,7 @@ block pageTitle
           h4 Upload Data Layers
           div(class= 'hidden' data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="layername").
-                Layer Name
-              input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="layername" value = "#{id}")
+              input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="datafileId" value = "#{id}")
               br
           div(data-role='fieldcontain')
             fieldset(data-role='controlgroup')

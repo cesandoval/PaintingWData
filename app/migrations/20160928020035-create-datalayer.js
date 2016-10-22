@@ -9,11 +9,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      datafileId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       layername: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      userLayerName: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       geometry: {
         type: Sequelize.GEOMETRY
@@ -21,8 +30,16 @@ module.exports = {
       properties: {
         type: Sequelize.JSON
       },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
       epsg: {
         type: Sequelize.INTEGER
+      },
+      location: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       rasterval: {
         type: Sequelize.FLOAT

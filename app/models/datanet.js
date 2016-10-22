@@ -4,12 +4,10 @@ module.exports = function(sequelize, DataTypes) {
     layername: {
       type: DataTypes.STRING,
       allowNull: false,
-      // unique: true,
     },
     layerids: {
       type: DataTypes.STRING,
       allowNull: false,
-      // unique: true,
     },
     geometry: {
       type: DataTypes.GEOMETRY,

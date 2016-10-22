@@ -3,6 +3,11 @@ module.exports = function(sequelize, DataTypes) {
   var Datalayer = sequelize.define('Datalayer', {
     userId: {
       type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    datafileId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     layername: {
       type: DataTypes.STRING,
@@ -25,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       allowNull: true
     },
-    userlayername: {
+    userLayerName: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -41,6 +46,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Datalayer.belongsTo(models.User, {foreignKey: 'userId'});
+        Datalayer.belongsTo(models.Datafile, {foreignKey: 'datafileId'});
       }
     }
   });

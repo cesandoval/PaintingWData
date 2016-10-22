@@ -225,15 +225,6 @@ function pushDataRaster(epsg, layername, callback) {
 }
 
 
-// async.waterfall([
-//     stValue,
-//     parseGeoJSON
-// ], function (err, result) {
-//     Model.DataJSON.sync().then(function(){
-//         return Model.DataJSON.create(result);
-//     });
-// });
-
 function stValue(callback) {
     console.log("=========================================");
     console.log(`in stValue`);
