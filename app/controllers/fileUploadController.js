@@ -12,7 +12,7 @@ var User = require('../models').User,
     request = require('request'),
     fileViewer = require('./fileViewerController.js');
 module.exports.show = function(req, res) {
-    res.render('upload');
+    res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
 }
 
 module.exports.upload = function(req, res) {
@@ -86,11 +86,7 @@ function extractZip(zipFile, callback){
   var fileName = path.parse(zipFile).name;
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
-  console.log("===========================");
-  console.log(targetPath);
-  console.log(targetName);
-  console.log(fileName);
-  var filePath = path.join(__dirname, `./shape_files/${targetName}`);
+  var filePath = path.join(__dirname, `./shape_files`);
   
   extract(zipFile, {dir: filePath}, function(err){
     if(err){  
@@ -104,8 +100,6 @@ function extractZip(zipFile, callback){
 }
 // returns a list of shapefiles in the uploaded directory.
 function getShapeFiles(directory, callback){
-  console.log("=========================== get shape file");
-  console.log(directory);
   var shapeFiles = [];
   fs.readdir(directory, function(err, files){
     if (err) {

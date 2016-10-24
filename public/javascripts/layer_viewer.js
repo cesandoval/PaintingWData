@@ -28,11 +28,10 @@ function render(boundingBox, geoJSON, centroid){
 
 
     parsedGeoJSON = [];
-    console.log(geoJSON)
     geoJSON.forEach(function(json, i) {
         parsedGeoJSON.push(JSON.parse(json));
     })
-console.log(parsedGeoJSON)
+
     L.geoJson(parsedGeoJSON, {
         style: myStyle
     }).addTo(map);

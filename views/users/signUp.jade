@@ -5,6 +5,8 @@ block pageTitle
   div(class="container")
     div(class="row")
       div(class="col-md-offset-5 col-md-3")
+        if !(message == '')
+          .alert.alert-danger(role='alert') #{message}
         form(method="post", action="/users/signup")
           h4 Create an account.
           div(data-role='fieldcontain')

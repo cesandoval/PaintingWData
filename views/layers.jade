@@ -10,6 +10,10 @@ block pageTitle
     
   .container(style = "margin-top: 50px")
     .row
+      if datafiles.length == 0
+        .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
+          a(href = "/upload")
+            strong upload a datafile
       for datafile in datafiles
         .col-sm-4.col-md-4.datalayer(style = "margin-top:20px")
           .post

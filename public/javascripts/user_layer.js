@@ -61,7 +61,6 @@ maps.forEach(function(map, index){
     });
 
     bBox.coordinates = reversedBbox;
-    console.log(bBox);
     L.geoJson(bBox, {
         style: myStyle
     }).addTo(map);
