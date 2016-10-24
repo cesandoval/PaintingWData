@@ -59,7 +59,7 @@ module.exports.show = function(req, res) {
             }
         }).then(function(datafiles){
             
-            res.render('layers', {id: req.params.id, datafiles : datafiles });
+            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
         });
 }
 
