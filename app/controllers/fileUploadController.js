@@ -41,9 +41,15 @@ module.exports.upload = function(req, res) {
       extractZip(path.join(path.dirname(file.path), file.name), function(err, target_path){
         if(err){
           console.log("Error: ", err);
+          
         }
         else{
-          verifyFiles(target_path, whitelist, function(areRightFileTypes){
+          verifyFiles(target_path, function(err, target_path){
+            if(err){
+                console.log("Error: ", err);
+                res.redirect(200, '..');
+            }
+            else{
             getShapeFiles(target_path, function(err, shapeFiles){
               if(err){
                 console.log("Error: ", err);
@@ -51,7 +57,6 @@ module.exports.upload = function(req, res) {
               else{
                 getEPSG(target_path, function(err, epsg){
                   var dataFile = Models.Datafile.build();
-                  dataFile.userId = req.user.id;
                   dataFile.location = target_path;
                   dataFile.filename = shapeFiles[0];
                   dataFile.epsg = epsg;
@@ -61,7 +66,7 @@ module.exports.upload = function(req, res) {
                 })  
               }
             });
-          });
+          }})
         }
       });
     }
@@ -86,26 +91,24 @@ function extractZip(zipFile, callback){
   var fileName = path.parse(zipFile).name;
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
-  console.log("===========================");
   console.log(targetPath);
   console.log(targetName);
   console.log(fileName);
+
   var filePath = path.join(__dirname, `./shape_files/${targetName}`);
-  
+  console.log(filePath);
   extract(zipFile, {dir: filePath}, function(err){
     if(err){  
       callback(err, null);
     }
     else{
-      callback(null, `${filePath}/${fileName}`);
+      callback(null, filePath);
       };
     }
   );
 }
 // returns a list of shapefiles in the uploaded directory.
 function getShapeFiles(directory, callback){
-  console.log("=========================== get shape file");
-  console.log(directory);
   var shapeFiles = [];
   fs.readdir(directory, function(err, files){
     if (err) {
@@ -114,6 +117,7 @@ function getShapeFiles(directory, callback){
     }
     else{
       files.forEach(function(file, index){
+
         if(path.extname(file) == ".shp") {
           shapeFiles.push(file);
         }
@@ -123,9 +127,10 @@ function getShapeFiles(directory, callback){
   });
 
 }
+
 // Goes through the files in the path to verify that they all have the 
 // specified extensions.
-function verifyFiles(directory, whiteList, callback){
+function verifyFiles(directory, callback){
   var areRightFileTypes = true;
   fs.readdir(directory, function(err, files){
     if (err) {
@@ -134,23 +139,25 @@ function verifyFiles(directory, whiteList, callback){
     }
     else{
       files.forEach(function(file, index){
+         console.log("=============================================");
+          console.log(file)
           ext = path.extname(file);
-          areRightFileTypes = areRightFileTypes && (ext === ".shp" || ext === ".shx" || ext === ".dbf" );
+          console.log(ext);
+          if(ext)
+            areRightFileTypes = areRightFileTypes && (ext === ".shp" || ext === ".shx" || ext === ".dbf" );
       });
     if(!areRightFileTypes){
       callback(null, directory);
     }
     else{
-      console.log("Error:  not the right type of files");
+      console.log("not the right type of files");
       callback("wrong file type", null);
     }
     }
   });
 }
 
-
 function getEPSG(file, callback) {
-  
   var dataset = gdal.open(file);
   var layer = dataset.layers.get(0);
   var epsg;
