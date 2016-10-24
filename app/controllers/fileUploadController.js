@@ -57,6 +57,7 @@ module.exports.upload = function(req, res) {
               else{
                 getEPSG(target_path, function(err, epsg){
                   var dataFile = Models.Datafile.build();
+                  dataFile.userId = req.user.id;
                   dataFile.location = target_path;
                   dataFile.filename = shapeFiles[0];
                   dataFile.epsg = epsg;

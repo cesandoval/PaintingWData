@@ -3,14 +3,52 @@
 var ids = [];
 var mapIds = [];
 var maps = [];
+var $datalayers = $('.datalayer');
+var $selectedLayers = $('#selectedLayers');
+var selectedLayerIds = []
+
+function getDatafileId(leafletMap){
+    return leafletMap.attr('id').split("_")[1];
+}
+
+function updataSelectedLayersValueString(selectedLayerIds){
+    $selectedLayers.val("");
+    var valueString = "";
+    selectedLayerIds.forEach(function(id, index){
+        valueString += id + " ";
+    });
+    $selectedLayers.val(valueString);
+}
+
 $(".leafletMap").each(function(index, map){
 	 maps.push(map);
       $(map).append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
       mapIds.push($(map).attr('id'));
-      ids.push($(map).attr('id').split("_")[1]);
+      ids.push(getDatafileId($(map)));
  })
 
-$datalayers = $('.datalayer');
+
+
+
+$datalayers.click(function(){
+    var $datalayer = $(this); 
+    if(!($datalayer.hasClass("selected_layer"))){
+        $datalayer.addClass('selected_layer');
+        var id = getDatafileId($($datalayer.find(".leafletMap")));
+        selectedLayerIds.push(id);
+        updataSelectedLayersValueString(selectedLayerIds)
+        console.log($selectedLayers.val());
+    }
+    else{
+
+        $(this).removeClass('selected_layer');
+        selectedLayerIds.pop(this);
+        updataSelectedLayersValueString(selectedLayerIds)
+        console.log($selectedLayers.val());
+    }
+});
+
+
 maps.forEach(function(map, index){
 	var mapId = $(map).attr('id');
 	$.ajax({

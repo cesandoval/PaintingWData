@@ -84,7 +84,7 @@ html
           ul.nav.navbar-nav.navbar-right
             if userSignedIn
               li
-                a(href='layers/#{user.id}') #{user.email}
+                a(href='/layers/#{user.id}') #{user.email}
               li 
                 a(href='/users/logout') Logout
             else

@@ -34,6 +34,18 @@ module.exports.saveShapes = function(req, res) {
         
     });
 }
+// This file extracts the datalayer ids from the request object and saves it on
+// the datalayerIds object. 
+// The datalayer objects are all strings containing ids. Eg "3", "7" ...
+module.exports.computeVoxels = function(req, res){
+    var datalayerIds = [];
+    req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
+        if(datalayerId !== "")
+            datalayerIds.push(datalayerId);
+    });
+
+    res.send(datalayerIds);   
+}
 module.exports.getDatalayers = function(req, res){
     Model.Datalayer.findOne({where:{
         datafileId : req.params.datafileId
