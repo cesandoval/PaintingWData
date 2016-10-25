@@ -4,6 +4,7 @@ var passport = require('passport'),
     appController = require('../controllers/appController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
+    datalayerController = require('../controllers/datalayerController.js'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -33,8 +34,9 @@ var passport = require('passport'),
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
 
-  router.get('/layers/:id', isAuthenticated, fileViewerController.show);
-  router.post('/layers', isAuthenticated, fileViewerController.computeVoxels);  
+  router.get('/layers/:id', isAuthenticated, datalayerController.show);
+  router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
+
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app', appController.show);
 

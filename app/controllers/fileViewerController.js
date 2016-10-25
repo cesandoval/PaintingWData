@@ -8,7 +8,6 @@ var Model = require('../models'),
     request = require('request');
 
 module.exports.saveShapes = function(req, res) {
-    // This will instead have to be the id of the file we just uploaded
     var id = req.user.id,
         newEpsg = req.body.epsg,
         datafileId = req.body.datafileId,
@@ -34,18 +33,7 @@ module.exports.saveShapes = function(req, res) {
         
     });
 }
-// This file extracts the datalayer ids from the request object and saves it on
-// the datalayerIds object. 
-// The datalayer objects are all strings containing ids. Eg "3", "7" ...
-module.exports.computeVoxels = function(req, res){
-    var datalayerIds = [];
-    req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-        if(datalayerId !== "")
-            datalayerIds.push(datalayerId);
-    });
 
-    res.send(datalayerIds);   
-}
 module.exports.getDatalayers = function(req, res){
     Model.Datalayer.findOne({where:{
         datafileId : req.params.datafileId
@@ -64,17 +52,6 @@ module.exports.getDatalayers = function(req, res){
     })
    
 }
-module.exports.show = function(req, res) {
-     Model.Datafile.findAll({
-            where : {
-                userId : req.user.id,
-            }
-        }).then(function(datafiles){
-            
-            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
-        });
-}
-
 
 function queryRepeatedLayer(file, layer, epsg, fields, req, callback) {
     Model.Datalayer.findAll({

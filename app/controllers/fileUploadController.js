@@ -13,6 +13,7 @@ var User = require('../models').User,
     fileViewer = require('./fileViewerController.js');
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
+    console.log('----++lfhdhddhlflfljajajajs+++-/////------kdkddkd-k-======------555555-')
 }
 
 module.exports.upload = function(req, res) {
