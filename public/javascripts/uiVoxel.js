@@ -9,7 +9,7 @@ $("#graphLayers").css("height", screenHeight);
 $("#graphControls").css("height", screenHeight);
 $(function() {
     $( "#accordion" ).accordion({
-        //collapsible: true,
+        // collapsible: true,
         autoHeight: false,
         navigation: true,
         heightStyle: "content",
@@ -91,10 +91,10 @@ function populateLayers(layers) {
     for (i = 0; i < layers.length; i++) {
         var layerName = slugify(layers[i]);
         $("#graphLayers").append('<div class="layerBoxes" id='+layerName+'></div>');
-        var colorInput = '<input type="text" class="showPaletteOnly mydiv" id='+layerName+'Picker />';
-        var colorInputB = '<input type="text" class="showPaletteOnlyB mydiv" id='+layerName+'B_Picker />';
-        var resetLayer = '<button class="resetLayer mydiv" id="'+layerName+'Reset">Reset</button>';
-        var radioBtn = $('<label><p class = "mydiv" title = '+layers[i].toUpperCase()+'>'+layers[i]+'</p><input type="checkbox" class="layerBoxes mydiv" name='
+        var colorInput = '<input type="text" class="showPaletteOnly rightAlign mydiv" id='+layerName+'Picker />';
+        var colorInputB = '<input type="text" class="showPaletteOnlyB rightAlign mydiv" id='+layerName+'B_Picker />';
+        var resetLayer = '<button class="resetLayer btn" id="'+layerName+'Reset">Reset</button>';
+        var radioBtn = $('<label><p class = "mydiv layerName" title = '+layers[i].toUpperCase()+'>'+layers[i]+'</p><input type="checkbox" class="layerBoxes mydiv checkboxStyle" name='
                          + layerName + ' checked/>'+colorInput+colorInputB+resetLayer+'</label>');
         
         radioBtn.appendTo('#'+layerName);

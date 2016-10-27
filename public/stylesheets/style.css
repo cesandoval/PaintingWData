@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
-@import 'https://fonts.googleapis.com/css?family=Montserrat:400,700';
+@import 'https://fonts.googleapis.com/css?family=Roboto:400,700';
 
 body {
   color: #1A1A1A;
@@ -9,38 +9,46 @@ body {
 p {
     font-family: 'EB Garamond', serif;
     color: #1A1A1A;
-    font-size: 20px;
+    font-size: 2.5vh;
 }
 
 h1, h2, h3 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+    font-size: 4vh;
 }
 
 /**************************/
 /* NAVBAR */
-.navbar-inverse {
-    background: #FA7951;
+.navbar-inverse { 
+    background: #283593;
     border-color: transparent;
     height: 10vh;
     padding-top:2vh;
+
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
 }
 
 /* title */
 .navbar-inverse .navbar-brand {
-    color: #1A1A1A;
+    color: white;
 }
 .navbar-inverse .navbar-brand:hover {
-    color: black;
+    color: white;
 }
 /* link */
 .navbar-inverse .navbar-nav > li > a {
-    color: #1A1A1A;
-    font-family: 'Montserrat', sans-serif;
+    color: white;
+    font-family: 'Roboto', sans-serif;
     font-size: 2vh;
     text-shadow: none;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
-    color: black;
+    color: white;
     text-decoration:underline;
 }
 
@@ -60,7 +68,6 @@ h1, h2, h3 {
 /* INDEX */
 
 .brand-title {
-    height: 100vh;
     margin: 0;
     background-image: url(/images/circle_background_1.svg), url(/images/red_circles.svg);
     background-repeat: no-repeat;
@@ -69,9 +76,9 @@ h1, h2, h3 {
     background-position: 0 0;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 10s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
     animation-name: move-in;
-    animation-duration: 10s;
+    animation-duration: 4s;
 
     -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
     animation-timing-function: ease-out;
@@ -85,9 +92,9 @@ h1, h2, h3 {
     background-position: 0 0;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 10s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
     animation-name: move-in;
-    animation-duration: 10s;
+    animation-duration: 4s;
 
     -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
     animation-timing-function: ease-out;
@@ -95,19 +102,24 @@ h1, h2, h3 {
 
 /* Chrome, Safari, Opera */
 @-webkit-keyframes move-in {
-    from {background-position: 0 100px;}
-    to {background-position: 0 0;}
+    from {opacity: 0.2;}
+    to {opacity: 1;}
 }
 
 /* Standard syntax */
 @keyframes move-in {
-    from {background-position: 0 100px;}
-    to {background-position: 0 0;}
+    from {opacity: 0.2;}
+    to {opacity: 1;}
 }
 
 .spacing {
     padding-top: 5vh;
     padding-bottom: 5vh;
+}
+
+.spacing-small {
+    padding-top: 3vh;
+    padding-bottom: 3vh;
 }
 
 .site-title {
@@ -117,8 +129,15 @@ h1, h2, h3 {
 }
 
 /*body*/
+
 .jumbotron {
-    background-color: #E8E8E8;
+    /*background-color: #E8E8E8;*/
+    background-color: white;
+    height: 100vh;
+}
+
+.transparent {
+    background-color: transparent;
 }
 
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
@@ -150,7 +169,7 @@ h1, h2, h3 {
 
 .btn-gray {
     color: black;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-image: url(/images/circle.svg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -207,4 +226,14 @@ body {
 
 .wrapper {
     text-align: center;
+}
+
+.footer p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2vh;
+    position: relative;
+    bottom: 0;
+    padding-left: 3vw;
+    width: 100%;
+    height: 60px;
 }

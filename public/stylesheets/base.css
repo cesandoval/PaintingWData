@@ -2,7 +2,8 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
-@import 'https://fonts.googleapis.com/css?family=Montserrat:400,700';
+@import 'https://fonts.googleapis.com/css?family=Roboto:400,700';
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans');
 
 ::-webkit-scrollbar
 {
@@ -110,9 +111,8 @@
     /*line-height: 85%;*/
     top: 25px;
     left: 7px;
-    /*font-family: "Source Sans Pro", san-sarif;*/
     /*font-family: 'Ubuntu', sans-serif;*/
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: bolder;
     color: black;
     /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
@@ -126,41 +126,51 @@
     width: 20%;
     right: 80%;
     /*bottom: 30px;*/
-    top: 50px;
-    background-color: rgb(245,165,3);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    top: 10vh; // height of navbar
+    /*background-color: rgb(245,165,3);*/
+    /*border-top: 1px solid rgba(233, 241,223, 1);*/
+    -webkit-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
+    box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
 }
 
 #accordion .ui-accordion-content {
     /*background-color: rgb(240,240,240);*/
-    background-color: rgba(253, 232,172, 1);
+    /*background-color: rgba(253, 232,172, 1);*/
+    /*background-color: #FFB899;*/
+    background-color: white;
+    /*border-right: 5px solid #2D6A65;*/
     line-height:  14pt;
     margin: 0;
     padding: 8px;
 }
 
 #accordion .ui-accordion-header {
-    background-color: rgb(245,165,3);
-    margin: 0px;
-    height: 27px;
-    text-align: left;
-    font-size: 18px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 500;
-    padding:0px;
-    padding-left: 8px;
-    padding-top: 4px;
+    background-color: #5C6BC0;
+    margin: 0 0 0 0;
+    height: 7vh;
+    text-align: right;
+    font-size: 17px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: medium;
+    text-transform: uppercase;
     vertical-align: middle;
+    padding: 0px;
+    padding-left: 8px;
+    padding-right: 1vw;
+    padding-top: 4px;
+    line-height: 7vh;
+    border: none;
     
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+/*    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
     border-right: 1px solid rgba(233, 241,223, 1);
     border-left: 1px solid rgba(233, 241,223, 1);
     border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    border-top: 1px solid rgba(233, 241,223, 1);*/
 }
 
 #graphLayers {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 15px;
 }
@@ -207,7 +217,7 @@
     border-right: 1px solid rgba(233, 241,223, 1);
     /*border-left: 1px solid rgba(0, 0, 0, .2);*/
     border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    /*border-top: 1px solid rgba(233, 241,223, 1);*/
 }
 
 .bottom{
@@ -235,6 +245,13 @@
     z-index: 2;
 }
 
+label {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
 .layerBoxes{
     vertical-align: middle;
     position: relative;
@@ -243,10 +260,12 @@
 
 .resetLayer{
     font-size: .08em;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
-    color: rgb(0,0,0);
+    /*color: rgb(0,0,0);*/
+    background-color: white;
+    width: 20px;
     line-height: 8pt;
 }
 
@@ -309,8 +328,18 @@
     bottom: -1px;
 }
 
+input[type=checkbox]{
+  display: block;
+  color: white;
+  background-color: #554236;
+  border: none !important;
+
+  
+}
+
 .sliderCell {
     position: relative;
+    height: 5vh;
 }
 
 .basicSliders {
@@ -353,7 +382,7 @@
 
 .sliderValue{
     display: inline;
-    /*padding-left: 5px;*/
+    padding-left: 5px;
     font-size: 13px;
     font-family: 'Ubuntu', sans-serif;
     font-weight: 500;
@@ -380,6 +409,10 @@
     float: right;
 }
 
+#opacityName {
+    padding-right: 2px;
+}
+
 .slidersOpacity.ui-slider .ui-slider-handle {
     width:.62em;
     height: .62em;
@@ -391,8 +424,9 @@
 
 .layerName {
     position: center;
-    /*float: left;*/
+    float: left;
     line-height: 20px;
+    width: 60%;
 }
 
 .ui-slider .ui-slider-handle {
@@ -465,7 +499,8 @@ ul p.buttons {
     border-top: 1px solid rgba(233, 241,223, 1);
     margin-bottom: 0px;
     margin-top: 0px;
-    background-color: rgba(233, 241,223, 1);
+    /*background-color: rgba(233, 241,223, 1);*/
+    background-color: FFB899;
     opacity: .65;
 }
 
@@ -476,8 +511,7 @@ ul p:hover.buttons {
 }
 
 .mydiv {
-    width: 45%;
-    float: left;
+    /*float: left;*/
     margin: 0px;
     height: 22px;
     margin-top: 10px;
@@ -486,6 +520,12 @@ ul p:hover.buttons {
     font-size: 13px;
     font-weight: 500;
     text-align: left;
+    font-family: 'Roboto', sans-serif;
+}
+
+.mydiv .rightAlign {
+    text-align: right;
+    float: right;
 }
 
 .layerBoxes {
@@ -495,25 +535,27 @@ ul p:hover.buttons {
     border-top: 1px solid white;
     padding-top: 1px;
     margin-top: -2px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .layerBoxes button {
-    padding: 0px !important;
-    height: 18px !important;
-    font-family: 'Ubuntu', sans-serif;
+    /*padding: 0px !important;*/
+    /*height: 18px !important;*/
+    font-family: 'Roboto', sans-serif;
     font-size: 11px;
     font-weight: 300;
-    margin: 0px;
     width: 17%;
+    float: right;
     text-align: center;
-    margin-top: 10px
 }
 
 .layerBoxes input {
-    padding: 0px !important;
-    height: 15px !important;
-    width: 16%;
-    margin-top: 10px
+    /*padding: 0px !important;*/
+    /*height: 15px !important;*/
+    width: 6%;
+    position: relative;
+    top: 100%;
+    /*transform: translateY(-50%);*/
 }
 
 .buttonsText {
@@ -521,7 +563,7 @@ ul p:hover.buttons {
     z-index: 10;
     bottom: -8px;
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: rgb(76,76,76);
@@ -529,9 +571,10 @@ ul p:hover.buttons {
 }
 
 .sp-replacer{
-    margin-top: 5px;
-    width: 11%;
-    margin-top: 13px
+    width: 6%;
+    position: relative;
+    top: 50%;
+    /*transform: translateY(-50%);*/
 }
 
 .sliderCell.opacity {
@@ -544,7 +587,7 @@ ul p:hover.buttons {
     margin-left: -52px;
 }
 .navbar-inverse .navbar-brand {
-    color: #1A1A1A;
+    color: white;
 }
 
 /*.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
@@ -556,5 +599,5 @@ ul p:hover.buttons {
     height: 50px;
     font-size: 24px;
     font-weight: 700;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
