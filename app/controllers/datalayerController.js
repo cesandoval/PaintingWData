@@ -27,9 +27,27 @@ module.exports.computeVoxels = function(req, res){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         getNet,
-        pushDataNet
+        // pushDataNet,
+        stValue,
+        parseGeoJSON,
     ], function (err, result) {
+        console.log(444444444444444444444445555555555555555)
+        console.log("\n\n\n");
         console.log(result);
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log(444444444444444444444445555555555555555)
+        console.log(444444444444444444444445555555555555555)
+
+        var newDataJSON = Model.Datajson.build();
+        newDataJSON.layername = result[1].layername;
+        newDataJSON.layerId = result[1].layerId;
+        newDataJSON.geojson = result[0]
+        newDataJSON.save().then(function(){
+            console.log('new geojsonmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
+        });   
     });
 
     res.send(datalayerIds);  
@@ -72,7 +90,7 @@ function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
     // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
     // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
-    var stepSize = 700;
+    var stepSize = 1500;
 
     var netFunctionQuery = `
     CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
@@ -108,8 +126,6 @@ function pushDataNet(pointNet, props, req, callback) {
     console.log("\n\n\n");
     var pointNet  = pointNet.point_net
     var maxLength = 1000;
-    // console.log(err);
-    // console.log(pointNet.coordinates);
 
     if (pointNet != null){ 
         pointNet.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}}
@@ -121,15 +137,12 @@ function pushDataNet(pointNet, props, req, callback) {
             console.log(errors);
             req.flash('error', "whoa")
             // res.redirect('app')
-        }).then(function() { 
-            return Model.Datanet.findAll();
-        }).then(function(layers) {
-            // console.log(layers) 
         }).then(function () {
             callback();
         })
     }, maxLength);
-        
+
+    var itemsProcessed = 0;  
     for (i = 0; i < pointNet.coordinates.length; i++){
         var point = {
             type: 'Point', 
@@ -147,30 +160,49 @@ function pushDataNet(pointNet, props, req, callback) {
         cargo.push(newDataNet, function(err) {
             // some
         });
+
+        itemsProcessed++;
+        console.log(itemsProcessed);
+
+        if(itemsProcessed === pointNet.coordinates.length) {
+            console.log('737327823874y2398476239846239846239846')
+            callback(null, props, req);          
+        }
     }
-    callback(null, 'done');
 }
 
 
-function stValue(callback) {
+function stValue(pointNet, props, req, callback) {
     console.log("=========================================");
     console.log(`in stValue`);
     console.log("\n\n\n");
-    var layername = 'Risk_cancerresp_rep_part_11'
-    var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public.datanet AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p.layername='"+layername+"' AND r.layername='"+layername+"';"
-    var epsg = 2263;
-        layerids = 1
+
+    var layername = props[0].layername;
+    var datanetName = 'test_voxel'; 
+    var fileId = props[0].datafileId;
+    var epsg = props[0].epsg;
+    var layerids = 1;
+
+    var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
+                    +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p.layername='"
+                    +datanetName+"' AND r.layername='"+layername+"';"
+
 
     connection.query(raw_query).spread(function(results, metadata){
         // parseGeoJSON(results, layername, epsg, layerids);
-        callback(null, results, layername, epsg, layerids)
+        callback(null, results, props, req)
     })
 }
 
-function parseGeoJSON(results, layername, epsg, layerids, callback) {
+function parseGeoJSON(results, props, req, callback) {
     console.log("=========================================");
     console.log(`in parseGeoJSON`);
     console.log("\n\n\n");
+
+    var layername = props[0].layername;
+    var epsg = props[0].epsg;
+    var layerids = 1;
+
     var features = [];
     for (i = 0; i < results.length; i++){
         var currentResult = results[i],
@@ -197,5 +229,5 @@ function parseGeoJSON(results, layername, epsg, layerids, callback) {
         layerids: layerids,
     }
 
-    callback(null, newDataJSON);
+    callback(null, [newDataJSON, props, req]);
 }
