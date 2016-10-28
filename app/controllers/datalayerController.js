@@ -33,7 +33,8 @@ module.exports.computeVoxels = function(req, res){
     ], function (err, result) {
         console.log(444444444444444444444445555555555555555)
         console.log("\n\n\n");
-        console.log(result);
+        console.log(result[0]);
+        console.log(result[1])
         console.log("\n\n\n");
         console.log("\n\n\n");
         console.log("\n\n\n");
@@ -42,8 +43,9 @@ module.exports.computeVoxels = function(req, res){
         console.log(444444444444444444444445555555555555555)
 
         var newDataJSON = Model.Datajson.build();
-        newDataJSON.layername = result[1].layername;
-        newDataJSON.layerId = result[1].layerId;
+        newDataJSON.layername = result[1][0].layername;
+        newDataJSON.layerids = result[1][0].layerId;
+        newDataJSON.epsg = result[1][0].epsg;
         newDataJSON.geojson = result[0]
         newDataJSON.save().then(function(){
             console.log('new geojsonmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
