@@ -125,8 +125,8 @@
     z-index: 5;
     width: 20%;
     right: 80%;
-    /*bottom: 30px;*/
-    top: 10vh; // height of navbar
+    bottom: 5vh;
+    top: 10vh; /* height of navbar */
     /*background-color: rgb(245,165,3);*/
     /*border-top: 1px solid rgba(233, 241,223, 1);*/
     -webkit-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
@@ -149,6 +149,7 @@
     background-color: #5C6BC0;
     margin: 0 0 0 0;
     height: 7vh;
+    color: white;
     text-align: right;
     font-size: 17px;
     font-family: 'Roboto', sans-serif;
@@ -221,13 +222,13 @@
 }
 
 .bottom{
-    background: rgb(245,165,3);
-    opacity: .4;
+    background-color: #283593;
+    /*opacity: .4;*/
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     right: 0px;
     width: 80%;
-    height:30px;
+    height:5vh;
     z-index: 4;
     border-right: 1px solid rgba(233, 241,223, 1);
     border-left: 1px solid rgba(233, 241,223, 1);
@@ -281,9 +282,9 @@ label {
 .bottomWidgets {
     position: absolute;
     left: 20%;
-    bottom: -5px;
+    bottom: -10vh;
     width: 80%;
-    height: 30px;
+    height: 5vh;
     z-index: 4;
 }
 
@@ -334,7 +335,7 @@ input[type=checkbox]{
   background-color: #554236;
   border: none !important;
 
-  
+
 }
 
 .sliderCell {
@@ -443,20 +444,20 @@ input[type=checkbox]{
 
 .nodes {
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 700;
     color: rgb(100,100,100);
     position: relative;
     width: 80%;
-    text-align: center;
-    margin: 0px;
+    text-align: left;
+    margin: 0;
 }
 
 .nodes ul p {
     border-bottom: 2px solid rgba(0,0,0,0);
-    margin-bottom: -10px;
+    margin-bottom: 0;
     margin-top: -10px;
-
+    font-family: 'Roboto', sans-serif;
 }
 
 .nodeNamesSelected {
@@ -487,11 +488,11 @@ input[type=checkbox]{
 }
 
 ul p.buttons {
-    height:30px;
+    height:5vh;
     bottom: 0px;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: rgb(0,0,0);
@@ -501,7 +502,7 @@ ul p.buttons {
     margin-top: 0px;
     /*background-color: rgba(233, 241,223, 1);*/
     background-color: FFB899;
-    opacity: .65;
+    /*opacity: .65;*/
 }
 
 ul p:hover.buttons {
@@ -561,7 +562,7 @@ ul p:hover.buttons {
 .buttonsText {
     position: absolute;
     z-index: 10;
-    bottom: -8px;
+    bottom: 0;
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
