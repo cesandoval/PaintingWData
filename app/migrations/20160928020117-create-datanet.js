@@ -8,13 +8,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      layername: {
+      voxelname: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      layerids: {
-        type: Sequelize.STRING,
+      userId: {
+        type: Sequelize.INTEGER,
         allowNull: false
+      },
+      datafileIds: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      datavoxelId: {
+        type: Sequelize.INTEGER,
+        allowNull: true
       },
       geometry: {
         type: Sequelize.GEOMETRY
