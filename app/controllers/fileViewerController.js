@@ -133,7 +133,8 @@ function pushDataLayer(file, epsg, newName, req, callback) {
                     description : req.body.description,
                     location : req.body.location,
                     properties: record.properties,
-                    rasterval: rasterVal
+                    rasterval: rasterVal, 
+                    rasterProperty: rasterProperty
                 }
 
                 if (geom != null) {

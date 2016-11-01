@@ -41,6 +41,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true
       },
+      rasterProperty: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
       rasterval: {
         type: Sequelize.FLOAT
       },
