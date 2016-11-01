@@ -121,7 +121,7 @@ function pushDataNet(pointNet, props, req, callback) {
     // ++++++++++++-++++++++++------
     var layername = 'test_voxel';
     var epsg = props[0].epsg;
-    var id = req.user.id;
+    var userId = req.user.id;
 
     console.log("=========================================");
     console.log(`in pushDataNet`);
@@ -152,9 +152,10 @@ function pushDataNet(pointNet, props, req, callback) {
             crs: { type: 'name', properties: { name: 'EPSG:'+epsg} }
         }
         var newDataNet = {
-            layername: layername,
-            userId: id,
-            layerids: 1,
+            voxelname: layername,
+            userId: userId,
+            //datafileIds: [1,2,3,4],
+            //datavoxelId: 1, 
             epsg: epsg,
             geometry: point,
         }
@@ -204,6 +205,7 @@ function parseGeoJSON(results, props, req, callback) {
     var layername = props[0].layername;
     var epsg = props[0].epsg;
     var layerids = 1;
+    var userId = req.user.id;
 
     var features = [];
     for (i = 0; i < results.length; i++){
@@ -225,10 +227,11 @@ function parseGeoJSON(results, props, req, callback) {
 
     var newDataJSON = {
         layername: layername,
-        // userId: 1,
+        // userId: userId,
+        // datafileIds: [1, 5, 6],
+        // datavoxelId: 1,
         epsg: epsg,
         geojson: geoJSON,
-        layerids: layerids,
     }
 
     callback(null, [newDataJSON, props, req]);

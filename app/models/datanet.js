@@ -1,11 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Datanet = sequelize.define('Datanet', {
-    layername: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    layerids: {
+    voxelname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -20,7 +16,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        
+        Datanet.belongsTo(models.User, {foreignKey: 'userId'});
+        Datanet.hasMany(models.Datafile, {foreignKey: 'datafileIds'});
+        Datanet.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });

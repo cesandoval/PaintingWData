@@ -6,17 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       
       },
-    layerids: {
-        type: DataTypes.STRING,
-        allowNull: false,
-       
-      },
     geojson: DataTypes.JSON,
     epsg: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Datajson.belongsTo(models.User, {foreignKey: 'userId'});
+        Datajson.hasMany(models.Datafile, {foreignKey: 'datafileIds'});
+        Datajson.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });
