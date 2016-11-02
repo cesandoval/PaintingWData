@@ -60,14 +60,16 @@ module.exports = {
         allowNull: false
 
       },
-      layerids: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       geojson: {
         type: Sequelize.JSON
       },
       epsg: {
+        type: Sequelize.INTEGER
+      },
+      userId: {
+        type: Sequelize.INTEGER
+      },
+      datafileId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Datanet = sequelize.define('Datanet', {
-    voxelname: {
+    layername: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -12,7 +12,11 @@ module.exports = function(sequelize, DataTypes) {
     epsg: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     classMethods: {
       associate: function(models) {
