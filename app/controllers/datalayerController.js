@@ -27,7 +27,7 @@ module.exports.computeVoxels = function(req, res){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         getNet,
-        // pushDataNet,
+        pushDataNet,
         stValue,
         parseGeoJSON,
     ], function (err, result) {
@@ -44,12 +44,14 @@ module.exports.computeVoxels = function(req, res){
 
         var newDataJSON = Model.Datajson.build();
         newDataJSON.layername = result[1][0].layername;
-        newDataJSON.layerids = result[1][0].layerId;
+        newDataJSON.datafileId = result[1][0].datafileId;
         newDataJSON.epsg = result[1][0].epsg;
-        newDataJSON.geojson = result[0]
+        newDataJSON.geojson = result[0];
+        newDataJSON.userId = req.user.id;
         newDataJSON.save().then(function(){
-            console.log('new geojsonmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
+            console.log('new geojsonmmmmmmm')
         });   
+
     });
 
     res.send(datalayerIds);  
@@ -92,7 +94,7 @@ function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
     // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
     // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
-    var stepSize = 1500;
+    var stepSize = 2000;
 
     var netFunctionQuery = `
     CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS

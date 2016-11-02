@@ -12,15 +12,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      layerids: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       geometry: {
         type: Sequelize.GEOMETRY
       },
       epsg: {
         type: Sequelize.INTEGER
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

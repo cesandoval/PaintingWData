@@ -5,10 +5,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    layerids: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     geometry: {
       type: DataTypes.GEOMETRY,
       allowNull: true
@@ -16,11 +12,17 @@ module.exports = function(sequelize, DataTypes) {
     epsg: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     classMethods: {
       associate: function(models) {
-        
+        Datanet.belongsTo(models.User, {foreignKey: 'userId'});
+        // Datanet.hasMany(models.Datafile, {foreignKey: 'datafileId'});
+        // Datanet.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });

@@ -20,26 +20,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      userLayerName: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
       geometry: {
         type: Sequelize.GEOMETRY
       },
       properties: {
         type: Sequelize.JSON
       },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true
-      },
       epsg: {
         type: Sequelize.INTEGER
-      },
-      location: {
-        type: Sequelize.STRING,
-        allowNull: true
       },
       rasterProperty: {
         type: Sequelize.STRING,
@@ -47,6 +35,18 @@ module.exports = {
       },
       rasterval: {
         type: Sequelize.FLOAT
+      },
+      userLayerName: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      location: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
