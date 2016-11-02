@@ -1,6 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var Datavoxel = sequelize.define('Datavoxel', {
+var Datavoxel = sequelize.define('Datavoxel', {
     voxelname: {
       type: DataTypes.STRING,
       allowNull: false,
