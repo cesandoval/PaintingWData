@@ -12,8 +12,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Datajson.belongsTo(models.User, {foreignKey: 'userId'});
-        Datajson.hasMany(models.Datafile, {foreignKey: 'datafileIds'});
-        Datajson.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
+        // Datajson.hasMany(models.Datafile, {foreignKey: 'datafileId'});
+        // Datajson.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });

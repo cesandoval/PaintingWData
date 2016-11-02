@@ -154,8 +154,8 @@ function pushDataNet(pointNet, props, req, callback) {
         var newDataNet = {
             voxelname: layername,
             userId: userId,
-            //datafileIds: [1,2,3,4],
-            //datavoxelId: 1, 
+            // datafileIds: '1,2,3,4',
+            datavoxelId: 1, 
             epsg: epsg,
             geometry: point,
         }
@@ -224,12 +224,12 @@ function parseGeoJSON(results, props, req, callback) {
         type: "FeatureCollection",
         features: features
     }
-
+    // GET THE REAL VALS....
     var newDataJSON = {
         layername: layername,
-        // userId: userId,
-        // datafileIds: [1, 5, 6],
-        // datavoxelId: 1,
+        userId: userId,
+        // datafileIds: '1, 5, 6',
+        datavoxelId: 1,
         epsg: epsg,
         geojson: geoJSON,
     }

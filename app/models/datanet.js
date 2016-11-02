@@ -17,8 +17,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Datanet.belongsTo(models.User, {foreignKey: 'userId'});
-        Datanet.hasMany(models.Datafile, {foreignKey: 'datafileIds'});
-        Datanet.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
+        // Datanet.hasMany(models.Datafile, {foreignKey: 'datafileId'});
+        // Datanet.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });
