@@ -1,6 +1,6 @@
 /*@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,300);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
-@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
 @import 'https://fonts.googleapis.com/css?family=Roboto:400,700';
 @import url('https://fonts.googleapis.com/css?family=Droid+Sans');
@@ -111,7 +111,7 @@
     /*line-height: 85%;*/
     top: 25px;
     left: 7px;
-    /*font-family: 'Ubuntu', sans-serif;*/
+    /*font-family: 'Roboto', sans-serif;*/
     font-family: 'Roboto', sans-serif;
     font-weight: bolder;
     color: black;
@@ -125,7 +125,7 @@
     z-index: 5;
     width: 20%;
     right: 80%;
-    bottom: 5vh;
+    bottom: 7vh;
     top: 10vh; /* height of navbar */
     /*background-color: rgb(245,165,3);*/
     /*border-top: 1px solid rgba(233, 241,223, 1);*/
@@ -146,7 +146,7 @@
 }
 
 #accordion .ui-accordion-header {
-    background-color: #5C6BC0;
+    background-color: #FFAB91;
     margin: 0 0 0 0;
     height: 7vh;
     color: white;
@@ -190,15 +190,15 @@
     color: rgb(76,76,76);
 }
 
-#dataText{
+.dataText{
     right: 32px;
 }
 
-#graphText{
+.graphText{
     right: 127px;  
 }
 
-#somText{
+.somText{
     right: 238px;  
 }
 
@@ -221,14 +221,14 @@
     /*border-top: 1px solid rgba(233, 241,223, 1);*/
 }
 
-.bottom{
-    background-color: #283593;
+.bottom {
+    background-color: #D34031;
     /*opacity: .4;*/
     position: absolute;
     bottom: 0;
     right: 0px;
     width: 80%;
-    height:5vh;
+    height:7vh;
     z-index: 4;
     border-right: 1px solid rgba(233, 241,223, 1);
     border-left: 1px solid rgba(233, 241,223, 1);
@@ -282,27 +282,26 @@ label {
 .bottomWidgets {
     position: absolute;
     left: 20%;
-    bottom: -10vh;
+    bottom: 0;
     width: 80%;
-    height: 5vh;
+    height: 7vh;
     z-index: 4;
 }
 
 .gridStatus {
     position: relative;
     z-index: 2;
-    left: 0%;
+    left: 2vw;
     padding-left: 13px;
 }
 
 .gridStatus label{
     position: relative;
     font-size: 16px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
-    color: rgb(76,76,76);
-
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    /*text-shadow: 1px 1px 0px rgba(255,255,255,.4);*/
+    color: white;
 }
 
 .threeD {
@@ -315,7 +314,7 @@ label {
 .threeD label{
     position: relative;
     font-size: 17px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-shadow: 1px 1px 0px rgba(255,255,255,.4);
     color: rgb(76,76,76);
@@ -340,7 +339,7 @@ input[type=checkbox]{
 
 .sliderCell {
     position: relative;
-    height: 5vh;
+    height: 7vh;
 }
 
 .basicSliders {
@@ -369,7 +368,7 @@ input[type=checkbox]{
 
 .slidersText {
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
     color: rgb(76,76,76);
@@ -385,7 +384,7 @@ input[type=checkbox]{
     display: inline;
     padding-left: 5px;
     font-size: 13px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
     color: rgb(140,140,140);
@@ -487,28 +486,29 @@ input[type=checkbox]{
     color: #ffffff;
 }
 
-ul p.buttons {
-    height:5vh;
+.buttons {
+    height:7vh;
     bottom: 0px;
+    line-height: 7vh;
     z-index: 5;
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
-    color: rgb(0,0,0);
-    border: 1px solid rgb(245,165,3);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    color: white;
+    /*border: 1px solid #9FA8DA;*/
+    /*border-top: 1px solid #9FA8DA;*/
     margin-bottom: 0px;
     margin-top: 0px;
     /*background-color: rgba(233, 241,223, 1);*/
-    background-color: FFB899;
+    background-color: #D34031;
     /*opacity: .65;*/
 }
 
 ul p:hover.buttons {
-	background-color: rgb(245,165,3);
+	background-color: #9FA8DA;
 	cursor: pointer;
-    
+    color: white;
 }
 
 .mydiv {
@@ -560,14 +560,14 @@ ul p:hover.buttons {
 }
 
 .buttonsText {
-    position: absolute;
-    z-index: 10;
-    bottom: 0;
+    /*position: absolute;*/
+    /*z-index: 10;*/
+    /*bottom: 0;*/
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
-    color: rgb(76,76,76);
+    color: white;
     text-align: center;
 }
 

@@ -12,7 +12,7 @@ append content
     div(class = "bar bottom")
     div(class="options")
     
-    dic(class="bottomWidgets")
+    div(class="bottomWidgets")
         span(class = "gridStatus")
             label.
                 Grid
@@ -21,25 +21,13 @@ append content
             label.
                 3d
             input(type="checkbox", id="threeDBox", class="bottomBox")
- 
-    // button(id="show", class='buttons').
-    //     DATA 
-    // button(id="graphShow", class='buttons').
-    //     GRAPH
-    // button(id="somShow", class='buttons').
-    //     SOM       
+      
     ul
-        p(id="show", class="buttons").
-        p(class="buttonsText", id="dataText").
-            Data
+        a(id="show", class="buttons dataText btn buttonsText") Data
     ul
-        p(id="graphShow", class="buttons").
-        p(class="buttonsText", id="graphText").
-            Graph
+        a(id="graphShow", class="buttons buttonsText btn graphText", role="button") Graph
     ul
-        p(id="somShow", class="buttons").
-        p(class="buttonsText", id="somText").
-            SOM
+        a(id="somShow", class="buttons btn buttonsText somText", role="button") SOM
 
     div(id="parallelData", class="parcoords")
     script(src="javascripts/parallel_coordinates.js")
