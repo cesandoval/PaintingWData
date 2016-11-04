@@ -406,10 +406,11 @@ input[type=checkbox]{
     padding-top: 3vh;
     padding-bottom:  3vh;
     position: relative;
-    height: 3vh;
-    top: 4px;
+    /*height: 3vh;*/
+    width: 80%;
+    /*top: 4px;*/
     right: 0px;
-    /*float: right;*/
+    float: left;
 }
 
 #opacityName {

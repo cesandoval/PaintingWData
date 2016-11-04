@@ -177,7 +177,7 @@ function getColorToggles(layerName){
 function populateGraphBasic() {
     // Add New Divs to the UI Graph
     $("#allOpacity").append('<div class="basicSliders" id="sliderOpacity" ></div>');
-    $("#allNeighbors").append('<div class="slidersBottom" id="sliderNeighbors" ></div>');
+    $("#allNeighbors").append('<div class="basicSliders" id="sliderNeighbors" ></div>');
     
     $('#allOpacity').append('<div class="slidersText" id="textOpacity" ></div>');
     $('#textOpacity').append('<span class="sliderName" id="opacityName" ></span>');
