@@ -19,11 +19,15 @@ html
     //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //- //on our web server and will be delivered faster to the client than our own server.
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+    script(type='text/javascript', src="/javascripts/js/tether.min.js")
+
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
-    link(rel='stylesheet', href='stylesheets/font-awesome.min.css')
+    link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
     //- //reference our site-specific css
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/awesome-bootstrap-checkbox.css')
+    link(rel='stylesheet', href='/stylesheets/build.css')
 
 
     //- // D3 libs
@@ -54,6 +58,9 @@ html
 
     // PaintingWithData CSS
     link(rel='stylesheet', href='/stylesheets/base.css')
+
+    // Bootstrap JS libs
+    script(type='text/javascript', src="/javascripts/js/bootstrap.min.js")
 
 
   body

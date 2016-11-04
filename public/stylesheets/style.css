@@ -20,6 +20,12 @@ h2 {
     font-size: 4vh;
 }
 
+h4 {
+    text-align: right;
+    font-family: 'Roboto', sans-serif;
+    font-size: 2vh;
+}
+
 /**************************/
 /* NAVBAR */
 .navbar-inverse { 

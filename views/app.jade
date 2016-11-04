@@ -13,21 +13,20 @@ append content
     div(class="options")
     
     div(class="bottomWidgets")
-        span(class = "gridStatus")
-            label.
-                Grid
-            input(type="checkbox", id="gridBox", class="bottomBox")
-        span(class = "threeD")
-            label.
-                3d
-            input(type="checkbox", id="threeDBox", class="bottomBox")
-      
-    ul
-        a(id="show", class="buttons dataText btn buttonsText") Data
-    ul
-        a(id="graphShow", class="buttons buttonsText btn graphText", role="button") Graph
-    ul
-        a(id="somShow", class="buttons btn buttonsText somText", role="button") SOM
+        div.bottomOptions.col-xs-1
+            label Grid
+                input(type="checkbox", id="gridBox")
+        div.col-xs-1.bottomOptions
+            label 3D
+                input(type="checkbox", id="threeDBox")
+    
+    div.row
+        ul
+            a(id="show", class="buttons dataText btn buttonsText", data-toggle="tooltip", data-placement="top", title="Display data") Data
+        ul
+            a(id="graphShow", class="buttons buttonsText btn graphText", role="button", data-toggle="tooltip", data-placement="top", title="Interactively filter data") Graph
+        ul
+            a(id="somShow", class="buttons btn buttonsText somText", role="button", data-toggle="tooltip", data-placement="top", title="SOM display") SOM
 
     div(id="parallelData", class="parcoords")
     script(src="javascripts/parallel_coordinates.js")
@@ -79,19 +78,17 @@ append content
     //
 
     div(id="accordion")
-        h3.
-            Layers
+        h3 Layers
         div(id='graphLayers')
-            div(id='allOpacity' class='sliderCell')
-            // div(id='allNeighbors' class='sliderCell')
-        h3.
-            Node Types
+            h4 Opacity
+                div(id='allOpacity' class='sliderCell')
+            h4 Number of Neighbors
+                div(id='allNeighbors' class='sliderCell')
+        h3 Node Types
         div(id='graphControls')
             // div(id='allOpacity' class='sliderCell')
             // div(id='allNeighbors' class='sliderCell')
             div(id='nodeTypes' class='nodes')
-            
-    div(id='allNeighbors' class='sliderCell')
             
     //- div(id="nodeLibrary")
     //-     h3.
@@ -99,7 +96,6 @@ append content
     //-     div(id='nodeTypes')
             
     script(src='javascripts/uiVoxel.js')
-
     script(src='javascripts/three_voxel.js')
     
     link(rel="stylesheet", href="stylesheets/d3.slider.css")

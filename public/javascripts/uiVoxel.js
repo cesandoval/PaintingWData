@@ -17,6 +17,9 @@ $(function() {
     });
 });
 
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
 
 // Functions for Adding Layers to the UI Accordion
 // Slugify strings
@@ -94,7 +97,7 @@ function populateLayers(layers) {
         var colorInput = '<input type="text" class="showPaletteOnly rightAlign mydiv" id='+layerName+'Picker />';
         var colorInputB = '<input type="text" class="showPaletteOnlyB rightAlign mydiv" id='+layerName+'B_Picker />';
         var resetLayer = '<button class="resetLayer btn" id="'+layerName+'Reset">Reset</button>';
-        var radioBtn = $('<label><p class = "mydiv layerName" title = '+layers[i].toUpperCase()+'>'+layers[i]+'</p><input type="checkbox" class="layerBoxes mydiv checkboxStyle" name='
+        var radioBtn = $('<label><p class = "mydiv layerName" title = '+layers[i].toUpperCase()+'>'+layers[i]+'</p><input id="checkbox" type="checkbox" class="layerBoxes mydiv checkbox-info checkbox" name='
                          + layerName + ' checked/>'+colorInput+colorInputB+resetLayer+'</label>');
         
         radioBtn.appendTo('#'+layerName);
@@ -177,11 +180,11 @@ function populateGraphBasic() {
     $("#allNeighbors").append('<div class="slidersBottom" id="sliderNeighbors" ></div>');
     
     $('#allOpacity').append('<div class="slidersText" id="textOpacity" ></div>');
-    $('#textOpacity').append('<span class="sliderName" id="opacityName" >Opacity:</span>');
+    $('#textOpacity').append('<span class="sliderName" id="opacityName" ></span>');
     $('#textOpacity').append('<span id="opacityVal" class="sliderValue" >0.60</span>');
     
     $('#allNeighbors').append('<div class="slidersText" id="textNeighbors" ></div>');
-    $('#textNeighbors').append('<span class="sliderName" id="neighborName" >Neighbors: </span>');
+    $('#textNeighbors').append('<span class="sliderName" id="neighborName" ></span>');
     $('#textNeighbors').append('<span id="neighborVal" class="sliderValue" >6</span>');
     
     // Add the Sliders

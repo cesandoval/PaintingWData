@@ -107,15 +107,11 @@
     z-index: 5;
     font-size: 30px;
     width: 20%;
-    /*left: 8px;*/
-    /*line-height: 85%;*/
     top: 25px;
     left: 7px;
-    /*font-family: 'Roboto', sans-serif;*/
     font-family: 'Roboto', sans-serif;
     font-weight: bolder;
     color: black;
-    /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
     text-align: left;
     vertical-align: middle;
 }
@@ -176,18 +172,11 @@
     font-size: 15px;
 }
 
-#allNeighbors {
-    position: absolute;
-    right: 310px;
-    bottom: 2px;
-    z-index: 10;
-}
-
 #textNeighbors{
-    position: relative;
+/*    position: relative;
     right: 161px;
     bottom: 3px;
-    color: rgb(76,76,76);
+    color: rgb(76,76,76);*/
 }
 
 .dataText{
@@ -207,8 +196,6 @@
 }
 
 .top{
-    /*background: rgb(210,210,210);*/
-    /*background: rgb(245,165,3);*/
     background: #FA7951;
     position: absolute;
     top: 0;
@@ -216,24 +203,17 @@
     height:100px;
     z-index: 4;
     border-right: 1px solid rgba(233, 241,223, 1);
-    /*border-left: 1px solid rgba(0, 0, 0, .2);*/
     border-bottom: 1px solid rgba(233, 241,223, 1);
-    /*border-top: 1px solid rgba(233, 241,223, 1);*/
 }
 
 .bottom {
     background-color: #D34031;
-    /*opacity: .4;*/
     position: absolute;
     bottom: 0;
     right: 0px;
     width: 80%;
     height:7vh;
     z-index: 4;
-    border-right: 1px solid rgba(233, 241,223, 1);
-    border-left: 1px solid rgba(233, 241,223, 1);
-    border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
 }
 
 .options {
@@ -262,17 +242,27 @@ label {
 .resetLayer{
     font-size: .08em;
     font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-    /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
-    /*color: rgb(0,0,0);*/
-    background-color: white;
+    font-weight: 500;
     width: 20px;
     line-height: 8pt;
+    background-color: #D34031;
+    color:white;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.resetLayer:hover {
+    background-color: #E5B5AA;
 }
 
 .showPaletteOnly {
     position: absolute;
     float: right;
+}
+
+.btn {
+    border-radius: 0;
+    padding: 6px 0;
 }
 
 .sp-palette {
@@ -286,22 +276,29 @@ label {
     width: 80%;
     height: 7vh;
     z-index: 4;
+    /*padding-top: 1vh;*/
+    line-height: 5vh;
+    vertical-align: center;
+    display: block;
 }
 
-.gridStatus {
+.bottomOptions {
     position: relative;
     z-index: 2;
     left: 2vw;
-    padding-left: 13px;
+    height: 7vh;
 }
 
 .gridStatus label{
-    position: relative;
-    font-size: 16px;
+    /*position: relative;*/
+    font-size: 14px;
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
-    /*text-shadow: 1px 1px 0px rgba(255,255,255,.4);*/
     color: white;
+}
+
+.gridBox {
+    align-content: middle;
 }
 
 .threeD {
@@ -311,13 +308,13 @@ label {
     padding-left: 9px;
 }
 
-.threeD label{
+.bottomOptions label{
     position: relative;
-    font-size: 17px;
+    font-size: 14px;
+    line-height: 7vh;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
-    color: rgb(76,76,76);
+    color: white;
     bottom: 0px;
     padding-left: 7px;
 }
@@ -329,12 +326,8 @@ label {
 }
 
 input[type=checkbox]{
-  display: block;
-  color: white;
-  background-color: #554236;
-  border: none !important;
-
-
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .sliderCell {
@@ -344,34 +337,32 @@ input[type=checkbox]{
 
 .basicSliders {
     position: relative;
-    width: 55%;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .slidersBottom {
     position: absolute;
-    width: 150%;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .neighborSliders {
     position: relative;
-    width: 150px;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .slidersText {
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-    color: rgb(76,76,76);
 }
 
 .sliderName {
@@ -386,9 +377,8 @@ input[type=checkbox]{
     font-size: 13px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-    color: rgb(140,140,140);
-    line-height: 20px;
+    color: black;
+    height: 5vh;
     float: none;
 }
 
@@ -402,11 +392,24 @@ input[type=checkbox]{
 
 .slidersOpacity  {
     position: relative;
-    width: 55%;
-    height: 7px;
+    width: 100%;
+    height: 3vh;
     top: 4px;
     right: 0px;
-    float: right;
+}
+
+#allOpacity {
+    padding-top: 3vh;
+}
+
+#allNeighbors {
+    padding-top: 3vh;
+    padding-bottom:  3vh;
+    position: relative;
+    height: 3vh;
+    top: 4px;
+    right: 0px;
+    /*float: right;*/
 }
 
 #opacityName {
@@ -441,10 +444,19 @@ input[type=checkbox]{
     /*margin-left: -.6em;*/
 }
 
+#custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+  }
+
 .nodes {
-    font-size: 15px;
+    font-size: 12px;
     font-family: 'Roboto', sans-serif;
-    font-weight: 700;
+    font-weight: 400;
     color: rgb(100,100,100);
     position: relative;
     width: 80%;
@@ -453,14 +465,14 @@ input[type=checkbox]{
 }
 
 .nodes ul p {
-    border-bottom: 2px solid rgba(0,0,0,0);
+    /*border-bottom: 2px solid rgba(0,0,0,0);*/
     margin-bottom: 0;
     margin-top: -10px;
     font-family: 'Roboto', sans-serif;
 }
 
 .nodeNamesSelected {
-	border-bottom: 2px solid #f55 !important;
+	/*border-bottom: 2px solid #f55 !important;*/
 	width: 100%;
 	margin:0 auto;
 }
@@ -473,10 +485,10 @@ input[type=checkbox]{
 .copyright {
 	font-size: 10px;
 	color: rgb(100,100,100);;
-    bottom: 35px;
+    bottom: 8vh;
     position: absolute;
     right: 10px;
-    z-index: 10;
+    z-index: 1;
 }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
@@ -489,26 +501,32 @@ input[type=checkbox]{
 .buttons {
     height:7vh;
     bottom: 0px;
-    line-height: 7vh;
+    line-height: 5vh;
+    border-radius: 0;
     z-index: 5;
     font-size: 15px;
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: white;
-    /*border: 1px solid #9FA8DA;*/
-    /*border-top: 1px solid #9FA8DA;*/
     margin-bottom: 0px;
     margin-top: 0px;
-    /*background-color: rgba(233, 241,223, 1);*/
     background-color: #D34031;
-    /*opacity: .65;*/
 }
 
-ul p:hover.buttons {
-	background-color: #9FA8DA;
+ul a:hover.buttons {
+	background-color: #B2322B;
 	cursor: pointer;
     color: white;
+}
+
+.tooltip {
+    background-color: transparent;
+    height: auto;
+    display: block;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    width: 5vw;
 }
 
 .mydiv {
@@ -533,7 +551,7 @@ ul p:hover.buttons {
     display: block;
     float: left;
     width: 100%;
-    border-top: 1px solid white;
+    /*border-top: 1px solid white;*/
     padding-top: 1px;
     margin-top: -2px;
     font-family: 'Roboto', sans-serif;

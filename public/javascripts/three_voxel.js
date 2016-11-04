@@ -121,7 +121,7 @@ function voxelBuffer(file, sizeRange, colorRange) {
         
         if (verts.length > 0) {
             // Get all the layer names in the JSON
-            layerNames = Object.keys(verts[0].properties).slice(0,1);
+            layerNames = Object.keys(verts[0].properties).slice(0,3);
             // Load the UI functions from uiVoxel
             populateLayers(layerNames);
             
