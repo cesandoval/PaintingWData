@@ -75,11 +75,19 @@ h4 {
 
 .brand-title {
     margin: 0;
-    background-image: url(/images/circle_background_1.svg), url(/images/red_circles.svg);
+    background-image: url(/images/blue_circles.svg), url(/images/red_circles.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100vw auto;
-    background-position: 0 0;
+    /*background-size: 100vw auto;*/
+    background-position: 30vw -20vh;
+
+    -webkit-background-size: 100vw auto;
+    background-size: ;
+
+    transition:all 5s ;
+    -webkit-transition:all 5s ;
+    -o-transition:all 5s ;
+    -moz-transition:all 5s ;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
     -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
@@ -90,12 +98,23 @@ h4 {
     animation-timing-function: ease-out;
 }
 
+.brand-title:hover {
+  background-size: 150vw auto;
+  background-position:  0vw 10vh;
+  opacity: 0.9;
+}
+
 .red-circle-bg {
     background-image: url(/images/red_circles.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: 100vw auto;
-    background-position: 0 0;
+    background-position: 20vw 40vh;
+
+    transition:all 2s ;
+    -webkit-transition:all 2s ;
+    -o-transition:all 2s ;
+    -moz-transition:all 2s ;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
     -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
@@ -126,6 +145,11 @@ h4 {
 .spacing-small {
     padding-top: 3vh;
     padding-bottom: 3vh;
+}
+
+.spacing-large {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
 }
 
 .site-title {
