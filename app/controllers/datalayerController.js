@@ -26,10 +26,11 @@ module.exports.computeVoxels = function(req, res){
      
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
+        createDatavoxel,
         getNet,
-        pushDataNet,
-        stValue,
-        parseGeoJSON,
+        // pushDataNet,
+        // stValue,
+        // parseGeoJSON,
     ], function (err, result) {
         console.log(444444444444444444444445555555555555555)
         console.log("\n\n\n");
@@ -42,15 +43,15 @@ module.exports.computeVoxels = function(req, res){
         console.log(444444444444444444444445555555555555555)
         console.log(444444444444444444444445555555555555555)
 
-        var newDataJSON = Model.Datajson.build();
-        newDataJSON.layername = result[1][0].layername;
-        newDataJSON.datafileId = result[1][0].datafileId;
-        newDataJSON.epsg = result[1][0].epsg;
-        newDataJSON.geojson = result[0];
-        newDataJSON.userId = req.user.id;
-        newDataJSON.save().then(function(){
-            console.log('new geojsonmmmmmmm')
-        });   
+        // var newDataJSON = Model.Datajson.build();
+        // newDataJSON.layername = result[1][0].layername;
+        // newDataJSON.datafileId = result[1][0].datafileId;
+        // newDataJSON.epsg = result[1][0].epsg;
+        // newDataJSON.geojson = result[0];
+        // newDataJSON.userId = req.user.id;
+        // newDataJSON.save().then(function(){
+        //     console.log('new geojsonmmmmmmm')
+        // });   
 
     });
 
@@ -65,6 +66,19 @@ module.exports.show = function(req, res) {
         }).then(function(datafiles){
             res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
         });
+}
+
+function createDatavoxel(bbox, props, req, callback){
+    var voxelname = 'test';
+
+    var newDatavoxel = Model.Datavoxel.build();
+    newDatavoxel.voxelname = voxelname;
+    newDatavoxel.epsg = props[0].epsg;
+    newDatavoxel.userId = req.user.id;
+    newDatavoxel.save().then(function(){
+        console.log('new Datavoxel Created!!!!!');
+        callback(null, bbox, props, req);
+    });  
 }
 
 function getBbox(datalayerIds, req, callback) {
@@ -85,6 +99,8 @@ function getBbox(datalayerIds, req, callback) {
         var props = results;
         connection.query(bboxQuery).spread(function(results, metadata){
             var bbox = results[0].st_setsrid
+            console.log(bbox)
+            console.log(props)
             callback(null, bbox, props, req);
         })
     })
