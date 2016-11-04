@@ -14,7 +14,7 @@ var Datavoxel = sequelize.define('Datavoxel', {
     classMethods: {
       associate: function(models) {
         Datavoxel.belongsTo(models.User, {foreignKey: 'userId'});
-        // Datavoxel.hasMany(models.Datafile, {foreignKey: 'datafileId'});
+        // Datavoxel.belongsToMany(models.Datafile, {through: 'Datfilevoxel'});
       }
     }
   });

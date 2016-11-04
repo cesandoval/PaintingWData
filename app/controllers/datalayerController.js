@@ -28,7 +28,7 @@ module.exports.computeVoxels = function(req, res){
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
         getNet,
-        // pushDataNet,
+        pushDataNet,
         // stValue,
         // parseGeoJSON,
     ], function (err, result) {
@@ -75,9 +75,17 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.voxelname = voxelname;
     newDatavoxel.epsg = props[0].epsg;
     newDatavoxel.userId = req.user.id;
-    newDatavoxel.save().then(function(){
-        console.log('new Datavoxel Created!!!!!');
-        callback(null, bbox, props, req);
+    newDatavoxel.save().then(function(datavoxel){
+        props.forEach(function(prop, index){
+            var newDatafilevoxel = Model.Datafilevoxel.build();
+            newDatafilevoxel.datavoxelId = datavoxel.id;
+            newDatafilevoxel.datafileId = prop.datafileId;
+            newDatafilevoxel.save().then(function(datafilevoxel){
+            
+        }); 
+            
+        })
+       callback(null, bbox, props, req);
     });  
 }
 
@@ -162,7 +170,7 @@ function pushDataNet(pointNet, props, req, callback) {
         })
     }, maxLength);
 
-    var itemsProcessed = 0;  
+    var itemsProcessed = 0; 
     for (i = 0; i < pointNet.coordinates.length; i++){
         var point = {
             type: 'Point', 
@@ -170,7 +178,7 @@ function pushDataNet(pointNet, props, req, callback) {
             crs: { type: 'name', properties: { name: 'EPSG:'+epsg} }
         }
         var newDataNet = {
-            voxelname: layername,
+            layername: layername,
             userId: userId,
             // datafileIds: '1,2,3,4',
             datavoxelId: 1, 
@@ -179,16 +187,17 @@ function pushDataNet(pointNet, props, req, callback) {
         }
 
         cargo.push(newDataNet, function(err) {
-            // some
+            // s
+            itemsProcessed++;
+            console.log(itemsProcessed);
+
+            if(itemsProcessed === pointNet.coordinates.length) {
+                console.log('737327823874y2398476239846239846239846')
+                callback(null, props, req);          
+            }
         });
 
-        itemsProcessed++;
-        console.log(itemsProcessed);
-
-        if(itemsProcessed === pointNet.coordinates.length) {
-            console.log('737327823874y2398476239846239846239846')
-            callback(null, props, req);          
-        }
+        
     }
 }
 
