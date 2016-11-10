@@ -12,13 +12,16 @@ module.exports = function(sequelize, DataTypes) {
     },
     datafileId: {
       type: DataTypes.INTEGER
+    },
+    datavoxelId: {
+      type: DataTypes.INTEGER
     }
   }, {
     classMethods: {
       associate: function(models) {
         Datajson.belongsTo(models.User, {foreignKey: 'userId'});
         Datajson.belongsTo(models.Datafile, {foreignKey: 'datafileId'});
-        // Datajson.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
+        Datajson.belongsTo(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });

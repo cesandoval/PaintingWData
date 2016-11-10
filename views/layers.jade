@@ -33,6 +33,9 @@ block pageTitle
                 a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
     form.form-inline.pull-right(method='post', action='/layers')
       .form-group
+        label(for="voxelname").
+          Voxel Name
+        input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
         input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
         button.btn.btn-default(type='submit') Compute Voxels
 

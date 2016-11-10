@@ -4,15 +4,6 @@ var Model = require('../models'),
     path = require('path'),
     request = require('request');
 
-// async.waterfall([
-//     stValue,
-//     parseGeoJSON
-// ], function (err, result) {
-//     Model.DataJSON.sync().then(function(){
-//         return Model.DataJSON.create(result);
-//     });
-// });
-
 // This file extracts the datalayer ids from the request object and saves it on
 // the datalayerIds object. 
 // The datalayer objects are all strings containing ids. Eg "3", "7" ...
@@ -47,6 +38,7 @@ module.exports.computeVoxels = function(req, res){
         // newDataJSON.layername = result[1][0].layername;
         // newDataJSON.datafileId = result[1][0].datafileId;
         // newDataJSON.epsg = result[1][0].epsg;
+        // newDataJSON.datavoxelId = result[1][0].datavoxelId;
         // newDataJSON.geojson = result[0];
         // newDataJSON.userId = req.user.id;
         // newDataJSON.save().then(function(){
@@ -68,27 +60,9 @@ module.exports.show = function(req, res) {
         });
 }
 
-function createDatavoxel(bbox, props, req, callback){
-    var voxelname = 'test';
 
-    var newDatavoxel = Model.Datavoxel.build();
-    newDatavoxel.voxelname = voxelname;
-    newDatavoxel.epsg = props[0].epsg;
-    newDatavoxel.userId = req.user.id;
-    newDatavoxel.save().then(function(datavoxel){
-        props.forEach(function(prop, index){
-            var newDatafilevoxel = Model.Datafilevoxel.build();
-            newDatafilevoxel.datavoxelId = datavoxel.id;
-            newDatafilevoxel.datafileId = prop.datafileId;
-            newDatafilevoxel.save().then(function(datafilevoxel){
-            
-        }); 
-            
-        })
-       callback(null, bbox, props, req);
-    });  
-}
-
+// This function creates a BBox around all the Datalayers selected
+// It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
 function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
 
@@ -96,8 +70,6 @@ function getBbox(datalayerIds, req, callback) {
                     " FROM public."+'"Datalayers"' + "AS p WHERE "
                     +'"datafileId"'+" in ("+idsQuery+");"; 
     
-    // I NEED TO ADD A PROPERTY THAT DEALS WITH THE ACTUAL NAME OF THE PROPERTY USED. THIS WOULD BE SAVED FROM LAYERVIEWER
-    // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
     connection.query(distinctQuery).spread(function(results, metadata){
         var epsg = results[0].epsg;
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.geometry),"+
@@ -114,6 +86,31 @@ function getBbox(datalayerIds, req, callback) {
     })
 }
 
+function createDatavoxel(bbox, props, req, callback){
+    var voxelname = 'test';
+    
+
+    var newDatavoxel = Model.Datavoxel.build();
+    newDatavoxel.voxelname = voxelname;
+    newDatavoxel.epsg = props[0].epsg;
+    newDatavoxel.userId = req.user.id;
+    newDatavoxel.save().then(function(datavoxel){
+        props.forEach(function(prop, index){
+            prop.datavoxelId = datavoxel.id;
+            var newDatafilevoxel = Model.Datafilevoxel.build();
+            newDatafilevoxel.datavoxelId = datavoxel.id;
+            newDatafilevoxel.datafileId = prop.datafileId;
+            newDatafilevoxel.save().then(function(datafilevoxel){
+            
+        }); 
+            
+        })
+       callback(null, bbox, props, req);
+    });  
+}
+
+// This function creates a Datanet around the BBox that has been computed
+// It returns the Datanet, and a list of properties of each Datafile associated with the Datanet
 function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
     // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
@@ -145,8 +142,12 @@ function getNet(bbox, props, req, callback) {
 function pushDataNet(pointNet, props, req, callback) {
     // THIS HAS TO BE GIVEN BY THE USER/////
     // ++++++++++++-++++++++++------
-    var layername = 'test_voxel';
+
+    // CHANGE LAYERNAME TO VOXELNAME/////
+    // ++++++++++++-++++++++++------
+    var voxelname = req.body.voxelname;
     var epsg = props[0].epsg;
+    var datavoxelId = props[0].datavoxelId;
     var userId = req.user.id;
 
     console.log("=========================================");
@@ -178,21 +179,18 @@ function pushDataNet(pointNet, props, req, callback) {
             crs: { type: 'name', properties: { name: 'EPSG:'+epsg} }
         }
         var newDataNet = {
-            layername: layername,
+            voxelname: voxelname,
             userId: userId,
-            // datafileIds: '1,2,3,4',
-            datavoxelId: 1, 
+            datavoxelId: datavoxelId, 
             epsg: epsg,
             geometry: point,
         }
 
         cargo.push(newDataNet, function(err) {
-            // s
             itemsProcessed++;
             console.log(itemsProcessed);
 
             if(itemsProcessed === pointNet.coordinates.length) {
-                console.log('737327823874y2398476239846239846239846')
                 callback(null, props, req);          
             }
         });
@@ -208,7 +206,7 @@ function stValue(pointNet, props, req, callback) {
     console.log("\n\n\n");
 
     var layername = props[0].layername;
-    var datanetName = 'test_voxel'; 
+    var datanetName = req.body.voxelname; 
     var fileId = props[0].datafileId;
     var epsg = props[0].epsg;
     var layerids = 1;
@@ -219,7 +217,6 @@ function stValue(pointNet, props, req, callback) {
 
 
     connection.query(raw_query).spread(function(results, metadata){
-        // parseGeoJSON(results, layername, epsg, layerids);
         callback(null, results, props, req)
     })
 }
@@ -231,7 +228,8 @@ function parseGeoJSON(results, props, req, callback) {
 
     var layername = props[0].layername;
     var epsg = props[0].epsg;
-    var layerids = 1;
+    var datavoxelId = props[0].datavoxelId;
+    var datafileId = props[0].datafileId;
     var userId = req.user.id;
 
     var features = [];
@@ -255,8 +253,8 @@ function parseGeoJSON(results, props, req, callback) {
     var newDataJSON = {
         layername: layername,
         userId: userId,
-        // datafileIds: '1, 5, 6',
-        datavoxelId: 1,
+        datavoxelId: datavoxelId,
+        datafileId: datafileId,
         epsg: epsg,
         geojson: geoJSON,
     }
