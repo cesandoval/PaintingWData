@@ -15,19 +15,37 @@ block pageTitle
 
 block content
   div.container.transparent
-    .row.spacing.red-circle-bg
+    .row.spacing
       .col-md-6
         h2.spacing-small Application
         p Painting with Data, utilizes voxels, a computer graphics technique, combined with a graph database as an alternative data representation. Its technological and theoretical features propose a hybrid approach to urban computing, combining functional and representational modeling to provide users with an agency in representation, an ability to compute visually, and to lower the barriers of entry to urban modeling through real-time user interaction. Such models can create intuitions of the relational structures among urban dynamics, providing personal and contextual transparency to the modeling process, and motivating civic engagement in policy-making.
         p
       .col-md-6.col-lg-offset-4
           a(class="btn btn-gray btn-small", href="/about", role="button") More &raquo;
-    .row
+    .row.red-circle-bg
       .col-md-6.col-lg-offset-6
         h2.spacing-small Urban Tribes
         p For the urban tribes project, the platform visualizes the sentiment classification of the tweets, and provides the users with an interface to contextually and intuitively improve the classification of the sentiments of the city. For the project, the platform will display multiple demographic voxel layers of information, and will be combined with a voxel layer that will display an interpolated field of values based on a sentiment analysis of tweets that have been continuously collected since October 2015. The voxel layer based on the tweets will be queried through the same tools that have been implemented in Painting with Data. Additionally, the users of the platform will be capable of displaying the individual tweets to review the accuracy of the classification algorithm. A newly created feature of the application will allow modifying the values and representations individual voxels through the user interface –this will enable the users to compare the actual tweet with the classification given, and the rest of the voxel layers to finally modify the voxel values based on their interpretation of the actual sentiment. The different personal opinions of the users will be recorded on the database, and utilized to improve the sentiment layer of the tweet and the classification algorithm itself. 
       .col-md-6.col-lg-offset-10
           a(class="btn btn-gray btn-small", href="#", role="button") More &raquo;
+    .row.spacing
+      .col-md-4
+        h2 Examples
+    .row.spacing
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+    .row.spacing
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+      .col-md-4
+        img(src="/images/fpo_300x200.png")
+    .row
       .col-md-6
         h2.spacing-small Urban Networks
         p For the urban networks project, the goal is to use the platform to visualize the contextual conditions of the city, such as what type of inhabitants are in different areas, compute their accessibility to current and future transportation infrastructure and provide the users with an interface to display their different transportation opportunities and their reach. For the project, the platform will display multiple demographic voxel layers of information, and a layer with the values to the closest transportation infrastructure per voxel. More importantly, the user will be able to generate a voxel layer computing their travel times to the rest of the voxel locations. Such a computation will create a heat map of travel times depending on transportation modes and time of the day. The users will be able to compute visually based on the different layers of information and their contextual knowledge of the city, validating or making their own assumptions about the results of the model. 

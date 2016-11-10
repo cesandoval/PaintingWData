@@ -1,9 +1,10 @@
 /*@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,300);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300);
+@import url(https://fonts.googleapis.com/css?family=Karla:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
-@import 'https://fonts.googleapis.com/css?family=Roboto:400,700';
+@import 'https://fonts.googleapis.com/css?family=Karla:400,700';
 @import url('https://fonts.googleapis.com/css?family=Droid+Sans');
+@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
 
 ::-webkit-scrollbar
 {
@@ -109,7 +110,7 @@
     width: 20%;
     top: 25px;
     left: 7px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: bolder;
     color: black;
     text-align: left;
@@ -148,7 +149,7 @@
     color: white;
     text-align: right;
     font-size: 17px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: medium;
     text-transform: uppercase;
     vertical-align: middle;
@@ -167,7 +168,7 @@
 }
 
 #graphLayers {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 600;
     font-size: 15px;
 }
@@ -177,6 +178,7 @@
     right: 161px;
     bottom: 3px;
     color: rgb(76,76,76);*/
+    float: right;
 }
 
 .dataText{
@@ -241,7 +243,7 @@ label {
 
 .resetLayer{
     font-size: .08em;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     width: 20px;
     line-height: 8pt;
@@ -292,7 +294,7 @@ label {
 .gridStatus label{
     /*position: relative;*/
     font-size: 14px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 300;
     color: white;
 }
@@ -312,7 +314,7 @@ label {
     position: relative;
     font-size: 14px;
     line-height: 7vh;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     color: white;
     bottom: 0px;
@@ -361,7 +363,7 @@ input[type=checkbox]{
 
 .slidersText {
     font-size: 15px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
 }
 
@@ -375,7 +377,7 @@ input[type=checkbox]{
     display: inline;
     padding-left: 5px;
     font-size: 13px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     color: black;
     height: 5vh;
@@ -456,7 +458,7 @@ input[type=checkbox]{
 
 .nodes {
     font-size: 12px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 400;
     color: rgb(100,100,100);
     position: relative;
@@ -469,7 +471,7 @@ input[type=checkbox]{
     /*border-bottom: 2px solid rgba(0,0,0,0);*/
     margin-bottom: 0;
     margin-top: -10px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
 }
 
 .nodeNamesSelected {
@@ -506,7 +508,7 @@ input[type=checkbox]{
     border-radius: 0;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: white;
@@ -526,7 +528,7 @@ ul a:hover.buttons {
     height: auto;
     display: block;
     text-align: center;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     width: 5vw;
 }
 
@@ -540,7 +542,7 @@ ul a:hover.buttons {
     font-size: 13px;
     font-weight: 500;
     text-align: left;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
 }
 
 .mydiv .rightAlign {
@@ -555,13 +557,13 @@ ul a:hover.buttons {
     /*border-top: 1px solid white;*/
     padding-top: 1px;
     margin-top: -2px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
 }
 
 .layerBoxes button {
     /*padding: 0px !important;*/
     /*height: 18px !important;*/
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-size: 11px;
     font-weight: 300;
     width: 17%;
@@ -583,7 +585,7 @@ ul a:hover.buttons {
     /*z-index: 10;*/
     /*bottom: 0;*/
     font-size: 15px;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: white;
@@ -619,5 +621,5 @@ ul a:hover.buttons {
     height: 50px;
     font-size: 24px;
     font-weight: 700;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Karla', sans-serif;
 }
