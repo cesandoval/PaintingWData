@@ -29,6 +29,11 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 $ cd app
 $ sequelize db:migrate
 ```
+* To erase the database before migrating:
+```
+$ cd app
+$ sequelize db:migrate:undo:all
+```
 * If sequelize command not found, run:
 ```
 npm install -g sequelize-cli

@@ -1,15 +1,9 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Datanet = sequelize.define('Datanet', {
-    layername: {
+    voxelname: {
       type: DataTypes.STRING,
       allowNull: false,
-      // unique: true,
-    },
-    layerids: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      // unique: true,
     },
     geometry: {
       type: DataTypes.GEOMETRY,
@@ -18,11 +12,22 @@ module.exports = function(sequelize, DataTypes) {
     epsg: {
       type: DataTypes.INTEGER,
       allowNull: true
-    }
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    datavoxelId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   }, {
     classMethods: {
       associate: function(models) {
-        
+        Datanet.belongsTo(models.User, {foreignKey: 'userId'});
+        Datanet.belongsTo(models.Datavoxel, {foreignKey: 'voxelId'});
+        // Datanet.hasMany(models.Datafile, {foreignKey: 'datafileId'});
+        // Datanet.hasOne(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });

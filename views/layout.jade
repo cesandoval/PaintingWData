@@ -81,12 +81,23 @@ html
               a(href='/about') About
             li
               a(href='/documentation') Documentation
-            li
-              a(href='/upload') Upload Data
-            li
-              a(href='/app') Application
-            li
-              a(href='/users/login') Login
+            if userSignedIn
+              li
+                a(href='/upload') Upload Data
+              li
+                a(href='/app') Application
+            
+          ul.nav.navbar-nav.navbar-right
+            if userSignedIn
+              li
+                a(href='/layers/#{user.id}') #{user.email}
+              li 
+                a(href='/users/logout') Logout
+            else
+              li
+                a(href='/users/signup') Sign Up
+              li
+                a(href='/users/login') Login
               
           //- div(id="navbar", class="navbar-collapse collapse")
           //-   //- form(method="post", action="/users/login", class="navbar-form navbar-right")

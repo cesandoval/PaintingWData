@@ -1,0 +1,47 @@
+extends layout
+
+block pageTitle
+  link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
+  link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+  script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
+  script(src="/javascripts/js/layers.js")
+  script.
+
+    
+  .container(style = "margin-top: 50px")
+    .row
+      if datafiles.length == 0
+        .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
+          a(href = "/upload")
+            strong upload a datafile
+      for datafile in datafiles
+        .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
+          .post
+            .post-img-content
+              div(id="map_#{datafile.id}", class = "leafletMap", style="width: 370px; height: 300px; margin:0 auto;")
+              span.post-title
+              .layerName
+            .content
+              
+
+              .property
+
+              .epsg
+              .description
+                
+              div
+                a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
+    form.form-inline.pull-right(method='post', action='/layers')
+      .form-group
+        label(for="voxelname").
+          Voxel Name
+        input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
+        input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+        button.btn.btn-default(type='submit') Compute Voxels
+
+   script(src="/javascripts/user_layer.js")
+    
+    
+            
+     
+      

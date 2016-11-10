@@ -246,6 +246,9 @@ body {
   background-color:#fff;
 
 }
+.selected_layer{
+    border: 2px solid #e67e22;
+}
 
 .fa-spinner{
     margin: 45% 45%;

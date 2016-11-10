@@ -1,33 +1,23 @@
-
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Datajsons', {
+    return queryInterface.createTable('Datavoxels', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      layername: {
+      voxelname: {
         type: Sequelize.STRING,
         allowNull: false
-
-      },
-      geojson: {
-        type: Sequelize.JSON
       },
       epsg: {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
-      },
-      datafileId: {
-        type: Sequelize.INTEGER
-      },
-      datavoxelId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -40,6 +30,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Datajsons');
+    return queryInterface.dropTable('Datavoxels');
   }
 };

@@ -119,6 +119,7 @@ function pushDataLayer(epsg, newName, callback) {
         }
     }
 }
+/// kjskdj
 
 function getBbox(epsg, newName, callback) {
     var layername = newName;
@@ -225,15 +226,6 @@ function pushDataRaster(epsg, layername, callback) {
 }
 
 
-// async.waterfall([
-//     stValue,
-//     parseGeoJSON
-// ], function (err, result) {
-//     Model.DataJSON.sync().then(function(){
-//         return Model.DataJSON.create(result);
-//     });
-// });
-
 function stValue(callback) {
     console.log("=========================================");
     console.log(`in stValue`);
@@ -282,6 +274,7 @@ function parseGeoJSON(results, layername, epsg, layerids, callback) {
 
     callback(null, newDataJSON);
 }
+
 module.exports = {
     getEPSG: getEPSG,
 }
