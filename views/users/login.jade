@@ -1,33 +1,18 @@
 extends ../layout
 
 block pageTitle
-  div(class='jumbotron')
-  //-   div(class='container')
-  //-     h1 Sign In
-  //-     form(method="post", action="/users/login")
-  //-       div(data-role='fieldcontain')
-  //-         fieldset(data-role='controlgroup')
-  //-           label(for='username') User Name
-  //-             input(id='username',type='text',value='',placeholder='@',name='username')
-  //-       div(id='hiddendiv',data-role='fieldcontain')
-  //-         fieldset(data-role='controlgroup')
-  //-           label(for='password') Password
-  //-             input(id='password',type='password',value='',placeholder='password',name='password')
-  //-       div(data-role='fieldcontain')   
-  //-         input(type='submit',value='Login',data-transition='fade', data-theme='c')
- 
-  div(class="container")
-    div(class="row")
-      div(class="col-md-offset-5 col-md-3")
+  div.container.login-container
+    div.row
+      div.col-md-offset-4.col-md-4
         if !(message == '')
           .alert.alert-danger(role='alert') #{message}
         form(method="post", action="/users/login")
-          h4 Welcome back.
-          div(data-role='fieldcontain')
+          h2.spacing Welcome back.
+          div(data-role='fieldcontain').form-group
             fieldset(data-role='controlgroup')
               label(for="email").
                 Username
-              input(type="text", id="email", class="form-control input-sm chat-input", name="username")
+              input(type="text", id="email", class="form-control input-sm chat-input", name="username", placeholder="newuser@gmail.com")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
@@ -35,5 +20,5 @@ block pageTitle
                 Password
               input(type="password", id="password", class="form-control input-sm chat-input", name="password")
               br
-          div(data-role='fieldcontain')   
-            input(type='submit',value='Sign In',data-transition='fade', data-theme='c', class="btn btn-primary btn-md")
+          div(data-role='fieldcontain').spacing   
+            input(type='submit',value='Sign In',data-transition='fade', data-theme='c', class="btn btn-gray btn-sm")

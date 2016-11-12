@@ -28,6 +28,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/awesome-bootstrap-checkbox.css')
     link(rel='stylesheet', href='/stylesheets/build.css')
+    link(rel='stylesheet', href='/stylesheets/login.css')
 
 
     //- // D3 libs
@@ -60,8 +61,7 @@ html
     link(rel='stylesheet', href='/stylesheets/base.css')
 
     // Bootstrap JS libs
-    script(type='text/javascript', src="/javascripts/js/bootstrap.min.js")
-
+    script(type='text/javascript', src="/javascripts/js/bootstrap.min.js")    
 
   body
     block navBar
@@ -98,17 +98,6 @@ html
                 a(href='/users/signup') Sign Up
               li
                 a(href='/users/login') Login
-              
-          //- div(id="navbar", class="navbar-collapse collapse")
-          //-   //- form(method="post", action="/users/login", class="navbar-form navbar-right")
-          //-   form(class="navbar-form navbar-right")
-          //-     div(class="form-group")
-          //-       input(type="text", placeholder="User Name", class="form-control", name="username")
-          //-     div(class="form-group")
-          //-       input(type="password", placeholder="Password", class="form-control", name="password")
-          //-     button(type="submit", class="btn btn-success").
-          //-       Sign in
-
 
     block pageTitle
     block content

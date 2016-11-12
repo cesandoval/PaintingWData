@@ -111,6 +111,8 @@ h4 {
     background-size: 100vw auto;
     background-position: -30vw 0vh;
 
+    width: 100vw;
+
     transition:all 2s ;
     -webkit-transition:all 2s ;
     -o-transition:all 2s ;
@@ -123,6 +125,20 @@ h4 {
 
     -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
     animation-timing-function: ease-out;
+}
+
+.no-margin { 
+    margin-left: 0;
+    margin-right: 0;
+ }
+
+ .margin {
+    margin-left: 5vw;
+    margin-right: 5vw;
+ }
+
+ .full-width { 
+    width: 100vw;
 }
 
 .red-circle-bg:hover {
@@ -275,3 +291,4 @@ body {
     width: 100%;
     height: 60px;
 }
+
