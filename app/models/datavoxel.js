@@ -10,6 +10,10 @@ var Datavoxel = sequelize.define('Datavoxel', {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    bbox: {
+      type: DataTypes.GEOMETRY,
+      allowNull: true
+    },
 }, {
     classMethods: {
       associate: function(models) {
