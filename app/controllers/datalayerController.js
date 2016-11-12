@@ -17,17 +17,25 @@ module.exports.computeVoxels = function(req, res){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
-        // getNet,
-        // pushDataNet,
-        // stValue,
-        // parseGeoJSON,
-        // pushDatajson
+        getNet,
+        pushDataNet,
+        stValue,
+        parseGeoJSON,
+        pushDatajson
     ], function (err, result) {
         console.log("\n\n\n");
-        console.log(result[0]);
         console.log("\n\n\n");
         console.log("\n\n\n");
         console.log(444444444444444444444445555555555555555)
+
+        console.log(result)
+        // Model.Datavoxel.find({
+        //     where : {
+        //         userId : req.user.id,
+        //     }
+        // }).then(function(datavoxels){
+        //     res.redirect(`/voxels/${req.user.id}`);
+        // });
     });
 
     res.send(datalayerIds);  
@@ -43,6 +51,16 @@ module.exports.show = function(req, res) {
         });
 }
 
+module.exports.showVoxels = function(req, res) {
+     Model.Datavoxel.findAll({
+            where : {
+                userId : req.user.id,
+            }
+        }).then(function(datavoxels){
+            console.log(datavoxels)
+            // res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
+        });
+}
 
 // This function creates a BBox around all the Datalayers selected
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
