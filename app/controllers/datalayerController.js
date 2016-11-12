@@ -2,36 +2,46 @@ var Model = require('../models'),
     connection = require('../sequelize.js'),
     async = require('async'),
     path = require('path'),
-    request = require('request');
+    request = require('request'),
+    amqp = require('amqplib/callback_api');
 
 // This file extracts the datalayer ids from the request object and saves it on
 // the datalayerIds object. 
 // The datalayer objects are all strings containing ids. Eg "3", "7" ...
+
 module.exports.computeVoxels = function(req, res){
     var datalayerIds = [];
+    var datalayerIdString = req.body.datalayerIds;
     req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-        if(datalayerId !== "")
+        if(datalayerId !== ""){
             datalayerIds.push(datalayerId);
+        }
     });
+    var q = 'layer_tasks'
 
-    async.waterfall([
-        async.apply(getBbox, datalayerIds, req),
-        createDatavoxel,
-        getNet,
-        pushDataNet,
-        stValue,
-        parseGeoJSON,
-        pushDatajson
-    ], function (err, result) {
-        console.log("\n\n\n");
-        console.log(result);
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log(444444444444444444444445555555555555555)
+    function bail(err) {
+      console.error(err);
+      process.exit(1);
+    }
+
+    // Publisher
+    console.log("================================");
+    function publisher(conn) {
+      conn.createChannel(on_open);
+      function on_open(err, ch) {
+        if (err != null) bail(err);
+        ch.assertQueue(q);
+        ch.sendToQueue(q, new Buffer(JSON.stringify({'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds}})));
+      }
+    }
+    console.log("================================");
+    amqp.connect('amqp://localhost', function(err, conn) {
+      if (err != null) bail(err);
+      publisher(conn);
     });
 
     res.send(datalayerIds);  
-}
+};
 
 module.exports.show = function(req, res) {
      Model.Datafile.findAll({
@@ -43,12 +53,35 @@ module.exports.show = function(req, res) {
         });
 }
 
+module.exports.startWorker = function(datalayerIds, req){
+    console.log("");
+    async.waterfall([
+        async.apply(getBbox, datalayerIds, req),
+        createDatavoxel,
+        getNet,
+        pushDataNet,
+        stValue,
+        parseGeoJSON,
+        pushDatajson,
+    ], function (err, result) {
+        console.log(444444444444444444444445555555555555555)
+        console.log("\n\n\n");
+        console.log(result[0]);
+        console.log(result[1])
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log("\n\n\n");
+        console.log(444444444444444444444445555555555555555)
+        console.log(444444444444444444444445555555555555555)
+    });
+};
+
 
 // This function creates a BBox around all the Datalayers selected
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
 function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
-
     var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+
                     " FROM public."+'"Datalayers"' + "AS p WHERE "
                     +'"datafileId"'+" in ("+idsQuery+");"; 
@@ -62,8 +95,6 @@ function getBbox(datalayerIds, req, callback) {
         var props = results;
         connection.query(bboxQuery).spread(function(results, metadata){
             var bbox = results[0].st_setsrid
-            console.log(bbox)
-            console.log(props)
             callback(null, bbox, props, req);
         })
     })
@@ -123,6 +154,11 @@ function getNet(bbox, props, req, callback) {
 }
 
 function pushDataNet(pointNet, props, req, callback) {
+    // THIS HAS TO BE GIVEN BY THE USER/////
+    // ++++++++++++-++++++++++------
+
+    // CHANGE LAYERNAME TO VOXELNAME/////
+    // ++++++++++++-++++++++++------
     var voxelname = req.body.voxelname;
     var epsg = props[0].epsg;
     var datavoxelId = props[0].datavoxelId;
@@ -142,7 +178,7 @@ function pushDataNet(pointNet, props, req, callback) {
         Model.Datanet.bulkCreate(tasks, { validate: true }).catch(function(errors) 
         {
             console.log(errors);
-            req.flash('error', "whoa")
+            // req.flash('error', "whoa")
             // res.redirect('app')
         }).then(function () {
             callback();
@@ -176,7 +212,6 @@ function pushDataNet(pointNet, props, req, callback) {
         
     }
 }
-
 
 function stValue(props, req, callback) {
     console.log("=========================================");
@@ -259,5 +294,4 @@ function pushDatajson(geoJSON, props, req, callback) {
         callback(null, 'New dataJSON added');
     }); 
 }
-
 
