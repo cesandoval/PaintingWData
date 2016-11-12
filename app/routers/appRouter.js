@@ -35,6 +35,7 @@ var passport = require('passport'),
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
 
   router.get('/layers/:id', isAuthenticated, datalayerController.show);
+  router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);

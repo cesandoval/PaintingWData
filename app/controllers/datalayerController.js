@@ -53,6 +53,18 @@ module.exports.show = function(req, res) {
         });
 }
 
+module.exports.showVoxels= function(req, res) {
+     Model.Datavoxel.findAll({
+            where : {
+                userId : req.user.id,
+            }
+        }).then(function(datavoxels){
+            res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
+        });
+}
+
+
+
 module.exports.startWorker = function(datalayerIds, req){
     console.log("");
     async.waterfall([
@@ -74,6 +86,13 @@ module.exports.startWorker = function(datalayerIds, req){
         console.log("\n\n\n");
         console.log(444444444444444444444445555555555555555)
         console.log(444444444444444444444445555555555555555)
+        Model.Datavoxel.findAll({
+            where: {
+                userId: req.user.id,
+            }
+        }).then(function(datavoxels){
+            res.redirect(`/voxels/${req.user.id}`);
+        });
     });
 };
 
@@ -220,80 +239,85 @@ function stValue(props, req, callback) {
     console.log(`in stValue`);
     console.log("\n\n\n");
     console.log(props[0])
-
-    var layername = props[0].layername;
-    var datanetName = req.body.voxelname; 
-    var datavoxelId = props[0].datavoxelId; 
-    var fileId = props[0].datafileId;
-    var epsg = props[0].epsg;
-    var layerids = 1;
-
-    var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
+    var resultsArr = [];
+    async.each(props, function(prop, callback) {
+        console.log("=========================================");
+        
+        var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
                     +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p."
-                    +'"datavoxelId"' + "=" +datavoxelId+" AND r.datafileid="+ fileId +";"
-
-    // var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
-    //                 +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p.voxelname='"
-    //                 +datanetName+"' AND r.datafileid="+ fileId +";"
-
-    connection.query(raw_query).spread(function(results, metadata){
-        callback(null, results, props, req)
-    })
+                    +'"datavoxelId"' + "=" +prop.datavoxelId+" AND r.datafileid="+ prop.datafileId +";"
+        connection.query(raw_query).spread(function(results, metadata){
+            resultsArr.push(results)
+        })
+    },
+    function(){
+         callback(null, resultsArr, props, req)
+    });
+      
 }
 
 function parseGeoJSON(results, props, req, callback) {
     console.log("=========================================");
     console.log(`in parseGeoJSON`);
     console.log("\n\n\n");
+    console.log(results);
 
-    console.log(results)
+    var newDataJsons = [];
+   
+    results.forEach(function(result, index){
+        var features = [];
+        for (i = 0; i < result.length; i++){
+            var currentResult = result[i],
+                voxel = {
+                    type: 'Feature',
+                    geometry: currentResult.st_asgeojson,
+                    properties: { }
+                    
+                };
+            voxel['properties'][layername] = currentResult.rastervalue;
+            features.push(voxel);
+        }
 
-    var layername = props[0].layername;
-    var epsg = props[0].epsg;
-    var datavoxelId = props[0].datavoxelId;
-    var datafileId = props[0].datafileId;
-    var userId = req.user.id;
+        var geoJSON = { 
+            type: "FeatureCollection",
+            features: features
+        }
+        var newDataJSON = {
+            layername: props[index].layername,
+            userId: req.user.id,
+            datavoxelId: props[index].datavoxelId,
+            datafileId: props[index].datafileId,
+            epsg: props[index].epsg,
+            geojson: geoJSON,
+        }
+        newDataJsons.push(newDataJSON)
+    });
 
-    var features = [];
-    for (i = 0; i < results.length; i++){
-        var currentResult = results[i],
-            voxel = {
-                type: 'Feature',
-                geometry: currentResult.st_asgeojson,
-                properties: { }
-                
-            };
-        voxel['properties'][layername] = currentResult.rastervalue;
-        features.push(voxel);
-    }
 
-    var geoJSON = { 
-        type: "FeatureCollection",
-        features: features
-    }
-    var newDataJSON = {
-        layername: layername,
-        userId: userId,
-        datavoxelId: datavoxelId,
-        datafileId: datafileId,
-        epsg: epsg,
-        geojson: geoJSON,
-    }
-    console.log(newDataJSON)
-    callback(null, newDataJSON, props, req);
+
+    
+    console.log(newDataJsons);
+    callback(null, newDataJsons, props, req);
 }
 
 function pushDatajson(geoJSON, props, req, callback) {
-    var newDataJSON = Model.Datajson.build();
-    newDataJSON.layername = props[0].layername;
-    newDataJSON.datafileId = props[0].datafileId;
-    newDataJSON.epsg = props[0].epsg;
-    newDataJSON.datavoxelId = props[0].datavoxelId;
-    newDataJSON.geojson = geoJSON;
-    newDataJSON.userId = req.user.id;
-    newDataJSON.save().then(function(){
+   async.each(props, function(prop, callback) {
+        var newDataJSON = Model.Datajson.build();
+        newDataJSON.layername = prop.layername;
+        newDataJSON.datafileId = prop.datafileId;
+        newDataJSON.epsg = prop.epsg;
+        newDataJSON.datavoxelId = prop.datavoxelId;
+        newDataJSON.geojson = geoJSON;
+        newDataJSON.userId = req.user.id;
+        newDataJSON.save().then(function(){
         console.log('new geojsonmmmmmmm');
         callback(null, 'New dataJSON added');
     }); 
+    },
+    function(){
+        callback(null, 'New dataJSON added');
+    }); 
+
+   
 }
 
