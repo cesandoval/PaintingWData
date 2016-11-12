@@ -96,7 +96,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
     background-repeat: no-repeat;
     background-attachment: fixed;
     /*background-size: 100vw auto;*/
-    background-position: 0vw 10vh;
+    background-position: 0vw 0vh;
 
     -webkit-background-size: 100vw auto;
     background-size: ;
