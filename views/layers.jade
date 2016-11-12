@@ -7,8 +7,10 @@ block pageTitle
   script(src="/javascripts/js/layers.js")
   script.
 
-    
-  .container(style = "margin-top: 50px")
+  
+  .container(style = "margin-top: 50px").spacing-large
+    .row.spacing-large
+      h1.center Layers
     .row
       if datafiles.length == 0
         .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
@@ -30,14 +32,17 @@ block pageTitle
               .description
                 
               div
-                a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
-    form.form-inline.pull-right(method='post', action='/layers')
-      .form-group
-        label(for="voxelname").
-          Voxel Name
-        input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
-        input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-        button.btn.btn-default(type='submit') Compute Voxels
+                a.btn.btn-mapviewer.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
+    .row.spacing-large
+      .col-md-4.col-md-offset-4
+        form(method='post', action='/layers')
+          .form-group
+            label(for="voxelname").
+              Voxel Name
+            input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
+            input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+            .row.spacing-small
+              button.btn.btn-gray.btn-lg.btn-voxel(type='submit') Compute <br>Voxels
 
    script(src="/javascripts/user_layer.js")
     

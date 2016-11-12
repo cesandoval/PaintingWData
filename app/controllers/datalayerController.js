@@ -101,8 +101,9 @@ function getBbox(datalayerIds, req, callback) {
 }
 
 function createDatavoxel(bbox, props, req, callback){
-    var voxelname = 'test';
-    
+    var voxelname = req.body.voxelname;
+    var currBbox = bbox;
+    currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ props[0].epsg} };
 
     var newDatavoxel = Model.Datavoxel.build();
     newDatavoxel.voxelname = voxelname;
@@ -114,9 +115,10 @@ function createDatavoxel(bbox, props, req, callback){
             var newDatafilevoxel = Model.Datafilevoxel.build();
             newDatafilevoxel.datavoxelId = datavoxel.id;
             newDatafilevoxel.datafileId = prop.datafileId;
+            newDatafilevoxel.bbox = currBbox;
             newDatafilevoxel.save().then(function(datafilevoxel){
-            
-        }); 
+
+            }); 
             
         })
        callback(null, bbox, props, req);

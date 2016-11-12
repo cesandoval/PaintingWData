@@ -1,0 +1,19 @@
+.login-container { 
+	padding-top: 20vh;
+	height: 90vh;
+ }
+
+.form-control {
+	border-radius: 3px;
+}
+
+input[type="submit"] {
+	height: 10vh;
+	width: 100%;
+	background-color: transparent;
+	font-size: 2vh;
+}
+
+.prompt {
+	text-align: center;
+}

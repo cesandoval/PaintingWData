@@ -1,6 +1,10 @@
 /*@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,300);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
-@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+@import url(https://fonts.googleapis.com/css?family=Karla:400,500,700,300);
+@import 'https://fonts.googleapis.com/css?family=EB+Garamond';
+@import 'https://fonts.googleapis.com/css?family=Karla:400,700';
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans');
+@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
 
 ::-webkit-scrollbar
 {
@@ -104,15 +108,11 @@
     z-index: 5;
     font-size: 30px;
     width: 20%;
-    /*left: 8px;*/
-    /*line-height: 85%;*/
     top: 25px;
     left: 7px;
-    /*font-family: "Source Sans Pro", san-sarif;*/
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: bolder;
-    color: rgba(255, 255,255, 1);
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+    color: black;
     text-align: left;
     vertical-align: middle;
 }
@@ -122,69 +122,74 @@
     z-index: 5;
     width: 20%;
     right: 80%;
-    /*bottom: 30px;*/
-    top: 50px;
-    background-color: rgb(245,165,3);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    bottom: 7vh;
+    top: 10vh; /* height of navbar */
+    /*background-color: rgb(245,165,3);*/
+    /*border-top: 1px solid rgba(233, 241,223, 1);*/
+    -webkit-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
+    box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
 }
 
 #accordion .ui-accordion-content {
     /*background-color: rgb(240,240,240);*/
-    background-color: rgba(253, 232,172, 1);
+    /*background-color: rgba(253, 232,172, 1);*/
+    /*background-color: #FFB899;*/
+    background-color: white;
+    /*border-right: 5px solid #2D6A65;*/
     line-height:  14pt;
     margin: 0;
     padding: 8px;
 }
 
 #accordion .ui-accordion-header {
-    background-color: rgb(245,165,3);
-    margin: 0px;
-    height: 27px;
-    text-align: left;
-    font-size: 18px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 500;
-    padding:0px;
-    padding-left: 8px;
-    padding-top: 4px;
+    background-color: #FFAB91;
+    margin: 0 0 0 0;
+    height: 7vh;
+    color: white;
+    text-align: right;
+    font-size: 17px;
+    font-family: 'Karla', sans-serif;
+    font-weight: medium;
+    text-transform: uppercase;
     vertical-align: middle;
+    padding: 0px;
+    padding-left: 8px;
+    padding-right: 1vw;
+    padding-top: 4px;
+    line-height: 7vh;
+    border: none;
     
-    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
+/*    text-shadow: 1px 1px 0px rgba(0,0,0,0.2);
     border-right: 1px solid rgba(233, 241,223, 1);
     border-left: 1px solid rgba(233, 241,223, 1);
     border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    border-top: 1px solid rgba(233, 241,223, 1);*/
 }
 
 #graphLayers {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 600;
     font-size: 15px;
 }
 
-#allNeighbors {
-    position: absolute;
-    right: 310px;
-    bottom: 2px;
-    z-index: 10;
-}
-
 #textNeighbors{
-    position: relative;
+/*    position: relative;
     right: 161px;
     bottom: 3px;
-    color: rgb(76,76,76);
+    color: rgb(76,76,76);*/
+    float: right;
 }
 
-#dataText{
+.dataText{
     right: 32px;
 }
 
-#graphText{
+.graphText{
     right: 127px;  
 }
 
-#somText{
+.somText{
     right: 238px;  
 }
 
@@ -193,32 +198,24 @@
 }
 
 .top{
-    /*background: rgb(210,210,210);*/
-    background: rgb(245,165,3);
+    background: #FA7951;
     position: absolute;
     top: 0;
     width: 19.9%;
     height:100px;
     z-index: 4;
     border-right: 1px solid rgba(233, 241,223, 1);
-    /*border-left: 1px solid rgba(0, 0, 0, .2);*/
     border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
 }
 
-.bottom{
-    background: rgb(245,165,3);
-    opacity: .4;
+.bottom {
+    background-color: #D34031;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     right: 0px;
     width: 80%;
-    height:30px;
+    height:7vh;
     z-index: 4;
-    border-right: 1px solid rgba(233, 241,223, 1);
-    border-left: 1px solid rgba(233, 241,223, 1);
-    border-bottom: 1px solid rgba(233, 241,223, 1);
-    border-top: 1px solid rgba(233, 241,223, 1);
 }
 
 .options {
@@ -231,6 +228,21 @@
     z-index: 2;
 }
 
+label {
+    display: block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+label[for="file-selector"] {
+    height: 12vh;
+    width: 100%;
+    line-height: 10vh;
+    font-size: 2vh;
+    font-weight: 400;
+}
+
 .layerBoxes{
     vertical-align: middle;
     position: relative;
@@ -239,16 +251,50 @@
 
 .resetLayer{
     font-size: .08em;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 400;
-    /*text-shadow: 1px 1px 0px rgba(0,0,0,0.2);*/
-    color: rgb(0,0,0);
+    font-family: 'Karla', sans-serif;
+    font-weight: 500;
+    width: 20px;
     line-height: 8pt;
+    background-color: #D34031;
+    color:white;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.resetLayer:hover {
+    background-color: #E5B5AA;
 }
 
 .showPaletteOnly {
     position: absolute;
     float: right;
+}
+
+.btn {
+    border-radius: 0;
+    padding: 6px 0;
+}
+
+.btn-voxel {
+    width: 5vw;
+    height: 5vw;
+    background-color: transparent;
+    float: right;
+}
+
+.btn-mapviewer {
+    background-color: rgb(220, 220, 220);
+    font-family: 'Karla', sans-serif;
+    color: black;
+    border-radius: 5px;
+    width: 5vw;
+    float: right;
+    margin-top: 2vh;
+}
+
+.btn-mapviewer:hover {
+    background-color: rgb(150, 150, 150);
+    color: white;
 }
 
 .sp-palette {
@@ -258,27 +304,33 @@
 .bottomWidgets {
     position: absolute;
     left: 20%;
-    bottom: -5px;
+    bottom: 0;
     width: 80%;
-    height: 30px;
+    height: 7vh;
     z-index: 4;
+    /*padding-top: 1vh;*/
+    line-height: 5vh;
+    vertical-align: center;
+    display: block;
 }
 
-.gridStatus {
+.bottomOptions {
     position: relative;
     z-index: 2;
-    left: 0%;
-    padding-left: 13px;
+    left: 2vw;
+    height: 7vh;
 }
 
 .gridStatus label{
-    position: relative;
-    font-size: 16px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
-    color: rgb(76,76,76);
+    /*position: relative;*/
+    font-size: 14px;
+    font-family: 'Karla', sans-serif;
+    font-weight: 300;
+    color: white;
+}
 
+.gridBox {
+    align-content: middle;
 }
 
 .threeD {
@@ -288,13 +340,13 @@
     padding-left: 9px;
 }
 
-.threeD label{
+.bottomOptions label{
     position: relative;
-    font-size: 17px;
-    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    line-height: 7vh;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,.4);
-    color: rgb(76,76,76);
+    color: white;
     bottom: 0px;
     padding-left: 7px;
 }
@@ -305,40 +357,48 @@
     bottom: -1px;
 }
 
+input[type=checkbox]{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+label {
+    font-family: 'Karla', sans-serif;
+}
+
 .sliderCell {
     position: relative;
+    height: 7vh;
 }
 
 .basicSliders {
     position: relative;
-    width: 55%;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .slidersBottom {
     position: absolute;
-    width: 150%;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .neighborSliders {
     position: relative;
-    width: 150px;
+    width: 80%;
     height: 12px;
     right: 0px;
-    float: right;
+    float: left;
 }
 
 .slidersText {
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-    color: rgb(76,76,76);
 }
 
 .sliderName {
@@ -349,13 +409,12 @@
 
 .sliderValue{
     display: inline;
-    /*padding-left: 5px;*/
+    padding-left: 5px;
     font-size: 13px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
-    text-shadow: 1px 1px 0px rgba(255,255,255,0.2);
-    color: rgb(140,140,140);
-    line-height: 20px;
+    color: black;
+    height: 5vh;
     float: none;
 }
 
@@ -369,11 +428,29 @@
 
 .slidersOpacity  {
     position: relative;
-    width: 55%;
-    height: 7px;
+    width: 100%;
+    height: 3vh;
     top: 4px;
     right: 0px;
-    float: right;
+}
+
+#allOpacity {
+    padding-top: 3vh;
+}
+
+#allNeighbors {
+    padding-top: 3vh;
+    padding-bottom:  3vh;
+    position: relative;
+    /*height: 3vh;*/
+    width: 80%;
+    /*top: 4px;*/
+    right: 0px;
+    float: left;
+}
+
+#opacityName {
+    padding-right: 2px;
 }
 
 .slidersOpacity.ui-slider .ui-slider-handle {
@@ -387,8 +464,9 @@
 
 .layerName {
     position: center;
-    /*float: left;*/
+    float: left;
     line-height: 20px;
+    width: 60%;
 }
 
 .ui-slider .ui-slider-handle {
@@ -403,26 +481,35 @@
     /*margin-left: -.6em;*/
 }
 
+#custom-handle {
+    width: 3em;
+    height: 1.6em;
+    top: 50%;
+    margin-top: -.8em;
+    text-align: center;
+    line-height: 1.6em;
+  }
+
 .nodes {
-    font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: 700;
+    font-size: 12px;
+    font-family: 'Karla', sans-serif;
+    font-weight: 400;
     color: rgb(100,100,100);
     position: relative;
     width: 80%;
-    text-align: center;
-    margin: 0px;
+    text-align: left;
+    margin: 0;
 }
 
 .nodes ul p {
-    border-bottom: 2px solid rgba(0,0,0,0);
-    margin-bottom: -10px;
+    /*border-bottom: 2px solid rgba(0,0,0,0);*/
+    margin-bottom: 0;
     margin-top: -10px;
-
+    font-family: 'Karla', sans-serif;
 }
 
 .nodeNamesSelected {
-	border-bottom: 2px solid #f55 !important;
+	/*border-bottom: 2px solid #f55 !important;*/
 	width: 100%;
 	margin:0 auto;
 }
@@ -435,10 +522,10 @@
 .copyright {
 	font-size: 10px;
 	color: rgb(100,100,100);;
-    bottom: 35px;
+    bottom: 8vh;
     position: absolute;
     right: 10px;
-    z-index: 10;
+    z-index: 1;
 }
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
@@ -448,32 +535,39 @@
     color: #ffffff;
 }
 
-ul p.buttons {
-    height:30px;
+.buttons {
+    height:7vh;
     bottom: 0px;
+    line-height: 5vh;
+    border-radius: 0;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     vertical-align: middle;
-    color: rgb(0,0,0);
-    border: 1px solid rgb(245,165,3);
-    border-top: 1px solid rgba(233, 241,223, 1);
+    color: white;
     margin-bottom: 0px;
     margin-top: 0px;
-    background-color: rgba(233, 241,223, 1);
-    opacity: .65;
+    background-color: #D34031;
 }
 
-ul p:hover.buttons {
-	background-color: rgb(245,165,3);
+ul a:hover.buttons {
+	background-color: #B2322B;
 	cursor: pointer;
-    
+    color: white;
+}
+
+.tooltip {
+    background-color: transparent;
+    height: auto;
+    display: block;
+    text-align: center;
+    font-family: 'Karla', sans-serif;
+    width: 5vw;
 }
 
 .mydiv {
-    width: 45%;
-    float: left;
+    /*float: left;*/
     margin: 0px;
     height: 22px;
     margin-top: 10px;
@@ -482,52 +576,61 @@ ul p:hover.buttons {
     font-size: 13px;
     font-weight: 500;
     text-align: left;
+    font-family: 'Karla', sans-serif;
+}
+
+.mydiv .rightAlign {
+    text-align: right;
+    float: right;
 }
 
 .layerBoxes {
     display: block;
     float: left;
     width: 100%;
-    border-top: 1px solid white;
+    /*border-top: 1px solid white;*/
     padding-top: 1px;
     margin-top: -2px;
+    font-family: 'Karla', sans-serif;
 }
 
 .layerBoxes button {
-    padding: 0px !important;
-    height: 18px !important;
-    font-family: 'Ubuntu', sans-serif;
+    /*padding: 0px !important;*/
+    /*height: 18px !important;*/
+    font-family: 'Karla', sans-serif;
     font-size: 11px;
     font-weight: 300;
-    margin: 0px;
     width: 17%;
+    float: right;
     text-align: center;
-    margin-top: 10px
 }
 
 .layerBoxes input {
-    padding: 0px !important;
-    height: 15px !important;
-    width: 16%;
-    margin-top: 10px
+    /*padding: 0px !important;*/
+    /*height: 15px !important;*/
+    width: 6%;
+    position: relative;
+    top: 100%;
+    /*transform: translateY(-50%);*/
 }
 
 .buttonsText {
-    position: absolute;
-    z-index: 10;
-    bottom: -8px;
+    /*position: absolute;*/
+    /*z-index: 10;*/
+    /*bottom: 0;*/
     font-size: 15px;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Karla', sans-serif;
     font-weight: 500;
     vertical-align: middle;
-    color: rgb(76,76,76);
+    color: white;
     text-align: center;
 }
 
 .sp-replacer{
-    margin-top: 5px;
-    width: 11%;
-    margin-top: 13px
+    width: 6%;
+    position: relative;
+    top: 50%;
+    /*transform: translateY(-50%);*/
 }
 
 .sliderCell.opacity {
@@ -540,17 +643,17 @@ ul p:hover.buttons {
     margin-left: -52px;
 }
 .navbar-inverse .navbar-brand {
-    color: rgba(255, 255,255, 1);
+    color: white;
 }
 
-.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+/*.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
     text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-}
+}*/
+
 .navbar-brand {
     float: left;
-    height: 50px;
-    padding: 13px 15px;
-    font-size: 22px;
+    height: 8vh;
+    font-size: 24px;
     font-weight: 700;
-    line-height: 20px;
+    font-family: 'Karla', sans-serif;
 }
