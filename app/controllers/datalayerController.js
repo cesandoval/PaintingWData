@@ -14,37 +14,20 @@ module.exports.computeVoxels = function(req, res){
             datalayerIds.push(datalayerId);
     });
 
-     
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
         getNet,
         pushDataNet,
-        // stValue,
-        // parseGeoJSON,
+        stValue,
+        parseGeoJSON,
+        pushDatajson
     ], function (err, result) {
-        console.log(444444444444444444444445555555555555555)
         console.log("\n\n\n");
-        console.log(result[0]);
-        console.log(result[1])
-        console.log("\n\n\n");
-        console.log("\n\n\n");
+        console.log(result);
         console.log("\n\n\n");
         console.log("\n\n\n");
         console.log(444444444444444444444445555555555555555)
-        console.log(444444444444444444444445555555555555555)
-
-        // var newDataJSON = Model.Datajson.build();
-        // newDataJSON.layername = result[1][0].layername;
-        // newDataJSON.datafileId = result[1][0].datafileId;
-        // newDataJSON.epsg = result[1][0].epsg;
-        // newDataJSON.datavoxelId = result[1][0].datavoxelId;
-        // newDataJSON.geojson = result[0];
-        // newDataJSON.userId = req.user.id;
-        // newDataJSON.save().then(function(){
-        //     console.log('new geojsonmmmmmmm')
-        // });   
-
     });
 
     res.send(datalayerIds);  
@@ -140,11 +123,6 @@ function getNet(bbox, props, req, callback) {
 }
 
 function pushDataNet(pointNet, props, req, callback) {
-    // THIS HAS TO BE GIVEN BY THE USER/////
-    // ++++++++++++-++++++++++------
-
-    // CHANGE LAYERNAME TO VOXELNAME/////
-    // ++++++++++++-++++++++++------
     var voxelname = req.body.voxelname;
     var epsg = props[0].epsg;
     var datavoxelId = props[0].datavoxelId;
@@ -200,21 +178,26 @@ function pushDataNet(pointNet, props, req, callback) {
 }
 
 
-function stValue(pointNet, props, req, callback) {
+function stValue(props, req, callback) {
     console.log("=========================================");
     console.log(`in stValue`);
     console.log("\n\n\n");
+    console.log(props[0])
 
     var layername = props[0].layername;
     var datanetName = req.body.voxelname; 
+    var datavoxelId = props[0].datavoxelId; 
     var fileId = props[0].datafileId;
     var epsg = props[0].epsg;
     var layerids = 1;
 
     var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
-                    +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p.layername='"
-                    +datanetName+"' AND r.layername='"+layername+"';"
+                    +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p."
+                    +'"datavoxelId"' + "=" +datavoxelId+" AND r.datafileid="+ fileId +";"
 
+    // var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
+    //                 +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p.voxelname='"
+    //                 +datanetName+"' AND r.datafileid="+ fileId +";"
 
     connection.query(raw_query).spread(function(results, metadata){
         callback(null, results, props, req)
@@ -225,6 +208,8 @@ function parseGeoJSON(results, props, req, callback) {
     console.log("=========================================");
     console.log(`in parseGeoJSON`);
     console.log("\n\n\n");
+
+    console.log(results)
 
     var layername = props[0].layername;
     var epsg = props[0].epsg;
@@ -249,7 +234,6 @@ function parseGeoJSON(results, props, req, callback) {
         type: "FeatureCollection",
         features: features
     }
-    // GET THE REAL VALS....
     var newDataJSON = {
         layername: layername,
         userId: userId,
@@ -258,6 +242,22 @@ function parseGeoJSON(results, props, req, callback) {
         epsg: epsg,
         geojson: geoJSON,
     }
-
-    callback(null, [newDataJSON, props, req]);
+    console.log(newDataJSON)
+    callback(null, newDataJSON, props, req);
 }
+
+function pushDatajson(geoJSON, props, req, callback) {
+    var newDataJSON = Model.Datajson.build();
+    newDataJSON.layername = props[0].layername;
+    newDataJSON.datafileId = props[0].datafileId;
+    newDataJSON.epsg = props[0].epsg;
+    newDataJSON.datavoxelId = props[0].datavoxelId;
+    newDataJSON.geojson = geoJSON;
+    newDataJSON.userId = req.user.id;
+    newDataJSON.save().then(function(){
+        console.log('new geojsonmmmmmmm');
+        callback(null, 'New dataJSON added');
+    }); 
+}
+
+

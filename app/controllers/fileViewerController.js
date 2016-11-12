@@ -147,7 +147,7 @@ function pushDataLayer(file, epsg, newName, req, callback) {
                 if(record == shapefile.end) {
                     cargo.drain = function () {
                         console.log('All Items have been processed!!!!!!')
-                        callback(null, epsg, newName);
+                        callback(null, epsg, newName, req.body.datafileId);
                     }
                 }
             }
@@ -155,13 +155,18 @@ function pushDataLayer(file, epsg, newName, req, callback) {
     });
 }
 
-function pushDataRaster(epsg, layername, callback) {
+function pushDataRaster(epsg, layername, datafileID, callback) {
     console.log("\n\n\n");
-    var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text);';
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text, datafileid integer);';
 
+    // var bboxQuery = tableQuery + 
+    //                 "INSERT INTO public.dataraster (rast, layername) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', rasterval, -999999), "+
+    //                 epsg+"), p.layername FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
+
+    // var bboxQuery = bboxQuery + "CREATE INDEX raster_gix ON public.dataraster USING GIST (r.raster) FROM public.dataraster AS r WHERE layername='"+layername+"';"
     var bboxQuery = tableQuery + 
-                    "INSERT INTO public.dataraster (rast, layername) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', rasterval, -999999), "+
-                    epsg+"), p.layername FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
+                    "INSERT INTO public.dataraster (rast, layername, datafileid) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', rasterval, -999999), "+
+                    epsg+"), p.layername, "+ datafileID + "FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
 
     connection.query(bboxQuery).spread(function(results, metadata){
             console.log('Rasters Pushed!!!!')
