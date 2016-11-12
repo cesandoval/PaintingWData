@@ -27,8 +27,24 @@ h4 {
     font-size: 2vh;
 }
 
+.bold {
+    font-weight: 700;
+}
+
+.center {
+    text-align: center;
+}
+
 /**************************/
 /* NAVBAR */
+nav navbar.navbar-inverse.navbar-fixed-top.container {
+    width: 90vw;
+}
+
+.nav-container {
+    width: 90vw;
+}
+
 .navbar-inverse { 
     background: #D34031;
     border-color: transparent;
@@ -179,12 +195,16 @@ h4 {
     font-weight: 700;
 }
 
+h1.site-title {
+    font-size: 8vh;
+}
+
 /*body*/
 
 .jumbotron {
     /*background-color: #E8E8E8;*/
     background-color: white;
-    height: 100vh;
+    height: 90vh;
 }
 
 .transparent {
@@ -212,10 +232,10 @@ h4 {
 }
 
 .btn-jumbotron {
-    height: 20vh;
-    width: 20vw;
+    height: 15vh;
+    width: 15vw;
     font-size: 3vh;
-    line-height: 17vh;
+    line-height: 13vh;
 }
 
 .btn-gray {
@@ -292,3 +312,7 @@ body {
     height: 60px;
 }
 
+.margin-small {
+    margin-left: 5vw;
+    margin-right: 5vw;
+}

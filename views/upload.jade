@@ -1,28 +1,24 @@
 extends layout
 
 block pageTitle
-  script.
+  div.jumbotron
+    div.container.spacing
+      .row
+        h1.spacing-large.center Upload Data Layers
 
-    
+      .row
+        p SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
+        p .dbf file
+        p .shp file
+        p .shx files
+        p Do not include /shd.xml file in the ZIP
 
-  div(class='jumbotron')
-    div(class='container')
-      h3 Upload Data Layers
-
-  div.container
-      p SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
-      p .dbf file
-      p .shp file
-      p .shx files
-      p Do not include /shd.xml file in the ZIP
-
-      label(class="btn btn-primary btn-block", for="file-selector").
-        Choose File
-      input(id="file-selector", name = "zip_file" class="btn btn-primary btn-block", type="file", style="display:none;")  
-      span(class='label label-info', id="upload-file-info")
-      button(class="btn btn-default btn-block hidden", id="upload", name="upload", data-transition="fade", data-theme="c").
-        Upload
-      div(class="progress")
+      label(class="btn btn-gray btn-md", for="file-selector").spacing-large Choose File
+      input(id="file-selector", name = "zip_file" class="btn btn-primary btn-block", type="file", style="display:none;").spacing
+      span(class='label label-info', id="upload-file-info").spacing
+      button(class="btn btn-default btn-block hidden", id="upload", name="upload", data-transition="fade", data-theme="c").spacing-large Upload
+      .row.spacing
+      div.progress
         div(class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar").
           Uploading File ...
 

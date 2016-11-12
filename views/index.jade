@@ -2,16 +2,13 @@ extends layout
 
 block pageTitle
   div(class='jumbotron').brand-title
-    div(class='container')
       .row
-        .col-md-6
+        .col-md-5.col-md-offset-1
           h1.site-title Painting with Data in Riyadh.
-          p Painting with Data is an alternative urban computing platform utilizes voxels to visualize datasets and provides a number of graphical user interfaces that facilitate citizen engagement and interaction. 
-          //- img(src="http://localhost:3000/images/painting_with_data.PNG", alt="Painting With Data", style="width:75%; display: block; margin:0 auto;")
-          p
+          p Painting with Data is an alternative urban computing platform that utilizes voxels to visualize datasets and provides a number of graphical user interfaces that facilitate citizen engagement and interaction. 
         .col-md-6.col-lg-offset-3
           p.spacing
-            a(class="btn btn-lg btn-jumbotron btn-gray", href="/about", role="button") Explore
+            a(class="btn btn-md btn-jumbotron btn-gray", href="/app", role="button") Explore
 
 block content
   div.container.transparent.no-margin

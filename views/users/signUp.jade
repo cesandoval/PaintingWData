@@ -7,7 +7,7 @@ block pageTitle
         if !(message == '')
           .alert.alert-danger(role='alert') #{message}
         form(method="post", action="/users/signup")
-          h2.spacing Create an account.
+          h2.spacing.prompt Create an account.
           div(data-role='fieldcontain').form-group
             fieldset(data-role='controlgroup')
               label(for="email").

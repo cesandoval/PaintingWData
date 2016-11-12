@@ -235,6 +235,14 @@ label {
     font-weight: 700;
 }
 
+label[for="file-selector"] {
+    height: 12vh;
+    width: 100%;
+    line-height: 10vh;
+    font-size: 2vh;
+    font-weight: 400;
+}
+
 .layerBoxes{
     vertical-align: middle;
     position: relative;

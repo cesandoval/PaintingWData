@@ -13,3 +13,7 @@ input[type="submit"] {
 	background-color: transparent;
 	font-size: 2vh;
 }
+
+.prompt {
+	text-align: center;
+}
