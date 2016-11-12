@@ -17,14 +17,14 @@ module.exports.computeVoxels = function(req, res){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
-        getNet,
-        pushDataNet,
-        stValue,
-        parseGeoJSON,
-        pushDatajson
+        // getNet,
+        // pushDataNet,
+        // stValue,
+        // parseGeoJSON,
+        // pushDatajson
     ], function (err, result) {
         console.log("\n\n\n");
-        console.log(result);
+        console.log(result[0]);
         console.log("\n\n\n");
         console.log("\n\n\n");
         console.log(444444444444444444444445555555555555555)
@@ -62,16 +62,15 @@ function getBbox(datalayerIds, req, callback) {
         var props = results;
         connection.query(bboxQuery).spread(function(results, metadata){
             var bbox = results[0].st_setsrid
-            console.log(bbox)
-            console.log(props)
             callback(null, bbox, props, req);
         })
     })
 }
 
 function createDatavoxel(bbox, props, req, callback){
-    var voxelname = 'test';
-    
+    var voxelname = req.body.voxelname;
+    var currBbox = bbox;
+    currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ props[0].epsg} };
 
     var newDatavoxel = Model.Datavoxel.build();
     newDatavoxel.voxelname = voxelname;
@@ -83,9 +82,10 @@ function createDatavoxel(bbox, props, req, callback){
             var newDatafilevoxel = Model.Datafilevoxel.build();
             newDatafilevoxel.datavoxelId = datavoxel.id;
             newDatafilevoxel.datafileId = prop.datafileId;
+            newDatafilevoxel.bbox = currBbox;
             newDatafilevoxel.save().then(function(datafilevoxel){
-            
-        }); 
+
+            }); 
             
         })
        callback(null, bbox, props, req);
