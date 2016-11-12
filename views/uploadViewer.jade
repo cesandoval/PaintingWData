@@ -7,7 +7,7 @@ block pageTitle
   script(src="/javascripts/js/layers.js")
   div.container.spacing-large
     .row(style="padding-top: 5vh;")
-      h1.center Add New Layer
+      h1.center View Layer
 
   div(id="map", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
 
@@ -17,7 +17,7 @@ block pageTitle
     div(class="row")
       div(class="col-md-offset-4 col-md-4")
         form(method="post", action="/uploadViewer")
-          h4.center.spacing Set New Layer Properties
+          h4.center.spacing Set Layer Properties
           div(class= 'hidden' data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="datafileId" value = "#{id}")

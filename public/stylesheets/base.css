@@ -275,6 +275,28 @@ label[for="file-selector"] {
     padding: 6px 0;
 }
 
+.btn-voxel {
+    width: 5vw;
+    height: 5vw;
+    background-color: transparent;
+    float: right;
+}
+
+.btn-mapviewer {
+    background-color: rgb(220, 220, 220);
+    font-family: 'Karla', sans-serif;
+    color: black;
+    border-radius: 5px;
+    width: 5vw;
+    float: right;
+    margin-top: 2vh;
+}
+
+.btn-mapviewer:hover {
+    background-color: rgb(150, 150, 150);
+    color: white;
+}
+
 .sp-palette {
     max-width: 10px;
 }
@@ -630,7 +652,7 @@ ul a:hover.buttons {
 
 .navbar-brand {
     float: left;
-    height: 50px;
+    height: 8vh;
     font-size: 24px;
     font-weight: 700;
     font-family: 'Karla', sans-serif;
