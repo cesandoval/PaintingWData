@@ -14,11 +14,14 @@ block pageTitle
         .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
           a(href = "/layers")
             strong build a datavoxel!
+
       for datavoxel in datavoxels
         .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
           .post
             .post-img-content
-              div(id="map_#{datafile.id}", class = "leafletMap", style="width: 370px; height: 300px; margin:0 auto;")
+
+              div
+                img(style= "width: 300px" src="http://www.worldpress.org/images/maps/world_600w.gif")
               span.post-title
               .layerName
             .content
@@ -30,15 +33,9 @@ block pageTitle
               .description
                 
               div
-                a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
+
+                a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datavoxel.id}') View Map
     form.form-inline.pull-right(method='post', action='/layers')
       .form-group
         input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
         button.btn.btn-default(type='submit') Open Voxels
-
-  //-  script(src="/javascripts/user_layer.js")
-    
-    
-            
-     
-      
