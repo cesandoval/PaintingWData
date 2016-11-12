@@ -17,11 +17,11 @@ var passport = require('passport'),
   });
 
   router.get('/about', function (req, res) {
-    res.render('about');
+    res.render('about', {userSignedIn: req.isAuthenticated(), user: req.user});
   });
 
   router.get('/documentation', function (req, res) {
-    res.render('documentation');
+    res.render('documentation', {userSignedIn: req.isAuthenticated(), user: req.user});
   });
 
   router.get('/upload', isAuthenticated, fileUploadController.show);

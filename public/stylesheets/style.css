@@ -1,31 +1,78 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
+@import 'https://fonts.googleapis.com/css?family=EB+Garamond';
+@import 'https://fonts.googleapis.com/css?family=Karla:400,700';
+@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
 
 body {
-  /*padding: 50px;*/
-  font-family: 'Ubuntu', sans-serif;
-  color: rgb(76,76,76);
+  color: #1A1A1A;
 }
 
+p {
+    font-family: 'EB Garamond', serif;
+    color: #1A1A1A;
+    font-size: 2.5vh;
+}
 
-/* navbar */
-.navbar-inverse {
-    background: rgb(245,165,3);
-    border-color: rgb(245,165,3);
+h1, h2, h3 {
+    font-family: 'Karla', sans-serif;
+}
+
+h2 {
+    font-size: 4vh;
+}
+
+h4 {
+    text-align: right;
+    font-family: 'Karla', sans-serif;
+    font-size: 2vh;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.center {
+    text-align: center;
+}
+
+/**************************/
+/* NAVBAR */
+nav navbar.navbar-inverse.navbar-fixed-top.container {
+    width: 90vw;
+}
+
+.nav-container {
+    width: 90vw;
+}
+
+.navbar-inverse { 
+    background: #D34031;
+    border-color: transparent;
+    height: 10vh;
+    padding-top:2vh;
+
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
 }
 
 /* title */
 .navbar-inverse .navbar-brand {
-    color: rgba(255, 255,255, 1);
+    color: white;
 }
 .navbar-inverse .navbar-brand:hover {
-    color: rgb(100,100,100);
+    color: white;
 }
 /* link */
 .navbar-inverse .navbar-nav > li > a {
-    color: rgba(255, 255,255, 1);
+    color: white;
+    font-family: 'Karla', sans-serif;
+    font-size: 2vh;
+    text-shadow: none;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
-    color: rgb(100,100,100);
+    color: white;
+    text-decoration:underline;
 }
 
 /* mobile version */
@@ -40,9 +87,132 @@ body {
     background-color: rgb(245,165,3);
 }
 
+/**************************/
+/* INDEX */
+
+.brand-title {
+    margin: 0;
+    background-image: url(/images/blue_circles.svg), url(/images/red_circles.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /*background-size: 100vw auto;*/
+    background-position: 0vw 0vh;
+
+    -webkit-background-size: 100vw auto;
+    background-size: ;
+
+    transition:all 5s ;
+    -webkit-transition:all 5s ;
+    -o-transition:all 5s ;
+    -moz-transition:all 5s ;
+
+    -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: move-in;
+    animation-duration: 4s;
+
+    -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
+    animation-timing-function: ease-out;
+}
+
+.brand-title:hover {
+  background-size: 150vw auto;
+  background-position: 0vw 0vh;
+}
+
+.red-circle-bg {
+    background-image: url(/images/red_circles.svg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100vw auto;
+    background-position: -30vw 0vh;
+
+    width: 100vw;
+
+    transition:all 2s ;
+    -webkit-transition:all 2s ;
+    -o-transition:all 2s ;
+    -moz-transition:all 2s ;
+
+    -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    animation-name: move-in;
+    animation-duration: 4s;
+
+    -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
+    animation-timing-function: ease-out;
+}
+
+.no-margin { 
+    margin-left: 0;
+    margin-right: 0;
+ }
+
+ .margin {
+    margin-left: 5vw;
+    margin-right: 5vw;
+ }
+
+ .full-width { 
+    width: 100vw;
+}
+
+.red-circle-bg:hover {
+  background-size: 110vw auto;
+  opacity: 0.9;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes move-in {
+    from {opacity: 0.2;}
+    to {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes move-in {
+    from {opacity: 0.2;}
+    to {opacity: 1;}
+}
+
+.spacing {
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+.spacing-small {
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+}
+
+.spacing-large {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+}
+
+.site-title {
+    padding-top:20vh;
+    padding-bottom: 5vh;
+    font-weight: 700;
+}
+
+h1.site-title {
+    font-size: 8vh;
+}
+
 /*body*/
+
 .jumbotron {
-    background-color: rgba(253, 232,172, 1);;
+    /*background-color: #E8E8E8;*/
+    background-color: white;
+    height: 90vh;
+}
+
+.transparent {
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    text-shadow: none;
 }
 
 /*button login*/
@@ -58,9 +228,47 @@ body {
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: rgb(245,165,3);
-    border-color: rgb(245,165,3);
+    border-color: none;
+}
+
+.btn-jumbotron {
+    height: 15vh;
+    width: 15vw;
+    font-size: 3vh;
+    line-height: 13vh;
+}
+
+.btn-gray {
+    color: black;
+    font-family: 'Karla', sans-serif;
+    background-image: url(/images/circle.svg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    text-align: center;
+    text-anchor: middle;
+    alignment-baseline: middle;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.btn-small {
+    height: 14vh;
+    width: 14vw;
+    font-size: 2vh;
+    line-height: 12vh;
+}
+
+.btn-jumbotron-text {
+    height: 20vh;
+    vertical-align: middle;
+}
+
+.btn-jumbotron:hover {
+    background-image: url(/images/dark_circle.svg);
+}
+
+.btn-gray:hover {
+    background-image: url(/images/dark_circle.svg);
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
@@ -92,4 +300,19 @@ body {
 
 .wrapper {
     text-align: center;
+}
+
+.footer p {
+    font-family: 'Karla', sans-serif;
+    font-size: 2vh;
+    position: relative;
+    bottom: 0;
+    padding-left: 3vw;
+    width: 100%;
+    height: 60px;
+}
+
+.margin-small {
+    margin-left: 5vw;
+    margin-right: 5vw;
 }
