@@ -19,6 +19,7 @@ module.exports.computeVoxels = function(req, res){
     });
     var q = 'layer_tasks'
 
+
     function bail(err) {
       console.error(err);
       process.exit(1);

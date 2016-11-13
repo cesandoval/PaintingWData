@@ -8,16 +8,18 @@ block pageTitle
   script.
 
     
-  .container(style = "margin-top: 100px")
+  .container(style = "margin-top: 50px")
     .row
       if datavoxels.length == 0
         .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
-          a(href = "/upload")
-            strong upload a datafile
+          a(href = "/layers")
+            strong build a datavoxel!
+
       for datavoxel in datavoxels
         .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
           .post
             .post-img-content
+
               div
                 img(style= "width: 300px" src="http://www.worldpress.org/images/maps/world_600w.gif")
               span.post-title
@@ -31,10 +33,9 @@ block pageTitle
               .description
                 
               div
+
                 a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datavoxel.id}') View Map
     form.form-inline.pull-right(method='post', action='/layers')
       .form-group
         input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-        button.btn.btn-default(type='submit') Open Voxles
-
-  
+        button.btn.btn-default(type='submit') Open Voxels

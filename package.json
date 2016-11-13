@@ -6,6 +6,7 @@
     "start": "supervisor ./bin/www"
   },
   "dependencies": {
+    "amqplib": "^0.5.1",
     "async": "^2.0.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
