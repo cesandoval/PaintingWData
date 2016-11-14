@@ -1,131 +1,81 @@
 extends layout
 
-//- block pageTitle
-//-   div(class='container')
-//-     h1 App
-//-     p This contains the app
 
 append content
-    //- div(class = "bar top")
-    //- div(id='appTittle').
-    //-     PAINTING <br> <font weight="300">with data
-    div(class = "bar bottom")
-    div(class="options")
-    
-    dic(class="bottomWidgets")
-        span(class = "gridStatus")
-            label.
-                Grid
-            input(type="checkbox", id="gridBox", class="bottomBox")
-        span(class = "threeD")
-            label.
-                3d
-            input(type="checkbox", id="threeDBox", class="bottomBox")
- 
-    // button(id="show", class='buttons').
-    //     DATA 
-    // button(id="graphShow", class='buttons').
-    //     GRAPH
-    // button(id="somShow", class='buttons').
-    //     SOM       
-    ul
-        p(id="show", class="buttons").
-        p(class="buttonsText", id="dataText").
-            Data
-    ul
-        p(id="graphShow", class="buttons").
-        p(class="buttonsText", id="graphText").
-            Graph
-    ul
-        p(id="somShow", class="buttons").
-        p(class="buttonsText", id="somText").
-            SOM
+    div.mainWindow
+        div#react
 
-    div(id="parallelData", class="parcoords")
-    script(src="javascripts/parallel_coordinates.js")
-    
-    script(src="javascripts/voxel/PixelGrid.js")
-    div(id="ThreeJS")
-    div(class='moveGUI')
-    
-    script(type='x-shader/x-vertex', id='vertexshader').
+    link(rel="stylesheet", href="stylesheets/app.css")
+    link(rel="stylesheet", href="stylesheets/d3.parcoords.css")
+
+    script(id="vertexShader", type="x-shader/x-vertex").
+        precision mediump float;
+
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform mat3 rotate;
+        uniform float show;
+        uniform float min;
+        uniform float max;
+
+        attribute vec3 position;
+        attribute vec3 normal;
+        attribute vec3 translation;
+
         attribute float size;
-        attribute vec3 customColor;
-        
-        varying vec3 vColor;
-        
-        uniform vec3 viewVector;
-        uniform float c;
-        uniform float p;
-        varying float intensity;
-        
-        attribute float customOpacity;
-        varying float vOpacity;
-        
+
+        varying vec4 vTest;
+        varying vec3 vNormal;
+        varying float vSize;
+
         void main() {
-        
-            vColor = customColor;
-            vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-            gl_PointSize = size * ( 300.0 / length( mvPosition.xyz ) );
-            gl_Position = projectionMatrix * mvPosition;
-          
-            vOpacity = customOpacity;
+
+            vNormal = normal;
+            vTest = vec4(position, 1.0);
+
+            float nshow = show;
+            if (!(size > min && size < max)) { nshow = 0.0; }
+
+            vSize = size;
+
+            vec3 positionRotate = rotate * position;
+
+            vec3 newPosition = (positionRotate * (size * nshow)) + translation;
+
+            gl_Position = projectionMatrix *
+                          modelViewMatrix *
+                          vec4(newPosition,1.0);
         }
-    
-    script(type='x-shader/x-fragment', id='fragmentshader').
-    
-        uniform vec3 color;
-        uniform sampler2D texture;
-        varying vec3 vColor;
-        varying float vOpacity;
-      
+
+    script(id="fragmentShader", type="x-shader/x-fragment").
+        precision lowp float;
+
+        uniform float amplitude;
+        uniform vec3 startColor;
+        uniform vec3 endColor;
+        uniform float transparency;
+
+        varying vec3 vNormal;
+        varying vec4 vTest;
+        varying float vSize;
+
+
         void main() {
-            gl_FragColor = vec4( color * vColor,  vOpacity );
-            gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
-            if ( gl_FragColor.a < ALPHATEST ) discard;
+        vec3 light = vec3(0.5,0.2,1.0);
+        light = normalize(light);
+
+        float vProd = max(0.0, dot(vNormal, light));
+
+        vec3 modColor = vec3(0.0, 0.0, 0.0);
+        modColor.x = ((endColor.x - startColor.x) * vSize) + startColor.x;
+        modColor.y = ((endColor.y - startColor.y) * vSize) + startColor.y;
+        modColor.z = ((endColor.z - startColor.z) * vSize) + startColor.z;
+        gl_FragColor = vec4(modColor, transparency);
+
         }
-    //    //script.
-    //    //  console.log(L);
-    //    //  L.mapbox.accessToken = 'pk.eyJ1IjoiY2VzYW5kb3ZhbCIsImEiOiJjaWptNjI4ejAwMGEwdXlseGppYjlrNGhjIn0.1Go1vzivLKpS1tiwS20KuQ';
-    //    //  L.mapbox.map('map-one', 'mapbox.streets').setView([38.8929,-77.0252], 14);
-    //
 
-    div(id="accordion")
-        h3.
-            Layers
-        div(id='graphLayers')
-            div(id='allOpacity' class='sliderCell')
-            // div(id='allNeighbors' class='sliderCell')
-        h3.
-            Node Types
-        div(id='graphControls')
-            // div(id='allOpacity' class='sliderCell')
-            // div(id='allNeighbors' class='sliderCell')
-            div(id='nodeTypes' class='nodes')
-            
-    div(id='allNeighbors' class='sliderCell')
-            
-    //- div(id="nodeLibrary")
-    //-     h3.
-    //-         NODES
-    //-     div(id='nodeTypes')
-            
-    script(src='javascripts/uiVoxel.js')
-
-    script(src='javascripts/three_voxel.js')
-    
-    link(rel="stylesheet", href="stylesheets/d3.slider.css")
-    script(src="javascripts/js/d3.slider.js")
-    div(id='slider1')
-    div(id='graphTools')
-        div(id='graphMaker')
-        div(id='graphMakerControls')
-    link(rel="stylesheet", href="stylesheets/graph-creator.css")
-    // <div id="toolbox">
-    //   <input type="file" id="hidden-file-upload"><input id="upload-input" type="image" title="upload graph" src="upload-icon.png" alt="upload graph"> <input type="image" id="download-input" title="download graph" src="download-icon.png" alt="download graph"> <input type="image" id="delete-graph" title="delete graph" src="trash-icon.png" alt="delete graph"> 
-    // </div>
-    script(src="javascripts/graph-creator.js")
-
-    div(class='copyright').
-        © 2016 Carlos Sandoval Olascoaga, MIT, KACST
-    
+    script(src='javascripts/js/three.js')
+    script(src='javascripts/js/OrbitControls.js')
+    script(src='javascripts/js/d3.js')
+    script(src='javascripts/js/d3.parcoords.js')
+    script(src='javascripts/bundle.js')

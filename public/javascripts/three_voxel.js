@@ -22,6 +22,13 @@ animate();
 
 
 // FUNCTIONS 
+// Create scene
+// Cteate Camera
+// Create Renderer
+// Add event listener for resize
+// Add controls
+// add grid
+// Create voxel buffer
 function init() 
 {
     // Create the scene and set the scene size.
