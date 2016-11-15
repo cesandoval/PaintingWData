@@ -65,7 +65,7 @@ var users = require('./app/routers/users');
 var datajson = require('./app/routers/datajson');
 
 
-app.use('/users', userRouter);
+app.use('/users', users);
 app.use('/', appRouter);
 app.use('/datajson', datajson);
 
