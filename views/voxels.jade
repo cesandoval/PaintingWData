@@ -16,7 +16,7 @@ block pageTitle
             strong build a datavoxel!
 
       for datavoxel in datavoxels
-        .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
+        .col-sm-4.col-md-4.datavoxel(selected = "false" style = "margin-top:20px", id="datavoxel_#{datavoxel.id}")
           .post
             .post-img-content
 
@@ -35,7 +35,6 @@ block pageTitle
               div
 
                 a.btn.btn-warning.btn-sm(href='/uploadViewer/#{datavoxel.id}') View Map
-    form.form-inline.pull-right(method='post', action='/layers')
-      .form-group
-        input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-        button.btn.btn-default(type='submit') Open Voxels
+
+      button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
+  script(src="/javascripts/js/voxels.js")
