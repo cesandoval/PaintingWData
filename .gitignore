@@ -3,3 +3,5 @@
 # we dont want to add the shape_files directory either
 /app/controllers/shape_files
 tasks.txt
+# we dont want temp files
+.swp

@@ -22,6 +22,7 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * Username should be `postgres`, and password `postgrespass`. An installation guide can be found [here](http://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01).
 * Using the PostgreSQL's UI pgAdminIII, or the [command line](http://gis.stackexchange.com/questions/71130/how-to-create-a-new-gis-database-in-postgis), create a DB based on a postGIS template. The user should be `postgres`, the pw `postgrespass`, and the DB name should be `PaintingWithData_Riyadh`. 
 * Install [RabbitMQ](https://www.rabbitmq.com/download.html) 
+* Run the command `gulp` when changing the react code. This task-runner will bundle all of the code as it is changed.
 
 
 ## Starting

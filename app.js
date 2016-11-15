@@ -48,7 +48,6 @@ app.use(function(req, res, next) {
 
 
 
-
 var Strategies = require('./app/controllers/signUpController');
 passport.use('signup', Strategies.SignUpStrategy);
 passport.use('login', Strategies.LoginStrategy);
@@ -62,11 +61,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // This is for PostGRES
 var appRouter = require('./app/routers/appRouter');
-var userRouter = require('./app/routers/users');
+var users = require('./app/routers/users');
+var datajson = require('./app/routers/datajson');
 
 
-app.use('/users', userRouter);
+app.use('/users', users);
 app.use('/', appRouter);
+app.use('/datajson', datajson);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

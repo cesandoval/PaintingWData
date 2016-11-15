@@ -1,203 +1,102 @@
-/* Visualization Styles */
-html {  font-size: 1em; font-family: Arial, Helvetica, sans-serif;background-color:rgb(42,42,42);}
-
-canvas { width: 100%; height: 100%;}
-
-.highlight {color: steelblue; background-color:rgba(0,0,0, 0.75); padding:8px; border:1px solid rgba(250, 250, 250, 0.75); }
-.tooltip {color: steelblue; background-color:rgba(0,0,0, 0.75); position: absolute; border:1px solid rgba(250, 250, 250, 0.75); max-width:400px;  }
-.caption {font-size: 1.4em; color: steelblue;  font-family: "Lucida Console", Monaco, monospace; }
-
- UI Styles 
-.control_header {color: white; background-color: rgba(0, 0, 0, 0.2); height: 2em; padding: 5px; font-weight:bold; min-width: 180px;}
-.control_body {margin-top: 10px;}
-.control_panel {position: relative;}
-
-
-/*.search_header {color: white; background-color: rgba(0, 0, 0, 0.2); height: 2em;padding: 5px; font-weight:bold; min-width: 180px;}*/
-/*.search_body {margin-top: 10px;}*/
-/*.search_panel {position: relative;}*/
-/*.searches {list-style-type: none; padding: 5px;}*/
-/*.search_piece_rel { color: white; opacity: 0.5;}*/
-
-/*select.search { padding: 5px; }*/
-/*input.search {color: white; background-color: rgb(21,21,21); margin-right:5px; border-radius: 0px; padding: 6px;}*/
-
-/*.map_header {color: white; background-color: rgba(0, 0, 0, 0.2); height: 2em;padding: 5px; font-weight:bold; min-width: 180px;}*/
-/*.map_body {margin-top: 10px;}*/
-/*.map_panel {position: relative;}*/
-
-/*.map_container {max-width:80%;position:absolute; margin: -5px -5px -5px -5px; padding: 5px; margin-left: 20px;top:20px;}*/
-/*.menu_container {max-width:80%;position:absolute; margin: 200px -5px -5px -5px; padding: 5px; margin-left: 20px;top:20px;}*/
-
-/*.bottom_menu {position: absolute; bottom: 4em; color: white; background-color: rgba(0, 0, 0, 0.2); height: 2em; padding: 5px; min-width: 180px; float:right;}*/
-
-/*          #map {*/
-/*          position:relative;width:175px;height:150px; border:4px solid #000; padding: 5px;*/
-/*          }*/
-          
-/*          #map img {*/
-/*    width:auto;*/
-/*}*/
-
-/* UI Widget Styles */
-
-
-.ng-pageslide { height:80%!important;background: #eee; background-color: rgba(21,21,21, 0); max-width: 260px;}
-
-.map_header {color: white; background-color: rgba(0, 0, 0, 0.2); height: 2em;padding: 5px; font-weight:bold; min-width: 180px;}
-.map_body {margin-top: 10px;}
-.map_panel {position: relative;}
-.map_container {position:absolute;width:211px; padding: 5px; margin-left: 20px; margin-top:20px;}
-
-body{
-    background-color:transparent !important;
-    width:100% !important;
-    height:100% !important;
-    
+.mainWindow {
+    padding: 1em;
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: red;
 }
 
+/*General Components*/
 
-.btn-danger {
-background-color: #622D2D;
-border-color: border-color;
-margin-right: 7px;
-
-}
-.btn-success {
-background-color: #373A33;
-border-color: #77b300;
-
-
-/* text-align: right; */
-}
-.pull-right {
-float: left !important;
-
+.mapMain {
+    position: relative;
 }
 
-
-.player {
-    position:absolute;
-    bottom: 1em;
-    width: 92%;
-    margin-left: 4%;
-}  
-
-textarea {background-color: rgba(0, 0, 0, 0.75);color: white;resize:both; overflow:auto;}
-
-button  {background-color: rgba(0, 0, 0, 0.75); border: border:1px solid  rgba(0, 0, 0, 0.75); color: white;}
-
-ol{ line-height:40px!important;}
-ul{margin-left:-39px;}
-li {font-size:9pt; }
-
-.container-fluid {
-/* margin-right: auto; */
-/* margin-left: auto; */
-/* padding-left: 15px; */
-/* padding-right: 15px; */
-/* height: 20px; */
+.sidebar {
+    width: 20vw;
+    background-color: pink;
+    overflow: auto;
+    position: fixed;
+    left:0;
+    top:50px;
+    bottom: 0;
 }
 
-input {
-cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
-padding:5px 25px; /*add some padding to the inside of the button*/
-background: rgba(50,50, 50, 0.75);  /*the colour of the button*/
-border:1px solid rgba(250, 250, 250, 0.75);  /*required or the default border for the browser will appear*/
-/*give the button curved corners, alter the size as required*/
--moz-border-radius: 10px;
--webkit-border-radius: 10px;
-border-radius: 0;
-/*give the button a drop shadow*/
--webkit-box-shadow: 0 0 4px rgba(0,0,0, .75);
--moz-box-shadow: 0 0 4px rgba(0,0,0, .75);
-box-shadow: 0 0 4px rgba(0,0,0, .75);
-/*style the text*/
-color:#f3f3f3;
-
-font-size:1 em;
-vertical-align:top;
+.map {
+    width: 80vw;
+    position: fixed;
+    right:0;
+    top:50px;
+    bottom: 0;
+    z-index:-1;
 }
 
-input:hover, input:focus{
-background-color :  rgb(95, 85, 80); /*make the background a little darker*/
-/*reduce the drop shadow size to give a pushed button effect*/
--webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
--moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
-box-shadow: 0 0 1px rgba(0,0,0, .75);
+.map canvas {
+    position:fixed;
+    right:0;
+    top:50px;
+    bottom: 0;
+    z-index:-1;
 }
 
-input[type=range] {
-    -webkit-appearance: none;
-    padding:5px 5px;
-    height:20px;
-    width: 100%;
+.options--react {
+    position: fixed;
+    top: 50px;
+    left: 20vw;
+    background-color: orange;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-     -webkit-appearance: none;
-    background-color: #666;
-    opacity: 0.75;
-    width: 10px;
-    height: 26px;
-}
+/*Options*/
 
-select{
+.optionsButton {
+    background-color: blue;
     color: white;
-    background-color: rgb(21,21,21);
-    margin-right:5px;
-}
-/* Select item background*/
-option { 
-    color: white;
-    background-color: rgb(42,42,42);
-}
-
-::-webkit-scrollbar {
-    width: 12px;
-}
- 
-::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,0.3); 
-    border-radius: 10px;
-}
- 
-::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,0.5); 
+    width:2em;
+    height:2em;
+    text-align: center;
+    position: absolute;
+    bottom:0;
+    right:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-::-webkit-scrollbar-corner{
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(255,255,255,0.5); 
+.optionsForm {
+    transition: height 0.5s, width 0.5s;
+    overflow: hidden;
+    display: flex;
+    padding:1em;
+}
+
+.layers__single {
+    background-color: green;
+    border: 1px solid black;
+    margin: 0 0 5px;
+    padding: 1em;
+}
+
+.sidebar__box--name {
+    background-color: white;
 }
 
 
 
-#ray-intersection {
-  border: 1px solid #CCC;
-  z-index: 10;
-  width: 500px;
-  height: 500px;
-  /* OFFSET CHANGE */
-  /* adding these values to demonstrate ray intersections anywhere in the scene */
-  position: absolute;
-  left: 150px;
-  top: 120px;
-  pointer-events: all;
+/*Arrows*/
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid #fff;
 }
 
-#select-marquee {
-  position:absolute;
-  /* initialize it offscreen */
-  top: -2px;
-  left: -2px;
-  z-index: 50;
-  height: 0px;
-  width: 10px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border: dotted 1px #9a9a9a;
-  margin: 0;
-  padding: 0;
-  pointer-events:none;
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
 }
