@@ -8,11 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      layername: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      layerids: {
+      voxelname: {
         type: Sequelize.STRING,
         allowNull: false
       },
@@ -21,6 +17,14 @@ module.exports = {
       },
       epsg: {
         type: Sequelize.INTEGER
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      datavoxelId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

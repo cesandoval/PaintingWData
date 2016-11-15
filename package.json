@@ -6,6 +6,7 @@
     "start": "supervisor ./bin/www"
   },
   "dependencies": {
+    "amqplib": "^0.5.1",
     "async": "^2.0.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
@@ -16,6 +17,7 @@
     "debug": "~2.2.0",
     "es6-promise": "^3.2.1",
     "express": "~4.13.4",
+    "express-flash": "0.0.2",
     "express-session": "~1.11.3",
     "extract-zip": "^1.5.0",
     "formidable": "^1.0.17",

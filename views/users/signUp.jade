@@ -1,17 +1,18 @@
 extends ../layout
 
 block pageTitle
-  div(class='jumbotron')
-  div(class="container")
-    div(class="row")
-      div(class="col-md-offset-5 col-md-3")
+  div.container.login-container
+    div.row
+      div.col-md-offset-4.col-md-4
+        if !(message == '')
+          .alert.alert-danger(role='alert') #{message}
         form(method="post", action="/users/signup")
-          h4 Create an account.
-          div(id='hiddendiv',data-role='fieldcontain')
+          h2.spacing.prompt Create an account.
+          div(data-role='fieldcontain').form-group
             fieldset(data-role='controlgroup')
               label(for="email").
-                E-mail
-              input(type="email", id="email", class="form-control input-sm chat-input", name="email")
+                Username
+              input(type="text", id="email", class="form-control input-sm chat-input", name="username", placeholder="newuser@gmail.com")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
@@ -21,10 +22,10 @@ block pageTitle
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="password2").
-                Re-type Password
-              input(type="password", id="password2", class="form-control input-sm chat-input", name="password2")
+              label(for="confirm_password").
+                Confirm Password
+              input(type="password", id="confirm_password", class="form-control input-sm chat-input", name="confirm_password")
               br
-          div(data-role='fieldcontain')   
-            input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-primary btn-block")
+          div(data-role='fieldcontain').spacing  
+            input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-gray btn-sm")
 

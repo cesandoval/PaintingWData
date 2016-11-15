@@ -5,14 +5,10 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser');
 
-//--------User-Auth----------
-// var flash = require("flash");
 var passport = require('passport');
-    setupPassport = require('./app/setupPassport'),
-    flash = require('connect-flash'),
+    flash = require('express-flash'),
     session = require('express-session'),
     jsonParser = bodyParser.json();
-var LocalStrategy = require('passport-local').Strategy;
 
 
 var app = express();
@@ -27,29 +23,35 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  secret: '4564f6s4fdsfdfd', 
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+// app.use(logger('dev'));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cookieParser());
 
 //--------User-Auth----------
-setupPassport(app)
-app.use(session({ secret: '4564f6s4fdsfdfd', resave: false, saveUninitialized: false }))
 
+// app.use(session({ secret: '4564f6s4fdsfdfd', resave: false, saveUninitialized: false }))
 app.use(flash())
 app.use(function(req, res, next) {
     res.locals.errorMessage = req.flash('error')
     next()
 });
 
-app.use(jsonParser)
-app.use(bodyParser.urlencoded({
-  extended: true
-}))
 
 
-// var User = require('./app/models/models');
-app.use(passport.initialize());
-app.use(passport.session());
-var Strategies = require('./app/controllers/signupController.js');
+var Strategies = require('./app/controllers/signUpController');
 passport.use('signup', Strategies.SignUpStrategy);
 passport.use('login', Strategies.LoginStrategy);
+
 // passport.use(new LocalStrategy(User.authenticate()));
 // passport.serializeUser(User.serializeUser());
 // passport.deserializeUser(User.deserializeUser());
@@ -63,7 +65,7 @@ var users = require('./app/routers/users');
 var datajson = require('./app/routers/datajson');
 
 
-app.use('/users', users);
+app.use('/users', userRouter);
 app.use('/', appRouter);
 app.use('/datajson', datajson);
 

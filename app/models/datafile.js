@@ -24,6 +24,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Datafile.belongsTo(models.User, {foreignKey: 'userId'});
+        Datafile.hasMany(models.Datalayer, {foreignKey: 'datafileId'});
+        // Datafile.belongsToMany(models.Datavoxel, {through: 'Datafilevoxel'});
+
       }
     }
   });
