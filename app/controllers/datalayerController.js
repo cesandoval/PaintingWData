@@ -45,13 +45,20 @@ module.exports.computeVoxels = function(req, res){
 };
 
 module.exports.show = function(req, res) {
-     Model.Datafile.findAll({
+    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, description, "rasterProperty", location, "userLayerName"'+
+                    " FROM public."+'"Datalayers"' + "AS p WHERE "
+                    +'"userId"'+"="+req.user.id+";"; 
+    
+    connection.query(distinctQuery).then(function(datalayers){
+        var distinctDatalayers = datalayers[0];
+        Model.Datafile.findAll({
             where : {
                 userId : req.user.id,
             }
         }).then(function(datafiles){
-            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
+            res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
         });
+    })
 }
 
 module.exports.showVoxels= function(req, res) {
@@ -60,6 +67,29 @@ module.exports.showVoxels= function(req, res) {
                 userId : req.user.id,
             }
         }).then(function(datavoxels){
+            console.log(datavoxels[2]);
+            // var voxelIds = [];
+            // var datafilevoxels = [];
+            // datavoxels.forEach(function(voxel, index){
+            //     var voxelId = voxel['dataValues'].id;
+            //     voxelIds.push(voxelId);
+            //     Model.Datafilevoxel.findAll({
+            //         where: {
+            //             datavoxelId: voxelId
+            //         }
+            //     }).then(function(datafilevoxel){
+            //         console.log(333333333)
+            //         datafilevoxel.forEach(function(dfv){
+            //             console.log(55555555)
+            //             var datafileId = dfv['datafileId'];
+            //             datafilevoxels.push(datafileId)
+            //         })
+            //     })
+            //     console.log(datafilevoxels)
+            // })
+            // console.log(datafilevoxels)
+            // console.log(voxelIds)
+            
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
         });
 }
@@ -122,6 +152,10 @@ function getBbox(datalayerIds, req, callback) {
 }
 
 function createDatavoxel(bbox, props, req, callback){
+    console.log("=========================================");
+    console.log(`in createDatavoxel`);
+    console.log("\n\n\n");
+
     var voxelname = req.body.voxelname;
     var currBbox = bbox;
     currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ props[0].epsg} };
@@ -130,15 +164,14 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.voxelname = voxelname;
     newDatavoxel.epsg = props[0].epsg;
     newDatavoxel.userId = req.user.id;
+    newDatavoxel.bbox = currBbox;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
             var newDatafilevoxel = Model.Datafilevoxel.build();
             newDatafilevoxel.datavoxelId = datavoxel.id;
             newDatafilevoxel.datafileId = prop.datafileId;
-            newDatafilevoxel.bbox = currBbox;
             newDatafilevoxel.save().then(function(datafilevoxel){
-
             }); 
             
         })

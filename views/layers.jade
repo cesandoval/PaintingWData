@@ -23,21 +23,34 @@ block pageTitle
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 370px; height: 300px; margin:0 auto;")
               span.post-title
               .layerName
+
+      for datalayer in datalayers
+        .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
+          .post
             .content
-              
-
+              .layername
+                label Layer Name: 
+                p(display='inline') #{datalayer.layername}
               .property
-
+                label Data Property:
+                p #{datalayer.rasterProperty}
               .epsg
+                label EPSG Code:
+                p #{datalayer.epsg}
               .description
-                
+                label Layer Description:
+                p #{datalayer.description}
+              .location
+                label Layer Location: 
+                p #{datalayer.location}
               div
-                a.btn.btn-mapviewer.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
+                a.btn.btn-mapviewer.btn-sm(href='/uploadViewer/#{datalayer.datafileId}') View Map
+
     .row.spacing-large
       .col-md-4.col-md-offset-4
         form(method='post', action='/layers')
           .form-group
-            label(for="voxelname").
+            h3.
               Voxel Name
             input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
             input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
