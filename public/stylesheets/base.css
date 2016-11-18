@@ -281,6 +281,16 @@ label[for="file-selector"] {
     box-shadow: none;
 }
 
+.btn:focus, .btn:active:focus, .btn.focus {
+    background-image: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    
+    outline: none;
+}
+
+
+
 .btn-voxel {
     width: 5vw;
     height: 5vw;

@@ -10,7 +10,7 @@ body {
 p {
     font-family: 'EB Garamond', serif;
     color: #1A1A1A;
-    font-size: calc(15px + 1.5vh);
+    font-size: calc(10px + 1.5vh);
 }
 
 h1, h2, h3 {
