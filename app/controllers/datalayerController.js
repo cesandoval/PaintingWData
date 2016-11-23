@@ -107,16 +107,6 @@ module.exports.startWorker = function(datalayerIds, req){
         parseGeoJSON,
         pushDatajson,
     ], function (err, result) {
-        console.log(444444444444444444444445555555555555555)
-        console.log("\n\n\n");
-        console.log(result[0]);
-        console.log(result[1])
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log(444444444444444444444445555555555555555)
-        console.log(444444444444444444444445555555555555555)
         Model.Datavoxel.findAll({
             where: {
                 userId: req.user.id,
