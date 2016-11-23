@@ -33,6 +33,7 @@ function upload(e)
         url: '/upload',
         xhr: function () {
         var xhr = new window.XMLHttpRequest();
+        $('.progress').removeClass('hidden');
         xhr.upload.addEventListener("progress", function (evt) {
             if (evt.lengthComputable) {
                 var percentComplete = (evt.loaded / evt.total)*100; 

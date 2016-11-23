@@ -8,41 +8,39 @@ block pageTitle
   script.
 
   
-  .container(style = "margin-top: 50px").spacing-large
-    .row.spacing-large
-      h1.center Layers
+  .container(style = "margin-top: 10px").spacing-large
+    
     .row
       if datafiles.length == 0
         .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
           a(href = "/upload")
             strong upload a datafile
-      for datafile in datafiles
-        .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
-          .post
-            .post-img-content
-              div(id="map_#{datafile.id}", class = "leafletMap", style="width: 370px; height: 300px; margin:0 auto;")
-              span.post-title
-              .layerName
-            .content
+      .row
+        .col-md-4
+          h1 &nbsp;Layers
+        .col-md-8(style="padding: 30px;")
+          .row
+            form(method='post', action='/layers')
+              .col-md-9
+                input.pull-right.form-control(type='text', name= 'voxelname', placeholder='voxel name...')
+                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+              .col-md-3
+                .input-group-btn
+                  button.btn.btn-default(style="width: 100%" ,type='submit') Compute Voxels
               
+      .row
+      for datafile in datafiles
+        
+        .col-sm-6.col-md-4
+          .thumbnail.datalayer(selected = "false" )
+            div(id="map_#{datafile.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
+            .caption
+              h3 
+              p 
+              p
+                a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
 
-              .property
-
-              .epsg
-              .description
-                
-              div
-                a.btn.btn-mapviewer.btn-sm(href='/uploadViewer/#{datafile.id}') View Map
-    .row.spacing-large
-      .col-md-4.col-md-offset-4
-        form(method='post', action='/layers')
-          .form-group
-            label(for="voxelname").
-              Voxel Name
-            input(type="voxelname", id="voxelname", class="form-control input-sm chat-input", name="voxelname")
-            input.form-control(name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-            .row.spacing-small
-              button.btn.btn-gray.btn-lg.btn-voxel(type='submit') Compute <br>Voxels
+     
 
    script(src="/javascripts/user_layer.js")
     
