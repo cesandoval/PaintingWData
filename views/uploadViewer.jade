@@ -5,57 +5,55 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/js/layers.js")
-  div.container.spacing-large
-    .row(style="padding-top: 5vh;")
-      h1.center View Layer
-
-  div(id="map", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
-
   script.
     var id = #{id};
-  div(class="container").spacing-large
-    div(class="row")
-      div(class="col-md-offset-4 col-md-4")
+
+  .container(style="margin-top: 100px")
+
+    .row
+      .col-md-6
+        div(id="map", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
+
+      .col-md-6
         form(method="post", action="/uploadViewer")
-          h4.center.spacing Set Layer Properties
           div(class= 'hidden' data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="datafileId" value = "#{id}")
               br
           div(data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="layername").
+              label.w3-label(for="layername").
                 Layer Name
-              input(type="text", id="layername", class="form-control input-sm chat-input", name="layername")
+              input.w3-input(type="text", id="layername", name="layername")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="location").
+              label.w3-label(for="location").
                 SRS Code
-              input(type="text", id="epsg", class="form-control input-sm chat-input", name="epsg")
+              input.w3-input(type="text", id="epsg",name="epsg")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="location").
+              label.w3-label(for="location").
                 Project Location
-              input(type="text", id="location", class="form-control input-sm chat-input", name="location")
+              input.w3-input(type="text", id="location", name="location")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="description").
+              label.w3-label(for="description").
                 Project Description
-              textarea(id="description", class="form-control input-sm chat-input", rows = "3", name="description")
+              textarea.w3-input(id="description",rows = "3", name="description")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
-              label(for="location").
+              label.w3-label(for="location").
                 Selected Data Property
               br
-              select(id='rasterProperty', name='rasterProperty')
+              select.form-control(id='rasterProperty', name='rasterProperty')
               br
               br
-          div(data-role='fieldcontain').spacing
-            input(type='submit',value='Save Layer',data-transition='fade', data-theme='c', class="btn btn-gray btn-lg")
-  
+          
+          button.btn.btn-block.btn-default(type='submit') Save Layer
+
    script(src="/javascripts/layer_viewer.js") 
 

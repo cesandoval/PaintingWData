@@ -7,7 +7,8 @@ block pageTitle
   script(src="/javascripts/js/layers.js")
   script.
 
-  .container(style = "margin-top: 50px").spacing-large
+    
+  .container(style = "margin-top: 10px").spacing-large
     .row.spacing-large
       h1.center Voxels
     .row
@@ -17,38 +18,22 @@ block pageTitle
             strong build a datavoxel!
 
       for datavoxel in datavoxels
-        .col-sm-4.col-md-4.datalayer(selected = "false" style = "margin-top:20px")
-          .post
-            .post-img-content
-              //- div(id="map_#{datavoxel.id}", class = "leafletMap", style="width: 370px; height: 300px; margin:0 auto;")
-              span.post-title
-              /////////
-              .layerName
-        .col-sm-4.col-md-4.datavoxel(selected = "false" style = "margin-top:20px", id="datavoxel_#{datavoxel.id}")
-          .post
-            .post-img-content
+        .col-sm-6.col-md-4
+          
+          .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
+            .post
+              .post-img-content
+                div
+                  img(style= "width: 100%" src="http://www.worldpress.org/images/maps/world_600w.gif")
+                span.post-title
+                p.layerName
+                p.content
+                p.property
+                p.epsg
+                p.description
+              br
+              br
+              a.btn.btn-default.btn-block(href='/uploadViewer/#{datavoxel.id}') View Map
 
-              div
-                //- img(style= "width: 300px" src="http://www.worldpress.org/images/maps/world_600w.gif")
-              span.post-title
-              //////////
-
-            .content
-              .layerName
-                label Data Voxel:
-                h3 #{datavoxel.voxelname}
-                .datalayers
-
-                .epsg
-                  label EPSG Code:
-                  p #{datavoxel.epsg}
-    .row.spacing-large
-      .col-md-4.col-md-offset-4
-        form(method='post', action='/layers')
-          .form-group
-            h3.
-              Open a Voxel File
-            .row.spacing-small
-              //button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
-              button.btn.btn-gray.btn-lg.btn-voxel(type='submit')#openVoxel Open <br>Voxels
+      button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
   script(src="/javascripts/js/voxels.js")

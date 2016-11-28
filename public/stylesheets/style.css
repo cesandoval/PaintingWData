@@ -8,13 +8,13 @@ body {
 }
 
 p {
-    font-family: 'EB Garamond', serif;
+    /*font-family: 'EB Garamond', serif;*/
     color: #1A1A1A;
     font-size: calc(10px + 1.5vh);
 }
 
 h1, h2, h3 {
-    font-family: 'Karla', sans-serif;
+    /*font-family: 'Karla', sans-serif;*/
 }
 
 h2 {
@@ -55,7 +55,9 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
     -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
     box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
 }
-
+.w3-label{
+    color: #333;
+}
 /* title */
 .navbar-inverse .navbar-brand {
     color: white;
@@ -283,7 +285,7 @@ body {
 
 }
 .selected_layer{
-    border: 2px solid #e67e22;
+    border: 1px inset #e67e22;
 }
 
 .fa-spinner{

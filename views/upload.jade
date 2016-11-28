@@ -1,26 +1,33 @@
 extends layout
 
 block pageTitle
-  div.jumbotron
-    div.container.spacing
-      .row
-        h1.spacing-large.center Upload Data Layers
-
-      .row
-        p SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
-        p .dbf file
-        p .shp file
-        p .shx files
-        p Do not include /shd.xml file in the ZIP
-
-      label(class="btn btn-gray btn-md", for="file-selector").spacing-large Choose File
-      input(id="file-selector", name = "zip_file" class="btn btn-primary btn-block", type="file", style="display:none;").spacing
-      span(class='label label-info', id="upload-file-info").spacing
-      button(class="btn btn-default btn-block hidden", id="upload", name="upload", data-transition="fade", data-theme="c").spacing-large Upload
-      .row.spacing
-      div.progress
-        div(class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar").
-          Uploading File ...
+  .container(style="margin-top: 100px;")
+    .row
+      .col-md-12.w3-container
+        .panel.panel-default
+          .panel-heading
+            h3.panel-title
+              | Upload
+          .panel-body
+            .row
+              .col-md-12
+                .row
+                  .col-md-12
+                    h2 SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
+                    p .dbf file
+                    p .shp file
+                    p .shx files
+                    p Do not include /shd.xml file in the ZIP
+                hr
+                .row
+                  .col-md-12
+                    input(id="file-selector", name = "zip_file", type="file")
+                    br
+                    button(class="btn btn-default btn-block hidden", id="upload", name="upload", data-transition="fade", data-theme="c").spacing-large Upload
+                    .row.spacing
+                    div.progress.hidden
+                      div(class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar").
+                        Uploading File ...
 
   script(src="/javascripts/js/fileUpload.js")
           
