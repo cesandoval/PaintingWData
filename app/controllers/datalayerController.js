@@ -56,6 +56,7 @@ module.exports.show = function(req, res) {
                 userId : req.user.id,
             }
         }).then(function(datafiles){
+            // Datafiles should have their distinct datalayers so we can render them with their properties
             res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
         });
     })
@@ -90,6 +91,7 @@ module.exports.showVoxels= function(req, res) {
             // console.log(datafilevoxels)
             // console.log(voxelIds)
             
+            // For every datavoxel we should get the associated datalayers to display their distinct names and properties
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
         });
 }
