@@ -14,6 +14,10 @@ var Datavoxel = sequelize.define('Datavoxel', {
       type: DataTypes.GEOMETRY,
       allowNull: true
     },
+    processed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    }
 }, {
     classMethods: {
       associate: function(models) {
