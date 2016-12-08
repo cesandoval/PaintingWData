@@ -6,6 +6,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Datafilevoxel.belongsTo(models.Datavoxel, {foreignKey: 'datavoxelId'});
+        // Datafilevoxel.hasMany(models.Datafile, {foreignKey: 'datafileId'});
         // associations can be defined here
       }
     }

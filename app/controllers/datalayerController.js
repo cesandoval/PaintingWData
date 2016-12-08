@@ -54,11 +54,23 @@ module.exports.show = function(req, res) {
         Model.Datafile.findAll({
             where : {
                 userId : req.user.id,
-            }
-        }).then(function(datafiles){
-            // Datafiles should have their distinct datalayers so we can render them with their properties
-            res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
-        });
+            },
+            include: [{
+                model: Model.Datalayer,
+                limit: 1}]
+            }).then(function(datafiles){
+                console.log("------------------------------------------------");
+                console.log(datafiles[0].Datalayers[0]);
+                res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
+            });  
+        // Model.Datafile.findAll({
+        //     where : {
+        //         userId : req.user.id,
+        //     }
+        // }).then(function(datafiles){
+        //     // Datafiles should have their distinct datalayers so we can render them with their properties
+        //     res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
+        // });
     })
 }
 
@@ -69,6 +81,15 @@ module.exports.showVoxels= function(req, res) {
                 processed : true,
             }
         }).then(function(datavoxels){
+            // Folder.findOne({
+            //     where :{
+            //         id: req.params.folderId,
+            //     },
+            //     include: [Card],
+            //     }).then(function(folder){
+            //     console.log("------------------------------------------------", folder);
+            //     res.render('folders/show', {folder: folder});
+            //     });  
             // console.log(datavoxels[2]);
             // var voxelIds = [];
             // var datafilevoxels = [];
