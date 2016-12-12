@@ -45,33 +45,18 @@ module.exports.computeVoxels = function(req, res){
 };
 
 module.exports.show = function(req, res) {
-    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, description, "rasterProperty", location, "userLayerName"'+
-                    " FROM public."+'"Datalayers"' + "AS p WHERE "
-                    +'"userId"'+"="+req.user.id+";"; 
-    
-    connection.query(distinctQuery).then(function(datalayers){
-        var distinctDatalayers = datalayers[0];
-        Model.Datafile.findAll({
-            where : {
-                userId : req.user.id,
-            },
-            include: [{
-                model: Model.Datalayer,
-                limit: 1}]
-            }).then(function(datafiles){
-                console.log("------------------------------------------------");
-                console.log(datafiles[0].Datalayers[0]);
-                res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
-            });  
-        // Model.Datafile.findAll({
-        //     where : {
-        //         userId : req.user.id,
-        //     }
-        // }).then(function(datafiles){
-        //     // Datafiles should have their distinct datalayers so we can render them with their properties
-        //     res.render('layers', {id: req.params.id, datalayers: distinctDatalayers, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
-        // });
-    })
+    Model.Datafile.findAll({
+        where : {
+            userId : req.user.id,
+        },
+        include: [{
+            model: Model.Datalayer,
+            limit: 1}]
+        }).then(function(datafiles){
+            console.log("------------------------------------------------");
+            console.log(datafiles[0].Datalayers[0]);
+            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
+        });  
 }
 
 module.exports.showVoxels= function(req, res) {
@@ -79,41 +64,16 @@ module.exports.showVoxels= function(req, res) {
             where : {
                 userId : req.user.id,
                 processed : true,
-            }
+            },
+            include: [{
+                model: Model.Datafile, include: [{
+                    model: Model.Datalayer,
+                    limit: 1
+                }]
+            }]
         }).then(function(datavoxels){
-            // Folder.findOne({
-            //     where :{
-            //         id: req.params.folderId,
-            //     },
-            //     include: [Card],
-            //     }).then(function(folder){
-            //     console.log("------------------------------------------------", folder);
-            //     res.render('folders/show', {folder: folder});
-            //     });  
-            // console.log(datavoxels[2]);
-            // var voxelIds = [];
-            // var datafilevoxels = [];
-            // datavoxels.forEach(function(voxel, index){
-            //     var voxelId = voxel['dataValues'].id;
-            //     voxelIds.push(voxelId);
-            //     Model.Datafilevoxel.findAll({
-            //         where: {
-            //             datavoxelId: voxelId
-            //         }
-            //     }).then(function(datafilevoxel){
-            //         console.log(333333333)
-            //         datafilevoxel.forEach(function(dfv){
-            //             console.log(55555555)
-            //             var datafileId = dfv['datafileId'];
-            //             datafilevoxels.push(datafileId)
-            //         })
-            //     })
-            //     console.log(datafilevoxels)
-            // })
-            // console.log(datafilevoxels)
-            // console.log(voxelIds)
+            console.log("------------------------------------------------");
             
-            // For every datavoxel we should get the associated datalayers to display their distinct names and properties
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
         });
 }
@@ -140,7 +100,6 @@ module.exports.startWorker = function(datalayerIds, req){
                 Model.Datavoxel.findAll({
                     where: {
                         userId: req.user.id,
-                        //props[0].datavoxelId
                     }
                 }).then(function(datavoxels){
                     console.log("====================== ");
@@ -192,10 +151,12 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
+
             var newDatafilevoxel = Model.Datafilevoxel.build();
-            newDatafilevoxel.datavoxelId = datavoxel.id;
-            newDatafilevoxel.datafileId = prop.datafileId;
+            newDatafilevoxel.DatavoxelId = datavoxel.id;
+            newDatafilevoxel.DatafileId = prop.datafileId;
             newDatafilevoxel.save().then(function(datafilevoxel){
+                console.log(datafilevoxel)
             }); 
             
         })
@@ -235,9 +196,6 @@ function getNet(bbox, props, req, callback) {
 }
 
 function pushDataNet(pointNet, props, req, callback) {
-    // THIS HAS TO BE GIVEN BY THE USER/////
-    // ++++++++++++-++++++++++------
-
     // CHANGE LAYERNAME TO VOXELNAME/////
     // ++++++++++++-++++++++++------
     var voxelname = req.body.voxelname;

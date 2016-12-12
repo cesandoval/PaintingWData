@@ -34,13 +34,17 @@ block pageTitle
 
             .content
               .layerName
-                label Data Voxel:
+                label Data Voxel Name:
                 h3 #{datavoxel.voxelname}
                 .datalayers
 
-                .epsg
-                  label EPSG Code:
-                  p #{datavoxel.epsg}
+                label Data Layers in Voxel:
+                for datafile in datavoxel.Datafiles
+                  label Data File Name:
+                  p #{datafile.Datalayers[0].layername}
+                  label Layer Data Property:
+                  p #{datafile.Datalayers[0].rasterProperty}
+
     .row.spacing-large
       .col-md-4.col-md-offset-4
         form(method='post', action='/layers')
