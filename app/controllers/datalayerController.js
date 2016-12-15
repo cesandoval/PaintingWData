@@ -45,21 +45,35 @@ module.exports.computeVoxels = function(req, res){
 };
 
 module.exports.show = function(req, res) {
-     Model.Datafile.findAll({
-            where : {
-                userId : req.user.id,
-            }
+    Model.Datafile.findAll({
+        where : {
+            userId : req.user.id,
+        },
+        include: [{
+            model: Model.Datalayer,
+            limit: 1}]
         }).then(function(datafiles){
+            console.log("------------------------------------------------");
+            console.log(datafiles[0].Datalayers[0]);
             res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
-        });
+        });  
 }
 
 module.exports.showVoxels= function(req, res) {
      Model.Datavoxel.findAll({
             where : {
                 userId : req.user.id,
-            }
+                processed : true,
+            },
+            include: [{
+                model: Model.Datafile, include: [{
+                    model: Model.Datalayer,
+                    limit: 1
+                }]
+            }]
         }).then(function(datavoxels){
+            console.log("------------------------------------------------");
+            
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user});
         });
 }
@@ -77,24 +91,22 @@ module.exports.startWorker = function(datalayerIds, req){
         parseGeoJSON,
         pushDatajson,
     ], function (err, result) {
-        console.log(444444444444444444444445555555555555555)
-        console.log("\n\n\n");
-        console.log(result[0]);
-        console.log(result[1])
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log("\n\n\n");
-        console.log(444444444444444444444445555555555555555)
-        console.log(444444444444444444444445555555555555555)
-        Model.Datavoxel.findAll({
-            where: {
-                userId: req.user.id,
-            }
-        }).then(function(datavoxels){
-            console.log("====================== ");
-            console.log("your voxel has been created.");
-        });
+        var voxelId = result;
+        Model.Datavoxel.findById(voxelId).then(function(datavoxel) {
+            datavoxel.update({
+                processed: true 
+            }).then(function(){
+                console.log('datavoxel updated too!!!!')
+                Model.Datavoxel.findAll({
+                    where: {
+                        userId: req.user.id,
+                    }
+                }).then(function(datavoxels){
+                    console.log("====================== ");
+                    console.log("your voxel has been created.");
+                });
+            })
+        })
     });
 };
 
@@ -122,6 +134,10 @@ function getBbox(datalayerIds, req, callback) {
 }
 
 function createDatavoxel(bbox, props, req, callback){
+    console.log("=========================================");
+    console.log(`in createDatavoxel`);
+    console.log("\n\n\n");
+
     var voxelname = req.body.voxelname;
     var currBbox = bbox;
     currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ props[0].epsg} };
@@ -130,15 +146,17 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.voxelname = voxelname;
     newDatavoxel.epsg = props[0].epsg;
     newDatavoxel.userId = req.user.id;
+    newDatavoxel.bbox = currBbox;
+    newDatavoxel.processed = false;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
-            var newDatafilevoxel = Model.Datafilevoxel.build();
-            newDatafilevoxel.datavoxelId = datavoxel.id;
-            newDatafilevoxel.datafileId = prop.datafileId;
-            newDatafilevoxel.bbox = currBbox;
-            newDatafilevoxel.save().then(function(datafilevoxel){
 
+            var newDatafilevoxel = Model.Datafilevoxel.build();
+            newDatafilevoxel.DatavoxelId = datavoxel.id;
+            newDatafilevoxel.DatafileId = prop.datafileId;
+            newDatafilevoxel.save().then(function(datafilevoxel){
+                console.log(datafilevoxel)
             }); 
             
         })
@@ -152,7 +170,7 @@ function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
     // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
     // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
-    var stepSize = 20000;
+    var stepSize = 1;
 
     var netFunctionQuery = `
     CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
@@ -172,14 +190,12 @@ function getNet(bbox, props, req, callback) {
     `
 
     connection.query(netFunctionQuery).spread(function(results, metadata){
+        console.log(results[0])
         callback(null, results[0], props, req);
     })
 }
 
 function pushDataNet(pointNet, props, req, callback) {
-    // THIS HAS TO BE GIVEN BY THE USER/////
-    // ++++++++++++-++++++++++------
-
     // CHANGE LAYERNAME TO VOXELNAME/////
     // ++++++++++++-++++++++++------
     var voxelname = req.body.voxelname;
@@ -190,6 +206,7 @@ function pushDataNet(pointNet, props, req, callback) {
     console.log("=========================================");
     console.log(`in pushDataNet`);
     console.log("\n\n\n");
+    console.log(pointNet);
     var pointNet  = pointNet.point_net
     var maxLength = 1000;
 
@@ -319,6 +336,7 @@ function parseGeoJSON(results, objProps, req, callback) {
 
 function pushDatajson(dataJSONs, objProps, req, callback) {
    var keys = Object.keys(objProps);
+   var voxelId
    async.each(keys, function(key, callback) {
         var newDataJSON = Model.Datajson.build();
         newDataJSON.layername = objProps[key].layername;
@@ -328,12 +346,14 @@ function pushDatajson(dataJSONs, objProps, req, callback) {
         newDataJSON.geojson = dataJSONs[key];
         newDataJSON.userId = req.user.id;
         newDataJSON.save().then(function(){
-        console.log('new geojsonmmmmmmm');
-        callback(null, 'New dataJSON added');
-    }); 
+            console.log('new geojsonmmmmmmm');
+
+            callback(null, 'STOPPPPPPPP');
+        }); 
+        voxelId = objProps[key].datavoxelId;
     },
     function(){
-        callback(null, 'New dataJSON added');
+        callback(null, voxelId);
     }); 
 
    

@@ -8,10 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      datavoxelId: {
+      DatavoxelId: {
         type: Sequelize.INTEGER,
       },
-      datafileId: {
+      DatafileId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

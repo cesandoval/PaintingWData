@@ -10,7 +10,7 @@ body {
 p {
     /*font-family: 'EB Garamond', serif;*/
     color: #1A1A1A;
-    font-size: 2.5vh;
+    font-size: calc(10px + 1.5vh);
 }
 
 h1, h2, h3 {
@@ -18,13 +18,13 @@ h1, h2, h3 {
 }
 
 h2 {
-    font-size: 4vh;
+    font-size: calc(20px + 1.5vh);
 }
 
 h4 {
     text-align: right;
     font-family: 'Karla', sans-serif;
-    font-size: 2vh;
+    font-size: 18pt;
 }
 
 .bold {
@@ -69,7 +69,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 .navbar-inverse .navbar-nav > li > a {
     color: white;
     font-family: 'Karla', sans-serif;
-    font-size: 2vh;
+    font-size: 12pt;
     text-shadow: none;
 }
 .navbar-inverse .navbar-nav > li > a:hover{
@@ -236,7 +236,7 @@ h1.site-title {
 .btn-jumbotron {
     height: 15vh;
     width: 15vw;
-    font-size: 3vh;
+    font-size: 3vmin;
     line-height: 13vh;
 }
 
@@ -254,10 +254,10 @@ h1.site-title {
 }
 
 .btn-small {
-    height: 14vh;
+    height: 14vmin;
     width: 14vw;
-    font-size: 2vh;
-    line-height: 12vh;
+    font-size: 2vmin;
+    line-height: 12vmin;
 }
 
 .btn-jumbotron-text {
@@ -306,7 +306,7 @@ body {
 
 .footer p {
     font-family: 'Karla', sans-serif;
-    font-size: 2vh;
+    font-size: 2vmin;
     position: relative;
     bottom: 0;
     padding-left: 3vw;

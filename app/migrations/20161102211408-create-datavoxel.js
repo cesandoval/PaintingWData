@@ -23,6 +23,10 @@ module.exports = {
         type: Sequelize.GEOMETRY,
         allowNull: true
       },
+      processed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
