@@ -13,9 +13,7 @@ function consumer(conn, callback) {
     if (err != null) bail(err);
     ch.assertQueue(q);
     ch.consume(q, function(msg) {
-      console.log("=============== message not null");
       if (msg !== null) {
-        console.log("=============== message not null");
         var recievedMsg = msg.content.toString();
         console.log('in test worker, recieved the message: ', recievedMsg);
         var req = JSON.parse(recievedMsg);
