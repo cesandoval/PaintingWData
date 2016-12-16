@@ -37,11 +37,10 @@ block pageTitle
             .caption
               h3 
               p 
-              | #{datafile.Datalayers[0].layername}
               p
                 a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
 
      
 
    script(src="/javascripts/user_layer.js")
-    
+ 
