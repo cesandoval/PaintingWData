@@ -35,11 +35,23 @@ block pageTitle
           .thumbnail.datalayer(selected = "false" )
             div(id="map_#{datafile.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
             .caption
-              h3 
-              p 
-              | #{datafile.Datalayers[0].layername}
-              p
-                a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
+              .layername
+                label Layer Name: 
+                p(display='inline') #{datafile.Datalayers[0].layername}
+                .property
+                  label Data Property:
+                  p #{datafile.Datalayers[0].rasterProperty}
+                .epsg
+                  label EPSG Code:
+                  p #{datafile.Datalayers[0].epsg}
+                .description
+                  label Layer Description:
+                  p #{datafile.Datalayers[0].description}
+                .location
+                  label Layer Location: 
+                  p #{datafile.Datalayers[0].location}
+                p
+                  a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
 
      
 
