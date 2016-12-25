@@ -35,13 +35,6 @@ block pageTitle
           .thumbnail.datalayer(selected = "false" )
             div(id="map_#{datafile.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
             .caption
-<<<<<<< HEAD
-              h3 
-              p 
-              p
-                a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
-
-=======
               .layername
                 label Layer Name: 
                 p(display='inline') #{datafile.Datalayers[0].layername}
@@ -61,7 +54,6 @@ block pageTitle
                   a.btn.btn-default.btn-block(href='/uploadViewer/#{datafile.id}') View Map
 
      
->>>>>>> master
 
    script(src="/javascripts/user_layer.js")
     

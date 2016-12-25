@@ -76,26 +76,29 @@ html
               span.icon-bar
           //- img(src="/images/PwR_logo_test_1.svg", style="padding-left: 2vw; width: auto; height: 5vh;")
           a(class='navbar-brand', href='/#')
-            img(alt="Brand" src="/images/pwd_navbar_logo.svg", style="height:100%;")
+            img(alt="Brand" src="/images/pwd_1225_1@2x-8.png", style="height:100%;")
 
 
-          ul.nav.navbar-nav.navbar-right
+          ul.nav.navbar-nav.navbar-left
             li
               a(href='/about') About
             li
               a(href='/documentation') Documentation
             if userSignedIn
               li
-                a(href='/upload') Upload Data
-              li
                 a(href='/app') Application
             
           ul.nav.navbar-nav.navbar-right
             if userSignedIn
-              li
-                a(href='/layers/#{user.id}') #{user.email}
-              li 
-                a(href='/users/logout') Logout
+             li.dropdown
+              a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
+                <span class="caret"></span>
+              ul.dropdown-menu(aria-labelledby="dropdownMenuLink")
+                a.li(href='/upload').dropdown-item Upload Data
+                <br>
+                a.li(href='/layers/#{user.id}').dropdown-item My Layers
+                <br>
+                a.dropdown-item.li(href='/logout') Logout
             else
               li
                 a(href='/users/signup') Sign Up

@@ -1,25 +1,25 @@
 extends layout
 
 block pageTitle
-  div.container
+  div.container.spacing-large
       .row.spacing-large
          h1.center Upload Data
-      .row.spacing-large    
-        .row
-          .col-md-8
-            h2 SHP files must be compressed in a ZIP file. <br>The ZIP file should include these files:
-            p .dbf file
-            p .shp file
-            p .shx files
-            p Do not include /shd.xml file in the ZIP
+      .row
+        .col-md-8
+          h3.spacing-large Add your own shape files to create voxels.
+          h5 SHP files must be compressed in a ZIP file. <br>The ZIP file should include these files:
+          h5 .dbf file
+          h5 .shp file
+          h5 .shx files
+          h5 Do not include /shd.xml file in the ZIP
+      .row
         hr
-        .row
-          .col-md-8
-            input(id="file-selector",  name = "zip_file", type="file")
-            br
-            p.spacing
-              a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
-        .row.spacing
+        .col-md-8
+          input(id="file-selector",  name = "zip_file", type="file")
+          br
+          p.spacing
+            a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
+      .row.spacing
           div.progress.hidden(style="backround-color: white")
             div(class="progress-bar progress-bar-warning" role="progressbar", style="width: 100%").
               Uploading File ...
