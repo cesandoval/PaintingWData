@@ -674,3 +674,12 @@ ul a:hover.buttons {
     font-weight: 700;
     font-family: 'Karla', sans-serif;
 }
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+}
+
+.progress {
+    background-color: white;
+}

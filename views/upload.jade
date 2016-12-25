@@ -1,33 +1,28 @@
 extends layout
 
 block pageTitle
-  .container(style="margin-top: 100px;")
-    .row
-      .col-md-12.w3-container
-        .panel.panel-default
-          .panel-heading
-            h3.panel-title
-              | Upload
-          .panel-body
-            .row
-              .col-md-12
-                .row
-                  .col-md-12
-                    h2 SHP fiels must be compressed in a ZIP file. The ZIP file should include these files:
-                    p .dbf file
-                    p .shp file
-                    p .shx files
-                    p Do not include /shd.xml file in the ZIP
-                hr
-                .row
-                  .col-md-12
-                    input(id="file-selector", name = "zip_file", type="file")
-                    br
-                    button(class="btn btn-default btn-block hidden", id="upload", name="upload", data-transition="fade", data-theme="c").spacing-large Upload
-                    .row.spacing
-                      div.progress.hidden.spacing-large
-                        div(class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar").
-                          Uploading File ...
+  div.container
+      .row.spacing-large
+         h1.center Upload Data
+      .row.spacing-large    
+        .row
+          .col-md-8
+            h2 SHP files must be compressed in a ZIP file. <br>The ZIP file should include these files:
+            p .dbf file
+            p .shp file
+            p .shx files
+            p Do not include /shd.xml file in the ZIP
+        hr
+        .row
+          .col-md-8
+            input(id="file-selector",  name = "zip_file", type="file")
+            br
+            p.spacing
+              a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
+        .row.spacing
+          div.progress.hidden(style="backround-color: white")
+            div(class="progress-bar progress-bar-warning" role="progressbar", style="width: 100%").
+              Uploading File ...
 
   script(src="/javascripts/js/fileUpload.js")
           

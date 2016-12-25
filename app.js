@@ -3,7 +3,8 @@ var express = require('express'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    i18n = require("i18n");
 
 var passport = require('passport');
     flash = require('express-flash'),
@@ -47,27 +48,32 @@ app.use(function(req, res, next) {
 });
 
 
-
 var Strategies = require('./app/controllers/signUpController');
 passport.use('signup', Strategies.SignUpStrategy);
 passport.use('login', Strategies.LoginStrategy);
 
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
-//----------------------------
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-// This is for PostGRES
+// Routes
 var appRouter = require('./app/routers/appRouter');
 var users = require('./app/routers/users');
 var datajson = require('./app/routers/datajson');
-
-
 app.use('/users', users);
 app.use('/', appRouter);
 app.use('/datajson', datajson);
+
+
+// language packages
+i18n.configure({
+    locales:['en', 'ar'],
+    directory: __dirname + '/locales'
+});
+app.use(i18n.init);
+
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

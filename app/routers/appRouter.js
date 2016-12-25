@@ -1,6 +1,4 @@
 var passport = require('passport'),
-    auth = require('passport-local-authenticate'),
-    signupController = require('../controllers/signupController.js'),
     appController = require('../controllers/appController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
@@ -9,6 +7,7 @@ var passport = require('passport'),
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
+
 
 
 
@@ -42,5 +41,7 @@ var passport = require('passport'),
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app', appController.show);
+
+
 
 module.exports = router;

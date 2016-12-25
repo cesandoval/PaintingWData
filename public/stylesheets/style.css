@@ -8,13 +8,13 @@ body {
 }
 
 p {
-    /*font-family: 'EB Garamond', serif;*/
+    font-family: 'EB Garamond', serif;
     color: #1A1A1A;
     font-size: calc(10px + 1.5vh);
 }
 
 h1, h2, h3 {
-    /*font-family: 'Karla', sans-serif;*/
+    font-family: 'Karla', sans-serif;
 }
 
 h2 {

@@ -222,7 +222,7 @@ function pushDataLayer(file, epsg, newName, req, layer, callback) {
 }
 
 function pushDataRaster(epsg, layername, datafileID, callback) {
-    console.log("\n\n\n");
+     console.log("\n\n\n");
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public.dataraster (id serial primary key, rast raster, layername text, datafileid integer);';
 
     // var bboxQuery = tableQuery + 

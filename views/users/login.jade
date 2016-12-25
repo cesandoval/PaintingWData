@@ -4,10 +4,10 @@ block pageTitle
   div.container.login-container
     div.row
       div.col-md-offset-4.col-md-4
-        if !(message == '')
-          .alert.alert-danger(role='alert') #{message}
         form(method="post", action="/users/login")
-          h2.spacing.prompt Welcome back.
+          h2.spacing.prompt Welcome!
+          if !(message == '')
+            .alert.alert-danger(role='alert') #{message}
           div(data-role='fieldcontain').form-group
             fieldset(data-role='controlgroup')
               label(for="email").
