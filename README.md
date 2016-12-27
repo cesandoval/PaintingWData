@@ -43,7 +43,7 @@ npm install -g sequelize-cli
 
 * Navigate back to the root directory (`cd ..`) and run `npm start` to start the server 
 * Run on browser `http://localhost:3000/` to view the website locally
-* To start the worker, run `node worker/app.js` and go to a separate tab in your browser and navigate to `localhost:8899` 
+* To start the worker, run `node worker/index.js` and go to a separate tab in your browser and navigate to `localhost:8899`
 * After each update on the code, stop and restart the worker, and refresh the page.
 
 ## Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL, KACST. All rights reserved.

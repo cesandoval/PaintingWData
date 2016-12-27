@@ -3,8 +3,9 @@ var Model = require('../models'),
     path = require('path'),
     request = require('request'),
     manager = require('../../worker/manager')(10),
-
+    mailer = require('./mailController'),
     app = require('../../app');
+
 
 // This file extracts the datalayer ids from the request object and saves it on
 // the datalayerIds object. 
@@ -25,6 +26,20 @@ module.exports.computeVoxels = function(req, res){
     manager.process(job, function (err, result){
             console.log("------------------------------------------------");
             console.log("done computing voxels.");
+            // var mailOptions = {
+            //     from: '"Painting With Data" <henry44duna@gmail.com>', // sender address
+            //     to: req.user.email, // list of receivers
+            //     subject: 'Done Processing Voxels', // Subject line
+            //     text: 'Done Processing Voxels', // plaintext body
+            //     html: '<b>Done processing voxels</b>' // html body
+            // };
+            // mailer.sendMail(mailOptions, function(err, info){
+            //     if(err){
+            //         console.log("error sending mail: \n", err);
+            //     }
+            //     console.log("Mail sent", info.response);
+            // });
+
 
         });
 
