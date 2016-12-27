@@ -17,22 +17,22 @@ block pageTitle
 
       for datavoxel in datavoxels
         .col-sm-6.col-md-4
-          
           .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
-            .post
-              .post-img-content
-                div
-                  img(style= "width: 100%" src="http://www.worldpress.org/images/maps/world_600w.gif")
-                span.post-title
-                p.layerName
-                  
-                p.content
-                p.property
-                p.epsg
-                p.description
-              br
-              br
-              a.btn.btn-default.btn-block(href='/uploadViewer/#{datavoxel.id}') View Map
+            div
+              img(style= "width: 100%" src="http://www.worldpress.org/images/maps/world_600w.gif")
+              .caption
+                .layerName
+                  label Data Voxel Name:
+                  p(display='inline') #{datavoxel.voxelname}
+                  .datalayers
+                  label Data Layers in Voxel:
+                    for datafile in datavoxel.Datafiles
+                      label Data File Name:
+                      p #{datafile.Datalayers[0].layername}
+                      label Layer Data Property:
+                      p #{datafile.Datalayers[0].rasterProperty}
+                  p
+                    a.btn.btn-default.btn-block(href='/uploadViewer/#{datavoxel.id}') View Map
 
       button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
   script(src="/javascripts/js/voxels.js")
