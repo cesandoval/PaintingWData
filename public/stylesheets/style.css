@@ -77,14 +77,16 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
-    color: black;
-    padding-left: 15px;
+    color: white;
+    padding-left: 25px;
+    padding-bottom: 25px;
     border-radius: 0;
 }
 
 ul.dropdown-menu {
     border-radius: 0;
     border: none;
+    background-color: #D34031;
 }
 
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {

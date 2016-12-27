@@ -25,7 +25,7 @@ block pageTitle
             fieldset(data-role='controlgroup')
               label.w3-label(for="layername").
                 Layer Name
-              input.w3-input(type="text", id="layername", name="layername", placeholder="New Layer")
+              input.w3-input(type="text", id="layername", name="layername")
               br
           div(id='hiddendiv',data-role='fieldcontain')
             fieldset(data-role='controlgroup')
@@ -53,10 +53,7 @@ block pageTitle
               select.form-control(id='rasterProperty', name='rasterProperty')
               br
               br
-      .row.spacing-large
-        .col-md-5
-        .col-md-1
-          button.btn.btn-md.btn-gray.btn-jumbotron(role="button", type="submit") Save Layer
+          button.btn.btn-md.btn-gray.btn-jumbotron(type='submit') Save Layer
 
-   script(src="/javascripts/layer_viewer.js") 
+script(src="/javascripts/layer_viewer.js") 
 
