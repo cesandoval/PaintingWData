@@ -13,6 +13,21 @@ p {
     font-size: calc(10px + 1.5vh);
 }
 
+a:link {
+    color: #1A1A1A;
+}
+
+.label-body {
+    font-family: 'Karla', sans-serif;
+    font-size: 10pt;
+}
+
+.note {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: calc(6px + 1.5vh);
+}
+
 h1, h2, h3 {
     font-family: 'Karla', sans-serif;
 }
@@ -283,6 +298,15 @@ h1.site-title {
     vertical-align: middle;
 }
 
+input[type=file] {
+    display: none;
+}
+
+.custom-upload {
+    display: inline-block;
+    cursor: pointer;
+}
+
 .btn-small {
     height: 14vmin;
     width: 14vw;
@@ -327,7 +351,35 @@ body {
 }
 
 .form-control {
-    border-radius: 10px;
+    border-radius: 0;
+}
+
+.form-input-line {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 5px;
+    border-left-width: 0;
+
+    border-radius: 0;
+    box-shadow: none;
+
+    font-family: 'Karla', sans-serif;
+    font-size: 14pt;
+    color: black;
+}
+
+textarea:focus, .form-control:focus, input:focus, input:active{
+    outline: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+
+    border-color: #D34031;
+}
+
+*:focus {
+    outline: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 .wrapper {
@@ -348,3 +400,15 @@ body {
     margin-left: 5vw;
     margin-right: 5vw;
 }
+
+/*************
+/* LEAFLET */
+
+.leaflet-container .leaflet-control-attribution, .leaflet-container .leaflet-control-scale {
+    font-family: 'Karla', sans-serif;
+}
+
+.leaflet-container a {
+    color: #D34031;
+}
+

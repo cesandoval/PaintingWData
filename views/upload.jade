@@ -7,18 +7,19 @@ block pageTitle
       .row
         .col-md-8
           h3.spacing-large Add your own shape files to create voxels.
-          h5 SHP files must be compressed in a ZIP file. <br>The ZIP file should include these files:
-          h5 .dbf file
-          h5 .shp file
-          h5 .shx files
-          h5 Do not include /shd.xml file in the ZIP
+          p.note SHP files must be compressed in a ZIP file. <br>The ZIP file should include these files:
+          p.note .dbf file
+          p.note .shp file
+          p.note .shx files
+          p.note Do not include /shd.xml file in the ZIP.
+
       .row
         hr
-        .col-md-8
-          input(id="file-selector",  name = "zip_file", type="file")
-          br
-          p.spacing
-            a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
+        h3.spacing.text-center
+          label(for="file-selector").btn.btn-gray.btn-jumbotron.custom-upload Add File
+            input(id="file-selector",  name = "zip_file", type="file")
+        p.spacing.text-center
+          a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
       .row.spacing
           div.progress.hidden(style="backround-color: white")
             div(class="progress-bar progress-bar-warning" role="progressbar", style="width: 100%").

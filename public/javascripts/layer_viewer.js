@@ -16,14 +16,15 @@ function render(boundingBox, geoJSON, centroid){
         bBoxCoords.push(feature.reverse());
     })
 
-   
     map.fitBounds(bBoxCoords);
 
     var myStyle = {
-        "color": "black",
+        "color": "white",
         "weight": 1,
-        "opacity": 0.5,
-        'fillColor': '#ff7800'
+        "opacity": 1,
+        "fillOpacity": 0.9,
+        // 'fillColor': '#ff7800'
+        'fillColor': '#D34031'
     };
 
 
