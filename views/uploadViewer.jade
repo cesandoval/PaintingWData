@@ -1,3 +1,62 @@
+//- extends layout
+
+//- block pageTitle
+//-   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
+//-   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+//-   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
+//-   script(src="/javascripts/js/layers.js")
+//-   script.
+//-     var id = #{id};
+
+//-   .container(style="margin-top: 100px")
+//-     .row.spacing-large
+//-          h1.center Create Layer
+//-     .row
+//-       .col-md-6
+//-         div(id="map", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
+
+//-       .col-md-6
+//-         form(method="post", action="/uploadViewer")
+//-           div(class= 'hidden' data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="datafileId" value = "#{id}")
+//-               br
+//-           div(data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               label.w3-label(for="layername").
+//-                 Layer Name
+//-               input.w3-input(type="text", id="layername", name="layername")
+//-               br
+//-           div(id='hiddendiv',data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               label.w3-label(for="location").
+//-                 SRS Code
+//-               input.w3-input(type="text", id="epsg",name="epsg")
+//-               br
+//-           div(id='hiddendiv',data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               label.w3-label(for="location").
+//-                 Project Location
+//-               input.w3-input(type="text", id="location", name="location")
+//-               br
+//-           div(id='hiddendiv',data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               label.w3-label(for="description").
+//-                 Project Description
+//-               textarea.w3-input(id="description",rows = "3", name="description")
+//-               br
+//-           div(id='hiddendiv',data-role='fieldcontain')
+//-             fieldset(data-role='controlgroup')
+//-               label.w3-label(for="location").
+//-                 Selected Data Property
+//-               br
+//-               select.form-control(id='rasterProperty', name='rasterProperty')
+//-               br
+//-               br
+//-           button.btn.btn-md.btn-gray.btn-jumbotron(type='submit') Save Layer
+
+//- script(src="/javascripts/layer_viewer.js") 
+
 extends layout
 
 block pageTitle
@@ -9,8 +68,10 @@ block pageTitle
     var id = #{id};
 
   .container(style="margin-top: 100px")
+
     .row.spacing-large
-         h1.center Create Layer
+        h1.center Create Layer
+
     .row
       .col-md-6
         div(id="map", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
@@ -53,7 +114,7 @@ block pageTitle
               select.form-control(id='rasterProperty', name='rasterProperty')
               br
               br
-          button.btn.btn-md.btn-gray.btn-jumbotron(type='submit') Save Layer
+          
+        button.btn.btn-block.btn-default(type='submit') Save Layer
 
-script(src="/javascripts/layer_viewer.js") 
-
+   script(src="/javascripts/layer_viewer.js") 
