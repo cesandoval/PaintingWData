@@ -286,13 +286,15 @@ h1.site-title {
 }
 
 .btn-gray {
-    color: black;
+    color: #333333;
     font-family: 'Karla', sans-serif;
     background-image: url(/images/circle.svg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     text-align: center;
     text-anchor: middle;
+    text-transform: uppercase;
+    font-weight: bold;
     alignment-baseline: middle;
     display: inline-block;
     vertical-align: middle;
@@ -339,7 +341,8 @@ body {
 
 }
 .selected_layer{
-    border: 1px inset #e67e22;
+    /*border: 5px inset #e67e22;*/
+    background-color: #F3C6B7;
 }
 
 .fa-spinner{

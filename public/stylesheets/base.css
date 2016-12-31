@@ -382,6 +382,10 @@ label {
     font-family: 'Karla', sans-serif;
 }
 
+.layer-label {
+    font-size: 14pt;
+}
+
 .sliderCell {
     position: relative;
     height: 7vh;

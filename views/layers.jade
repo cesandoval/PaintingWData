@@ -10,29 +10,31 @@ block pageTitle
 
   
   .container(style = "margin-top: 10px").spacing-large
-    
-    .row
-      if datafiles.length == 0
-        .alert.alert-info(role='alert' style = "margin-top:20px" ) No Datafiles Found  &nbsp; 
-          a(href = "/upload")
-            strong upload a datafile
-
-      .row.spacing-large
+    .row.spacing-large
         h1.center Layers
 
-      .row
-        .col-md-3
-        .col-md-6(style="padding: 30px;")
-          .row
-              h3.spacing Compute voxels for a set of layers by selecting them below.
-          .row
-            form(method='post', action='/layers')
-              input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
-              input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-              <br>
-              .row.spacing-large
-                .input-group-btn.text-right
-                  button.btn.btn-gray.btn-jumbotron(type='submit') Compute
+    .row
+      if datafiles.length == 0
+        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No datafiles found  &nbsp;
+        <br>
+        div.text-center
+          a(href = "/upload")
+            btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Upload a datafile
+
+      if datafiles.length != 0
+        .row
+          .col-md-3
+          .col-md-6(style="padding: 30px;")
+            .row
+                h3.spacing Compute voxels for a set of layers by selecting them below.
+            .row
+              form(method='post', action='/layers')
+                input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
+                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+                <br>
+                .row.spacing-large
+                  .input-group-btn.text-right
+                    button.btn.btn-gray.btn-jumbotron(type='submit') Compute
               
       .row
       for datafile in datafiles
@@ -41,20 +43,20 @@ block pageTitle
             .thumbnail.datalayer(selected = "false" )
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
               .caption
-                .layername
-                  label Layer Name
+                .layername.spacing
+                  label.layer-label Layer Name
                   p(display='inline').label-body #{datafile.Datalayers[0].layername}
                   .property
-                    label Data Property
+                    label.layer-label Data Property
                     p.label-body #{datafile.Datalayers[0].rasterProperty}
                   .epsg
-                    label EPSG Code
+                    label.layer-label EPSG Code
                     p.label-body #{datafile.Datalayers[0].epsg}
                   .description
-                    label Layer Description
+                    label.layer-label Layer Description
                     p.label-body #{datafile.Datalayers[0].description}
                   .location
-                    label Layer Location
+                    label.layer-label Layer Location
                     p.label-body #{datafile.Datalayers[0].location}
                   p.label-body.text-right
                     a.btn.btn-gray.btn-jumbotron.btn-block(href='/uploadViewer/#{datafile.id}') View Map
