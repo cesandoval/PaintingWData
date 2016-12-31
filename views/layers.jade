@@ -3,6 +3,7 @@ extends layout
 block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+  link(rel="stylesheet", href="/stylesheets/layers.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/js/layers.js")
   script.
@@ -41,21 +42,21 @@ block pageTitle
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
               .caption
                 .layername
-                  label Layer Name: 
+                  label Layer Name
                   p(display='inline').label-body #{datafile.Datalayers[0].layername}
                   .property
-                    label Data Property:
+                    label Data Property
                     p.label-body #{datafile.Datalayers[0].rasterProperty}
                   .epsg
-                    label EPSG Code:
+                    label EPSG Code
                     p.label-body #{datafile.Datalayers[0].epsg}
                   .description
-                    label Layer Description:
+                    label Layer Description
                     p.label-body #{datafile.Datalayers[0].description}
                   .location
-                    label Layer Location: 
+                    label Layer Location
                     p.label-body #{datafile.Datalayers[0].location}
-                  p.label-body.text-center
+                  p.label-body.text-right
                     a.btn.btn-gray.btn-jumbotron.btn-block(href='/uploadViewer/#{datafile.id}') View Map
 
      

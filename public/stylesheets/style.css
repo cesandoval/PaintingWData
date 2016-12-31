@@ -373,6 +373,8 @@ textarea:focus, .form-control:focus, input:focus, input:active{
     box-shadow: none;
     -webkit-box-shadow: none;
 
+    transition: 1s ease;
+
     border-color: #D34031;
 }
 
