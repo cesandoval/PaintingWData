@@ -21,7 +21,7 @@ block pageTitle
             btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Build a datavoxel!
 
       for datavoxel in datavoxels
-        if datafile.Datalayers[0] && datavoxel.id
+        if datavoxel.id
           .col-sm-6.col-md-4
             .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
               div
