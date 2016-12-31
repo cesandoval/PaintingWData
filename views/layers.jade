@@ -20,15 +20,18 @@ block pageTitle
         h1.center Layers
 
       .row
-        .col-md-8(style="padding: 30px;")
+        .col-md-3
+        .col-md-6(style="padding: 30px;")
+          .row
+              h3.spacing Compute voxels for a set of layers by selecting them below.
           .row
             form(method='post', action='/layers')
-              .col-md-9
-                input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
-                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-              .col-md-3
-                .input-group-btn
-                  button.btn.btn-default(style="width: 100%" ,type='submit') Compute Voxels
+              input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
+              input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+              <br>
+              .row.spacing-large
+                .input-group-btn.text-right
+                  button.btn.btn-gray.btn-jumbotron(type='submit') Compute
               
       .row
       for datafile in datafiles
