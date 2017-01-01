@@ -22,7 +22,7 @@ function render(boundingBox, geoJSON, centroid){
         "color": "white",
         "weight": 1,
         "opacity": 1,
-        "fillOpacity": 0.9,
+        "fillOpacity": 0.75,
         // 'fillColor': '#ff7800'
         'fillColor': '#D34031'
     };

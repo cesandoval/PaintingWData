@@ -3,6 +3,7 @@ extends layout
 block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+  link(rel="stylesheet", href="/stylesheets/layers.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/js/layers.js")
   script.
@@ -17,7 +18,7 @@ block pageTitle
         p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No datafiles found  &nbsp;
         <br>
         div.text-center
-          a(href = "/layers")
+          a(href = "/layers/{datavoxel.userId}")
             btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Build a datavoxel!
 
       for datavoxel in datavoxels
@@ -26,19 +27,23 @@ block pageTitle
             .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
               div
                 img(style= "width: 100%" src="http://www.worldpress.org/images/maps/world_600w.gif")
-                .caption
-                  .layerName
-                    label Data Voxel Name:
-                    p(display='inline') #{datavoxel.voxelname}
-                    .datalayers
-                    label Data Layers in Voxel:
-                      for datafile in datavoxel.Datafiles
-                        label Data File Name:
-                        p #{datafile.Datalayers[0].layername}
-                        label Layer Data Property:
-                        p #{datafile.Datalayers[0].rasterProperty}
-                    p
-                      a.btn.btn-default.btn-block(href='/uploadViewer/#{datavoxel.id}') View Map
+              .caption
+                .layername.spacing
+                  h3 #{datavoxel.voxelname}
+                  .datalayers
+                  if datavoxel.Datafiles.length > 0
+                    label.layer-label Layers in Voxel
+                    for datafile in datavoxel.Datafiles
+                      hr
+                      label Layer #{Object.keys(datavoxel.Datafiles).length}
+                      br
+                      p.label-body File Name
+                      label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
+                      br
+                      p.label-body Layer Data Property
+                      label.layer-label.voxel-label #{datafile.Datalayers[0].rasterProperty}
+                  p.label-body.text-right
+                    a.btn.btn-gray.btn-jumbotron(href='/uploadViewer/#{datavoxel.id}') View Map
       if datavoxels.length != 0
         button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
   script(src="/javascripts/js/voxels.js")

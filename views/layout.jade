@@ -94,13 +94,13 @@ html
               a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
                 <span class="caret"></span>
               ul.dropdown-menu(aria-labelledby="dropdownMenuLink")
-                a.li(href='/upload').dropdown-item Upload Data
-                <br>
-                a.li(href='/layers/#{user.id}').dropdown-item My Layers
-                <br>
-                a.li(href='/voxels/#{user.id}').dropdown-item My Voxels
-                <br>
-                a.dropdown-item.li(href='/logout') Logout
+                a.li(href='/upload', style="line-height: 30px;").dropdown-item Upload Layers
+                br(style="padding-top: 20px;")
+                a.li(href='/layers/#{user.id}', style="line-height: 30px;").dropdown-item My Layers
+                br
+                a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Voxels
+                br.spacing
+                a.dropdown-item.li(href='/logout', style="line-height: 30px;") Logout
 
             else
               li
@@ -116,4 +116,13 @@ html
 
     div.footer
       p &copy; Carlos Sandoval Olascoaga, CDDL, KACST 2016.
+
+script.
+  $('.dropdown').on('show.bs.dropdown', function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+  });
+
+  $('.dropdown').on('hide.bs.dropdown', function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+  });
     

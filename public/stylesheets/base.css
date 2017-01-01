@@ -384,6 +384,12 @@ label {
 
 .layer-label {
     font-size: 14pt;
+    text-transform: uppercase;
+}
+
+.voxel-label {
+    margin-top: 10px;
+    font-size: 12pt;
 }
 
 .sliderCell {
