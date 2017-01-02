@@ -27,11 +27,11 @@ module.exports.computeVoxels = function(req, res){
             console.log("------------------------------------------------");
             console.log("done computing voxels.");
             // var mailOptions = {
-            //     from: '"Painting With Data" <henry44duna@gmail.com>', // sender address
+            //     from: '"Painting With Data" <sender@email.com>', // sender
             //     to: req.user.email, // list of receivers
             //     subject: 'Done Processing Voxels', // Subject line
             //     text: 'Done Processing Voxels', // plaintext body
-            //     html: '<b>Done processing voxels</b>' // html body
+            //     html: '<b>Done processing voxels</b>' // html body, figure out how to d
             // };
             // mailer.sendMail(mailOptions, function(err, info){
             //     if(err){
