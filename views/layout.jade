@@ -125,4 +125,10 @@ script.
   $('.dropdown').on('hide.bs.dropdown', function() {
     $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
   });
+
+  jQuery('ul.nav li.dropdown').hover(function() {
+    jQuery(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+    }, function() {
+      jQuery(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+      });
     
