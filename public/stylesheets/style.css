@@ -76,9 +76,15 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 /* title */
 .navbar-inverse .navbar-brand {
     color: white;
+    opacity: 1;
+
+    transition: 0.5s ease;
 }
 .navbar-inverse .navbar-brand:hover {
     color: white;
+    opacity: 0.8;
+
+    transition: 0.5s ease;
 }
 /* link */
 .navbar-inverse .navbar-nav > li > a,
@@ -131,11 +137,12 @@ ul.dropdown-menu {
 
 .brand-title {
     margin: 0;
-    background-image: url(/images/blue_circles.svg);
+    background-image: url(/images/blue_circles_1.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     /*background-size: 100vw auto;*/
     background-position: 0vw 0vh;
+    stroke: 8px;
 
     -webkit-background-size: 100vw auto;
     background-size: ;
@@ -171,21 +178,21 @@ ul.dropdown-menu {
 
     width: 100vw;
 
-    transition:all 2s ;
-    -webkit-transition:all 2s ;
-    -o-transition:all 2s ;
-    -moz-transition:all 2s ;
+    transition:all 4s ;
+    -webkit-transition:all 4s ;
+    -o-transition:all 4s ;
+    -moz-transition:all 4s ;
 
     -webkit-animation-name: move-in; /* Chrome, Safari, Opera */
-    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 5s; /* Chrome, Safari, Opera */
     animation-name: move-in;
-    animation-duration: 4s;
+    animation-duration: 5s;
 
     -webkit-backface-visibility: hidden;
     -webkit-transform: translateZ(0);
 
-    -webkit-animation-timing-function: ease-out; /* Chrome, Safari, Opera */
-    animation-timing-function: ease-out;
+    -webkit-animation-timing-function: ease; /* Chrome, Safari, Opera */
+    animation-timing-function: ease;
 }
 
 .no-margin { 
@@ -203,8 +210,7 @@ ul.dropdown-menu {
 }
 
 .red-circle-bg:hover {
-  background-size: 110vw auto;
-  opacity: 0.9;
+  background-size: 120vw auto;
 }
 
 /* Chrome, Safari, Opera */
@@ -283,6 +289,8 @@ h1.site-title {
     line-height: 8vh;
     background-color: transparent;
     border: none;
+
+    transition: 1s ease;
 }
 
 .btn-gray {
@@ -298,6 +306,8 @@ h1.site-title {
     alignment-baseline: middle;
     display: inline-block;
     vertical-align: middle;
+
+    transition: 1s ease;
 }
 
 input[type=file] {
@@ -323,16 +333,22 @@ input[type=file] {
 
 .btn-jumbotron:hover {
     background-image: url(/images/dark_circle.svg);
+
+    transition: 1s ease;
 }
 
 .btn-gray:hover {
     background-image: url(/images/dark_circle.svg);
+
+    transition: 1s ease;
 }
 
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
     color: #fff;
     background-color: rgb(76,76,76);
     border-color: rgb(76,76,76);
+
+    transition: 1s ease;
 }
 
 /*login*/
