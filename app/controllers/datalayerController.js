@@ -26,19 +26,19 @@ module.exports.computeVoxels = function(req, res){
     manager.process(job, function (err, result){
             console.log("------------------------------------------------");
             console.log("done computing voxels.");
-            // var mailOptions = {
-            //     from: '"Painting With Data" <sender@email.com>', // sender
-            //     to: req.user.email, // list of receivers
-            //     subject: 'Done Processing Voxels', // Subject line
-            //     text: 'Done Processing Voxels', // plaintext body
-            //     html: '<b>Done processing voxels</b>' // html body, figure out how to d
-            // };
-            // mailer.sendMail(mailOptions, function(err, info){
-            //     if(err){
-            //         console.log("error sending mail: \n", err);
-            //     }
-            //     console.log("Mail sent", info.response);
-            // });
+            var mailOptions = {
+                from: '"Painting With Data" <sender@email.com>', // sender
+                to: req.user.email, // list of receivers
+                subject: 'Done Processing Voxels', // Subject line
+                text: 'Done Processing Voxels', // plaintext body
+                html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
+            };
+            mailer.sendMail(mailOptions, function(err, info){
+                if(err){
+                    console.log("error sending mail: \n", err);
+                }
+                console.log("Mail sent", info.response);
+            });
 
 
         });
