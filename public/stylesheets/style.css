@@ -63,7 +63,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 .navbar-inverse { 
     background: #D34031;
     border-color: transparent;
-    height: 10vh;
+    height: 80px;
     padding-top:2vh;
 
     -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
@@ -357,9 +357,14 @@ body {
   background-color:#fff;
 
 }
-.selected_layer{
+.selected_layer {
     /*border: 5px inset #e67e22;*/
-    background-color: #F3C6B7;
+    /*background-color: #FCE3D9;*/
+    background-color: #F1D9D0;
+}
+
+.thumbnail .caption {
+    color: black;
 }
 
 .fa-spinner{

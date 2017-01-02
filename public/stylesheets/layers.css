@@ -1,6 +1,6 @@
 .thumbnail {
 	border-radius: 0px;
-	border: 3px solid #F3C6B7;
+	border: 3px solid #F1D9D0;
 
 	opacity:0.9;
 	transition: 1s ease;
@@ -11,4 +11,21 @@
 	transition: 1s ease;
 
 	border: 3px solid #D34031;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+	border: none;
+	border-radius: 0;
+}
+
+.leaflet-bar a:last-child, .leaflet-bar a:first-child {
+	border-radius: 0;
+	color: #D34031;
+}
+
+.leaflet-bar a:hover {
+	border: 3px solid #D34031;
+	background-color: white;
+
+	transition: 1s ease;
 }
