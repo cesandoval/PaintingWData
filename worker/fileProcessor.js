@@ -80,6 +80,7 @@ function getNet(bbox, props, req, callback) {
     // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
     // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
     var stepSize = 1;
+    console.log(bbox);
 
     var netFunctionQuery = `
 CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS

@@ -3,7 +3,7 @@ var Model = require('../models'),
     path = require('path'),
     request = require('request'),
     manager = require('../../worker/manager')(10),
-    // mailer = require('./mailController'),
+    mailer = require('./mailController'),
     app = require('../../app');
 
 
