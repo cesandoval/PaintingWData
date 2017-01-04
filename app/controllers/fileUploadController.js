@@ -94,7 +94,7 @@ function extractZip(zipFile, callback){
   var targetName = fileName + "_" + getTimestamp();
   var targetPath = path.join(__dirname, './shape_files');
 
-  var filePath = path.join(__dirname, `./shape_files`);
+  var filePath = path.join(__dirname, './shape_files');
   
   extract(zipFile, {dir: filePath}, function(err){
     if(err){  

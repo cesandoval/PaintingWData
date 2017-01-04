@@ -29,7 +29,7 @@ module.exports.saveShapes = function(req, res) {
                 userId : req.user.id,
             }
         }).then(function(datafiles){
-            res.redirect(`/layers/${req.user.id}`);
+            res.redirect('/layers/' + req.user.id);
         });
         
     });

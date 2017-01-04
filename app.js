@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 });
 
 
-var Strategies = require('./app/controllers/signUpController');
+var Strategies = require('./app/controllers/signupController');
 passport.use('signup', Strategies.SignUpStrategy);
 passport.use('login', Strategies.LoginStrategy);
 
