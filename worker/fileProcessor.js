@@ -77,21 +77,24 @@ function createDatavoxel(bbox, props, req, callback){
 // It returns the Datanet, and a list of properties of each Datafile associated with the Datanet
 function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
-    // I NEED TO FIGURE OUT A WAY TO PICK THE STEPSIZE IN A BETTER WAY
-    // +++++++++++++++++----------------+++++++++++++++---------------+++++++++
-    var stepSize = 1;
-    console.log(bbox);
+
+    var numOfVoxels = 10;
+    var coords = bbox.coordinates[0],
+        length = Math.abs(coords[3][0]-coords[0][0])*1000000,
+        width = Math.abs(coords[2][1]-coords[0][1])*1000000,
+        area = length*width; 
+    var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
 
     var netFunctionQuery = `
 CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
 $$
-SELECT
-    ST_SetSRID(ST_Collect(ST_POINT(x,y)), ST_SRID($1))
-FROM
-    generate_series(floor(ST_XMin($1))::numeric, ceiling(ST_xmax($1))::numeric, $2) as x,
-    generate_series(floor(ST_ymin($1))::numeric, ceiling(ST_ymax($1))::numeric,$2) as y
-WHERE
-    ST_Intersects($1,ST_SetSRID(ST_POINT(x,y), ST_SRID($1)))
+SELECT 
+    ST_Collect(st_setsrid(ST_POINT(x/1000000::float,y/1000000::float),st_srid($1))) 
+FROM 
+  generate_series(floor(st_xmin($1)*1000000)::int, ceiling(st_xmax($1)*1000000)::int,$2) as x,
+  generate_series(floor(st_ymin($1)*1000000)::int, ceiling(st_ymax($1)*1000000)::int,$2) as y 
+WHERE 
+    st_intersects($1,ST_SetSRID(ST_POINT(x/1000000::float,y/1000000::float),ST_SRID($1)))
 $$
 LANGUAGE sql VOLATILE;
 
@@ -100,7 +103,7 @@ SELECT
 `
 
     connection.query(netFunctionQuery).spread(function(results, metadata){
-        console.log(results[0])
+        // console.log(results[0])
         callback(null, results[0], props, req);
     })
 }
