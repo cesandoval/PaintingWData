@@ -25,7 +25,7 @@ router.post('/login',
   }
 );
 router.get('/signup', function(req, res, next){
-  res.render('users/signup', { title: 'Express', message: req.flash('signUpMessage')});
+  res.render('users/signp', { title: 'Express', message: req.flash('signUpMessage')});
 });
  router.post('/signup', passport.authenticate('signup',{
     successRedirect: '/users/login',

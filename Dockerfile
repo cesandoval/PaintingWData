@@ -26,6 +26,15 @@ WORKDIR /code
 
 RUN npm install
 RUN npm install gdal --save
+RUN npm install --save sequelize
+RUN npm install --save pg pg-hstore
+RUN npm install -g sequelize-cli
+
+WORKDIR app
+RUN sequelize db:migrate 
+
+WORKDIR /code
+
 
 
 # Expose port
