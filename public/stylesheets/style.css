@@ -54,10 +54,16 @@ h4 {
 /* NAVBAR */
 nav navbar.navbar-inverse.navbar-fixed-top.container {
     width: 90vw;
+    height: 100%;
+}
+
+.nav {
+    height: 100%;
 }
 
 .nav-container {
     width: 90vw;
+    height: 100%;
 }
 
 .navbar-inverse { 
@@ -95,6 +101,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
     font-size: 12pt;
     text-shadow: none;
     border: none;
+    height: 100%;
 }
 
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
@@ -106,9 +113,33 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 
 ul.dropdown-menu {
     border-radius: 0;
-    border: none;
-    background-color: #D34031;
+    /*border-top: 2px solid #F9CBC2;*/
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: none;
+    position: absolute;
+    top: 100%;
+    /*background-color: #D34031;*/
+    background-color: #F9CBC2;
 }
+
+.dropdown {
+    height: 100%;
+}
+
+.navbar .nav > li > .dropdown-menu:after {
+    position: absolute;
+    top: -6px;
+    left: 48%;
+    display: inline-block;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #F9CBC2;
+    border-left: 6px solid transparent;
+    content: '';
+
+    transition: 0.2s ease;
+  }
 
 
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
@@ -315,6 +346,14 @@ input[type=file] {
     display: none;
 }
 
+input[type=password], textarea {
+    background-color: white;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+}
+
 .custom-upload {
     display: inline-block;
     cursor: pointer;
@@ -338,7 +377,7 @@ input[type=file] {
     transition: 1s ease;
 }
 
-.btn-gray:hover {
+.btn-gray:hover, .btn-gray:active, .btn-gray:focus {
     background-image: url(/images/dark_circle.svg);
 
     transition: 1s ease;
@@ -350,6 +389,14 @@ input[type=file] {
     border-color: rgb(76,76,76);
 
     transition: 1s ease;
+}
+
+.btn:active, .btn.active {
+    border-color: transparent;
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus {
+    border-color: transparent;
 }
 
 /*login*/
@@ -387,6 +434,8 @@ body {
 
     border-radius: 0;
     box-shadow: none;
+
+    background-color: white;
 
     font-family: 'Karla', sans-serif;
     font-size: 14pt;
@@ -437,5 +486,10 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 
 .leaflet-container a {
     color: #D34031;
+}
+
+.modal-content {
+    border-radius: 0px;
+    border: none;
 }
 

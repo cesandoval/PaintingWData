@@ -13,6 +13,14 @@
 	border: 3px solid #D34031;
 }
 
+.thumbnail .datalayer {
+	padding: 0;
+}
+
+.thumbnail { 
+	padding: 0;
+}
+
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
 	border: none;
 	border-radius: 0;
@@ -24,8 +32,11 @@
 }
 
 .leaflet-bar a:hover {
-	border: 3px solid #D34031;
-	background-color: white;
+	background-color: #F1D9D0;
 
 	transition: 1s ease;
+}
+
+.leaflet-container .leaflet-control-attribution {
+	background-color: transparent;
 }

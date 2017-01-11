@@ -1,7 +1,8 @@
 var id = id;
 var $dropdown = $($('select')[0]);
 var $epsg= $('#epsg');
-var $map = $('#map');
+var $map = $('#map_thumbnail_' + id);
+console.log($map);
 $map.addClass('temporary_map_visuals');
 $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
 requestMap(id, render);
@@ -10,7 +11,7 @@ function render(boundingBox, geoJSON, centroid){
     var centroid = centroid;
     var geoJSON = geoJSON;
     var bBox = boundingBox;
-    var map = embedMap('map', JSON.parse(centroid).coordinates.reverse())
+    var map = embedMap('map_thumbnail_' + id, JSON.parse(centroid).coordinates.reverse())
     bBoxCoords = [];
     bBox.coordinates[0].forEach(function(feature, i) {
         bBoxCoords.push(feature.reverse());

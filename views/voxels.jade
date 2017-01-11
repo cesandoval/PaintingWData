@@ -13,6 +13,13 @@ block pageTitle
     .row.spacing-large
         h1.center Voxels
 
+    .col-md-6(style="padding: 30px;").col-md-offset-3
+      if datavoxels.length != 0
+        .row.text-center
+          h3.spacing Open voxel by selecting one below.
+        .row.spacing.text-center
+          button.btn.btn-gray.btn-jumbotron#openVoxel(style="width: 100px; height: 100px; line-height: 90px;") Open Voxels
+
     .row
       if datavoxels.length == 0
         p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No datafiles found  &nbsp;
@@ -25,25 +32,21 @@ block pageTitle
         if datavoxel.id
           .col-sm-6.col-md-4
             .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
-              div
-                img(style= "width: 100%" src="http://www.worldpress.org/images/maps/world_600w.gif")
+              div(id="map_#{datavoxel.id}", class = "leafletMap", style="width: 100%; height: 300px; margin:0 auto;")
               .caption
                 .layername.spacing
                   h3 #{datavoxel.voxelname}
                   .datalayers
                   if datavoxel.Datafiles.length > 0
+                    -var index = 1
                     label.layer-label Layers in Voxel
                     for datafile in datavoxel.Datafiles
                       hr
-                      label Layer #{Object.keys(datavoxel.Datafiles).length}
+                      label Layer #{index++}
                       br
                       p.label-body File Name
                       label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
                       br
                       p.label-body Layer Data Property
                       label.layer-label.voxel-label #{datafile.Datalayers[0].rasterProperty}
-                  p.label-body.text-right
-                    a.btn.btn-gray.btn-jumbotron(href='/uploadViewer/#{datavoxel.id}') View Map
-      if datavoxels.length != 0
-        button.btn.btn-default.pull-right#openVoxel(style="width: 120px;") Open Voxels
   script(src="/javascripts/js/voxels.js")

@@ -131,4 +131,9 @@ script.
     }, function() {
       jQuery(this).find('.dropdown-menu').first().stop(true, true).slideUp();
       });
+
+   $(document).ready(function() {
+    var height = $(".navbar").height();
+    $(".dropdown-menu").top(height);
+  });
     

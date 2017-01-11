@@ -72,24 +72,27 @@ maps.forEach(function(map, index){
 			console.log(err);
 		}
 	})
-	function render(map, boundingBox, centroid){
-    var centroid = centroid;
-    var geoJSON = geoJSON;
-    var bBox = boundingBox;
-    var map = embedMap(mapId, centroid.coordinates.reverse())
-    bBoxCoords = [];
-    bBox.coordinates[0].forEach(function(feature, i) {
-        bBoxCoords.push(feature.reverse());
-    })
+	function render(map, boundingBox, centroid) {
+        var centroid = centroid;
+        var geoJSON = geoJSON;
+        var bBox = boundingBox;
+        var map = embedMap(mapId, centroid.coordinates.reverse())
+        bBoxCoords = [];
+        bBox.coordinates[0].forEach(function(feature, i) {
+            bBoxCoords.push(feature.reverse());
+        })
 
    
     map.fitBounds(bBoxCoords);
+
+    // Disable scrolling into map unless clicked
+    map.scrollWheelZoom.disable();
 
     var myStyle = {
         "color": "red",
         "weight": 1,
         "opacity": 0.5,
-        'fillColor': '#ff7800'
+        'fillColor': 'white'
     };
     var reversedBbox = [[]];
     bBox.coordinates.forEach(function(coordinates, index){
