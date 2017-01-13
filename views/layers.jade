@@ -4,8 +4,10 @@ block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet", href="/stylesheets/layers.css")
+  link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/js/layers.js")
+  script(src="/javascripts/js/bootstrap-slider.js")
   script.
 
   
@@ -31,6 +33,12 @@ block pageTitle
               form(method='post', action='/layers')
                 input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
                 input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+                <br>
+                .row.spacing-large
+                  .col-md-6
+                    p(style="font-size: 14pt; font-family: Karla;") Voxel density
+                  .col-md-6
+                    input.slider(data-slider-handle="round")
                 <br>
                 .row.spacing-large
                   .input-group-btn.text-center
@@ -65,28 +73,33 @@ block pageTitle
                   p.label-body.text-right.spacing
                     a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView" data-map-id="#{datafile.id}") View Map
 
-                  div.modal.fade.bs-example-modal-lg(id="mapView" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
-                    div.modal-dialog.modal-lg(role="document")
-                      div.modal-content(style="z-index: 10000!important;")
-                        div.modal-header
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                          .row.spacing-large
-                            h1.center #{datafile.Datalayers[0].userLayerName}
-                        div.modal-body
-                          .row
-                            .col-md-6
-                              script.
-                                var id = #{datafile.id};
-                              div(id="map_thumbnail_#{datafile.id}", style="width: 300px; height: 300px; margin:0 auto;").spacing-large
+          div.modal.fade.bs-example-modal-lg(id="mapView" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
+            div.modal-dialog.modal-lg(role="document")
+              div.modal-content(style="z-index: 10000!important;")
+                div.modal-header
+                  button(type="button" class="close" data-dismiss="modal" data-map-id="#{datafile.id}" aria-label="Close")<span aria-hidden="true">&times;</span></button>
+                  .row.spacing-large
+                    h1.center #{datafile.Datalayers[0].userLayerName}
+                div.modal-body
+                  .row
+                    .col-md-6
+                      script.
+                        var id = #{datafile.id};
+                      div(id="map_thumbnail_#{datafile.id}", style="width: 300px; height: 300px; margin:0 auto;").spacing-large
 
-                            .col-md-6
-                              label.layer-label Layer Name
-                                p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                    .col-md-6
+                      label.layer-label Layer Name
+                        p(display='inline').label-body #{datafile.Datalayers[0].layername}
     
   script.
-    $('#mapView').on('hidden.bs.modal', function () {
-      
-    })
+    var mySlider = $("input.slider").bootstrapSlider();
+    var value = mySlider.bootstrapSlider('getValue');
+
+    // For non-getter methods, you can chain together commands
+    //- mySlider
+    //-     .bootstrapSlider('setValue', 5)
+    //-     .bootstrapSlider('setValue', 7);
+
   script(src="/javascripts/map_thumbnail_viewer.js")
   script(src="/javascripts/user_layer.js")
   // script(src="/javascripts/layer_viewer.js") 

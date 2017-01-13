@@ -35,7 +35,7 @@ function requestMap(id, callback){
 }
 
 function embedMap(id, centroid){
-    var map = L.map(id).setView(centroid, 11);
+    map = L.map(id).setView(centroid, 11);
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +

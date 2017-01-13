@@ -1,15 +1,26 @@
-$('#mapView').on('hide.bs.modal', function (e) {
-  console.log("Removing map.");
-  map.remove(); 
-})
+// $('#mapView').on('hidden.bs.modal', function (e) {
+//   console.log("Removing map.");
+//   window.alert('hidden event fired!');
+//   var mapId = $(e.relatedTarget).data('map-id');
+//   var $map = $('#map_thumbnail_' + mapId);
+  
+//   $map.removeClass('temporary_map_visuals');
+//   $map.empty();
+
+// });
 
 $('#mapView').on('show.bs.modal', function(e) {
 
   var mapId = $(e.relatedTarget).data('map-id');
 
+  console.log("Map creation.");
+  
   var $dropdown = $($('select')[0]);
   var $epsg= $('#epsg');
   var $map = $('#map_thumbnail_' + mapId);
+  if ($map.hasClass('temporary_map_visuals')) return;
+  console.log("Map doesn't have vis class");
+
   $map.addClass('temporary_map_visuals');
   $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
 
