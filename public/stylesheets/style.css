@@ -3,6 +3,11 @@
 @import 'https://fonts.googleapis.com/css?family=Karla:400,700';
 @import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
 
+/*(255, 93, 68) #ff5d44 */
+/* background: #D34031; */
+
+
+
 body {
   color: #1A1A1A;
 }
@@ -67,7 +72,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 
 .navbar-inverse { 
-    background: #D34031;
+    background: #ff5d44;
     border-color: transparent;
     height: 80px;
     padding-top:2vh;
@@ -81,7 +86,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 /* title */
 .navbar-inverse .navbar-brand {
-    color: white;
+    color: black;
     opacity: 1;
 
     transition: 0.5s ease;
@@ -94,14 +99,17 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 /* link */
 .navbar-inverse .navbar-nav > li > a,
-.navbar-nav > li > ul > a,
-.navbar-nav > li.dropdown > a {
-    color: white;
+.navbar-nav > li > ul > a {
+    color: black;
     font-family: 'Karla', sans-serif;
     font-size: 12pt;
     text-shadow: none;
     border: none;
     height: 100%;
+}
+
+.navbar-nav > li.dropdown > a {
+    color: black;
 }
 
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
@@ -120,8 +128,9 @@ ul.dropdown-menu {
     border-bottom: none;
     position: absolute;
     top: 100%;
-    /*background-color: #D34031;*/
-    background-color: #F9CBC2;
+    /*background-color: #ff5d44;*/
+    /*background-color: #F9CBC2;*/
+    background-color: black;
 }
 
 .dropdown {
@@ -134,7 +143,7 @@ ul.dropdown-menu {
     left: 48%;
     display: inline-block;
     border-right: 6px solid transparent;
-    border-bottom: 6px solid #F9CBC2;
+    border-bottom: 6px solid black;
     border-left: 6px solid transparent;
     content: '';
 
@@ -148,7 +157,7 @@ ul.dropdown-menu {
 }
 
 .navbar-inverse .navbar-nav > li > a:hover{
-    color: white;
+    color: black;
     text-decoration:underline;
 }
 
@@ -407,7 +416,8 @@ body {
 .selected_layer {
     /*border: 5px inset #e67e22;*/
     /*background-color: #FCE3D9;*/
-    background-color: #F1D9D0;
+    /*background-color: #F1D9D0;*/
+    background-color: #ff5d44;
 }
 
 .thumbnail .caption {
@@ -449,7 +459,7 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 
     transition: 1s ease;
 
-    border-color: #D34031;
+    border-color: #ff5d44;
 }
 
 *:focus {
@@ -485,7 +495,7 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 }
 
 .leaflet-container a {
-    color: #D34031;
+    color: #ff5d44;
 }
 
 .modal-content {

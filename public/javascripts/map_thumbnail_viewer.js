@@ -1,13 +1,19 @@
 $('#mapView').on('show.bs.modal', function(e) {
-
       var mapId = $(e.relatedTarget).data('map-id');
-
       var $dropdown = $($('select')[0]);
       var $epsg= $('#epsg');
       var $map = $('#map_thumbnail_' + mapId);
+      
       console.log($map);
-      $map.addClass('temporary_map_visuals');
-      $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
+
+      if ($map.hasClass('temporary_map_visuals'))
+        console.log('Map already has subclasses.');
+      else {
+        console.log('Adding visuals to map.');
+        $map.addClass('temporary_map_visuals');
+        $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');  
+      }
+      
 
       $.ajax({
         url: '/getMapData/'+id ,
