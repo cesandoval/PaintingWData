@@ -27,9 +27,6 @@ $(".leafletMap").each(function(index, map){
       ids.push(getDatafileId($(map)));
  })
 
-
-
-
 $datalayers.click(function(){
     var $datalayer = $(this); 
     if(!($datalayer.hasClass("selected_layer"))){

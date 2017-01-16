@@ -1,12 +1,15 @@
 var currId;
 var maps = {};
 
-$('#mapView').on('hide.bs.modal', function (e) {
-  console.log("Removing map " + currId);
-  // $map.empty();
-
-  if (maps['map_thumbnail_' + currId] != null) 
+$('#mapView').on('hidden.bs.modal', function (e) {
+  if (maps['map_thumbnail_' + currId] != null) {
+    console.log('Removing map' + 'map_thumbnail_' + currId);
     maps['map_thumbnail_' + currId].remove();
+  }
+
+  console.log("Removing map " + currId);
+  var $map = $('#map_thumbnail');
+  $map.empty();
 });
 
 $('#mapView').on('show.bs.modal', function(e) {
@@ -14,10 +17,15 @@ $('#mapView').on('show.bs.modal', function(e) {
   currId = mapId;
   var $dropdown = $($('select')[0]);
   var $epsg= $('#epsg');
-  var $map = $('#map_thumbnail_' + mapId);
+  var $map = $('#map_thumbnail');
 
-  $map.addClass('temporary_map_visuals');
-  $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
+  if ($map.hasClass('temporary_map_visuals'))
+    console.log('Map already has subclasses.');
+  else {
+    console.log('Adding visuals to map.');
+    $map.addClass('temporary_map_visuals');
+    $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');  
+  }
 
   $.ajax({
     url: '/getMapData/'+id,
@@ -39,7 +47,7 @@ $('#mapView').on('show.bs.modal', function(e) {
         renderEPSG(data.epsg);
 
         var centroid = JSON.stringify(data.centroid);
-        render(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
+        renderMap(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
       }
       else
       {
@@ -53,14 +61,14 @@ $('#mapView').on('show.bs.modal', function(e) {
     }
   });
 
-  function render(boundingBox, geoJSON, centroid){
+  function renderMap(boundingBox, geoJSON, centroid){
     var centroid = centroid;
     var geoJSON = geoJSON;
     var bBox = boundingBox;
     var index = 'map_thumbnail_' + currId;
     console.log('Current id is ' + index);
 
-    maps[index] = embedMap('map_thumbnail_' + currId, JSON.parse(centroid).coordinates.reverse())
+    maps[index] = embedMap('map_thumbnail', JSON.parse(centroid).coordinates.reverse())
     console.log(maps[index]);
 
     bBoxCoords = [];
