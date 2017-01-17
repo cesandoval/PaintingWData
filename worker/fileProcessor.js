@@ -45,6 +45,7 @@ function getBbox(datalayerIds, req, callback) {
     })
 }
 
+
 function createDatavoxel(bbox, props, req, callback){
 
     var voxelname = req.body.voxelname;
@@ -161,6 +162,25 @@ function pushDataNet(pointNet, props, req, callback) {
     }
 }
 
+function pointQuery(prop, callback){
+    rasterQuery = `
+    SELECT p.geometry, g.rasterval As rastervalue 
+    FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
+    WHERE ST_Intersects(g.geometry, p.geometry) AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
+    AND g.`+'"datafileId"'+ "=" + prop.datafileId +";"
+
+    // rasterQuery = `
+    // SELECT p.geometry as pt, CASE WHEN ST_Intersects(g.geometry, p.geometry) = TRUE THEN g.rasterval ELSE 0 end as pt_props
+    // FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g
+    // WHERE  p.` +'"datavoxelId"' + "=" +props[0].datavoxelId+`
+    // AND g.`+'"datafileId"'+ "=" + props[0].datafileId +";"
+
+    connection.query(rasterQuery).spread(function(results, metadata){
+        console.log(results);
+        callback(results);
+    });
+}
+
 function stValue(prop, callback) {
     var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
         +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p."
@@ -179,10 +199,9 @@ function cargoLoad(props, req, callback){
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
-            stValue(tasks[i], function(results){
-
+            pointQuery(tasks[i], function(results){
+            // stValue(tasks[i], function(results){
                 callback(results);
-
             });
         }
 
@@ -201,7 +220,6 @@ function cargoLoad(props, req, callback){
 }
 
 function parseGeoJSON(results, objProps, req, callback) {
-
     var newDataJsons = {};
     var _keys = Object.keys(results);
     _keys.forEach(function(key, index){
@@ -212,11 +230,10 @@ function parseGeoJSON(results, objProps, req, callback) {
             var currentResult = currGeojson[i],
                 voxel = {
                     type: 'Feature',
-                    geometry: currentResult.st_asgeojson,
+                    geometry: currentResult.geometry,
                     properties: { }
 
                 };
-
             voxel['properties'][layername] = currentResult.rastervalue;
             features.push(voxel);
         }
@@ -236,7 +253,7 @@ function parseGeoJSON(results, objProps, req, callback) {
         newDataJsons[key] = newDataJSON;
     });
 
-    console.log(newDataJsons);
+    // console.log(newDataJsons);
     callback(null, newDataJsons, objProps, req);
 }
 
