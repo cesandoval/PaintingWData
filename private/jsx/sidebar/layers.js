@@ -17,37 +17,29 @@ class Layers extends React.Component {
     }
     // Assumes that geojson will be nonzero size
     getLayers() {
-        console.log("====================================");
-        console.log(datavoxelId);
-        console.log("====================================");
         // TODO Change this when migrate to actual code
         axios.get('/datajson/all/'+ datavoxelId, {options: {}})
-            .then(({ data })=>{
-                console.log("====================================");
-                console.log(data);
-                console.log("====================================");
+            .then(({ data })=>{  
                 act.sideAddLayers(data.map(l => {
-                    const length = l.geojson.length;
-
+                    const length = l.geojson.geojson.features.length;
+                    
                     // Will hold a transoformed geojson
                     const transGeojson = {
-                        name: l.layername,
-                        type: l.geojson[0].geometry.type,
-                        length: l.geojson.length,
+                        name: l.geojson.layername,
+                        type: l.geojson.geojson.features[0].geometry.type,
+                        length: length,
                         data: Array(Math.floor(Math.sqrt(length)))
                     }
-
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
-                    const mappedGeojson = l.geojson.map(g => {
+                    const mappedGeojson = l.geojson.geojson.features.map(g => {
                         // Shouldn't need to parse
                         //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
                         const coords = g.geometry.coordinates;
                         const id = parseFloat(g.id);
                         const weight = parseFloat(g.properties[l.layername]);
-                        return new Float32Array([coords[0], coords[1], coords[2], weight, id]);
+                        return new Float32Array([coords[0], coords[1], 0, weight, 1]);
                     });
-
                     mappedGeojson.sort();
                     for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
                         let j = i * 200;
