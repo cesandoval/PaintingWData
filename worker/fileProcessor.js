@@ -66,7 +66,7 @@ function createDatavoxel(bbox, props, req, callback){
             newDatafilevoxel.DatavoxelId = datavoxel.id;
             newDatafilevoxel.DatafileId = prop.datafileId;
             newDatafilevoxel.save().then(function(datafilevoxel){
-                console.log(datafilevoxel)
+                // console.log(datafilevoxel)
             });
 
         })
@@ -79,7 +79,7 @@ function createDatavoxel(bbox, props, req, callback){
 function getNet(bbox, props, req, callback) {
     var epsg = props[0].epsg;
 
-    var numOfVoxels = 10;
+    var numOfVoxels = req.body.voxelDensity;
     var coords = bbox.coordinates[0],
         length = Math.abs(coords[3][0]-coords[0][0])*1000000,
         width = Math.abs(coords[2][1]-coords[0][1])*1000000,
@@ -151,7 +151,7 @@ function pushDataNet(pointNet, props, req, callback) {
 
         cargo.push(newDataNet, function(err) {
             itemsProcessed++;
-            console.log(itemsProcessed);
+            // console.log(itemsProcessed);
 
             if(itemsProcessed === pointNet.coordinates.length) {
                 callback(null, props, req);
@@ -176,7 +176,7 @@ function pointQuery(prop, callback){
     // AND g.`+'"datafileId"'+ "=" + props[0].datafileId +";"
 
     connection.query(rasterQuery).spread(function(results, metadata){
-        console.log(results);
+        // console.log(results);
         callback(results);
     });
 }
