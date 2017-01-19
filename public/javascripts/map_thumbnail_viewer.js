@@ -1,23 +1,31 @@
 var currId;
 var maps = {};
 
-$('#mapView').on('hidden.bs.modal', function (e) {
+$('[id*="mapView"]').on('hidden.bs.modal', function (e) {
   if (maps['map_thumbnail_' + currId] != null) {
     console.log('Removing map' + 'map_thumbnail_' + currId);
     maps['map_thumbnail_' + currId].remove();
   }
 
   console.log("Removing map " + currId);
-  var $map = $('#map_thumbnail');
+  var $map = $('#map_thumbnail_' + currId);
   $map.empty();
 });
 
-$('#mapView').on('show.bs.modal', function(e) {
-  var mapId = $(e.relatedTarget).data('map-id');  
+$('.modal').on('show.bs.modal', function(e) {
+  var mapId = $(e.relatedTarget).data('map-id');
+  if ($(this).attr('id') == ('mapView_' + mapId)) {
+    console.log('Found element.');
+  }
+  else {
+    console.log('Not right element ' + $(this).attr('id'));
+    return;
+  }
+
   currId = mapId;
   var $dropdown = $($('select')[0]);
   var $epsg= $('#epsg');
-  var $map = $('#map_thumbnail');
+  var $map = $('#map_thumbnail_' + currId);
 
   if ($map.hasClass('temporary_map_visuals'))
     console.log('Map already has subclasses.');
@@ -65,24 +73,24 @@ $('#mapView').on('show.bs.modal', function(e) {
     var centroid = centroid;
     var geoJSON = geoJSON;
     var bBox = boundingBox;
-    var index = 'map_thumbnail_' + currId;
-    console.log('Current id is ' + index);
+    var mapIndex = 'map_thumbnail_' + currId;
+    console.log('Current id is ' + mapIndex);
 
-    maps[index] = embedMap('map_thumbnail', JSON.parse(centroid).coordinates.reverse())
-    console.log(maps[index]);
+    maps[mapIndex] = embedMap(mapIndex, JSON.parse(centroid).coordinates.reverse())
+    console.log(maps[mapIndex]);
 
     bBoxCoords = [];
     bBox.coordinates[0].forEach(function(feature, i) {
       bBoxCoords.push(feature.reverse());
     })
 
-    maps[index].fitBounds(bBoxCoords);
+    maps[mapIndex].fitBounds(bBoxCoords);
 
     var myStyle = {
       "color": "white",
       "weight": 1,
       "opacity": 1,
-      "fillOpacity": 0.75,
+      "fillOpacity": 0.65,
               // 'fillColor': '#ff7800'
               'fillColor': '#D34031'
     };
@@ -95,7 +103,7 @@ $('#mapView').on('show.bs.modal', function(e) {
 
     L.geoJson(parsedGeoJSON, {
       style: myStyle
-    }).addTo(maps[index]);
+    }).addTo(maps[mapIndex]);
   }
   function renderEPSG(epsg){
     $epsg.val(epsg);

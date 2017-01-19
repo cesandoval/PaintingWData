@@ -9,7 +9,6 @@ block pageTitle
   script(src="/javascripts/js/layers.js")
   script(src="/javascripts/js/bootstrap-slider.js")
   script.
-
   
   .container(style = "margin-top: 10px").spacing-large
     .row.spacing-large
@@ -54,7 +53,7 @@ block pageTitle
                   h3(style="font-weight: 600;") #{datafile.Datalayers[0].userLayerName}
                 div(style="border-top: 1px solid black; height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
-              .caption
+              .caption(style="padding-left: 5%;")
                   .layername
                     br
                     label.layer-label Layer Name
@@ -74,9 +73,9 @@ block pageTitle
                       label.layer-label Layer Location
                       p.label-body #{datafile.Datalayers[0].location}
                   p.label-body.text-right.spacing
-                    a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView" data-map-id="#{datafile.id}") View Map
+                    a.btn.btn-gray.btn-jumbotron.btn-block(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Map
 
-          div.modal.fade.bs-example-modal-lg(id="mapView" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
+          div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
             div.modal-dialog.modal-lg(role="document")
               div.modal-content(style="z-index: 10000!important;")
                 div.modal-header
@@ -88,11 +87,15 @@ block pageTitle
                     .col-md-6
                       script.
                         var id = #{datafile.id};
-                      div(id="map_thumbnail", style="width: 300px; height: 300px; margin:0 auto;").spacing-large
-
+                      div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
                     .col-md-6
                       label.layer-label Layer Name
                         p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                      .property
+                        label.layer-label EPSG Code
+                          p.label-body #{datafile.Datalayers[0].epsg}
+                      label.layer-label Upload Date
+                        p.label-body #{datafile.Datalayers[0].createdAt}
     
   script.
     var mySlider = $("input.slider").bootstrapSlider();

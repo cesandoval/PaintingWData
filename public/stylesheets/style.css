@@ -1,9 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
-@import 'https://fonts.googleapis.com/css?family=Karla:400,700';
-@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
+@import 'https://fonts.googleapis.com/css?family=Lato:400,700';
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i&subset=latin-ext');
 
-/*(255, 93, 68) #ff5d44 */
+/*(255, 93, 68) #f16752 */
 /* background: #D34031; */
 
 
@@ -23,8 +24,10 @@ a:link {
 }
 
 .label-body {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 10pt;
+    text-transform: none;
+    font-weight: 400;
 }
 
 .note {
@@ -34,7 +37,7 @@ a:link {
 }
 
 h1, h2, h3 {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 h2 {
@@ -43,7 +46,7 @@ h2 {
 
 h4 {
     text-align: right;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 18pt;
 }
 
@@ -72,7 +75,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 
 .navbar-inverse { 
-    background: #ff5d44;
+    background: #f16752;
     border-color: transparent;
     height: 80px;
     padding-top:2vh;
@@ -101,7 +104,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 .navbar-inverse .navbar-nav > li > a,
 .navbar-nav > li > ul > a {
     color: black;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 12pt;
     text-shadow: none;
     border: none;
@@ -128,7 +131,7 @@ ul.dropdown-menu {
     border-bottom: none;
     position: absolute;
     top: 100%;
-    /*background-color: #ff5d44;*/
+    /*background-color: #f16752;*/
     /*background-color: #F9CBC2;*/
     background-color: black;
 }
@@ -336,7 +339,7 @@ h1.site-title {
 
 .btn-gray {
     color: #333333;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     background-image: url(/images/circle.svg);
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -417,7 +420,7 @@ body {
     /*border: 5px inset #e67e22;*/
     /*background-color: #FCE3D9;*/
     /*background-color: #F1D9D0;*/
-    background-color: #ff5d44;
+    background-color: #f16752;
 }
 
 .thumbnail .caption {
@@ -447,7 +450,7 @@ body {
 
     background-color: white;
 
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 14pt;
     color: black;
 }
@@ -459,7 +462,7 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 
     transition: 1s ease;
 
-    border-color: #ff5d44;
+    border-color: #f16752;
 }
 
 *:focus {
@@ -473,7 +476,7 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 }
 
 .footer p {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 2vmin;
     position: relative;
     bottom: 0;
@@ -491,11 +494,11 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 /* LEAFLET */
 
 .leaflet-container .leaflet-control-attribution, .leaflet-container .leaflet-control-scale {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 .leaflet-container a {
-    color: #ff5d44;
+    color: #f16752;
 }
 
 .modal-content {
@@ -520,5 +523,16 @@ textarea:focus, .form-control:focus, input:focus, input:active{
   display: inline-block;
   text-align: left;
   vertical-align: middle;
+}
+
+.close {
+    float: right;
+    font-size: 60px;
+    font-weight: 100;
+    line-height: 30px;
+    color: #000;
+    /* text-shadow: 0 1px 0 #fff; */
+    filter: alpha(opacity=20);
+    opacity: .9; 
 }
 
