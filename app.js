@@ -8,7 +8,7 @@ var express = require('express'),
 
 var passport = require('passport');
     flash = require('express-flash'),
-    session = require('express-session'),
+    session = require('cookie-session'),
     jsonParser = bodyParser.json();
 
 
@@ -60,7 +60,7 @@ var users = require('./app/routers/users');
 var datajson = require('./app/routers/datajson');
 app.use('/users', users);
 app.use('/', appRouter);
-app.use('/datajson', datajson);
+// app.use('/datajson', datajson);
 
 
 // language packages

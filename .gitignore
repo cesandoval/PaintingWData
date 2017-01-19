@@ -5,3 +5,4 @@
 tasks.txt
 # we dont want temp files
 .swp
+/public/javascripts/bundle.js  

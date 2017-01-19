@@ -17,9 +17,15 @@ class Layers extends React.Component {
     }
     // Assumes that geojson will be nonzero size
     getLayers() {
+        console.log("====================================");
+        console.log(datavoxelId);
+        console.log("====================================");
         // TODO Change this when migrate to actual code
-        axios.post('/datajson/all', {options: {}})
+        axios.get('/datajson/all/'+ datavoxelId, {options: {}})
             .then(({ data })=>{
+                console.log("====================================");
+                console.log(data);
+                console.log("====================================");
                 act.sideAddLayers(data.map(l => {
                     const length = l.geojson.length;
 
