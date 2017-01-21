@@ -1,7 +1,8 @@
 .thumbnail {
 	border-radius: 0px;
 	border: 3px solid #ff5d44;
-
+	/*border: none;*/
+	
 	opacity:0.9;
 	transition: 1s ease;
 }
@@ -10,7 +11,9 @@
 	opacity:1;
 	transition: 1s ease;
 
-	border: 3px solid #D34031;
+	/*border: 3px solid #D34031;*/
+	border: 3px solid black;
+	/*border: 3px solid #F9CBC2;*/
 }
 
 .thumbnail .datalayer {
@@ -40,3 +43,7 @@
 .leaflet-container .leaflet-control-attribution {
 	background-color: transparent;
 }
+
+/*body {
+	background: linear-gradient(to bottom, white, rgba(255, 93, 68, 0.4));
+}*/

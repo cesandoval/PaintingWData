@@ -10,9 +10,22 @@ block pageTitle
   script(src="/javascripts/js/bootstrap-slider.js")
   script.
   
-  .container(style = "margin-top: 10px").spacing-large
-    .row.spacing-large
+  .container(style = "margin-top: 10px; margin-left: 0; width: 100vw;").spacing-large
+    .container
+      .row.spacing-large
         h1.center Layers
+
+      .row.spacing-large
+        .col-md-6.col-md-offset-3
+          p.text-center Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+      .row.text-center
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+        br
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+        br
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+
 
     .row
       if datafiles.length == 0
@@ -26,8 +39,8 @@ block pageTitle
         .row
           .col-md-3
           .col-md-6(style="padding: 30px;")
-            .row
-                h3.spacing Compute voxels for a set of layers by selecting them below.
+            .row.text-center
+                h3.spacing Compute voxels for a set of layers by selecting them below. Click on the layer again to deselect.
             .row
               form(method='post', action='/layers')
                 input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
@@ -39,10 +52,18 @@ block pageTitle
                   .col-md-6
                     input.slider(data-slider-handle="round")
                 <br>
-                .row.spacing-large
+                .row.spacing
                   .input-group-btn.text-center
                     button.btn.btn-gray.btn-jumbotron(type='submit') Compute
-              
+      .row.text-center
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+        br
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+        br
+        span.glyphicon.glyphicon-triangle-bottom &#xe114;
+      
+      div.spacing-large
+
       .row
       for datafile in datafiles
         if datafile.Datalayers[0]
@@ -50,7 +71,7 @@ block pageTitle
             .thumbnail.datalayer(selected = "false", style="z-index: 1;")
               .caption.text-center
                 .layername
-                  h3(style="font-weight: 600;") #{datafile.Datalayers[0].userLayerName}
+                  h3(style="font-weight: 600; text-transform: uppercase;") #{datafile.Datalayers[0].userLayerName}
                 div(style="border-top: 1px solid black; height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
               .caption(style="padding-left: 5%;")
@@ -61,41 +82,38 @@ block pageTitle
                   .property
                     label.layer-label Data Property
                     p.label-body #{datafile.Datalayers[0].rasterProperty}
-                  .epsg
-                    label.layer-label EPSG Code
-                    p.label-body #{datafile.Datalayers[0].epsg}
-                  if datafile.Datalayers[0].description.length > 0
-                    .description
-                      label.layer-label Layer Description
-                      p.label-body #{datafile.Datalayers[0].description}
                   if datafile.Datalayers[0].location.length > 0
                     .location
                       label.layer-label Layer Location
                       p.label-body #{datafile.Datalayers[0].location}
-                  p.label-body.text-right.spacing
-                    a.btn.btn-gray.btn-jumbotron.btn-block(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Map
+                  p.label-body.text-right
+                    a.modal-button.btn.btn-block(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
 
           div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
             div.modal-dialog.modal-lg(role="document")
               div.modal-content(style="z-index: 10000!important;")
                 div.modal-header
                   button(type="button" class="close" data-dismiss="modal" data-map-id="#{datafile.id}" aria-label="Close")<span aria-hidden="true">&times;</span></button>
-                  .row.spacing-large
+                  .row.spacing
                     h1.center #{datafile.Datalayers[0].userLayerName}
                 div.modal-body
                   .row
                     .col-md-6
                       script.
                         var id = #{datafile.id};
-                      div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
+                      div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing
                     .col-md-6
                       label.layer-label Layer Name
                         p(display='inline').label-body #{datafile.Datalayers[0].layername}
                       .property
                         label.layer-label EPSG Code
                           p.label-body #{datafile.Datalayers[0].epsg}
-                      label.layer-label Upload Date
-                        p.label-body #{datafile.Datalayers[0].createdAt}
+                      if datafile.Datalayers[0].description.length > 0
+                        .description
+                          label.layer-label Layer Description
+                          p.label-body #{datafile.Datalayers[0].description}
+                      label.layer-label Uploaded On
+                        p.label-body #{datafile.Datalayers[0].createdAt.toUTCString()}
     
   script.
     var mySlider = $("input.slider").bootstrapSlider();
