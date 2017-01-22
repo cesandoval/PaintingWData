@@ -21,7 +21,7 @@ module.exports.saveShapes = function(req, res) {
         queryRepeatedLayer,
         pushDataLayerTransform,
         // pushDataLayer,
-        pushDataRaster
+        // pushDataRaster
     ], function (err, result) {
         console.log(result)
         Model.Datafile.find({
@@ -148,7 +148,8 @@ function pushDataLayerTransform(file, epsg, newName, req, layer, callback) {
                 if(itemsProcessed === totalFeatues) {
                     cargo.drain = function () {
                         console.log('All Items have been processed!!!!!!');
-                        callback(null, epsg, newName, req.body.datafileId);
+                        // callback(null, epsg, newName, req.body.datafileId);
+                        callback(null, [epsg, newName]);
                     }   
                 }
             });
@@ -235,8 +236,8 @@ function pushDataRaster(epsg, layername, datafileID, callback) {
                     epsg+"), p.layername, "+ datafileID + "FROM public."+'"Datalayers"' +"AS p WHERE layername='"+layername+"';";
 
     connection.query(bboxQuery).spread(function(results, metadata){
-            console.log('Rasters Pushed!!!!')
-            callback(null, [epsg, layername])
+            console.log('Rasters Pushed!!!!');
+            callback(null, [epsg, layername]);
         })
 }
 

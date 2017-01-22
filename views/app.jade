@@ -2,11 +2,13 @@ extends layout
 
 
 append content
+    script.
+        var datavoxelId = #{datavoxelId};
     div.mainWindow
         div#react
 
-    link(rel="stylesheet", href="stylesheets/app.css")
-    link(rel="stylesheet", href="stylesheets/d3.parcoords.css")
+    link(rel="stylesheet", href="/stylesheets/app.css")
+    link(rel="stylesheet", href="/stylesheets/d3.parcoords.css")
 
     script(id="vertexShader", type="x-shader/x-vertex").
         precision mediump float;
@@ -73,8 +75,8 @@ append content
         gl_FragColor = vec4(modColor, transparency);
 
         }
-    script(src='javascripts/js/three.js')
-    script(src='javascripts/js/OrbitControls.js')
-    script(src='javascripts/js/d3.js')
-    script(src='javascripts/js/d3.parcoords.js')
-    script(src='javascripts/bundle.js')
+    script(src='/javascripts/js/three.js')
+    script(src='/javascripts/js/OrbitControls.js')
+    script(src='/javascripts/js/d3.js')
+    script(src='/javascripts/js/d3.parcoords.js')
+    script(src='/javascripts/bundle.js')

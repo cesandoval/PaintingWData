@@ -40,7 +40,9 @@ var passport = require('passport'),
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
-  router.get('/app', appController.show);
+  router.get('/app/:datavoxelId', isAuthenticated, appController.show);
+  router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
+
 
 
 
