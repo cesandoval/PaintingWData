@@ -3,11 +3,13 @@ export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
-    constructor(graph, geometryObject, dataArray, startColor, endColor, pxWidth=200, pxHeight=200, n=0){
+    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, pxWidth=200, pxHeight=200, n=0){
         // Constants
         this.ELEMENTS_PER_ITEM = 3
         this.pxWidth = pxWidth;
         this.pxHeight = pxHeight;
+        this.minVal = minMax[0];
+        this.maxVal = minMax[1];
 
         // Pixels (Geometry)
         this.geometry = this.initGeometry();
@@ -44,23 +46,42 @@ export default class Pixels {
 
     static parseDataJSON(datajson) {
         // Matrix of data
-        const data = datajson.geojson.data;
+        // const data = datajson.geojson.data;
+        const otherData = datajson.geojson.otherdata;
+        const otherArray = new Float32Array(otherData.length * 3)
 
-        const array = new Float32Array(data.length * data[0].length * 3);
+        // const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
         const endColor = datajson.color2;
 
-        const shift = x => ( (x * 2 - 1) * 300 );
+        // const shift = x => ( (x * 2 - 1) * 300 );
+        const shift = x => ( (x *10) );
 
-        for (let i = 0; i < data.length; i++){
-            for (let j = 0; j < data[0].length; j++){
-                // x, y coordinates
-                array[(i * data.length + j) * 3 + 0] = shift(data[i][j][0]);
-                array[(i * data.length + j) * 3 + 1] = shift(data[i][j][1]);
-                // value/weight
-                array[(i * data.length + j) * 3 + 2] = data[i][j][3];
-            }
+        let minVal = Number.POSITIVE_INFINITY;
+        let maxVal = Number.NEGATIVE_INFINITY;
+        for (let i = 0, j=0; i < otherData.length; i++, j=j+3){
+            // x, y coordinates
+            otherArray[j] = shift(otherData[i][0]);
+            otherArray[j + 1] = shift(otherData[i][1]);
+            // value/weight
+            otherArray[j * 3 + 2] = otherData[i][3];
+            if (otherData[i][3]<minVal) { minVal=otherData[i][3]};
+            if (otherData[i][3]>maxVal) { maxVal=otherData[i][3]};
         }
+
+        const minMax = [minVal, maxVal];
+
+        // Julian's Implementation, does not parse the JSON correctly
+        //  But is memory efficient... FIX ME!!!!
+        // for (let i = 0; i < data.length; i++){
+        //     for (let j = 0; j < data[i].length; j++){
+        //         // x, y coordinates
+        //         array[(i * data.length + j) * 3 + 0] = shift(data[i][j][0]);
+        //         array[(i * data.length + j) * 3 + 1] = shift(data[i][j][1]);
+        //         // value/weight
+        //         array[(i * data.length + j) * 3 + 2] = data[i][j][3];
+        //     }
+        // }
 
 
         // Old implementation using a datajson.geojson array
@@ -73,7 +94,7 @@ export default class Pixels {
             //array[j+2] = datajson.geojson[i].properties[datajson.name];
         //}
 
-        return { array, startColor, endColor };
+        return { otherArray, startColor, endColor, minMax};
 
     }
 
@@ -99,10 +120,17 @@ export default class Pixels {
         const translations = this.initAttribute(numElements * 3, 3, true);
         const values = this.initAttribute(numElements, 1, true);
 
+        const remap = x => ((x-this.minVal)/(this.maxVal-this.minVal));
+
+
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
-            translations.setXYZ(j, dataArray[i], this.layerN * 0.01, dataArray[i+1]);
-            values.setX(j, 1.0-dataArray[i+2]);
+            translations.setXYZ(j, dataArray[i], 0, dataArray[i+1]);
+            values.setX(j, .05);
+            let test = ((dataArray[i+2]-this.minVal)/(this.maxVal-this.minVal));
+            console.log(test);
+            // values.setX(j, 1.0-dataArray[i+2]);
         }
+
         this.setAttributes(geometry, translations, values);
     }
 

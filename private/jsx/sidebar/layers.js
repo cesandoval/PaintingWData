@@ -28,7 +28,8 @@ class Layers extends React.Component {
                         name: l.geojson.layername,
                         type: l.geojson.geojson.features[0].geometry.type,
                         length: length,
-                        data: Array(Math.floor(Math.sqrt(length)))
+                        data: Array(Math.floor(Math.sqrt(length))),
+                        otherdata: Array(length)
                     }
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
@@ -40,10 +41,13 @@ class Layers extends React.Component {
                         const weight = parseFloat(g.properties[l.layername]);
                         return new Float32Array([coords[0], coords[1], 0, weight, 1]);
                     });
-                    mappedGeojson.sort();
+                    // mappedGeojson.sort();
                     for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
                         let j = i * 200;
                         transGeojson.data[i] = mappedGeojson.slice(j, j+200);
+                    }
+                    for (let i = 0; i < length; i++){
+                        transGeojson.otherdata[i] = mappedGeojson[i];
                     }
 
                     return createLayer(l.layername, true, l.color1, l.color2, transGeojson);
