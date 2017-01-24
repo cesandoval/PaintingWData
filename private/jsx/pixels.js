@@ -59,13 +59,16 @@ export default class Pixels {
 
         let minVal = Number.POSITIVE_INFINITY;
         let maxVal = Number.NEGATIVE_INFINITY;
+
+        const tessst = new Float32Array(otherData.length/3);
         for (let i = 0, j=0; i < otherData.length; i++, j=j+3){
             // x, y coordinates
             otherArray[j] = shift(otherData[i][0]);
             otherArray[j + 1] = shift(otherData[i][1]);
             // value/weight
-            otherArray[j * 3 + 2] = otherData[i][3];
-            if (otherData[i][3]<minVal) { minVal=otherData[i][3]};
+            otherArray[j + 2] = otherData[i][3];
+
+            if (otherData[i][3]<minVal) { minVal=otherData[i][3] };
             if (otherData[i][3]>maxVal) { maxVal=otherData[i][3]};
         }
 
@@ -120,15 +123,13 @@ export default class Pixels {
         const translations = this.initAttribute(numElements * 3, 3, true);
         const values = this.initAttribute(numElements, 1, true);
 
-        const remap = x => ((x-this.minVal)/(this.maxVal-this.minVal));
-
+        const lowBnd = .025;
+        const highBnd = .12;
+        const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             translations.setXYZ(j, dataArray[i], 0, dataArray[i+1]);
-            values.setX(j, .05);
-            let test = ((dataArray[i+2]-this.minVal)/(this.maxVal-this.minVal));
-            console.log(test);
-            // values.setX(j, 1.0-dataArray[i+2]);
+            values.setX(j, remap(dataArray[i+2]));
         }
 
         this.setAttributes(geometry, translations, values);
