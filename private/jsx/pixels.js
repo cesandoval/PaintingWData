@@ -4,6 +4,9 @@ export default class Pixels {
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
     constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, pxWidth=200, pxHeight=200, n=0){
+        const lowBnd = .0015;
+        const highBnd = .012;
+
         // Constants
         this.ELEMENTS_PER_ITEM = 3
         this.pxWidth = pxWidth;
@@ -24,10 +27,45 @@ export default class Pixels {
 
         this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        this.initTransValsAttrs(this.geometry, dataArray);
-        this.material = this.initMaterial();
+        this.initTransValsAttrs(this.geometry, dataArray, lowBnd, highBnd);
+        this.material = this.initMaterial(lowBnd, highBnd);
 
         this.addToScene(graph.scene);
+    }
+
+    // Zoom Extent based on geo's bbox
+    static zoomExtent(canvas, bbox) {
+        let aabbMin = new THREE.Vector3();
+        let aabbMax = new THREE.Vector3();
+        let radius = 0;
+        let newBbox = bbox[0]
+
+        aabbMin.x = newBbox[0][0];
+        aabbMin.y = -newBbox[0][1];
+        aabbMin.z = 0;
+        aabbMax.x = newBbox[2][0];
+        aabbMax.y = -newBbox[2][1];
+        aabbMax.z = 0;
+
+        // Compute world AABB center
+        let aabbCenter = new THREE.Vector3();
+        aabbCenter.x = (aabbMax.x + aabbMin.x) * 0.5;
+        aabbCenter.z = (aabbMax.y + aabbMin.y) * 0.5;
+        aabbCenter.y = (aabbMax.z + aabbMin.z) * 0.5;
+        canvas.controls.target = aabbCenter;
+
+        // Compute world AABB "radius" (approx: better if BB height)
+        let diag = new THREE.Vector3();
+        diag = diag.subVectors(aabbMax, aabbMin);
+        radius = diag.length() * 0.5;
+
+        // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
+        let offset = radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5);
+        let thiscam = canvas.camera;
+        let newPos = new THREE.Vector3(aabbCenter.x, offset, aabbCenter.z)
+
+        //set camera position and target
+        thiscam.position.set(newPos.x, newPos.y, newPos.z);
     }
 
     // Create a InstancedBufferGeometry Object
@@ -54,17 +92,14 @@ export default class Pixels {
         const startColor = datajson.color1;
         const endColor = datajson.color2;
 
-        // const shift = x => ( (x * 2 - 1) * 300 );
-        const shift = x => ( (x *10) );
 
         let minVal = Number.POSITIVE_INFINITY;
         let maxVal = Number.NEGATIVE_INFINITY;
 
-        const tessst = new Float32Array(otherData.length/3);
         for (let i = 0, j=0; i < otherData.length; i++, j=j+3){
             // x, y coordinates
-            otherArray[j] = shift(otherData[i][0]);
-            otherArray[j + 1] = shift(otherData[i][1]);
+            otherArray[j] = otherData[i][0];
+            otherArray[j + 1] = otherData[i][1];
             // value/weight
             otherArray[j + 2] = otherData[i][3];
 
@@ -117,18 +152,16 @@ export default class Pixels {
         }
     }
 
-    initTransValsAttrs(geometry, dataArray) {
+    initTransValsAttrs(geometry, dataArray, lowBnd, highBnd) {
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
         const translations = this.initAttribute(numElements * 3, 3, true);
         const values = this.initAttribute(numElements, 1, true);
 
-        const lowBnd = .025;
-        const highBnd = .12;
         const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
-            translations.setXYZ(j, dataArray[i], 0, dataArray[i+1]);
+            translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
             values.setX(j, remap(dataArray[i+2]));
         }
 
@@ -141,9 +174,10 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
+        console.log(geometry)
     }
 
-    initMaterial(){
+    initMaterial(lowBnd, highBnd){
         let material = new THREE.RawShaderMaterial({
             uniforms: {
                 show: {
@@ -152,11 +186,11 @@ export default class Pixels {
                 },
                 min: {
                     type: 'f',
-                    value: 0.0
+                    value: lowBnd
                 },
                 max: {
                     type: 'f',
-                    value: 1.0
+                    value: highBnd
                 },
                 transparency: {
                     type: 'f',
@@ -178,7 +212,10 @@ export default class Pixels {
             },
             vertexShader: document.getElementById('vertexShader').textContent,
             fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+            
         })
+        console.log(material);
+        // console.log(fragmentShader);
         material.transparent = true;
         return material;
     }

@@ -25,6 +25,7 @@ class Layer extends React.Component {
 
         // Get geometry
         let pixels = this.props.geometries[this.props.name]
+        console.log(this.props)
         if (e.target.name == 'color1'){
             pixels.material.uniforms.startColor.value.set(e.target.value)
         } else {

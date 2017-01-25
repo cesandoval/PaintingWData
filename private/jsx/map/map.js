@@ -21,7 +21,13 @@ class MapCanvas extends React.Component {
         // Get layers once they appear
         // Map them to Pixels objects
         // Add the pixel geometries to the map
+        // console.log(99999,G)
         if (newProps.layers.length > 0 && !this.state.layersAdded) {
+            // Sets the camera to the voxels' bbox 
+            const bbox = newProps.layers[0].bbox;
+            const canvas = newProps.map;
+            const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
+
             this.setState({layersAdded: true});
 
             newProps.layers.map((layer, n)=>{
@@ -30,7 +36,7 @@ class MapCanvas extends React.Component {
                 // Parses the layer
                 const out = PaintGraph.Pixels.parseDataJSON(layer);
                 // Creates the Pixels object
-                const P = new PaintGraph.Pixels(this.props.map, circle, out.otherArray, out.startColor, out.endColor, out.minMax, 200, 200, n);
+                const P = new PaintGraph.Pixels(this.props.map, circle, out.otherArray, out.startColor, out.endColor, out.minMax, out.bbox, 200, 200, n);
 
                 act.mapAddGeometry(layer.name, P);
             });
