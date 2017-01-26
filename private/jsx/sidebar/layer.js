@@ -35,10 +35,16 @@ class Layer extends React.Component {
     render() {
         return(
             <div className="layers__single">
-                <h4>{this.props.name}</h4>
-                <input type="checkbox" checked={this.props.visible} onChange={this.changeVisibility} name={this.props.name}/>
-                <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
-                <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
+                <div className="row spacing">
+                    <div className="col-md-6">
+                        <p className="sans small">{this.props.name}</p>
+                    </div>
+                    <div className="col-md-6">
+                        <input type="checkbox" checked={this.props.visible} onChange={this.changeVisibility} name={this.props.name}/>
+                        <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
+                        <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
+                    </div>
+                </div>
             </div>
         );
     }

@@ -23,6 +23,10 @@ p.sans {
     font-family: 'Overpass', sans-serif;
 }
 
+p.small.sans { 
+    font-size: 14px;
+}
+
 a:link {
     color: #1A1A1A;
 }
