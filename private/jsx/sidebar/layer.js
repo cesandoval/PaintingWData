@@ -7,18 +7,24 @@ class Layer extends React.Component {
         super(props);
         this.changeVisibility = this.changeVisibility.bind(this);
         this.changeColor = this.changeColor.bind(this);
+        this.handleCheckedEvent = this.handleCheckedEvent.bind(this);
     }
     changeVisibility(e) {
         act.sideUpdateLayer(this.props.name, 'visible', e.target.checked);
-
+        act.sideRemoveLayer(this.props.name);
         // Get geometry
-        let pixels = this.props.geometries[this.props.name]
-        // Change Size
-        if (!e.target.checked){
-            pixels.material.uniforms.show.value = 0.0;
-        } else {
-            pixels.material.uniforms.show.value = 1.0;
-        }
+        // let pixels = this.props.geometries[this.props.name]
+        // // Change Size
+        // if (!e.target.checked){
+        //     pixels.material.uniforms.show.value = 0.0;
+        // } else {
+        //     pixels.material.uniforms.show.value = 1.0;
+        // }
+    }
+    handleCheckedEvent(e) {
+        this.changeVisibility(e);
+        // var layerName = this.props.name;
+        // act.sideRemoveLayer(layerName);
     }
     changeColor(e){
         act.sideUpdateLayer(this.props.name, e.target.name, e.target.value);
@@ -35,12 +41,16 @@ class Layer extends React.Component {
         return(
             <div className="layers__single">
                 <h4>{this.props.name}</h4>
-                <input type="checkbox" checked={this.props.visible} onChange={this.changeVisibility} name={this.props.name}/>
+                <input type="checkbox" checked={this.props.visible} onChange={this.handleCheckedEvent} name={this.props.name}/>
                 <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
                 <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
             </div>
         );
     }
 }
-
-export default connect(s=>({geometries: s.map.geometries}))(Layer);
+const mapStateToProps = (state) => {
+    return {
+        geometries: state.map.geometries
+    };
+}
+export default connect(mapStateToProps)(Layer);

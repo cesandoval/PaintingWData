@@ -1,26 +1,43 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import * as act from '../store/actions';
 
 class PCoords extends React.Component {
     constructor(props){
         super(props);
-        this.state = {pc: null, started: false};
+
+        this.state = {
+            pc: null, 
+        };
+
         this.build = this.build.bind(this);
         this.calcRanges = this.calcRanges.bind(this);
+
     }
     componentWillReceiveProps(nprops){
-        if(nprops.mapStarted && !this.state.started && nprops.layers.length > 0){
-            this.setState({started: true});
+        // true should be map started instead of a constant literal
+        // !this.state.started was one of the conditions to run the following block, for 
+        // some reason. the sate was {pc: null, started: false}. I changed it
+        if(true && nprops.layers.length > 0){
+
             // Assumes that all of the layers have the same length
             // and also that the data matches up
             // ie. indexes == same location
+
+            //clean the container first
+            let pcContainer = document.getElementById("parcoords");
+            while (pcContainer.firstChild) {
+                pcContainer.removeChild(pcContainer.firstChild);
+            }
+            // and recalculate parcoords
             let numElements = nprops.layers[0].geojson.length;
-            let numLayers = nprops.layers.length;
+            let visibleLayers = nprops.layers.filter(l => l.visible);
+            let numLayers = visibleLayers.length;
 
             let build = [];
             for(let i = 0; i < numElements; i++ ){
-                let inBuild = Array(numLayers);
-                for (let j = 0; j < numLayers; j++){
+                var inBuild = Array(numLayers);
+                for (var j = 0; j < numLayers; j++){
                     inBuild[j] = nprops.layers[j].geojson.data[Math.floor(i / 200)][i % 200][3];
                 }
                 build.push(inBuild);
@@ -28,6 +45,7 @@ class PCoords extends React.Component {
             this.build(build)
         }
     }
+
     build(data) {
         const pc = d3.parcoords()('#parcoords')
             .mode("queue")
@@ -36,7 +54,7 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode("1D-axes");
-        pc.on("brush", this.calcRanges.bind(this));
+        pc.on("brush", this.calcRanges(this));
         this.setState({pc: pc});
     }
     calcRanges(data){
@@ -74,9 +92,10 @@ class PCoords extends React.Component {
     style() {
         return {
             backgroundColor: "red",
-            width: "500px",
-            height: "300px",
+            width: "80vw",
+            height: "200px",
             position: "fixed",
+            overflow: "auto",
             bottom: "0",
             right: "0",
             zIndex: "10"
@@ -89,8 +108,12 @@ class PCoords extends React.Component {
     }
 }
 
-export default connect(s=>({
-    mapStarted: s.map.started,
-    layers:s.sidebar.layers,
-    geometries: s.map.geometries
-}))(PCoords)
+const mapStateToProps = (state) => {
+    return {
+        mapStarted: state.map.started,
+        layers:     state.sidebar.layers,
+        geometries: state.map.geometries
+    }
+}
+
+export default connect(mapStateToProps)(PCoords)

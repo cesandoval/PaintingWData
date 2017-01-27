@@ -45,7 +45,6 @@ export default class Pixels {
     static parseDataJSON(datajson) {
         // Matrix of data
         const data = datajson.geojson.data;
-
         const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
         const endColor = datajson.color2;
@@ -53,7 +52,7 @@ export default class Pixels {
         const shift = x => ( (x * 2 - 1) * 300 );
 
         for (let i = 0; i < data.length; i++){
-            for (let j = 0; j < data[0].length; j++){
+            for (let j = 0; j < data[i].length; j++){
                 // x, y coordinates
                 array[(i * data.length + j) * 3 + 0] = shift(data[i][j][0]);
                 array[(i * data.length + j) * 3 + 1] = shift(data[i][j][1]);
@@ -156,6 +155,7 @@ export default class Pixels {
 
     get mesh() {
         if (this._mesh == undefined){
+            
             this._mesh = new THREE.Mesh(this.geometry, this.material);
             this._mesh.frustumCulled = false;
             return this._mesh;
@@ -164,7 +164,8 @@ export default class Pixels {
         }
     }
 
-    addToScene(scene){
+    addToScene(scene){     
+        // console.log(this.geometry);
         scene.add( this.mesh );
     }
 
