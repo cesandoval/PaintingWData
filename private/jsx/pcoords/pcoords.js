@@ -1,17 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import * as act from '../store/actions';
 
 class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
     constructor(props){
         super(props);
-        this.state = {pc: null, started: false};
+
+        this.state = {
+            pc: null, 
+        };
+
         this.build = this.build.bind(this);
         this.calcRanges = this.calcRanges.bind(this);
+
     }
     componentWillReceiveProps(nprops){
-        if(nprops.mapStarted && !this.state.started && nprops.layers.length > 0){
+        //nprops.mapStarted
+        if(true && nprops.layers.length > 0){
             this.setState({started: true});
 
             // Sets the mins and maxs values of every layer
@@ -27,8 +34,16 @@ class PCoords extends React.Component {
             // Assumes that all of the layers have the same length
             // and also that the data matches up
             // ie. indexes == same location
+
+            //clean the container first
+            let pcContainer = document.getElementById("parcoords");
+            while (pcContainer.firstChild) {
+                pcContainer.removeChild(pcContainer.firstChild);
+            }
+            // and recalculate parcoords
             let numElements = nprops.layers[0].geojson.length;
-            let numLayers = nprops.layers.length;
+            let visibleLayers = nprops.layers.filter(l => l.visible);
+            let numLayers = visibleLayers.length;
 
             // TODO GET RID OF GEOJSON.DATA AND SIMPLY REMAP THE RANGES....
             // CURRENTLY SUPER INEFFICIENT TO SEND THE ARRAYS TWICE....
@@ -45,6 +60,7 @@ class PCoords extends React.Component {
             this.build(build)
         }
     }
+
     build(data) {
         let minVal = this.minVal[0];
         let maxVal = this.maxVal[0];
@@ -106,6 +122,7 @@ class PCoords extends React.Component {
             width: "500px",
             height: "300px",
             position: "fixed",
+            overflow: "auto",
             bottom: "0",
             right: "0",
             zIndex: "10",
@@ -119,8 +136,12 @@ class PCoords extends React.Component {
     }
 }
 
-export default connect(s=>({
-    mapStarted: s.map.started,
-    layers:s.sidebar.layers,
-    geometries: s.map.geometries
-}))(PCoords)
+const mapStateToProps = (state) => {
+    return {
+        mapStarted: state.map.started,
+        layers:     state.sidebar.layers,
+        geometries: state.map.geometries
+    }
+}
+
+export default connect(mapStateToProps)(PCoords)

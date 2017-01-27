@@ -5,6 +5,7 @@ import mapReducer from './reducers/map';
 import overlayReducer from './reducers/overlay';
 import optionsReducer from './reducers/options';
 
+
 var reducers = combineReducers({
     sidebar: sidebarReducer,
     map: mapReducer,

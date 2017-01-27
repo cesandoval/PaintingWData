@@ -4,6 +4,8 @@ import * as act from '../store/actions';
 import axios from 'axios';
 
 import Layer from './layer';
+import OpacitySlider from './opacitySlider';
+import KnnSlider from './knnSlider';
 
 const createLayer = (name, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox) => ({
     name, visible, color1, color2, geojson, bbox
@@ -11,6 +13,7 @@ const createLayer = (name, visible, color1='#00ff00', color2='#0000ff', geojson=
 
 class Layers extends React.Component {
     constructor(props){
+        console.log("================= layers");
         super(props);
         this.getLayers = this.getLayers.bind(this);
         this.getLayers();
@@ -75,6 +78,8 @@ class Layers extends React.Component {
                         color2={layer.color2}
                     />
                 ))}
+                <OpacitySlider> </OpacitySlider>
+                <KnnSlider></KnnSlider>
             </div>
         );
     }
