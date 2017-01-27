@@ -26,6 +26,12 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      neighborhood: {
+        type: Sequelize.JSON,
+      },
+      pointindex: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

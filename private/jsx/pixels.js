@@ -159,6 +159,7 @@ export default class Pixels {
         const values = this.initAttribute(numElements, 1, true);
 
         const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
+        const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
@@ -174,7 +175,6 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
-        console.log(geometry)
     }
 
     initMaterial(lowBnd, highBnd){
@@ -214,8 +214,6 @@ export default class Pixels {
             fragmentShader: document.getElementById( 'fragmentShader' ).textContent
             
         })
-        console.log(material);
-        // console.log(fragmentShader);
         material.transparent = true;
         return material;
     }

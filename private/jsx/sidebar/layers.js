@@ -32,6 +32,7 @@ class Layers extends React.Component {
                         otherdata: Array(length),
                         minMax: Array(2)
                     }
+                    console.log(l)
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
                     const mappedGeojson = l.geojson.geojson.features.map(g => {
