@@ -23,9 +23,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     neighborhood: {
       type: DataTypes.JSON,
-    },
-    pointindex: {
-      type: DataTypes.INTEGER
     }
   }, {
     classMethods: {

@@ -139,9 +139,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
 
     var itemsProcessed = 0;
     var firstItem = pointNet.coordinates[0][0]
-    console.log(99999999999999999988888, firstItem)
-    console.log('------------------------------', pointNet.coordinates.length)
-    console.log('++++++++++++++++', columns, rows)
+
     for (i = 0; i < pointNet.coordinates.length; i++){
 
         var point = {
@@ -159,7 +157,6 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
                 row: Math.floor(i/rows),
                 column: i%rows
             }, 
-            pointindex: i
         }
 
         cargo.push(newDataNet, function(err) {
@@ -175,37 +172,9 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
     }
 }
 
-function neighborsOf(pixelIndex) {
-    var m = this.pxWidth;
-    var n = this.pxHeight;
-    var pixelAddress = this._pixels[pixelIndex];
-    var x = pixelAddress[0];
-        y = pixelAddress[1];
-    
-    var indices = [-1, 0, 1];
-    var ret = [];
-    var arrayM = Array.apply(null, Array(m)).map(function (_, i) {return i;});
-    var arrayN = Array.apply(null, Array(n)).map(function (_, i) {return i;});
-    
-    for (var di = 0; di < indices.length; di++) {
-        for (var dj = 0; dj < indices.length; dj ++) {
-            var wBoolean = arrayM.indexOf(x+indices[di]) >= 0;
-            var hBoolean = arrayN.indexOf(y+indices[dj]) >= 0;
-            if (wBoolean == true && hBoolean == true) {
-                //if (!(indeces[di]==0 && indeces[dj]==0)) {
-                var new_index = ((x+indices[di])*m)+(y+indices[dj]);
-                ret.push(new_index);
-                //}
-            }
-            
-        }
-    }
-    return ret;
-}
-
 function pointQuery(prop, callback){
     rasterQuery = `
-    SELECT p.geometry, g.rasterval As rastervalue 
+    SELECT p.geometry, g.rasterval, p.neighborhood As rastervalue 
     FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
     WHERE ST_Intersects(g.geometry, p.geometry) AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
     AND g.`+'"datafileId"'+ "=" + prop.datafileId +";"
@@ -261,6 +230,7 @@ function cargoLoad(props, req, callback){
 }
 
 function parseGeoJSON(results, objProps, req, callback) {
+    console.log(results);
     var newDataJsons = {};
     var _keys = Object.keys(results);
     _keys.forEach(function(key, index){
