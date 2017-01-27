@@ -12,7 +12,7 @@ export default class Graph {
         this.controls = this.initControls(this.camera, this.canvas)
 
         // Optional
-        this.gridHelperId = this.initGrid(this.scene);
+        // this.gridHelperId = this.initGrid(this.scene);
 
         // Put canvas onto the page
         this.insertCanvas(this.canvas, this.renderer.domElement);
@@ -27,7 +27,7 @@ export default class Graph {
 
     // Create a Camera
     initCamera(width, height) {
-        var camera = new THREE.PerspectiveCamera(90, width / height, 5, 1500);
+        var camera = new THREE.PerspectiveCamera(90, width / height, 0.01, 1500);
         camera.position.y = 300;
         camera.lookAt(new THREE.Vector3(0.0,0.0,0.0));
         camera.enablePan = true;

@@ -13,13 +13,13 @@ class Layer extends React.Component {
         act.sideUpdateLayer(this.props.name, 'visible', e.target.checked);
         act.sideRemoveLayer(this.props.name);
         // Get geometry
-        // let pixels = this.props.geometries[this.props.name]
-        // // Change Size
-        // if (!e.target.checked){
-        //     pixels.material.uniforms.show.value = 0.0;
-        // } else {
-        //     pixels.material.uniforms.show.value = 1.0;
-        // }
+        let pixels = this.props.geometries[this.props.name]
+        // Change Size
+        if (!e.target.checked){
+            pixels.material.uniforms.show.value = 0.0;
+        } else {
+            pixels.material.uniforms.show.value = 1.0;
+        }
     }
     handleCheckedEvent(e) {
         this.changeVisibility(e);

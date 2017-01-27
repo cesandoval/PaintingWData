@@ -31,7 +31,7 @@ block pageTitle
       for datavoxel in datavoxels
         if datavoxel.id
           .col-sm-6.col-md-4
-            .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}")
+            .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}", style="z-index: 1;")
               .caption.text-center
                 .layername
                   h3 #{datavoxel.voxelname}
@@ -55,9 +55,9 @@ block pageTitle
                       p.label-body Layer Data Property
                         label.layer-label.voxel-label #{datafile.Datalayers[0].rasterProperty}
                       p.label-body.text-right
-                        a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView" data-map-id="#{datafile.id}") View Layer
+                        a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
 
-                      div.modal.fade.bs-example-modal-lg(id="mapView" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
+                      div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
                           div.modal-dialog.modal-lg(role="document")
                             div.modal-content(style="z-index: 10000!important;")
                               div.modal-header
@@ -69,7 +69,7 @@ block pageTitle
                                   .col-md-6
                                     script.
                                       var id = #{datafile.id};
-                                    div(id="map_thumbnail", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
+                                    div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
                                   .col-md-6
                                     label.layer-label Layer Name
                                       p(display='inline').label-body #{datafile.Datalayers[0].layername}

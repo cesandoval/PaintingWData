@@ -9,8 +9,10 @@ module.exports.show = function(req, res) {
 
 module.exports.getDatajsons = function(req, res){
 	Model.Datajson.findAll({where: {
-		datavoxelId: req.params.datavoxelId
-	}}).then(function(datajsons){
+		datavoxelId: req.params.datavoxelId,
+		},
+        include: [{model: Model.Datavoxel}]
+        }).then(function(datajsons){
 		res.json(datajsons);
 	});
 }

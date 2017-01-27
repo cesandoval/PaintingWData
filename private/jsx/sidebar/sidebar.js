@@ -14,7 +14,7 @@ const initFields = [
     {
         field: <NodeTypes />,
         name: "Node Types",
-        show: false
+        show: true
     },
 ]
 

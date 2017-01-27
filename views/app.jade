@@ -69,9 +69,9 @@ append content
         float vProd = max(0.0, dot(vNormal, light));
 
         vec3 modColor = vec3(0.0, 0.0, 0.0);
-        modColor.x = ((endColor.x - startColor.x) * vSize) + startColor.x;
-        modColor.y = ((endColor.y - startColor.y) * vSize) + startColor.y;
-        modColor.z = ((endColor.z - startColor.z) * vSize) + startColor.z;
+        modColor.x = ((endColor.x - startColor.x) * (vSize*80.0)) + startColor.x;
+        modColor.y = ((endColor.y - startColor.y) * (vSize*80.0)) + startColor.y;
+        modColor.z = ((endColor.z - startColor.z) * (vSize*80.0)) + startColor.z;
         gl_FragColor = vec4(modColor, transparency);
 
         }
