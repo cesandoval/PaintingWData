@@ -50,9 +50,11 @@ class Layer extends React.Component {
                         <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
                     </div>
                 </div>
+            </div>
         );
     }
 }
+
 const mapStateToProps = (state) => {
     return {
         geometries: state.map.geometries
