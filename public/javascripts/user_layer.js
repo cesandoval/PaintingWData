@@ -74,35 +74,37 @@ maps.forEach(function(map, index){
         var geoJSON = geoJSON;
         var bBox = boundingBox;
         var map = embedMap(mapId, centroid.coordinates.reverse())
+
         bBoxCoords = [];
         bBox.coordinates[0].forEach(function(feature, i) {
             bBoxCoords.push(feature.reverse());
         })
 
-   
-    map.fitBounds(bBoxCoords);
+        map.fitBounds(bBoxCoords);
 
-    // Disable scrolling into map unless clicked
-    map.scrollWheelZoom.disable();
+        // Disable scrolling into map unless clicked
+        map.scrollWheelZoom.disable();
 
-    var myStyle = {
-        "color": "red",
-        "weight": 1,
-        "opacity": 0.5,
-        'fillColor': 'white'
-    };
-    var reversedBbox = [[]];
-    bBox.coordinates.forEach(function(coordinates, index){
-    	coordinates.forEach(function(coords, index){
-    		reversedBbox[0].push(coords.reverse());
-    	});
-    });
+        var myStyle = {
+            "color": "red",
+            "weight": 1,
+            "opacity": 0.5,
+            'fillColor': 'white'
+        };
 
-    bBox.coordinates = reversedBbox;
-    L.geoJson(bBox, {
-        style: myStyle
-    }).addTo(map);
-}
+        var reversedBbox = [[]];
+        bBox.coordinates.forEach(function(coordinates, index){
+        	coordinates.forEach(function(coords, index){
+        		reversedBbox[0].push(coords.reverse());
+        	});
+        });
+
+        bBox.coordinates = reversedBbox;
+        
+        L.geoJson(bBox, {
+            style: myStyle
+        }).addTo(map);
+    }
 });
 
 

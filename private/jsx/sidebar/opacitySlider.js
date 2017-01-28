@@ -18,7 +18,7 @@ class OpacitySlider extends React.Component {
     }
 }
 
-var opacitySlider = $("slider").bootstrapSlider();
-var value = opacitySlider.bootstrapSlider('getValue');
+// var opacitySlider = $("slider").bootstrapSlider();
+// var value = opacitySlider.bootstrapSlider('getValue');
 
 export default OpacitySlider
