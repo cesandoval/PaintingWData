@@ -35,7 +35,7 @@ class Layer extends React.Component {
     render() {
         return(
             <div className="layers__single">
-                <div className="row spacing">
+                <div className="row">
                     <div className="col-md-6">
                         <p className="sans small">{this.props.name}</p>
                     </div>

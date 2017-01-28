@@ -20,7 +20,7 @@
     overflow: auto;
     position: fixed;
     left:0;
-    top:50px;
+    top:80px;
     bottom: 0;
 
     -webkit-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
@@ -79,14 +79,28 @@
     background-color: white;
     /*border: 1px solid #f16752;*/
     border-bottom: 4px solid #f16752;
-    margin: 0 0 5px;
-    padding: 10px;
+    /*border-top: 4px solid #f16752;*/
+    margin: 0;
+    padding-top: 15px;
+    padding-bottom: 10px;
 
     font-size: 11pt;
 }
 
 .sidebar__box--name {
     background-color: white;
+    text-align: center;
+    display: block;
+    font-family: 'Overpass', sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    background-color: #F9CBC2;
+    color: black;
+    font-size: 14pt;
+    text-transform: uppercase;
+
+    border-bottom: 4px solid #f16752;
 }
 
 /*Arrows*/
