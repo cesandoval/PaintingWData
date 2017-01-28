@@ -177,6 +177,7 @@ export default class Pixels {
             values.setX(j, remap(dataArray[i+2]));
         }
         //
+        console.log(values)
         this.setAttributes(geometry, translations, values);
     }
 

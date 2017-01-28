@@ -24,6 +24,7 @@ class PCoords extends React.Component {
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
+            console.log(nprops.layers[0].geojson)
             for (let i = 0; i<nprops.layers.length; i++) {
                 mins[i] = nprops.layers[i].geojson.minMax[0];
                 maxs[i] = nprops.layers[i].geojson.minMax[1];
@@ -112,7 +113,6 @@ class PCoords extends React.Component {
         for (let index in minObjs) {
             let name = this.props.layers[index].name;
             let pixels = this.props.geometries[name];
-            console.log(pixels)
             pixels.material.uniforms.min.value = remap(minObjs[index], index, this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[index], index, this.minVal, this.maxVal);
         }

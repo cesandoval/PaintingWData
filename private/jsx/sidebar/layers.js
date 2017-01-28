@@ -64,6 +64,7 @@ class Layers extends React.Component {
                         if (mappedGeojson[i][3]>maxVal) { maxVal=mappedGeojson[i][3]};
                         transGeojson.otherdata[i] = mappedGeojson[i];
                     }
+                    transGeojson.minMax= [minVal, maxVal]
 
                     return createLayer(l.layername, propertyName, true, l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols);
                 }));
