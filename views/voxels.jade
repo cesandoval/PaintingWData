@@ -5,6 +5,7 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet", href="/stylesheets/layers.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
+  script(src="/javascripts/js/voxels.js")
   script(src="/javascripts/js/layers.js")
   script.
 
@@ -79,6 +80,9 @@ block pageTitle
                                     label.layer-label Upload Date
                                       p.label-body #{datafile.Datalayers[0].createdAt}
 
+        script.
+          var data = !{JSON.stringify(datavoxel)};
+          renderMap(document.getElementById("map_#{datavoxel.id}"), data);
 
   script(src="/javascripts/map_thumbnail_viewer.js")
-  script(src="/javascripts/js/voxels.js")
+  
