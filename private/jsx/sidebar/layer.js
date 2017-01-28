@@ -42,12 +42,14 @@ class Layer extends React.Component {
             <div className="layers__single">
                 <div className="row">
                     <div className="col-md-6">
-                        <p className="sans small">{this.props.name}</p>
+                        <p className="layer-label">{this.props.name}</p>
                     </div>
                     <div className="col-md-6">
-                        <input type="checkbox" checked={this.props.visible} onChange={this.handleCheckedEvent} name={this.props.name}/>
-                        <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
-                        <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
+                        <div className="text-right">
+                            <input type="checkbox" checked={this.props.visible} onChange={this.handleCheckedEvent} name={this.props.name}/>
+                            <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
+                            <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
+                        </div>
                     </div>
                 </div>
             </div>
