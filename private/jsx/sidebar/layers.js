@@ -47,7 +47,8 @@ class Layers extends React.Component {
                         const weight = parseFloat(g.properties[l.layername]);
                         const row = g.properties.neighborhood.row;
                         const column = g.properties.neighborhood.column; 
-                        return new Float32Array([coords[0], coords[1], 0, weight, 1, row, column]);
+                        const pointIndex = g.properties.pointIndex;
+                        return new Float32Array([coords[0], coords[1], 0, weight, 1, row, column, pointIndex]);
                     });
                     // mappedGeojson.sort();
                     for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){

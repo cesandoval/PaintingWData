@@ -29,6 +29,9 @@ module.exports = {
       neighborhood: {
         type: Sequelize.JSON,
       },
+      voxelIndex: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

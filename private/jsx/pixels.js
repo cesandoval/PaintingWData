@@ -90,7 +90,7 @@ export default class Pixels {
         // const data = datajson.geojson.data;
         const otherData = datajson.geojson.otherdata;
         const otherArray = new Float32Array(otherData.length * 3)
-        const addressArray = new Float32Array(otherData.length * 2)
+        const addressArray = new Float32Array(otherData.length * 3)
 
         // const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
@@ -110,6 +110,7 @@ export default class Pixels {
             // voxel address
             addressArray[j] = otherData[i][5];
             addressArray[j+1] = otherData[i][6];
+            addressArray[j+2] = otherData[i][7];
 
             if (otherData[i][3]<minVal) { minVal=otherData[i][3] };
             if (otherData[i][3]>maxVal) { maxVal=otherData[i][3]};
@@ -161,6 +162,8 @@ export default class Pixels {
     // }
 
     initTransValsAttrs(geometry, dataArray, lowBnd, highBnd) {
+        const allElements = this.pxWidth * this.pxHeight;
+        console.log(allElements);
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
         const translations = this.initAttribute(numElements * 3, 3, true);
@@ -173,7 +176,7 @@ export default class Pixels {
             translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
             values.setX(j, remap(dataArray[i+2]));
         }
-
+        //
         this.setAttributes(geometry, translations, values);
     }
 
@@ -194,13 +197,13 @@ export default class Pixels {
         //     row: i%rows
         // }, 
 
-        console.log(addresses);
-        console.log(currValues);
+        // console.log(addresses);
+        // console.log(currValues);
 
         var numberOfNeighbors = 0;
 
         const neighbors =  new Float32Array(addresses.length);
-        for (let i = 0, j = 0; i < addresses.length; i = i + 2, j++) {
+        for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
             let currNeighbors = new Float32Array(numberOfNeighbors);
             let row = addresses[i];
             let col = addresses[i+1];
@@ -208,10 +211,9 @@ export default class Pixels {
             if (numberOfNeighbors == 0) {
                 neighbors[i] = [currIndex];
             }
-            console.log(currIndex);
 
         }
-        console.log(neighbors);
+        // console.log(neighbors);
 
 
         // var m = this.pxWidth;

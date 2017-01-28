@@ -159,6 +159,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
                 column: Math.floor(i/rows),
                 row: i%rows
             }, 
+            voxelIndex: i
         }
 
         cargo.push(newDataNet, function(err) {
@@ -175,7 +176,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
 
 function pointQuery(prop, callback){
     rasterQuery = `
-    SELECT p.geometry, p.neighborhood, g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
+    SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + `g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
     FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
     WHERE ST_Intersects(g.geometry, p.geometry) AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
     AND g.`+'"datafileId"'+ "=" + prop.datafileId +";"
@@ -249,6 +250,7 @@ function parseGeoJSON(results, objProps, req, rowsCols, callback) {
             voxel['properties'][layername] = currentResult.rastervalue;
             voxel['properties']['neighborhood'] = currentResult.neighborhood;
             voxel['properties']['property'] = currentResult.rasterProperty;
+            voxel['properties']['pointIndex'] = currentResult.voxelIndex;
             features.push(voxel);
         }
 
