@@ -33,14 +33,17 @@ export default (state=initialSidebarState, action) => {
                     return layer;
                 }
             });
+            console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
             return Object.assign({}, state, {layers: newLayers});
 
-        case c.SIDE_REMOVE_LAYER:
-            var newLayers = state.layers.map(layer => (
-                // Remove layers with the same name
-                layer.name != action.layerName
-            ));
-            return Object.assign({}, state, {layers: newLayers});
+        case c.SIDE_REMOVE_LAYER: // just fall through for now.
+            // var newLayers = state.layers.map(layer => (
+            //     // Remove layers with the same name
+
+            //     layer.name == action.layerName
+            // ));
+            
+            return state;
 
         case c.SIDE_CHANGE_OPACITY:
             console.assert(Number.isFinite(action.opacity),

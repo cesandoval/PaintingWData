@@ -146,6 +146,7 @@ function verifyFiles(directory, callback){
             areRightFileTypes = areRightFileTypes && (ext === ".shp" || ext === ".shx" || ext === ".dbf" );
       });
     if(!areRightFileTypes){
+      console.log(directory);
       callback(null, directory);
     }
     else{

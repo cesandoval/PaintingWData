@@ -21,6 +21,12 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    neighborhood: {
+      type: DataTypes.JSON,
+    },
+    pointindex: {
+      type: DataTypes.INTEGER
+    }
   }, {
     classMethods: {
       associate: function(models) {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Layers from './layers';
 import NodeTypes from './nodetypes'
+import * as act from '../store/actions';
 
 const initFields = [
     {
