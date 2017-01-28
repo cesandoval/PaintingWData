@@ -36,7 +36,7 @@ class MapCanvas extends React.Component {
                 // Parses the layer
                 const out = PaintGraph.Pixels.parseDataJSON(layer);
                 // Creates the Pixels object
-                const P = new PaintGraph.Pixels(this.props.map, circle, out.otherArray, out.startColor, out.endColor, out.minMax, out.bbox, 200, 200, n);
+                const P = new PaintGraph.Pixels(this.props.map, circle, out.otherArray, out.startColor, out.endColor, out.minMax, out.addressArray, layer.rowsCols.cols, layer.rowsCols.rows, n);
 
                 act.mapAddGeometry(layer.name, P);
             });

@@ -112,6 +112,7 @@ class PCoords extends React.Component {
         for (let index in minObjs) {
             let name = this.props.layers[index].name;
             let pixels = this.props.geometries[name];
+            console.log(pixels)
             pixels.material.uniforms.min.value = remap(minObjs[index], index, this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[index], index, this.minVal, this.maxVal);
         }

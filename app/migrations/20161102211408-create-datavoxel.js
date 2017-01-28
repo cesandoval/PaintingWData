@@ -27,6 +27,9 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
+      rowsCols: {
+        type: Sequelize.JSON,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

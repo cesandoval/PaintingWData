@@ -17,6 +17,9 @@ var Datavoxel = sequelize.define('Datavoxel', {
     processed: {
       type: DataTypes.BOOLEAN,
       allowNull: false
+    },
+    rowsCols: {
+      type: DataTypes.JSON,
     }
 }, {
     classMethods: {
