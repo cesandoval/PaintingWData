@@ -29,13 +29,21 @@ module.exports.saveShapes = function(req, res) {
                 userId : req.user.id,
             }
         }).then(function(datafiles){
-            res.redirect('/layers/' + req.user.id);
+            
+
+
+            if (req.user.id) {
+                console.log(req.user.id);
+                res.redirect('/layers/' + req.user.id);
+            }
         });
         
     });
 }
 
 module.exports.getDatalayers = function(req, res){
+    console.log("Data layer id: " + req.params.datafileId + "\n\n");
+
     Model.Datalayer.findOne({where:{
         datafileId : req.params.datafileId
     }}).then(function(datalayer){
@@ -43,6 +51,8 @@ module.exports.getDatalayers = function(req, res){
             async.apply(loadData, req.params.datafileId, req),
             getBoundingBox,
         ], function (err, result) {
+            // console.log(datalayer);
+
             res.send({
                 datalayer,
                 bBox : result[0], 
