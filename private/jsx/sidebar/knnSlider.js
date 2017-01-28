@@ -10,12 +10,10 @@ class KnnSlider extends React.Component {
     
     render() {
         return(
-            <input
-                type="range"
-                min="0"                   
-                max="9"                 
-                step="1"                  
-            />
+            <div className="knn-slider">
+                <p className="layer-label"> # Nearest Neighbors </p>
+                <input type="range" min="0" max="0" step="1"/>
+            </div>
         );
     }
 }

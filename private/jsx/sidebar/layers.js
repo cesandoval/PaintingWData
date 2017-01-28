@@ -78,10 +78,10 @@ class Layers extends React.Component {
                         color2={layer.color2}
                     />
                 ))}
+                <OpacitySlider> </OpacitySlider>
                 <div className="row">
-                    <OpacitySlider> </OpacitySlider>
+                    <KnnSlider></KnnSlider>
                 </div>
-                <KnnSlider></KnnSlider>
             </div>
         );
     }

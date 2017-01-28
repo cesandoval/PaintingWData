@@ -78,7 +78,7 @@
 .layers__single {
     background-color: white;
     /*border: 1px solid #f16752;*/
-    border-bottom: 4px solid #f16752;
+    border-bottom: 2px solid #f16752;
     /*border-top: 4px solid #f16752;*/
     margin: 0;
     padding-top: 15px;
@@ -146,4 +146,16 @@ input[type="color" i] {
     display: inline-block;
 
     -webkit-appearance: none;
+}
+
+/* Opacity Slider */
+.opacity-slider, .knn-slider {
+    text-align: center;
+    padding-top: 10px;
+    width: 100%;
+    margin: 0;
+
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 }

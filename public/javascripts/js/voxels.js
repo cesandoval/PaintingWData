@@ -38,27 +38,16 @@ maps.forEach(function(map, index){
 	var mapId = $(map).attr('id');
 	console.log(mapId + "	" + ids[index]);
 
-	$.ajax({
-		url : "/getDatalayers/" + ids[index],
-		type: 'GET',
-		cache: false,
-		processData: false, 
-		contentType: false, 
-		success: function(data){
-			console.log(" rendering map " + ids[index]);
-			var bBox = JSON.parse(data.bBox);
-			// $datalayers[index].find('.layerName')[0].html(data.datalayer.layerName);
-			// $($datalayers[index].find('.property')[0]).html(data.datalayer.properties);
-			// $($datalayers[index].find('.description')[0]).html(data.datalayer.description);
-			// $($datalayers[index].find('.epsg')[0]).html(data.datalayer.epsg);
-			$(map).removeClass('temporary_map_visuals');
-			$(map).empty();
-			render(mapId, bBox, JSON.parse(data.centroid));
-		},
-		failure: function(err){
-			console.log("Cannot render map" + err);
-		}
-	})
+	console.log(" rendering map " + ids[index]);
+	var bBox = JSON.parse($datavoxel.bBox);
+	// $datalayers[index].find('.layerName')[0].html(data.datalayer.layerName);
+	// $($datalayers[index].find('.property')[0]).html(data.datalayer.properties);
+	// $($datalayers[index].find('.description')[0]).html(data.datalayer.description);
+	// $($datalayers[index].find('.epsg')[0]).html(data.datalayer.epsg);
+	$(map).removeClass('temporary_map_visuals');
+	$(map).empty();
+	render(mapId, bBox, JSON.parse(data.centroid));
+
 	function render(map, boundingBox, centroid){
 		var centroid = centroid;
 		var geoJSON = geoJSON;

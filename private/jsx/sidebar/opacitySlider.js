@@ -10,14 +10,15 @@ class OpacitySlider extends React.Component {
     
     render() {
         return(
-            <input
-                type="range"
-                min="0"                   
-                max="1"                 
-                step="0.01"                  
-            />
+            <div className="opacity-slider">
+                <p className="layer-label"> Opacity </p>
+                <input className="slider" type="range" min="0" max="1" step="0.01"/>
+            </div>
         );
     }
 }
+
+var opacitySlider = $("slider").bootstrapSlider();
+var value = opacitySlider.bootstrapSlider('getValue');
 
 export default OpacitySlider
