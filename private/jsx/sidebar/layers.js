@@ -7,8 +7,8 @@ import Layer from './layer';
 import OpacitySlider from './opacitySlider';
 import KnnSlider from './knnSlider';
 
-const createLayer = (name, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox) => ({
-    name, visible, color1, color2, geojson, bbox
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols
 })
 
 class Layers extends React.Component {
@@ -21,10 +21,12 @@ class Layers extends React.Component {
     // Assumes that geojson will be nonzero size
     getLayers() {
         // TODO Change this when migrate to actual code
+        // GET RID OF DATA... THIS SHOULD BE DONE ON THE FLY WITH A TRANSFORM
         axios.get('/datajson/all/'+ datavoxelId, {options: {}})
             .then(({ data })=>{  
                 act.sideAddLayers(data.map(l => {
                     const length = l.geojson.geojson.features.length;
+                    const propertyName = l.geojson.geojson.features[0].properties.property;
                     
                     // Will hold a transoformed geojson
                     const transGeojson = {
@@ -33,9 +35,8 @@ class Layers extends React.Component {
                         length: length,
                         data: Array(Math.floor(Math.sqrt(length))),
                         otherdata: Array(length),
-                        minMax: Array(2)
+                        minMax: Array(2), 
                     }
-                    console.log(l)
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
                     const mappedGeojson = l.geojson.geojson.features.map(g => {
@@ -44,7 +45,10 @@ class Layers extends React.Component {
                         const coords = g.geometry.coordinates;
                         const id = parseFloat(g.id);
                         const weight = parseFloat(g.properties[l.layername]);
-                        return new Float32Array([coords[0], coords[1], 0, weight, 1]);
+                        const row = g.properties.neighborhood.row;
+                        const column = g.properties.neighborhood.column; 
+                        const pointIndex = g.properties.pointIndex;
+                        return new Float32Array([coords[0], coords[1], 0, weight, 1, row, column, pointIndex]);
                     });
                     // mappedGeojson.sort();
                     for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
@@ -62,7 +66,7 @@ class Layers extends React.Component {
                     }
                     transGeojson.minMax= [minVal, maxVal]
 
-                    return createLayer(l.layername, true, l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates);
+                    return createLayer(l.layername, propertyName, true, l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols);
                 }));
             });
     }

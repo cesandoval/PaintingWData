@@ -3,7 +3,7 @@ export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
-    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, pxWidth=200, pxHeight=200, n=0){
+    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0){
         const lowBnd = .0015;
         const highBnd = .012;
 
@@ -20,6 +20,7 @@ export default class Pixels {
         this.startColor = new THREE.Color(startColor);
         this.endColor = new THREE.Color(endColor);
         this.layerN = n;
+        this.addresses = addresses;
 
         // Sanity Check
         if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -29,6 +30,8 @@ export default class Pixels {
 
         this.initTransValsAttrs(this.geometry, dataArray, lowBnd, highBnd);
         this.material = this.initMaterial(lowBnd, highBnd);
+
+        this.neighborsOf(8);
 
         this.addToScene(graph.scene);
     }
@@ -87,6 +90,7 @@ export default class Pixels {
         // const data = datajson.geojson.data;
         const otherData = datajson.geojson.otherdata;
         const otherArray = new Float32Array(otherData.length * 3)
+        const addressArray = new Float32Array(otherData.length * 3)
 
         // const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
@@ -102,6 +106,11 @@ export default class Pixels {
             otherArray[j + 1] = otherData[i][1];
             // value/weight
             otherArray[j + 2] = otherData[i][3];
+
+            // voxel address
+            addressArray[j] = otherData[i][5];
+            addressArray[j+1] = otherData[i][6];
+            addressArray[j+2] = otherData[i][7];
 
             if (otherData[i][3]<minVal) { minVal=otherData[i][3] };
             if (otherData[i][3]>maxVal) { maxVal=otherData[i][3]};
@@ -132,27 +141,29 @@ export default class Pixels {
             //array[j+2] = datajson.geojson[i].properties[datajson.name];
         //}
 
-        return { otherArray, startColor, endColor, minMax};
+        return { otherArray, startColor, endColor, minMax, addressArray};
 
     }
 
-    get addresses() {
-        if (this._addresses == undefined) {
-            this._addresses = new Array(this.numElements);
+    // get addresses() {
+    //     if (this._addresses == undefined) {
+    //         this._addresses = new Array(this.numElements);
 
-            for (let i = 0; i < this.pxWidth*this.pxHeight; i++) {
-                //console.log([Math.floor(i/this.pxWidth), i%this.pxWidth]);
-                this._addresses[i] = [Math.floor(i/this.pxWidth), i%this.pxWidth];
-            }
+    //         for (let i = 0; i < this.pxWidth*this.pxHeight; i++) {
+    //             //console.log([Math.floor(i/this.pxWidth), i%this.pxWidth]);
+    //             this._addresses[i] = [Math.floor(i/this.pxWidth), i%this.pxWidth];
+    //         }
 
-            return this._addresses;
+    //         return this._addresses;
 
-        } else {
-            return this._addresses;
-        }
-    }
+    //     } else {
+    //         return this._addresses;
+    //     }
+    // }
 
     initTransValsAttrs(geometry, dataArray, lowBnd, highBnd) {
+        const allElements = this.pxWidth * this.pxHeight;
+        console.log(allElements);
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
         const translations = this.initAttribute(numElements * 3, 3, true);
@@ -165,7 +176,8 @@ export default class Pixels {
             translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
             values.setX(j, remap(dataArray[i+2]));
         }
-
+        //
+        console.log(values)
         this.setAttributes(geometry, translations, values);
     }
 
@@ -175,6 +187,70 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
+    }
+
+    neighborsOf(numberOfNeighbors) {
+        const addresses = this.addresses;
+        const currValues = this.mesh.geometry.attributes.size.array;
+
+        // neighborhood: {
+        //     column: Math.floor(i/rows),
+        //     row: i%rows
+        // }, 
+
+        // console.log(addresses);
+        // console.log(currValues);
+
+        var numberOfNeighbors = 0;
+
+        const neighbors =  new Float32Array(addresses.length);
+        for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
+            let currNeighbors = new Float32Array(numberOfNeighbors);
+            let row = addresses[i];
+            let col = addresses[i+1];
+            let currIndex = col * this.pxHeight;
+            if (numberOfNeighbors == 0) {
+                neighbors[i] = [currIndex];
+            }
+
+        }
+        // console.log(neighbors);
+
+
+        // var m = this.pxWidth;
+        // var n = this.pxHeight;
+        // var pixelAddress = this._pixels[pixelIndex];
+        // var x = pixelAddress[0];
+        //     y = pixelAddress[1];
+        
+        // var indices = [-1, 0, 1];
+        // var ret = [];
+        // var arrayM = Array.apply(null, Array(m)).map(function (_, i) {return i;});
+        // var arrayN = Array.apply(null, Array(n)).map(function (_, i) {return i;});
+        
+        // for (var di = 0; di < indices.length; di++) {
+        //     for (var dj = 0; dj < indices.length; dj ++) {
+        //         var wBoolean = arrayM.indexOf(x+indices[di]) >= 0;
+        //         var hBoolean = arrayN.indexOf(y+indices[dj]) >= 0;
+        //         if (wBoolean == true && hBoolean == true) {
+        //             //if (!(indeces[di]==0 && indeces[dj]==0)) {
+        //             var new_index = ((x+indices[di])*m)+(y+indices[dj]);
+        //             ret.push(new_index);
+        //             //}
+        //         }
+                
+        //     }
+        // }
+        // return ret;
+
+    }
+
+    allNeighbors() {
+        this._addresses();
+        for (var i = 0; i<this.pxHeight*this.pxWidth; i++) {
+            this._neighbors[i] = this.neighborsOf(i);
+        }
+        return this._neighbors
     }
 
     initMaterial(lowBnd, highBnd){

@@ -24,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
     neighborhood: {
       type: DataTypes.JSON,
     },
-    pointindex: {
+    voxelIndex: {
       type: DataTypes.INTEGER
     }
   }, {

@@ -29,7 +29,7 @@ module.exports = {
       neighborhood: {
         type: Sequelize.JSON,
       },
-      pointindex: {
+      voxelIndex: {
         type: Sequelize.INTEGER
       },
       createdAt: {
