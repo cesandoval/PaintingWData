@@ -12,11 +12,12 @@ export default class extends React.Component {
         console.log(999999999999999)
     }
     render(){
-        return(
-            <div>
-                NodeTypes
-                <input type="button" onClick={this.changeWeights} value="rofl"/>
-            </div>
-        );
+        // return(
+        //     <div>
+        //         NodeTypes
+        //         <input type="button" onClick={this.changeWeights} value="rofl"/>
+        //     </div>
+        // );
+        return;
     }
 }

@@ -11,11 +11,11 @@ const initFields = [
         name: "Layers",
         show: true
     },
-    {
-        field: <NodeTypes />,
-        name: "Node Types",
-        show: true
-    },
+    // {
+    //     field: <NodeTypes />,
+    //     name: "Node Types",
+    //     show: false
+    // },
 ]
 
 // Binding onClick makes it easy to figure out which

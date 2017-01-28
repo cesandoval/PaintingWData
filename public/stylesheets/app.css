@@ -20,7 +20,7 @@
     overflow: auto;
     position: fixed;
     left:0;
-    top:50px;
+    top:80px;
     bottom: 0;
 
     -webkit-box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
@@ -79,14 +79,36 @@
     background-color: white;
     /*border: 1px solid #f16752;*/
     border-bottom: 4px solid #f16752;
-    margin: 0 0 5px;
-    padding: 10px;
+    /*border-top: 4px solid #f16752;*/
+    margin: 0;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 
     font-size: 11pt;
 }
 
+.layer-label {
+    font-size: 11pt;
+    font-family: 'Overpass', sans-serif;
+    padding: 0;
+    text-transform: none;
+}
+
 .sidebar__box--name {
     background-color: white;
+    text-align: center;
+    display: block;
+    font-family: 'Overpass', sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    background-color: #F9CBC2;
+    color: black;
+    font-size: 14pt;
+    text-transform: uppercase;
+
+    border-bottom: 4px solid #f16752;
 }
 
 /*Arrows*/
@@ -104,4 +126,24 @@
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-bottom: 10px solid #fff;
+}
+
+
+/*Checkbox*/
+input[type=checkbox]{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+input[type="color" i] {
+    margin: 0;
+    border: 1px solid white;
+    background-color: transparent;
+    padding-right: 5px;
+    padding-left: 0;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+
+    -webkit-appearance: none;
 }
