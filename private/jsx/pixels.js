@@ -28,7 +28,7 @@ export default class Pixels {
 
         this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        this.initTransValsAttrs(this.geometry, dataArray, lowBnd, highBnd);
+        this.initTransValsAttrs(this.geometry, dataArray, this.addresses, lowBnd, highBnd);
         this.material = this.initMaterial(lowBnd, highBnd);
 
         this.neighborsOf(8);
@@ -74,7 +74,9 @@ export default class Pixels {
     // Create a InstancedBufferGeometry Object
     // See Three.js Docs for more info
     initGeometry() {
-        return new THREE.InstancedBufferGeometry();
+        const buffer_geometry = new THREE.InstancedBufferGeometry();
+        buffer_geometry.dynamic = true;
+        return buffer_geometry;
     }
 
     setGeometry(geometry, geometryObject) {
@@ -161,23 +163,21 @@ export default class Pixels {
     //     }
     // }
 
-    initTransValsAttrs(geometry, dataArray, lowBnd, highBnd) {
+    initTransValsAttrs(geometry, dataArray, addresses, lowBnd, highBnd) {
         const allElements = this.pxWidth * this.pxHeight;
-        console.log(allElements);
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        const translations = this.initAttribute(numElements * 3, 3, true);
-        const values = this.initAttribute(numElements, 1, true);
+        const translations = this.initAttribute(allElements * 3, 3, true);
+        const values = this.initAttribute(allElements, 1, true);
 
         const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
         const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
-            translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
-            values.setX(j, remap(dataArray[i+2]));
+            let currIndex = addresses[i+2]
+            translations.setXYZ(currIndex, dataArray[i], 0, -dataArray[i+1]);
+            values.setX(currIndex, remap(dataArray[i+2]));
         }
-        //
-        console.log(values)
         this.setAttributes(geometry, translations, values);
     }
 
@@ -187,6 +187,7 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
+        geometry.attributes.size.needsUpdate = true;
     }
 
     neighborsOf(numberOfNeighbors) {
@@ -203,19 +204,32 @@ export default class Pixels {
 
         var numberOfNeighbors = 0;
 
-        const neighbors =  new Float32Array(addresses.length);
+        const neighbors =  new Float32Array(this.pxWidth * this.pxHeight);
+        let sizes = this.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
-            let currNeighbors = new Float32Array(numberOfNeighbors);
+            if (numberOfNeighbors == 0) {
+                var currNeighbors = new Float32Array(1);
+            }
+            else {
+                var currNeighbors = new Float32Array(numberOfNeighbors);
+            }
             let row = addresses[i];
             let col = addresses[i+1];
-            let currIndex = col * this.pxHeight;
+            let currIndex = addresses[i+2];
+
             if (numberOfNeighbors == 0) {
-                neighbors[i] = [currIndex];
+                currNeighbors[0] = currIndex;
             }
 
+            const currSizes = this.geometry.attributes.size.array;
+            let totalSize = 0;
+            for (let n=0; n<currNeighbors.length; n++) {
+                totalSize += currSizes[currNeighbors[n]];
+            }
+            let avgSize = totalSize/currNeighbors.length;
+            neighbors[currIndex] = avgSize;
         }
-        // console.log(neighbors);
-
+        this.geometry.attributes.size.array = neighbors;
 
         // var m = this.pxWidth;
         // var n = this.pxHeight;

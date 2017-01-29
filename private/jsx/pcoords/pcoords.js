@@ -24,7 +24,6 @@ class PCoords extends React.Component {
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
-            console.log(nprops.layers[0].geojson)
             for (let i = 0; i<nprops.layers.length; i++) {
                 mins[i] = nprops.layers[i].geojson.minMax[0];
                 maxs[i] = nprops.layers[i].geojson.minMax[1];
