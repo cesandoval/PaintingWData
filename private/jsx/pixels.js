@@ -191,72 +191,52 @@ export default class Pixels {
     }
 
     neighborsOf(numberOfNeighbors) {
+        var numberOfNeighbors = 3;
+
         const addresses = this.addresses;
         const currValues = this.mesh.geometry.attributes.size.array;
 
-        // neighborhood: {
-        //     column: Math.floor(i/rows),
-        //     row: i%rows
-        // }, 
-
-        // console.log(addresses);
-        // console.log(currValues);
-
-        var numberOfNeighbors = 0;
-
         const neighbors =  new Float32Array(this.pxWidth * this.pxHeight);
+        const indices = [-1, 0, 1];
+        const arrayM = Array.apply(null, Array(this.pxWidth)).map(function (_, i) {return i;});
+        const arrayN = Array.apply(null, Array(this.pxHeight)).map(function (_, i) {return i;});
+
         let sizes = this.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
+            let currIndex = addresses[i+2];
+            const currSizes = this.geometry.attributes.size.array;
+
             if (numberOfNeighbors == 0) {
-                var currNeighbors = new Float32Array(1);
+                neighbors[currIndex] = currSizes[currIndex];
             }
             else {
-                var currNeighbors = new Float32Array(numberOfNeighbors);
-            }
-            let row = addresses[i];
-            let col = addresses[i+1];
-            let currIndex = addresses[i+2];
+                var currNeighbors = new Float32Array(9);
+                let row = addresses[i];
+                let col = addresses[i+1];
 
-            if (numberOfNeighbors == 0) {
-                currNeighbors[0] = currIndex;
+                let n = 0
+                for (let di = 0; di < indices.length; di++) {
+                    for (let dj = 0; dj < indices.length; dj++) {
+                        let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
+                        let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
+                        if (wBoolean == true && hBoolean == true) {
+                            let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
+                            currNeighbors[n] = new_index;
+                        }
+                        n++
+                    }
+                }
+                // currNeighbors[0] = currIndex;
+                
+                let totalSize = 0;
+                for (let n=0; n<currNeighbors.length; n++) {
+                    totalSize += currSizes[currNeighbors[n]];
+                }
+                let avgSize = totalSize/9;
+                neighbors[currIndex] = avgSize;
             }
-
-            const currSizes = this.geometry.attributes.size.array;
-            let totalSize = 0;
-            for (let n=0; n<currNeighbors.length; n++) {
-                totalSize += currSizes[currNeighbors[n]];
-            }
-            let avgSize = totalSize/currNeighbors.length;
-            neighbors[currIndex] = avgSize;
         }
         this.geometry.attributes.size.array = neighbors;
-
-        // var m = this.pxWidth;
-        // var n = this.pxHeight;
-        // var pixelAddress = this._pixels[pixelIndex];
-        // var x = pixelAddress[0];
-        //     y = pixelAddress[1];
-        
-        // var indices = [-1, 0, 1];
-        // var ret = [];
-        // var arrayM = Array.apply(null, Array(m)).map(function (_, i) {return i;});
-        // var arrayN = Array.apply(null, Array(n)).map(function (_, i) {return i;});
-        
-        // for (var di = 0; di < indices.length; di++) {
-        //     for (var dj = 0; dj < indices.length; dj ++) {
-        //         var wBoolean = arrayM.indexOf(x+indices[di]) >= 0;
-        //         var hBoolean = arrayN.indexOf(y+indices[dj]) >= 0;
-        //         if (wBoolean == true && hBoolean == true) {
-        //             //if (!(indeces[di]==0 && indeces[dj]==0)) {
-        //             var new_index = ((x+indices[di])*m)+(y+indices[dj]);
-        //             ret.push(new_index);
-        //             //}
-        //         }
-                
-        //     }
-        // }
-        // return ret;
-
     }
 
     allNeighbors() {
