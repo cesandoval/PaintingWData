@@ -47,9 +47,11 @@
 
 .options--react {
     position: fixed;
-    top: 50px;
-    left: 20vw;
-    background-color: orange;
+    bottom: 0;
+    height: 50px;
+    width: calc(100vw - 300px);
+    left: 300px;
+    background-color: #F9CBC2;
 }
 
 /*Options*/
@@ -62,7 +64,7 @@
     text-align: center;
     position: absolute;
     bottom:0;
-    right:0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,7 +80,7 @@
 .layers__single {
     background-color: white;
     /*border: 1px solid #f16752;*/
-    border-bottom: 2px solid #f16752;
+    border-bottom: 2px solid #F9CBC2;
     /*border-top: 4px solid #f16752;*/
     margin: 0;
     padding-top: 15px;
@@ -108,7 +110,7 @@
     font-size: 14pt;
     text-transform: uppercase;
 
-    border-bottom: 4px solid #f16752;
+    border-bottom: 4px solid #F9CBC2;
 }
 
 /*Arrows*/
