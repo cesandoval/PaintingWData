@@ -5,6 +5,8 @@ import * as act from '../store/actions';
 class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
+
+    // TODO EVERYTIME THE COLOR GETS UPDATED, THE PCOORDS GET RESTARTED, BUT THE MIN/MAX VALS DONT
     constructor(props){
         super(props);
 
@@ -45,14 +47,11 @@ class PCoords extends React.Component {
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
-            // TODO GET RID OF GEOJSON.DATA AND SIMPLY REMAP THE RANGES....
-            // CURRENTLY SUPER INEFFICIENT TO SEND THE ARRAYS TWICE....
-            // const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
             let build = [];
             for(let i = 0; i < numElements; i++ ){
                 let inBuild = Array(numLayers);
                 for (let j = 0; j < numLayers; j++){
-                    inBuild[j] = nprops.layers[j].geojson.data[Math.floor(i / 200)][i % 200][3];
+                    inBuild[j] = nprops.layers[j].geojson.otherdata[i][3];
                 }
                 build.push(inBuild);
             }

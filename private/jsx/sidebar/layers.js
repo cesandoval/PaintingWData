@@ -33,7 +33,7 @@ class Layers extends React.Component {
                         name: l.geojson.layername,
                         type: l.geojson.geojson.features[0].geometry.type,
                         length: length,
-                        data: Array(Math.floor(Math.sqrt(length))),
+                        // data: Array(Math.floor(Math.sqrt(length))),
                         otherdata: Array(length),
                         minMax: Array(2), 
                     }
@@ -51,10 +51,10 @@ class Layers extends React.Component {
                         return new Float32Array([coords[0], coords[1], 0, weight, 1, row, column, pointIndex]);
                     });
                     // mappedGeojson.sort();
-                    for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
-                        let j = i * 200;
-                        transGeojson.data[i] = mappedGeojson.slice(j, j+200);
-                    }
+                    // for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
+                    //     let j = i * 200;
+                    //     transGeojson.data[i] = mappedGeojson.slice(j, j+200);
+                    // }
 
                     let minVal = Number.POSITIVE_INFINITY;
                     let maxVal = Number.NEGATIVE_INFINITY;
@@ -65,8 +65,8 @@ class Layers extends React.Component {
                         transGeojson.otherdata[i] = mappedGeojson[i];
                     }
                     transGeojson.minMax= [minVal, maxVal]
-
-                    return createLayer(l.layername, propertyName, true, l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols);
+                    return createLayer(l.geojson.geojson.features[0].properties.property, propertyName, true, 
+                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols);
                 }));
             });
     }

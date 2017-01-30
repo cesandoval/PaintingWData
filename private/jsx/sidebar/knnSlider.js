@@ -7,6 +7,10 @@ class KnnSlider extends React.Component {
         super(props);
         
     }
+    componentWillReceiveProps(nprops){
+        //nprops.mapStarted
+        // console.log(nprops);
+    }
     
     render() {
         return(
