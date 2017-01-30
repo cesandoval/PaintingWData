@@ -98,10 +98,6 @@ export default class Pixels {
         const startColor = datajson.color1;
         const endColor = datajson.color2;
 
-
-        let minVal = Number.POSITIVE_INFINITY;
-        let maxVal = Number.NEGATIVE_INFINITY;
-
         for (let i = 0, j=0; i < otherData.length; i++, j=j+3){
             // x, y coordinates
             otherArray[j] = otherData[i][0];
@@ -113,12 +109,7 @@ export default class Pixels {
             addressArray[j] = otherData[i][5];
             addressArray[j+1] = otherData[i][6];
             addressArray[j+2] = otherData[i][7];
-
-            if (otherData[i][3]<minVal) { minVal=otherData[i][3] };
-            if (otherData[i][3]>maxVal) { maxVal=otherData[i][3]};
         }
-
-        const minMax = [minVal, maxVal];
 
         // Julian's Implementation, does not parse the JSON correctly
         //  But is memory efficient... FIX ME!!!!
@@ -143,7 +134,7 @@ export default class Pixels {
             //array[j+2] = datajson.geojson[i].properties[datajson.name];
         //}
 
-        return { otherArray, startColor, endColor, minMax, addressArray};
+        return { otherArray, startColor, endColor, addressArray};
 
     }
 
@@ -191,10 +182,10 @@ export default class Pixels {
     }
 
     neighborsOf(numberOfNeighbors) {
-        var numberOfNeighbors = 3;
+        var numberOfNeighbors = 8;
 
         const addresses = this.addresses;
-        const currValues = this.mesh.geometry.attributes.size.array;
+        const currSizes = this.geometry.attributes.size.array;
 
         const neighbors =  new Float32Array(this.pxWidth * this.pxHeight);
         const indices = [-1, 0, 1];
@@ -204,47 +195,68 @@ export default class Pixels {
         let sizes = this.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
             let currIndex = addresses[i+2];
-            const currSizes = this.geometry.attributes.size.array;
-
+            
             if (numberOfNeighbors == 0) {
                 neighbors[currIndex] = currSizes[currIndex];
             }
             else {
-                var currNeighbors = new Float32Array(9);
+                if (numberOfNeighbors < 5) {
+                    var currNeighbors = new Float32Array(5);
+                } else {
+                    var currNeighbors = new Float32Array(9);
+                }
                 let row = addresses[i];
                 let col = addresses[i+1];
 
-                let n = 0
+                let n = 0;
+                let k = 0;
                 for (let di = 0; di < indices.length; di++) {
                     for (let dj = 0; dj < indices.length; dj++) {
                         let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
                         let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
-                        if (wBoolean == true && hBoolean == true) {
-                            let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
-                            currNeighbors[n] = new_index;
+                        if (numberOfNeighbors < 5) {
+                            if (wBoolean == true && hBoolean == true && n%2==0) {
+                                let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
+                                currNeighbors[k] = new_index;
+                                k++
+                            }
+                        } else {
+                            if (wBoolean == true && hBoolean == true) {
+                                let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
+                                currNeighbors[n] = new_index;
+                                n++
+                            }
                         }
-                        n++
+                        
                     }
                 }
-                // currNeighbors[0] = currIndex;
-                
-                let totalSize = 0;
-                for (let n=0; n<currNeighbors.length; n++) {
-                    totalSize += currSizes[currNeighbors[n]];
+
+                if (numberOfNeighbors != 4 && numberOfNeighbors != 8) { 
+                    var randomNeighbors = this.randomPick(currNeighbors, numberOfNeighbors);
+                } else {
+                    var randomNeighbors = currNeighbors; 
                 }
-                let avgSize = totalSize/9;
-                neighbors[currIndex] = avgSize;
+
+                let totalSize = 0;
+                for (let n=0; n<randomNeighbors.length; n++) {
+                    totalSize += currSizes[randomNeighbors[n]];
+                    
+                }
+                neighbors[currIndex] = totalSize/(numberOfNeighbors+1);
             }
         }
         this.geometry.attributes.size.array = neighbors;
     }
 
-    allNeighbors() {
-        this._addresses();
-        for (var i = 0; i<this.pxHeight*this.pxWidth; i++) {
-            this._neighbors[i] = this.neighborsOf(i);
+    randomPick(myArray,nb_picks){
+        for (var i = myArray.length-1; i > 1  ; i--)
+        {
+            var r = Math.floor(Math.random()*i);
+            var t = myArray[i];
+            myArray[i] = myArray[r];
+            myArray[r] = t;
         }
-        return this._neighbors
+        return myArray.slice(0,nb_picks+1);
     }
 
     initMaterial(lowBnd, highBnd){
