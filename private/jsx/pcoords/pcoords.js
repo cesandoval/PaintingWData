@@ -19,11 +19,8 @@ class PCoords extends React.Component {
 
     }
     componentWillReceiveProps(nprops){
-        //nprops.mapStarted
         if(true && nprops.layers.length > 0){
             this.setState({started: true});
-            console.log(9999999999999999)
-            console.log(nprops.layers)
 
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
@@ -53,19 +50,14 @@ class PCoords extends React.Component {
 
             console.log(visibleLayers)
 
-            // let build = [];
             let dictBuild = Array(numElements);
             for(let i = 0; i < numElements; i++ ){
-                // let inBuild = Array(numLayers);
                 let inDict = {}
                 for (let j = 0; j < numLayers; j++){
-                    inDict[nprops.layers[j].propertyName] = nprops.layers[j].geojson.otherdata[i][3];
-                    // inBuild[j] = nprops.layers[j].geojson.otherdata[i][3];
+                    inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
                 }
                 dictBuild[i] = inDict;
-                // build.push(inBuild);
             }
-            // console.log(dictBuild);
             this.build(dictBuild)
             this.layerIndeces = layerIndeces           
         }
@@ -122,10 +114,6 @@ class PCoords extends React.Component {
         }
 
         for (let name in minObjs) {
-            console.log(name)
-            console.log(this.props.geometries, this.props.geometries[name])
-            console.log(name, this.layerIndeces[name])
-            console.log(this.minVal, this.maxVal)
             let pixels = this.props.geometries[name];
             pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
