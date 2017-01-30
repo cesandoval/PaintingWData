@@ -22,11 +22,15 @@ class PCoords extends React.Component {
         //nprops.mapStarted
         if(true && nprops.layers.length > 0){
             this.setState({started: true});
+            console.log(9999999999999999)
+            console.log(nprops.layers)
 
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
+            const layerIndeces = {};
             for (let i = 0; i<nprops.layers.length; i++) {
+                layerIndeces[nprops.layers[i].propertyName] = i
                 mins[i] = nprops.layers[i].geojson.minMax[0];
                 maxs[i] = nprops.layers[i].geojson.minMax[1];
             }
@@ -47,16 +51,23 @@ class PCoords extends React.Component {
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
-            let build = [];
-            for(let i = 0; i < numElements; i++ ){
-                let inBuild = Array(numLayers);
-                for (let j = 0; j < numLayers; j++){
-                    inBuild[j] = nprops.layers[j].geojson.otherdata[i][3];
-                }
-                build.push(inBuild);
-            }
+            console.log(visibleLayers)
 
-            this.build(build)
+            // let build = [];
+            let dictBuild = Array(numElements);
+            for(let i = 0; i < numElements; i++ ){
+                // let inBuild = Array(numLayers);
+                let inDict = {}
+                for (let j = 0; j < numLayers; j++){
+                    inDict[nprops.layers[j].propertyName] = nprops.layers[j].geojson.otherdata[i][3];
+                    // inBuild[j] = nprops.layers[j].geojson.otherdata[i][3];
+                }
+                dictBuild[i] = inDict;
+                // build.push(inBuild);
+            }
+            // console.log(dictBuild);
+            this.build(dictBuild)
+            this.layerIndeces = layerIndeces           
         }
     }
 
@@ -90,6 +101,7 @@ class PCoords extends React.Component {
     calcRanges(data){
         const brushSelection = this.pc.brushExtents();
         const layerNames = Object.keys(brushSelection);
+        console.log(layerNames)
 
         // Calculate range of data
         let maxObjs = {}
@@ -108,11 +120,15 @@ class PCoords extends React.Component {
         const remap = function(x, i, mins, maxs) {
             return (highBnd-lowBnd)*((x-mins[i])/(maxs[i]-mins[i]))+lowBnd;
         }
-        for (let index in minObjs) {
-            let name = this.props.layers[index].name;
+
+        for (let name in minObjs) {
+            console.log(name)
+            console.log(this.props.geometries, this.props.geometries[name])
+            console.log(name, this.layerIndeces[name])
+            console.log(this.minVal, this.maxVal)
             let pixels = this.props.geometries[name];
-            pixels.material.uniforms.min.value = remap(minObjs[index], index, this.minVal, this.maxVal);
-            pixels.material.uniforms.max.value = remap(maxObjs[index], index, this.minVal, this.maxVal);
+            pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
+            pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
         }
     }
     style() {
