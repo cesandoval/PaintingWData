@@ -28,7 +28,7 @@ export default class Pixels {
 
         this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        this.initTransValsAttrs(this.geometry, dataArray, lowBnd, highBnd);
+        this.initTransValsAttrs(this.geometry, dataArray, this.addresses, lowBnd, highBnd);
         this.material = this.initMaterial(lowBnd, highBnd);
 
         this.neighborsOf(8);
@@ -74,7 +74,9 @@ export default class Pixels {
     // Create a InstancedBufferGeometry Object
     // See Three.js Docs for more info
     initGeometry() {
-        return new THREE.InstancedBufferGeometry();
+        const buffer_geometry = new THREE.InstancedBufferGeometry();
+        buffer_geometry.dynamic = true;
+        return buffer_geometry;
     }
 
     setGeometry(geometry, geometryObject) {
@@ -161,23 +163,21 @@ export default class Pixels {
     //     }
     // }
 
-    initTransValsAttrs(geometry, dataArray, lowBnd, highBnd) {
+    initTransValsAttrs(geometry, dataArray, addresses, lowBnd, highBnd) {
         const allElements = this.pxWidth * this.pxHeight;
-        console.log(allElements);
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        const translations = this.initAttribute(numElements * 3, 3, true);
-        const values = this.initAttribute(numElements, 1, true);
+        const translations = this.initAttribute(allElements * 3, 3, true);
+        const values = this.initAttribute(allElements, 1, true);
 
         const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
         const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
-            translations.setXYZ(j, dataArray[i], 0, -dataArray[i+1]);
-            values.setX(j, remap(dataArray[i+2]));
+            let currIndex = addresses[i+2]
+            translations.setXYZ(currIndex, dataArray[i], 0, -dataArray[i+1]);
+            values.setX(currIndex, remap(dataArray[i+2]));
         }
-        //
-        console.log(values)
         this.setAttributes(geometry, translations, values);
     }
 
@@ -187,62 +187,56 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
+        geometry.attributes.size.needsUpdate = true;
     }
 
     neighborsOf(numberOfNeighbors) {
+        var numberOfNeighbors = 3;
+
         const addresses = this.addresses;
         const currValues = this.mesh.geometry.attributes.size.array;
 
-        // neighborhood: {
-        //     column: Math.floor(i/rows),
-        //     row: i%rows
-        // }, 
+        const neighbors =  new Float32Array(this.pxWidth * this.pxHeight);
+        const indices = [-1, 0, 1];
+        const arrayM = Array.apply(null, Array(this.pxWidth)).map(function (_, i) {return i;});
+        const arrayN = Array.apply(null, Array(this.pxHeight)).map(function (_, i) {return i;});
 
-        // console.log(addresses);
-        // console.log(currValues);
-
-        var numberOfNeighbors = 0;
-
-        const neighbors =  new Float32Array(addresses.length);
+        let sizes = this.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
-            let currNeighbors = new Float32Array(numberOfNeighbors);
-            let row = addresses[i];
-            let col = addresses[i+1];
-            let currIndex = col * this.pxHeight;
+            let currIndex = addresses[i+2];
+            const currSizes = this.geometry.attributes.size.array;
+
             if (numberOfNeighbors == 0) {
-                neighbors[i] = [currIndex];
+                neighbors[currIndex] = currSizes[currIndex];
             }
+            else {
+                var currNeighbors = new Float32Array(9);
+                let row = addresses[i];
+                let col = addresses[i+1];
 
-        }
-        // console.log(neighbors);
-
-
-        // var m = this.pxWidth;
-        // var n = this.pxHeight;
-        // var pixelAddress = this._pixels[pixelIndex];
-        // var x = pixelAddress[0];
-        //     y = pixelAddress[1];
-        
-        // var indices = [-1, 0, 1];
-        // var ret = [];
-        // var arrayM = Array.apply(null, Array(m)).map(function (_, i) {return i;});
-        // var arrayN = Array.apply(null, Array(n)).map(function (_, i) {return i;});
-        
-        // for (var di = 0; di < indices.length; di++) {
-        //     for (var dj = 0; dj < indices.length; dj ++) {
-        //         var wBoolean = arrayM.indexOf(x+indices[di]) >= 0;
-        //         var hBoolean = arrayN.indexOf(y+indices[dj]) >= 0;
-        //         if (wBoolean == true && hBoolean == true) {
-        //             //if (!(indeces[di]==0 && indeces[dj]==0)) {
-        //             var new_index = ((x+indices[di])*m)+(y+indices[dj]);
-        //             ret.push(new_index);
-        //             //}
-        //         }
+                let n = 0
+                for (let di = 0; di < indices.length; di++) {
+                    for (let dj = 0; dj < indices.length; dj++) {
+                        let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
+                        let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
+                        if (wBoolean == true && hBoolean == true) {
+                            let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
+                            currNeighbors[n] = new_index;
+                        }
+                        n++
+                    }
+                }
+                // currNeighbors[0] = currIndex;
                 
-        //     }
-        // }
-        // return ret;
-
+                let totalSize = 0;
+                for (let n=0; n<currNeighbors.length; n++) {
+                    totalSize += currSizes[currNeighbors[n]];
+                }
+                let avgSize = totalSize/9;
+                neighbors[currIndex] = avgSize;
+            }
+        }
+        this.geometry.attributes.size.array = neighbors;
     }
 
     allNeighbors() {
