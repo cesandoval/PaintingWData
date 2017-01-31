@@ -31,7 +31,6 @@ export default class Pixels {
         this.initTransValsAttrs(this.geometry, dataArray, this.addresses, lowBnd, highBnd);
         this.material = this.initMaterial(lowBnd, highBnd);
 
-        // this.neighborsOf(8);
         this.addToScene(graph.scene);
     }
 
@@ -164,84 +163,6 @@ export default class Pixels {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
         geometry.addAttribute('originalsize', originalValues);
-    }
-
-    neighborsOf(numberOfNeighbors) {
-        var numberOfNeighbors = 8;
-
-        const addresses = this.addresses;
-        const currSizes = this.geometry.attributes.size.array;
-
-        const neighbors =  new Float32Array(this.pxWidth * this.pxHeight);
-        const indices = [-1, 0, 1];
-        const arrayM = Array.apply(null, Array(this.pxWidth)).map(function (_, i) {return i;});
-        const arrayN = Array.apply(null, Array(this.pxHeight)).map(function (_, i) {return i;});
-
-        for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
-            let currIndex = addresses[i+2];
-            
-            if (numberOfNeighbors == 0) {
-                neighbors[currIndex] = currSizes[currIndex];
-            }
-            else {
-                if (numberOfNeighbors < 5) {
-                    var currNeighbors = new Float32Array(5);
-                } else {
-                    var currNeighbors = new Float32Array(9);
-                }
-                let row = addresses[i];
-                let col = addresses[i+1];
-
-                let n = 0;
-                let k = 0;
-                for (let di = 0; di < indices.length; di++) {
-                    for (let dj = 0; dj < indices.length; dj++) {
-                        let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
-                        let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
-                        if (numberOfNeighbors < 5) {
-                            if (wBoolean == true && hBoolean == true && n%2==0) {
-                                let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
-                                currNeighbors[k] = new_index;
-                                k++
-                            }
-                        } else {
-                            if (wBoolean == true && hBoolean == true) {
-                                let new_index = ((col+indices[di])*this.pxHeight)+(row+indices[dj]);
-                                currNeighbors[n] = new_index;
-                                n++
-                            }
-                        }
-                        
-                    }
-                }
-
-                if (numberOfNeighbors != 4 && numberOfNeighbors != 8) { 
-                    var randomNeighbors = this.randomPick(currNeighbors, numberOfNeighbors);
-                } else {
-                    var randomNeighbors = currNeighbors; 
-                }
-
-                let totalSize = 0;
-                for (let n=0; n<randomNeighbors.length; n++) {
-                    totalSize += currSizes[randomNeighbors[n]];
-                    
-                }
-                neighbors[currIndex] = totalSize/(numberOfNeighbors+1);
-            }
-        }
-        console.log(neighbors);
-        this.geometry.attributes.size.array = neighbors;
-    }
-
-    randomPick(myArray,nb_picks){
-        for (var i = myArray.length-1; i > 1  ; i--)
-        {
-            var r = Math.floor(Math.random()*i);
-            var t = myArray[i];
-            myArray[i] = myArray[r];
-            myArray[r] = t;
-        }
-        return myArray.slice(0,nb_picks+1);
     }
 
     initMaterial(lowBnd, highBnd){
