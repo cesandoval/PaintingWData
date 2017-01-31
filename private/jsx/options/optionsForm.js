@@ -37,12 +37,10 @@ class OptionsForm extends React.Component {
     render() {
         return(
             <div style={this.props.style} className="optionsForm">
-                <div>
-                    <input type="checkbox"
-                        onChange={this.gridControl}
-                        checked={this.state.grid} />
-                    Grid
-                </div>
+                <input type="checkbox"
+                    onChange={this.gridControl}
+                    checked={this.state.grid} />
+                Grid
             </div>
         );
     }

@@ -38,11 +38,17 @@ class Layer extends React.Component {
         }
     }
     render() {
+        console.log(this.props);
         return(
             <div className="layers__single">
                 <div className="row">
                     <div className="col-md-6">
                         <p className="layer-label">{this.props.name}</p>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
+                        <p className="layer-label-small">{this.props.propName}</p>
                     </div>
                     <div className="col-md-6">
                         <div className="text-right">
@@ -59,6 +65,7 @@ class Layer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
+        layers: state.sidebar.layers,
         geometries: state.map.geometries
     };
 }

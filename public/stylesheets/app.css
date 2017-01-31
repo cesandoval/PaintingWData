@@ -48,7 +48,7 @@
 .options--react {
     position: fixed;
     bottom: 0;
-    height: 50px;
+    height: 30px;
     width: calc(100vw - 300px);
     left: 300px;
     background-color: #F9CBC2;
@@ -101,18 +101,26 @@
     text-transform: none;
 }
 
+.layer-label-small {
+    font-size: 9pt;
+    font-family: 'Overpass', sans-serif;
+    padding: 0;
+    text-transform: none;
+}
+
 .sidebar__box--name {
     background-color: white;
     text-align: center;
     display: block;
     font-family: 'Overpass', sans-serif;
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
 
     background-color: #F9CBC2;
     color: black;
     font-size: 14pt;
     text-transform: uppercase;
+    height: 40px;
 
     border-bottom: 4px solid #F9CBC2;
 }
@@ -138,6 +146,8 @@
 input[type=checkbox]{
   margin-left: 5px;
   margin-right: 5px;
+  font-family: 'Overpass', sans-serif;
+  display: inline-block;
 }
 
 input[type="color" i] {

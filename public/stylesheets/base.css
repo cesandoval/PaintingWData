@@ -562,22 +562,30 @@ label {
 }
 
 .buttons {
-    height:7vh;
+    height:30px;
     bottom: 0px;
-    line-height: 5vh;
+    line-height: 30px;
     border-radius: 0;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Overpass', sans-serif;
     font-weight: 500;
     vertical-align: middle;
+    display: inline-block;
     color: white;
     margin-bottom: 0px;
     margin-top: 0px;
     background-color: #D34031;
+    border: none;
+    padding: 0;
 }
 
-ul a:hover.buttons {
+.buttons:active, buttons:focus {
+    background-color: #B2322B;
+    color: white;
+}
+
+.buttons:hover {
 	background-color: #B2322B;
 	cursor: pointer;
     color: white;

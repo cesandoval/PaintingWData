@@ -146,7 +146,7 @@ class PCoords extends React.Component {
             height: "300px",
             position: "fixed",
             overflow: "auto",
-            bottom: "0",
+            bottom: "30px",
             right: "0",
             zIndex: "10",
             opacity: .5
