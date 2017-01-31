@@ -38,6 +38,7 @@
     "passport-local-authenticate": "^1.2.0",
     "pg": "6.0.1",
     "rangeslider.js": "^2.3.0",
+    "react-bootstrap": "^0.30.7",
     "request": "^2.73.0",
     "sequelize": "3.23.4",
     "sequelize-cli": "^2.4.0",

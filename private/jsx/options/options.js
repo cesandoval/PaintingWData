@@ -2,6 +2,7 @@ import React from 'react';
 
 import OptionsButton from './optionsButton';
 import OptionsForm  from './optionsForm';
+import Button from 'react-bootstrap/lib/Button';
 
 const openedStyle = {
     height:'20em',
@@ -23,7 +24,7 @@ export default class extends React.Component {
             <div className="options--react">
                 <OptionsForm style={this.state.style} />
                 <OptionsButton onClick={this.resize} down={this.state.style.width=='20em'}/>
-                <a id="show", className="buttons dataText btn buttonsText"> Data </a>
+                <Button id="show" className="buttons dataText btn buttonsText"> Data </Button>
             </div>
         );
     }
