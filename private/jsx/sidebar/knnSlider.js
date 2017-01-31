@@ -19,7 +19,6 @@ class KnnSlider extends React.Component {
     }
 
     handleSlide(){
-
         let numberOfNeighbors = document.getElementById('knnSlider').value;
 
         for(var key in this.geometries) {
@@ -34,16 +33,17 @@ class KnnSlider extends React.Component {
         // TODO THIS NEEDS TO KEEP TRACK OF THE ORIGINAL VALUES SOMEHOW
         // PERHAPS THE ORIGINAL VALS CAN BE GRABBED FROM PROPS INSTEAD OF NPROPS
         // THIS MIGHT HAVE TO ALSO UPDATE THE COLOR RANGES.....
-        // console.log(layerName)
         const addresses = layer.addresses;
-        const currSizes = layer.geometry.attributes.size.array;
+        const currSizes = layer.geometry.attributes.originalsize.array;
+        // console.log(5555555)
+        // console.log(currSizes);
+        // console.log(this.props.geometries['OBJECTID'].geometry.attributes.size.array)
 
         const neighbors =  new Float32Array(layer.pxWidth * layer.pxHeight);
         const indices = [-1, 0, 1];
         const arrayM = Array.apply(null, Array(layer.pxWidth)).map(function (_, i) {return i;});
         const arrayN = Array.apply(null, Array(layer.pxHeight)).map(function (_, i) {return i;});
 
-        let sizes = layer.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
             let currIndex = addresses[i+2];
             
@@ -98,11 +98,11 @@ class KnnSlider extends React.Component {
         }
         // console.log(layer.geometry.attributes.size.array)
         let pixels = this.props.geometries[layerName];
-
         
         pixels.geometry.attributes.size.needsUpdate = true;
         // console.log(pixels.geometry.attributes.size.array)
-        
+        console.log(neighbors);
+        console.log(pixels.geometry.attributes.originalsize.array)
         pixels.geometry.attributes.size.array = neighbors;
         // console.log(pixels.geometry.attributes.size.array)
         // pixels.material.uniforms.min.value = 0.006;
