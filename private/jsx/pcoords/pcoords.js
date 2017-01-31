@@ -48,22 +48,36 @@ class PCoords extends React.Component {
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
-            console.log(visibleLayers)
-
             let dictBuild = Array(numElements);
+
+            var brushedLayers;
+            if (typeof this.minObjs != 'undefined') {
+                brushedLayers = Object.keys(this.minObjs);
+                console.log(brushedLayers)
+            }
             for(let i = 0; i < numElements; i++ ){
                 let inDict = {}
                 for (let j = 0; j < numLayers; j++){
+                    if (typeof this.minObjs != 'undefined' && i<3) {
+                        var currVal = visibleLayers[j].geojson.otherdata[i][3];
+                        console.log(visibleLayers[j].propertyName, this.minObjs[visibleLayers[j].propertyName])
+                        console.log(visibleLayers[j].propertyName, this.minObjs)
+                        console.log(visibleLayers);
+                        if (currVal >= this.minObjs[visibleLayers[j].propertyName] &&  currVal >= this.maxObjs[visibleLayers[j].propertyName]) {
+                            console.log(visibleLayers[j].propertyName)
+                            // inDict[visibleLayers[j].propertyName] = currVal;
+                        }
+                    } 
                     inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
                 }
                 dictBuild[i] = inDict;
             }
-            this.build(dictBuild)
-            this.layerIndeces = layerIndeces           
+            this.build(dictBuild, 1)
+            this.layerIndeces = layerIndeces 
         }
     }
 
-    build(data) {
+    build(data, test) {
         let minVal = this.minVal[0];
         let maxVal = this.maxVal[0];
 
@@ -86,14 +100,18 @@ class PCoords extends React.Component {
             .reorderable()
             .brushMode("1D-axes");
         pc.on("brushend", this.calcRanges.bind(this));
+        console.log(555555555)
         this.pc = pc;
         this.setState({pc: pc});
     }
 
     calcRanges(data){
+        this.pc.randoms = true;
+        // console.log(this.pc.brushed())
+        // console.log(this.pc.state)
+
         const brushSelection = this.pc.brushExtents();
         const layerNames = Object.keys(brushSelection);
-        console.log(layerNames)
 
         // Calculate range of data
         let maxObjs = {}
@@ -105,7 +123,9 @@ class PCoords extends React.Component {
                 maxObjs[layerNames[i]] = selection[1];
             }
         }
-
+        this.minObjs = minObjs;
+        this.maxObjs = maxObjs;
+        
         // Update Layers
         const lowBnd = .0015;
         const highBnd = .012;        

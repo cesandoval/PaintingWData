@@ -33,7 +33,7 @@ export default (state=initialSidebarState, action) => {
                     return layer;
                 }
             });
-            console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
+            // console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
             return Object.assign({}, state, {layers: newLayers});
 
         case c.SIDE_REMOVE_LAYER: // just fall through for now.
