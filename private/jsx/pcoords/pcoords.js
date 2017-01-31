@@ -16,7 +16,6 @@ class PCoords extends React.Component {
 
         this.build = this.build.bind(this);
         this.calcRanges = this.calcRanges.bind(this);
-
     }
     componentWillReceiveProps(nprops){
         if(true && nprops.layers.length > 0){

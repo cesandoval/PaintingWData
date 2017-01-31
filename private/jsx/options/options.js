@@ -9,30 +9,21 @@ const openedStyle = {
     padding:'1em'
 }
 
-const closedStyle = {
-    height:'2em',
-    width:'2em',
-    padding:'0em'
-}
-
 export default class extends React.Component {
     constructor(props){
         super(props);
-        this.state = {style: closedStyle};
+        this.state = {style: openedStyle};
         this.resize = this.resize.bind(this);
     }
     resize() {
-        if (this.state.style.width == '20em'){
-            this.setState({style: closedStyle})
-        } else {
-            this.setState({style: openedStyle})
-        }
+        this.setState({style: openedStyle});
     }
     render() {
         return(
             <div className="options--react">
                 <OptionsForm style={this.state.style} />
                 <OptionsButton onClick={this.resize} down={this.state.style.width=='20em'}/>
+                <a id="show", className="buttons dataText btn buttonsText"> Data </a>
             </div>
         );
     }

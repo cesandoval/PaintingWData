@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import Layers from './layers';
 import NodeTypes from './nodetypes'
 import * as act from '../store/actions';
+import OpacitySlider from './opacitySlider';
+import KnnSlider from './knnSlider';
 
 const initFields = [
     {
@@ -60,6 +62,10 @@ export default class Sidebar extends React.Component {
                         onClick={this.onClick}
                     />
                 ))}
+                <div className="sliders">
+                    <OpacitySlider> </OpacitySlider>
+                    <KnnSlider> </KnnSlider>
+                </div>
             </div>
         );
     }
