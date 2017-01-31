@@ -74,6 +74,7 @@ class Layers extends React.Component {
                 {this.props.layers.map((layer, i)=>( 
                     <Layer
                         key={i}
+                        propName={layer.propertyName}
                         name={layer.name}
                         visible={layer.visible}
                         color1={layer.color1}
