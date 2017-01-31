@@ -9,9 +9,14 @@ class KnnSlider extends React.Component {
         this.state = {knn: 3};
         this.changeKNN = this.changeKNN.bind(this);   
     }
+
     componentWillReceiveProps(nprops){
-        //nprops.mapStarted
-        // console.log(nprops);
+      // you will get the layers by doing nprops.layers
+      console.log("this is a layer: ", nprops.layers)
+    }
+
+    handleSlide(){
+          console.log(document.getElementById('knnSlider').value)
     }
 
     changeKNN(e){
@@ -21,7 +26,6 @@ class KnnSlider extends React.Component {
         //     geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
         // }
     }
-    
     
     render() {
         return(
@@ -34,7 +38,7 @@ class KnnSlider extends React.Component {
                         <p className="slider-label"> 0 </p>
                     </div>
                     <div className="col-md-9">
-                        <input type="range" onChange={this.changeKNN} value={this.state.knn} min="0" max="10" step="1" /> 
+                        <input type="range" onChange={this.handleSlide} value={this.state.knn} min="0" max="10" step="1" /> 
                     </div>
                     <div className="col-md-1">
                         <p className="slider-label"> 1 </p>
@@ -45,4 +49,12 @@ class KnnSlider extends React.Component {
     }
 }
 
-export default KnnSlider;
+
+
+const mapStateToProps = (state) => {
+    return {
+        layers:     state.sidebar.layers,
+    }
+}
+
+export default connect(mapStateToProps)(KnnSlider)

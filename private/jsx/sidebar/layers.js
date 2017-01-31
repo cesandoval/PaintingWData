@@ -11,7 +11,7 @@ const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#000
 
 class Layers extends React.Component {
     constructor(props){
-        console.log("================= layers");
+        
         super(props);
         this.getLayers = this.getLayers.bind(this);
         this.getLayers();
