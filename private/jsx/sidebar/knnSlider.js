@@ -8,6 +8,9 @@ class KnnSlider extends React.Component {
 
         this.neighborsOf = this.neighborsOf.bind(this);
         this.randomPick = this.randomPick.bind(this);
+        
+        this.state = {knn: 3};
+        this.changeKNN = this.changeKNN.bind(this);   
     }
 
     componentWillReceiveProps(nprops){
@@ -16,9 +19,7 @@ class KnnSlider extends React.Component {
     }
 
     handleSlide(){
-        // console.log(this.layers)
-        // console.log(this.geometries)
-        // console.log(this.props)
+
         let numberOfNeighbors = document.getElementById('knnSlider').value;
 
         for(var key in this.geometries) {
@@ -27,9 +28,6 @@ class KnnSlider extends React.Component {
             }
         }
 
-        // this.geometries.map((geometry, n)=>{
-        //     this.neighborsOf(geometry, numberOfNeighbors);
-        // });
     }
 
     neighborsOf(layer, layerName, numberOfNeighbors) {
@@ -120,6 +118,14 @@ class KnnSlider extends React.Component {
             myArray[r] = t;
         }
         return myArray.slice(0,nb_picks+1);
+    }
+
+    changeKNN(e){
+        this.setState({knn: e.target.value});
+        // for (var geo in this.props.geometries) {
+        //     let geometry = this.props.geometries[geo];
+        //     geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
+        // }
     }
 
     render() {

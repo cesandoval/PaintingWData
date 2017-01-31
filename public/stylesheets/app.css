@@ -130,7 +130,6 @@
   border-bottom: 10px solid #fff;
 }
 
-
 /*Checkbox*/
 input[type=checkbox]{
   margin-left: 5px;
@@ -160,4 +159,18 @@ input[type="color" i] {
     padding-top: 15px;
     padding-bottom: 10px;
     padding-left: 10px;
+}
+
+.sliders {
+    bottom: 0;
+    position: absolute;
+}
+
+.slider-label {
+    font-size: 9pt;
+    font-family: 'Overpass', sans-serif;
+    display: inline;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
 }
