@@ -22,6 +22,7 @@ class PCoords extends React.Component {
         if(true && nprops.layers.length > 0){
             this.setState({started: true});
 
+
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
@@ -60,11 +61,11 @@ class PCoords extends React.Component {
                 for (let j = 0; j < numLayers; j++){
                     if (typeof this.minObjs != 'undefined' && i<3) {
                         var currVal = visibleLayers[j].geojson.otherdata[i][3];
-                        console.log(visibleLayers[j].propertyName, this.minObjs[visibleLayers[j].propertyName])
-                        console.log(visibleLayers[j].propertyName, this.minObjs)
-                        console.log(visibleLayers);
+                        // console.log(visibleLayers[j].propertyName, this.minObjs[visibleLayers[j].propertyName])
+                        // console.log(visibleLayers[j].propertyName, this.minObjs)
+                        // console.log(visibleLayers);
                         if (currVal >= this.minObjs[visibleLayers[j].propertyName] &&  currVal >= this.maxObjs[visibleLayers[j].propertyName]) {
-                            console.log(visibleLayers[j].propertyName)
+                            // console.log(visibleLayers[j].propertyName)
                             // inDict[visibleLayers[j].propertyName] = currVal;
                         }
                     } 
@@ -100,7 +101,7 @@ class PCoords extends React.Component {
             .reorderable()
             .brushMode("1D-axes");
         pc.on("brushend", this.calcRanges.bind(this));
-        console.log(555555555)
+        // console.log(555555555)
         this.pc = pc;
         this.setState({pc: pc});
     }

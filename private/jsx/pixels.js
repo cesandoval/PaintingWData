@@ -31,7 +31,7 @@ export default class Pixels {
         this.initTransValsAttrs(this.geometry, dataArray, this.addresses, lowBnd, highBnd);
         this.material = this.initMaterial(lowBnd, highBnd);
 
-        this.neighborsOf(8);
+        // this.neighborsOf(8);
 
         this.addToScene(graph.scene);
     }
@@ -178,7 +178,6 @@ export default class Pixels {
     setAttributes(geometry, translations, values) {
         geometry.addAttribute('translation', translations);
         geometry.addAttribute('size', values);
-        geometry.attributes.size.needsUpdate = true;
     }
 
     neighborsOf(numberOfNeighbors) {
