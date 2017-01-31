@@ -38,7 +38,6 @@ class Layer extends React.Component {
         }
     }
     render() {
-        console.log(this.props);
         return(
             <div className="layers__single">
                 <div className="row">
