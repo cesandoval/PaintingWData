@@ -90,6 +90,10 @@
     font-size: 11pt;
 }
 
+.layers {
+    height: 50vh;
+}
+
 .layer-label {
     font-size: 11pt;
     font-family: 'Overpass', sans-serif;
@@ -164,6 +168,7 @@ input[type="color" i] {
 .sliders {
     bottom: 0;
     position: absolute;
+    background-color: white;
 }
 
 .slider-label {

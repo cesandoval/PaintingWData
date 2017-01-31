@@ -20,6 +20,7 @@ html
     //- //on our web server and will be delivered faster to the client than our own server.
     script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
 
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
@@ -100,7 +101,7 @@ html
                 br
                 a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Voxels
                 br.spacing
-                a.dropdown-item.li(href='/logout', style="line-height: 30px;") Logout
+                a.dropdown-item.li(href='/', style="line-height: 30px;") Logout
 
             else
               li
