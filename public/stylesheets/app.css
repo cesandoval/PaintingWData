@@ -108,6 +108,13 @@
     text-transform: none;
 }
 
+.sidebar__box {
+    height: 70%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 .sidebar__box--name {
     background-color: white;
     text-align: center;
@@ -179,6 +186,7 @@ input[type="color" i] {
     bottom: 0;
     position: absolute;
     background-color: white;
+    height: 30%;
 }
 
 .slider-label {
