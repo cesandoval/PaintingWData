@@ -558,9 +558,11 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 }
 
 .modal-button.btn {
-    border-radius: 5px;
-    background-color: #F9CBC2;
+    border-radius: 0px;
+    background-color: transparent;
+    border: 4px solid #F9CBC2;
     color: #333;
+    width: 100px;
     font-weight: 600;
     text-transform: uppercase;
 }
