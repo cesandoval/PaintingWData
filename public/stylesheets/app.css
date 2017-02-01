@@ -49,8 +49,8 @@
     position: fixed;
     bottom: 0;
     height: 30px;
-    width: calc(100vw - 300px);
-    left: 300px;
+    width: 80vw;
+    right: 0;
     background-color: #F9CBC2;
 }
 

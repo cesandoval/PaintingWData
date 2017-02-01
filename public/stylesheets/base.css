@@ -568,11 +568,10 @@ label {
     border-radius: 0;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Overpass', sans-serif;
-    font-weight: 500;
+    font-family: 'Karla', sans-serif;
     vertical-align: middle;
     display: inline-block;
-    color: white;
+    color: black;
     margin-bottom: 0px;
     margin-top: 0px;
     background-color: #D34031;
