@@ -7,106 +7,68 @@ class KnnSlider extends React.Component {
         super(props);
 
         this.neighborsOf = this.neighborsOf.bind(this);
+        this.getKNN = this.getKNN.bind(this);
         this.randomPick = this.randomPick.bind(this);
         
-        this.state = {knn: 3};
-        this.changeKNN = this.changeKNN.bind(this);   
+        // this.state = {knn: 0};
+        // this.changeKNN = this.changeKNN.bind(this);   
     }
 
     componentWillReceiveProps(nprops){
         this.layers = nprops.layers;
         this.geometries = nprops.geometries; 
+
+        const layersNeighbors = {}
+        for(var key in this.geometries) {
+            if(this.geometries.hasOwnProperty(key)) {
+                layersNeighbors[key] = this.neighborsOf(this.geometries[key]);
+            }
+        }
+        this.layersNeighbors = layersNeighbors;
     }
 
     handleSlide(){
-
         let numberOfNeighbors = document.getElementById('knnSlider').value;
-
         for(var key in this.geometries) {
             if(this.geometries.hasOwnProperty(key)) {
-                this.neighborsOf(this.geometries[key], key, numberOfNeighbors);
+                this.getKNN(this.geometries[key], key, this.layersNeighbors[key], numberOfNeighbors);
             }
         }
-
     }
 
-    neighborsOf(layer, layerName, numberOfNeighbors) {
-        // TODO THIS NEEDS TO KEEP TRACK OF THE ORIGINAL VALUES SOMEHOW
-        // PERHAPS THE ORIGINAL VALS CAN BE GRABBED FROM PROPS INSTEAD OF NPROPS
-        // THIS MIGHT HAVE TO ALSO UPDATE THE COLOR RANGES.....
-        // console.log(layerName)
+    neighborsOf(layer) {
         const addresses = layer.addresses;
-        const currSizes = layer.geometry.attributes.size.array;
 
-        const neighbors =  new Float32Array(layer.pxWidth * layer.pxHeight);
+        const neighbors =  new Array(layer.pxWidth * layer.pxHeight);
         const indices = [-1, 0, 1];
         const arrayM = Array.apply(null, Array(layer.pxWidth)).map(function (_, i) {return i;});
         const arrayN = Array.apply(null, Array(layer.pxHeight)).map(function (_, i) {return i;});
 
-        let sizes = layer.geometry.attributes.size.array;
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {
             let currIndex = addresses[i+2];
             
-            if (numberOfNeighbors == 0) {
-                neighbors[currIndex] = currSizes[currIndex];
+            var currNeighbors = new Float32Array(9);
+
+            let row = addresses[i];
+            let col = addresses[i+1];
+
+            let n = 0;
+            let k = 0;
+            for (let di = 0; di < indices.length; di++) {
+                for (let dj = 0; dj < indices.length; dj++) {
+                    let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
+                    let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
+
+                    if (wBoolean == true && hBoolean == true) {
+                        let new_index = ((col+indices[di])*layer.pxHeight)+(row+indices[dj]);
+                        currNeighbors[n] = new_index;
+                        n++
+                    }                    
+                }
             }
-            else {
-                if (numberOfNeighbors < 5) {
-                    var currNeighbors = new Float32Array(5);
-                } else {
-                    var currNeighbors = new Float32Array(9);
-                }
-                let row = addresses[i];
-                let col = addresses[i+1];
-
-                let n = 0;
-                let k = 0;
-                for (let di = 0; di < indices.length; di++) {
-                    for (let dj = 0; dj < indices.length; dj++) {
-                        let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
-                        let hBoolean = arrayN.indexOf(row+indices[dj]) >= 0;
-                        if (numberOfNeighbors < 5) {
-                            if (wBoolean == true && hBoolean == true && n%2==0) {
-                                let new_index = ((col+indices[di])*layer.pxHeight)+(row+indices[dj]);
-                                currNeighbors[k] = new_index;
-                                k++
-                            }
-                        } else {
-                            if (wBoolean == true && hBoolean == true) {
-                                let new_index = ((col+indices[di])*layer.pxHeight)+(row+indices[dj]);
-                                currNeighbors[n] = new_index;
-                                n++
-                            }
-                        }
-                        
-                    }
-                }
-
-                if (numberOfNeighbors != 4 && numberOfNeighbors != 8) { 
-                    var randomNeighbors = this.randomPick(currNeighbors, numberOfNeighbors);
-                } else {
-                    var randomNeighbors = currNeighbors; 
-                }
-
-                let totalSize = 0;
-                for (let n=0; n<randomNeighbors.length; n++) {
-                    totalSize += currSizes[randomNeighbors[n]];
-                    
-                }
-                neighbors[currIndex] = totalSize/(numberOfNeighbors+1);
-            }
+            neighbors[currIndex] = currNeighbors;
         }
-        // console.log(layer.geometry.attributes.size.array)
-        let pixels = this.props.geometries[layerName];
-
-        
-        pixels.geometry.attributes.size.needsUpdate = true;
-        // console.log(pixels.geometry.attributes.size.array)
-        
-        pixels.geometry.attributes.size.array = neighbors;
-        // console.log(pixels.geometry.attributes.size.array)
-        // pixels.material.uniforms.min.value = 0.006;
-        // pixels.material.uniforms.max.value = .09;
+        return neighbors;
     }
 
     randomPick(myArray,nb_picks){
@@ -118,6 +80,62 @@ class KnnSlider extends React.Component {
             myArray[r] = t;
         }
         return myArray.slice(0,nb_picks+1);
+    }
+
+    getKNN(layer, layerName, neighbors, numberOfNeighbors) {
+        numberOfNeighbors = parseInt(numberOfNeighbors);
+        const addresses = layer.addresses;
+        const currSizes = layer.geometry.attributes.originalsize.array;
+
+        const newSizes =  new Float32Array(layer.pxWidth * layer.pxHeight);
+        const indices = [-1, 0, 1];
+        const arrayM = Array.apply(null, Array(layer.pxWidth)).map(function (_, i) {return i;});
+        const arrayN = Array.apply(null, Array(layer.pxHeight)).map(function (_, i) {return i;});
+
+        for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {  
+            let currIndex = addresses[i+2];          
+            if (numberOfNeighbors == 0) {
+                newSizes[currIndex] = currSizes[currIndex];
+            }
+            else {
+                if (numberOfNeighbors < 5) {
+                    var currNeighbors = new Float32Array(5);
+                } else {
+                    var currNeighbors = new Float32Array(9);
+                }
+
+                let allNeighbors = neighbors[currIndex];
+                let n = 0;
+                let k = 0;
+                for (let di = 0; di < allNeighbors.length; di++) {
+                    if (numberOfNeighbors < 5) {
+                        if (di%2==0) {
+                            currNeighbors[k] = allNeighbors[di];
+                            k++
+                        }
+                    } else {
+                        currNeighbors[n] = allNeighbors[di];
+                        n++
+                    }
+                }
+
+                if (numberOfNeighbors != 4 && numberOfNeighbors != 8) { 
+                    var randomNeighbors = this.randomPick(currNeighbors, numberOfNeighbors);
+                } else {
+                    var randomNeighbors = currNeighbors; 
+                }
+
+                let totalSize = 0;
+                for (let n=0; n<randomNeighbors.length; n++) {
+                    totalSize += currSizes[randomNeighbors[n]];                    
+                }
+                newSizes[currIndex] = totalSize/(numberOfNeighbors+1);
+            }
+        }
+        let pixels = this.props.geometries[layerName];
+        
+        pixels.geometry.attributes.size.needsUpdate = true;
+        pixels.geometry.attributes.size.array = newSizes;
     }
 
     changeKNN(e){
