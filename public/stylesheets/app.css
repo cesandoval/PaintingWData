@@ -15,7 +15,7 @@
 }
 
 .sidebar {
-    width: 300px;
+    width: 20vw;
     background-color: white;
     overflow: auto;
     position: fixed;
@@ -49,8 +49,8 @@
     position: fixed;
     bottom: 0;
     height: 30px;
-    width: calc(100vw - 300px);
-    left: 300px;
+    width: 80vw;
+    right: 0;
     background-color: #F9CBC2;
 }
 
@@ -80,7 +80,7 @@
 .layers__single {
     background-color: white;
     /*border: 1px solid #f16752;*/
-    border-bottom: 2px solid #F9CBC2;
+    border-bottom: 2px solid #eee;
     /*border-top: 4px solid #f16752;*/
     margin: 0;
     padding-top: 15px;
@@ -101,6 +101,10 @@
     text-transform: none;
 }
 
+.sidebar {
+    overflow-x: hidden;
+}
+
 .layer-label-small {
     font-size: 9pt;
     font-family: 'Karla', sans-serif;
@@ -113,6 +117,7 @@
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    border-bottom: 4px solid #F9CBC2;
 }
 
 .sidebar__box--name {
@@ -125,6 +130,7 @@
     background-color: white;
     color: #333;
     font-size: 14pt;
+    font-weight: 800;
     text-transform: uppercase;
     height: 30px;
 
@@ -134,12 +140,11 @@
 
 .slider-name {
     text-align: center;
-    /*display: block;*/
     vertical-align: middle;
     font-family: 'Karla', sans-serif;
     padding-top: 10px;
     padding-bottom: 10px;
-
+    font-weight: 800;
 
     background-color: white;
     color: #333;
