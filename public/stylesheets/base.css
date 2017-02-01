@@ -81,8 +81,8 @@
     opacity: .70;
 }
 
-#show {
-    width:100px;
+#dataShow {
+    width:120px;
     position: absolute;
     z-index: 4;
     right: 0px;
@@ -91,9 +91,9 @@
 #graphShow {
     position: absolute;
     /*bottom: 10px;*/
-    width:100px;
+    width:120px;
     z-index: 10;
-    right: 102px;
+    right: 120px;
 }
 
 #somShow {
@@ -186,7 +186,7 @@
 }
 
 .graphText{
-    right: 127px;  
+    right: 0px;  
 }
 
 .somText{

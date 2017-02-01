@@ -142,14 +142,14 @@ class PCoords extends React.Component {
     style() {
         return {
             backgroundColor: "white",
-            width: "500px",
+            width: "79vw",
             height: "300px",
             position: "fixed",
-            overflow: "auto",
+            overflow: "hidden",
             bottom: "30px",
             right: "0",
-            zIndex: "10",
-            opacity: .5
+            zIndex: "4",
+            opacity: 0.5
         }
     }
     render() {
