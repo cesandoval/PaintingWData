@@ -36,6 +36,7 @@ class PCoords extends React.Component {
             this.minVal = mins;
             this.maxVal = maxs;
             this.layersNameProperty = layersNameProperty;
+            // this.brushed = false;
 
             // Assumes that all of the layers have the same length
             // and also that the data matches up
@@ -52,49 +53,38 @@ class PCoords extends React.Component {
             let numLayers = visibleLayers.length;
 
             let dictBuild = Array(numElements);
-            let dictBrush = Array(numElements);
+            let dictBrush = [];
 
-            var brushedLayers;
-            // console.log(brushedLayers)
-            if (typeof this.minObjs != 'undefined') {
-                brushedLayers = Object.keys(this.minObjs);
-                console.log(brushedLayers)
-            }
+            // var brushedLayers;
+            // if (typeof this.minObjs != 'undefined') {
+            //     brushedLayers = Object.keys(this.minObjs);
+            // }
 
             let bool = 0;
             for(let i = 0; i < numElements; i++ ){
                 let inDict = {};
                 let inBrush = {};
                 for (let j = 0; j < numLayers; j++){
-                    if (typeof this.minObjs != 'undefined') {
-                        var currVal = visibleLayers[j].geojson.otherdata[i][3];
-                        // console.log(visibleLayers[j].propertyName, this.minObjs[visibleLayers[j].propertyName])
-                        // console.log(visibleLayers[j].propertyName, this.minObjs)
-                        // console.log(visibleLayers);
-                        if (currVal >= this.minObjs[visibleLayers[j].propertyName] ) {
-                            // console.log(888888888888888)
-                            inBrush[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-                            bool++;
-                            // console.log(visibleLayers[j].propertyName)
-                            // inDict[visibleLayers[j].propertyName] = currVal;
-                        }
-                    } 
+                    // if (typeof this.minObjs != 'undefined') {
+                    //     this.brushed = true;
+                    //     var currVal = visibleLayers[j].geojson.otherdata[i][3];
+
+                    //     if (currVal >= this.minObjs[visibleLayers[j].propertyName] && currVal <= this.maxObjs[visibleLayers[j].propertyName]) {
+                    //         inBrush[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
+                    //         bool++;
+                    //     }
+                    // } 
                     inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
                 }
                 dictBuild[i] = inDict;
-                dictBrush[i] = inBrush;
+                // dictBrush[bool] = inBrush;
             }
-            console.log(dictBrush);
-            console.log(bool)
-            if (typeof this.pc != 'undefined') {
-                console.log(this.pc.state);
-            }
-            this.build(dictBuild, 1)
+            this.build(dictBuild, dictBrush)
             this.layerIndeces = layerIndeces 
         }
     }
 
-    build(data, test) {
+    build(data, dictBrush) {
         let minVal = this.minVal[0];
         let maxVal = this.maxVal[0];
 
@@ -116,16 +106,17 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode("1D-axes");
+        // if (this.brushed) {
+        //     pc.state.brushed = dictBrush;
+        // }
+        
         pc.on("brushend", this.calcRanges.bind(this));
-        // console.log(555555555)
         this.pc = pc;
         this.setState({pc: pc});
     }
 
     calcRanges(data){
         this.pc.randoms = true;
-        // console.log(this.pc.brushed())
-        console.log(this.pc.state)
 
         const brushSelection = this.pc.brushExtents();
         const layerNames = Object.keys(brushSelection);
