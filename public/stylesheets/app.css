@@ -96,14 +96,14 @@
 
 .layer-label {
     font-size: 11pt;
-    font-family: 'Overpass', sans-serif;
+    font-family: 'Karla', sans-serif;
     padding: 0;
     text-transform: none;
 }
 
 .layer-label-small {
     font-size: 9pt;
-    font-family: 'Overpass', sans-serif;
+    font-family: 'Karla', sans-serif;
     padding: 0;
     text-transform: none;
 }
@@ -112,24 +112,40 @@
     height: 70%;
     width: 100%;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .sidebar__box--name {
-    background-color: white;
     text-align: center;
     display: block;
-    font-family: 'Overpass', sans-serif;
+    font-family: 'Karla', sans-serif;
     padding-top: 20px;
     padding-bottom: 40px;
 
-    background-color: #F9CBC2;
-    color: black;
+    background-color: white;
+    color: #333;
+    font-size: 14pt;
+    text-transform: uppercase;
+    height: 30px;
+
+    /*border-bottom: 4px solid #F9CBC2;*/
+    border: none;
+}
+
+.slider-name {
+    text-align: center;
+    /*display: block;*/
+    vertical-align: middle;
+    font-family: 'Karla', sans-serif;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+
+    background-color: white;
+    color: #333;
     font-size: 14pt;
     text-transform: uppercase;
     height: 40px;
-
-    border-bottom: 4px solid #F9CBC2;
 }
 
 /*Arrows*/
@@ -153,7 +169,7 @@
 input[type=checkbox]{
   margin-left: 5px;
   margin-right: 5px;
-  font-family: 'Overpass', sans-serif;
+  font-family: 'Karla', sans-serif;
   display: inline-block;
 }
 
@@ -173,13 +189,13 @@ input[type="color" i] {
 /* Opacity Slider */
 .opacity-slider, .knn-slider {
     text-align: center;
-    padding-top: 10px;
     width: 100%;
     margin: 0;
 
     padding-top: 15px;
     padding-bottom: 10px;
     padding-left: 10px;
+    padding-right: 10px;
 }
 
 .sliders {
@@ -187,11 +203,12 @@ input[type="color" i] {
     position: absolute;
     background-color: white;
     height: 30%;
+    width: 100%;
 }
 
 .slider-label {
     font-size: 9pt;
-    font-family: 'Overpass', sans-serif;
+    font-family: 'Karla', sans-serif;
     display: inline;
     padding-left: 2px;
     padding-right: 2px;
