@@ -4,7 +4,7 @@ import * as act from '../actions';
 
 const initialSidebarState = {
     layers: [],
-    opacity: 0.60
+    opacity: 0.50
 }
 
 export default (state=initialSidebarState, action) => {

@@ -14,6 +14,7 @@ class PCoords extends React.Component {
             pc: null, 
         };
 
+
         this.build = this.build.bind(this);
         this.calcRanges = this.calcRanges.bind(this);
     }
@@ -21,6 +22,9 @@ class PCoords extends React.Component {
         if(true && nprops.layers.length > 0){
             this.setState({started: true});
 
+            const bounds = nprops.layers[0].bounds;
+            this.lowBnd = bounds[0];
+            this.highBnd = bounds[1];
 
             // Sets the mins and maxs values of every layer
             const mins = Array(nprops.layers.length);
@@ -134,9 +138,10 @@ class PCoords extends React.Component {
         this.minObjs = minObjs;
         this.maxObjs = maxObjs;
         
-        // Update Layers
-        const lowBnd = .0015;
-        const highBnd = .012;        
+        // Update Layers  
+        const lowBnd = this.lowBnd;
+        const highBnd = this.highBnd; 
+         
         const remap = function(x, i, mins, maxs) {
             return (highBnd-lowBnd)*((x-mins[i])/(maxs[i]-mins[i]))+lowBnd;
         }

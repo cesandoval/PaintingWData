@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 class OpacitySlider extends React.Component {
     constructor(props){
         super(props);
-        this.state = {opacity: 40};
+        this.state = {opacity: 50};
 
         this.changeOpacity = this.changeOpacity.bind(this);
     }

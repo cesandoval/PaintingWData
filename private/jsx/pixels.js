@@ -3,9 +3,9 @@ export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
-    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0){
-        const lowBnd = .0015;
-        const highBnd = .012;
+    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0, bounds=[]){
+        this.lowBnd = bounds[0];
+        this.highBnd = bounds[1];
 
         // Constants
         this.ELEMENTS_PER_ITEM = 3
@@ -28,8 +28,8 @@ export default class Pixels {
 
         this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
-        this.initTransValsAttrs(this.geometry, dataArray, this.addresses, lowBnd, highBnd);
-        this.material = this.initMaterial(lowBnd, highBnd);
+        this.initTransValsAttrs(this.geometry, dataArray, this.addresses, this.lowBnd, this.highBnd);
+        this.material = this.initMaterial(this.lowBnd, this.highBnd);
 
         this.addToScene(graph.scene);
     }
@@ -131,8 +131,9 @@ export default class Pixels {
             //// Value
             //array[j+2] = datajson.geojson[i].properties[datajson.name];
         //}
+        const bounds = [this.lowBnd, this.highBnd];
 
-        return { otherArray, startColor, endColor, addressArray};
+        return { otherArray, startColor, endColor, addressArray, bounds};
 
     }
 
@@ -201,7 +202,9 @@ export default class Pixels {
             vertexShader: document.getElementById('vertexShader').textContent,
             fragmentShader: document.getElementById( 'fragmentShader' ).textContent
             
+            
         })
+
         material.transparent = true;
         return material;
     }

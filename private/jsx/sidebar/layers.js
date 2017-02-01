@@ -5,8 +5,8 @@ import axios from 'axios';
 
 import Layer from './layer';
 
-const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols) => ({
-    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds
 })
 
 class Layers extends React.Component {
@@ -37,6 +37,14 @@ class Layers extends React.Component {
                     }
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
+
+                    let xDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[0])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[0]));
+                    let yDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[1])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[1]));
+
+                    const lowBnd = Math.max(xDiff, yDiff)/10;
+                    const highBnd = Math.max(xDiff, yDiff)*.8;
+                    const bounds = [ lowBnd, highBnd ];
+
                     const mappedGeojson = l.geojson.geojson.features.map(g => {
                         // Shouldn't need to parse
                         //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
@@ -64,7 +72,7 @@ class Layers extends React.Component {
                     }
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 
-                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols);
+                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds);
                 }));
             });
     }
