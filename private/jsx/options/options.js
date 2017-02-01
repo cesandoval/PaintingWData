@@ -17,7 +17,7 @@ export default class extends React.Component {
             <div className="options--react">
                 <OptionsForm/>
                 <Button id="show" className="buttons dataText btn buttonsText" onClick={this.showData}> Query Data </Button>
-                <Button id="show" className="buttons dataText btn buttonsText" onClick={this.showData}> Compute Data </Button>
+                <Button className="buttons graphText btn buttonsText" onClick={this.showData}> Compute Data </Button>
             </div>
         );
     }

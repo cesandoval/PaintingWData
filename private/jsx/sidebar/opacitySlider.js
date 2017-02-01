@@ -21,10 +21,10 @@ class OpacitySlider extends React.Component {
     render() {
         return(
             <div className="opacity-slider">
-                <div className="row">
-                    <p className="layer-label"> Opacity </p>
+                <div className="row text-center">
+                    <p className="slider-name"> Opacity </p>
                 </div>
-                <div className="row">
+                <div className="row text-center">
                     <div className="col-md-1">
                         <p className="slider-label"> 0 </p>
                     </div>

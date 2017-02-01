@@ -149,15 +149,27 @@ class KnnSlider extends React.Component {
     render() {
         return(
             <div className="knn-slider">
-                <p className="layer-label"> # Nearest Neighbors </p>
-                <input className="slider" 
-                       id = "knnSlider"
-                       type="range" 
-                       onChange = {() => this.handleSlide()}
-                       min="0" 
-                       max="8" 
-                       defaultValue="0"
-                       step="1"/>
+                <div className="row">
+                    <p className="slider-name"> # Nearest Neighbors </p>
+                </div>
+                <div className="row">
+                    <div className="col-md-1">
+                        <p className="slider-label"> 0 </p>
+                    </div>
+                    <div className="col-md-9">
+                        <input className="slider" 
+                           id = "knnSlider"
+                           type="range" 
+                           onChange = {() => this.handleSlide()}
+                           min="0" 
+                           max="8" 
+                           defaultValue="0"
+                           step="1"/> 
+                        </div>
+                    <div className="col-md-1">
+                        <p className="slider-label"> 8 </p>
+                    </div>
+                </div>
             </div>
         );
     }
