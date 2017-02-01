@@ -26,14 +26,17 @@ class PCoords extends React.Component {
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
             const layerIndeces = {};
+            const layersNameProperty = {}
             for (let i = 0; i<nprops.layers.length; i++) {
                 layerIndeces[nprops.layers[i].propertyName] = i
+                layersNameProperty[nprops.layers[i].propertyName] = nprops.layers[i].name;
                 mins[i] = nprops.layers[i].geojson.minMax[0];
                 maxs[i] = nprops.layers[i].geojson.minMax[1];
             }
             this.minVal = mins;
             this.maxVal = maxs;
-            
+            this.layersNameProperty = layersNameProperty;
+
             // Assumes that all of the layers have the same length
             // and also that the data matches up
             // ie. indexes == same location
@@ -49,21 +52,29 @@ class PCoords extends React.Component {
             let numLayers = visibleLayers.length;
 
             let dictBuild = Array(numElements);
+            let dictBrush = Array(numElements);
 
             var brushedLayers;
+            // console.log(brushedLayers)
             if (typeof this.minObjs != 'undefined') {
                 brushedLayers = Object.keys(this.minObjs);
                 console.log(brushedLayers)
             }
+
+            let bool = 0;
             for(let i = 0; i < numElements; i++ ){
-                let inDict = {}
+                let inDict = {};
+                let inBrush = {};
                 for (let j = 0; j < numLayers; j++){
-                    if (typeof this.minObjs != 'undefined' && i<3) {
+                    if (typeof this.minObjs != 'undefined') {
                         var currVal = visibleLayers[j].geojson.otherdata[i][3];
                         // console.log(visibleLayers[j].propertyName, this.minObjs[visibleLayers[j].propertyName])
                         // console.log(visibleLayers[j].propertyName, this.minObjs)
                         // console.log(visibleLayers);
-                        if (currVal >= this.minObjs[visibleLayers[j].propertyName] &&  currVal >= this.maxObjs[visibleLayers[j].propertyName]) {
+                        if (currVal >= this.minObjs[visibleLayers[j].propertyName] ) {
+                            // console.log(888888888888888)
+                            inBrush[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
+                            bool++;
                             // console.log(visibleLayers[j].propertyName)
                             // inDict[visibleLayers[j].propertyName] = currVal;
                         }
@@ -71,6 +82,12 @@ class PCoords extends React.Component {
                     inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
                 }
                 dictBuild[i] = inDict;
+                dictBrush[i] = inBrush;
+            }
+            console.log(dictBrush);
+            console.log(bool)
+            if (typeof this.pc != 'undefined') {
+                console.log(this.pc.state);
             }
             this.build(dictBuild, 1)
             this.layerIndeces = layerIndeces 
@@ -108,7 +125,7 @@ class PCoords extends React.Component {
     calcRanges(data){
         this.pc.randoms = true;
         // console.log(this.pc.brushed())
-        // console.log(this.pc.state)
+        console.log(this.pc.state)
 
         const brushSelection = this.pc.brushExtents();
         const layerNames = Object.keys(brushSelection);
@@ -134,7 +151,7 @@ class PCoords extends React.Component {
         }
 
         for (let name in minObjs) {
-            let pixels = this.props.geometries[name];
+            let pixels = this.props.geometries[this.layersNameProperty[name]];
             pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
         }
