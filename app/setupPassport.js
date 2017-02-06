@@ -2,7 +2,7 @@ var passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     auth = require('passport-local-authenticate'),
     Model = require('./models');
-
+//
 module.exports = function(app) {
   app.use(passport.initialize())
   app.use(passport.session())
