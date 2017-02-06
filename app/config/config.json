@@ -3,21 +3,21 @@
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
-    "host": "52.87.253.4",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh_test",
-    "host": "52.87.253.4",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh_prod",
-    "host": "52.87.253.4",
+    "host": "localhost",
     "dialect": "postgres"
   }
 
