@@ -55,7 +55,7 @@ maps.forEach(function(map, index){
 		processData: false, 
 		contentType: false, 
 		success: function(data){
-		
+            console.log(data);
 			var bBox = JSON.parse(data.bBox);
 	        // $datalayers[index].find('.layerName')[0].html(data.datalayer.layerName);
 	        // $($datalayers[index].find('.property')[0]).html(data.datalayer.properties);

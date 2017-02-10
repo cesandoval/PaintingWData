@@ -18,7 +18,15 @@ module.exports = function(sequelize, DataTypes) {
       },
       userId: {
         type: DataTypes.INTEGER
-      }
+      },
+      bbox: {
+        type: DataTypes.GEOMETRY,
+        allowNull: true
+      },
+      centroid: {
+        type: DataTypes.GEOMETRY,
+        allowNull: true
+      },
   }, {
 
     classMethods: {

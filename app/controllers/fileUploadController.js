@@ -13,7 +13,6 @@ var User = require('../models').User,
     fileViewer = require('./fileViewerController.js');
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
-    console.log('----++lfhdhddhlflfljajajajs+++-/////------kdkddkd-k-======------555555-')
 }
 
 module.exports.upload = function(req, res) {
@@ -56,12 +55,15 @@ module.exports.upload = function(req, res) {
                 console.log("Error: ", err);
               }
               else{
-                getEPSG(target_path, function(err, epsg){
+                getEPSG(target_path, function(err, epsg, bbox, centroid){
+                  console.log(bbox, centroid);
                   var dataFile = Models.Datafile.build();
                   dataFile.userId = req.user.id;
                   dataFile.location = target_path;
                   dataFile.filename = shapeFiles[0];
                   dataFile.epsg = epsg;
+                  dataFile.centroid = centroid;
+                  dataFile.bbox = bbox;
                   dataFile.save().then(function(d){
                     res.send({id : d.id});
                   });
@@ -160,17 +162,26 @@ function verifyFiles(directory, callback){
 function getEPSG(file, callback) {
   var dataset = gdal.open(file);
   var layer = dataset.layers.get(0);
+  var bbox = layer.getExtent().toPolygon();
+  var centroid = JSON.parse(bbox.centroid().toJSON());
+  bbox = JSON.parse(bbox.toJSON());
+  
   var epsg;
   if (layer.srs.getAttrValue("AUTHORITY",1)==null){
     request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
           epsg = JSON.parse(body)['codes'][0]['code'];
-          callback(null, epsg);
+          bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+          centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+
+          callback(null, epsg, bbox, centroid);
         }
       })
   } else {
     epsg = layer.srs.getAttrValue("AUTHORITY",1);
-    callback(null, epsg);
+    bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+    centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+    callback(null, epsg, bbox, centroid);
   }        
 }

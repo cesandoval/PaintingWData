@@ -23,6 +23,14 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
+      bbox: {
+        type: Sequelize.GEOMETRY,
+        allowNull: true
+      },
+      centroid: {
+        type: Sequelize.GEOMETRY,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
