@@ -52,11 +52,12 @@ class PCoords extends React.Component {
                 pcContainer.removeChild(pcContainer.firstChild);
             }
             // and recalculate parcoords
+            const totalElements = nprops.layers[0].rowsCols['cols']*nprops.layers[0].rowsCols['rows']
             let numElements = nprops.layers[0].geojson.length;
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
-            let dictBuild = Array(numElements);
+            let dictBuild = Array(totalElements);
             let dictBrush = [];
 
             // var brushedLayers;
@@ -65,7 +66,7 @@ class PCoords extends React.Component {
             // }
 
             let bool = 0;
-            for(let i = 0; i < numElements; i++ ){
+            for(let i = 0; i < totalElements; i++ ){
                 let inDict = {};
                 let inBrush = {};
                 for (let j = 0; j < numLayers; j++){
@@ -78,11 +79,22 @@ class PCoords extends React.Component {
                     //         bool++;
                     //     }
                     // } 
-                    inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
+                    if (visibleLayers[j].geojson.otherdata[i] !== undefined ) {
+                        // index doesn't point to an undefined item.
+                        inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
+                    } else {
+                        inDict[visibleLayers[j].propertyName] = 0;
+                    }
                 }
+                // if (visibleLayers[0].geojson.otherdata[i] !== undefined ) {
+                //     dictBuild[visibleLayers[0].geojson.otherdata[i][7]] = inDict;
+                // } else {
+                //     dictBuild[i] = inDict;
+                // }
                 dictBuild[i] = inDict;
                 // dictBrush[bool] = inBrush;
             }
+            console.log(dictBuild)
             this.build(dictBuild, dictBrush)
             this.layerIndeces = layerIndeces 
         }
