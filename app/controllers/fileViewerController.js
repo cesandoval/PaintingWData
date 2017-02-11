@@ -44,24 +44,19 @@ module.exports.saveShapes = function(req, res) {
 module.exports.getDatalayers = function(req, res){
     console.log("Data layer id: " + req.params.datafileId + "\n\n");
 
-    Model.Datalayer.findOne({where:{
-        datafileId : req.params.datafileId
-    }}).then(function(datalayer){
-          async.waterfall([
-            async.apply(loadData, req.params.datafileId, req),
-            getBoundingBox,
-        ], function (err, result) {
-            // console.log(datalayer);
-
-            res.send({
-                datalayer,
-                bBox : result[0], 
-                centroid: result[1],
-                epsg: result[2]
-            })
-        });  
-    })
-   
+    Model.Datafile.findOne({
+        where : {
+            userId : req.user.id,
+            id : req.params.datafileId
+        },
+        include: [{
+            model: Model.Datalayer,
+            limit: 1}]
+    }).then(function(datafile){
+        res.send({
+            datafile
+        })
+    });
 }
 
 function queryRepeatedLayer(file, layer, epsg, fields, req, callback) {

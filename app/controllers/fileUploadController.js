@@ -162,16 +162,26 @@ function verifyFiles(directory, callback){
 function getEPSG(file, callback) {
   var dataset = gdal.open(file);
   var layer = dataset.layers.get(0);
+
+
+
+
   var bbox = layer.getExtent().toPolygon();
-  var centroid = JSON.parse(bbox.centroid().toJSON());
-  bbox = JSON.parse(bbox.toJSON());
   
   var epsg;
   if (layer.srs.getAttrValue("AUTHORITY",1)==null){
     request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
       function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          epsg = JSON.parse(body)['codes'][0]['code'];
+          epsg = parseInt(JSON.parse(body)['codes'][0]['code']);
+          var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
+              d_srs = gdal.SpatialReference.fromEPSGA(4326);
+          var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
+          bbox.transform(transformation)
+          bbox.transformTo(d_srs);
+          var centroid = JSON.parse(bbox.centroid().toJSON());
+          bbox = JSON.parse(bbox.toJSON());
+
           bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
           centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
 
@@ -180,6 +190,14 @@ function getEPSG(file, callback) {
       })
   } else {
     epsg = layer.srs.getAttrValue("AUTHORITY",1);
+    var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
+        d_srs = gdal.SpatialReference.fromEPSGA(4326);
+    var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
+    bbox.transform(transformation);
+    bbox.transformTo(d_srs);
+    var centroid = JSON.parse(bbox.centroid().toJSON());
+    bbox = JSON.parse(bbox.toJSON());
+
     bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
     centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
     callback(null, epsg, bbox, centroid);

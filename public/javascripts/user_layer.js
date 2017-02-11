@@ -55,15 +55,10 @@ maps.forEach(function(map, index){
 		processData: false, 
 		contentType: false, 
 		success: function(data){
-            console.log(data);
-			var bBox = JSON.parse(data.bBox);
-	        // $datalayers[index].find('.layerName')[0].html(data.datalayer.layerName);
-	        // $($datalayers[index].find('.property')[0]).html(data.datalayer.properties);
-	        // $($datalayers[index].find('.description')[0]).html(data.datalayer.description);
-	        // $($datalayers[index].find('.epsg')[0]).html(data.datalayer.epsg);
+			var bBox = data.datafile.bbox;
 	        $(map).removeClass('temporary_map_visuals');
 	        $(map).empty();
-			render(mapId, bBox, JSON.parse(data.centroid));
+			render(mapId, bBox, data.datafile.centroid);
 		},
 		failure: function(err){
 			console.log(err);
