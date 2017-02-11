@@ -150,7 +150,7 @@ export default class Pixels {
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]
-            translations.setXYZ(currIndex, dataArray[i], 0, -dataArray[i+1]);
+            translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
             values.setX(currIndex, remap(dataArray[i+2]));
             originalValues.setX(currIndex, remap(dataArray[i+2]));
         }
