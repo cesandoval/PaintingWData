@@ -1,18 +1,9 @@
-var fileUploadHelper = require('../../lib/fileUploadHelper');
-
-var User = require('../models').User,
-    gdal = require("gdal"),
-    shapefile = require('shapefile'),
+var fileUploadHelper = require('../../lib/fileUploadHelper'), 
     Models = require('../models'),
     path = require('path'),
-    async = require('async'),
     fs = require('fs'),
-    ncp = require('ncp'),
-    exec = require('child_process').exec,
-    formidable = require('formidable'),
-    extract = require('extract-zip'),
-    request = require('request'),
-    fileViewer = require('./fileViewerController.js');
+    formidable = require('formidable');
+
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
 }
