@@ -1,13 +1,7 @@
 var fileViewerHelper = require('../../lib/fileViewerHelper');
 
 var Model = require('../models'),
-    connection = require('../sequelize.js'),
-    gdal = require("gdal"),
-    shapefile = require("shapefile"),
-    async = require('async'),
-    fs = require('fs'),
-    path = require('path'),
-    request = require('request');
+    async = require('async');
 
 module.exports.saveShapes = function(req, res) {
     var id = req.user.id,
