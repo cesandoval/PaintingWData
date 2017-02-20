@@ -305,3 +305,13 @@ function getBoundingBox(file, layer, epsg, fields, req, callback){
     centroid.transform(transformation);
     callback(null, [bBox.toJSON(), centroid.toJSON(),  epsg])
 }
+
+module.exports = {
+    QueryRepeatedLayer : queryRepeatedLayer,
+    PushDataLayerTransform : pushDataLayerTransform,
+    PushDataLayer : pushDataLayer,
+    PushDataRaster : pushDataRaster,
+    LoadData : loadData,
+    GetGeoJSON : getGeoJSON,
+    GetBoundingBox : getBoundingBox
+}

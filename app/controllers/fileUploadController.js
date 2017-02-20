@@ -203,3 +203,13 @@ function getEPSG(file, callback) {
     callback(null, epsg, bbox, centroid);
   }        
 }
+
+module.exports = {
+  ExtractZip : extractZip,
+  SignUpStrategy : getShapeFiles,
+  VerifyFiles : verifyFiles,
+  GetEPSG: getEPSG
+}
+
+
+
