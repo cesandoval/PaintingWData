@@ -1,5 +1,3 @@
-var fileUploader = require('../../lib/fileUploadHelper');
-
 var User = require('../models').User,
     gdal = require("gdal"),
     shapefile = require('shapefile'),
@@ -40,24 +38,24 @@ module.exports.upload = function(req, res) {
        console.log("something went wrong! " + err);
      }
      else{
-      fileUploader.extractZip(path.join(path.dirname(file.path), file.name), function(err, target_path){
+      extractZip(path.join(path.dirname(file.path), file.name), function(err, target_path){
         if(err){
           console.log("Error: ", err);
           
         }
         else{
-          fileUploader.verifyFiles(target_path, function(err, target_path){
+          verifyFiles(target_path, function(err, target_path){
             if(err){
                 console.log("Error: ", err);
                 res.redirect(200, '..');
             }
             else{
-            fileUploader.getShapeFiles(target_path, function(err, shapeFiles){
+            getShapeFiles(target_path, function(err, shapeFiles){
               if(err){
                 console.log("Error: ", err);
               }
               else{
-                fileUploader.getEPSG(target_path, function(err, epsg, bbox, centroid){
+                getEPSG(target_path, function(err, epsg, bbox, centroid){
                   console.log(bbox, centroid);
                   var dataFile = Models.Datafile.build();
                   dataFile.userId = req.user.id;
@@ -85,3 +83,123 @@ module.exports.upload = function(req, res) {
    
 }
 
+// Gets the current time stamp in secods
+function getTimestamp(){
+    return Math.floor(Date.now() / 1000);
+}
+
+// Extracts the uploaded zip file, adds the timestamp to the extracted
+// folder and deletes the original zip file.
+// do some refactoring to ease the callback hell.
+function extractZip(zipFile, callback){
+  var fileName = path.parse(zipFile).name;
+  var targetName = fileName + "_" + getTimestamp();
+  var targetPath = path.join(__dirname, './shape_files');
+
+  var filePath = path.join(__dirname, './shape_files');
+  
+  extract(zipFile, {dir: filePath}, function(err){
+    if(err){  
+      callback(err, null);
+    }
+    else{
+      callback(null, filePath);
+      };
+    }
+  );
+}
+// returns a list of shapefiles in the uploaded directory.
+function getShapeFiles(directory, callback){
+  var shapeFiles = [];
+  fs.readdir(directory, function(err, files){
+    if (err) {
+      console.log("Error:  ", err);
+      callback(err, null);
+    }
+    else{
+      files.forEach(function(file, index){
+
+        if(path.extname(file) == ".shp") {
+          shapeFiles.push(file);
+        }
+      });
+      callback(null, shapeFiles);
+    }
+  });
+
+}
+
+// Goes through the files in the path to verify that they all have the 
+// specified extensions.
+function verifyFiles(directory, callback){
+  var areRightFileTypes = true;
+  fs.readdir(directory, function(err, files){
+    if (err) {
+      console.log("Error:  ", err);
+      callback(err, null);
+    }
+    else{
+      files.forEach(function(file, index){
+         console.log("=============================================");
+          console.log(file)
+          ext = path.extname(file);
+          console.log(ext);
+          if(ext)
+            areRightFileTypes = areRightFileTypes && (ext === ".shp" || ext === ".shx" || ext === ".dbf" );
+      });
+    if(!areRightFileTypes){
+      console.log(directory);
+      callback(null, directory);
+    }
+    else{
+      console.log("not the right type of files");
+      callback("wrong file type", null);
+    }
+    }
+  });
+}
+
+function getEPSG(file, callback) {
+  var dataset = gdal.open(file);
+  var layer = dataset.layers.get(0);
+
+
+
+
+  var bbox = layer.getExtent().toPolygon();
+  
+  var epsg;
+  if (layer.srs.getAttrValue("AUTHORITY",1)==null){
+    request('http://prj2epsg.org/search.json?terms='+layer.srs.toWKT(), 
+      function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          epsg = parseInt(JSON.parse(body)['codes'][0]['code']);
+          var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
+              d_srs = gdal.SpatialReference.fromEPSGA(4326);
+          var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
+          bbox.transform(transformation)
+          bbox.transformTo(d_srs);
+          var centroid = JSON.parse(bbox.centroid().toJSON());
+          bbox = JSON.parse(bbox.toJSON());
+
+          bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+          centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+
+          callback(null, epsg, bbox, centroid);
+        }
+      })
+  } else {
+    epsg = layer.srs.getAttrValue("AUTHORITY",1);
+    var s_srs = gdal.SpatialReference.fromEPSGA(epsg),
+        d_srs = gdal.SpatialReference.fromEPSGA(4326);
+    var transformation = new gdal.CoordinateTransformation(s_srs, d_srs);
+    bbox.transform(transformation);
+    bbox.transformTo(d_srs);
+    var centroid = JSON.parse(bbox.centroid().toJSON());
+    bbox = JSON.parse(bbox.toJSON());
+
+    bbox.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+    centroid.crs = { type: 'name', properties: { name: 'EPSG:'+epsg}};
+    callback(null, epsg, bbox, centroid);
+  }        
+}
