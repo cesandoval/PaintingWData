@@ -33,6 +33,7 @@ class Layers extends React.Component {
                         length: length,
                         // data: Array(Math.floor(Math.sqrt(length))),
                         otherdata: Array(length),
+                        hashedData: {},
                         minMax: Array(2), 
                     }
                     // geojson -> Float32Array([x, y, z, w, id])
@@ -69,6 +70,7 @@ class Layers extends React.Component {
                         if (mappedGeojson[i][3]<minVal) { minVal=mappedGeojson[i][3] };
                         if (mappedGeojson[i][3]>maxVal) { maxVal=mappedGeojson[i][3]};
                         transGeojson.otherdata[i] = mappedGeojson[i];
+                        transGeojson.hashedData[mappedGeojson[i][7]] = mappedGeojson[i];
                     }
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 

@@ -53,149 +53,44 @@ class PCoords extends React.Component {
             }
             // and recalculate parcoords
             const totalElements = nprops.layers[0].rowsCols['cols']*nprops.layers[0].rowsCols['rows']
-            let numElements = nprops.layers[0].geojson.length;
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
-
-
             let maxVoxels = 0;
+            let currLayer = {};
             for (let i=0; i<visibleLayers.length; i++) {
+                var indicesDict = Object.assign({}, currLayer, visibleLayers[i].geojson.hashedData);
+                currLayer = visibleLayers[i].geojson.hashedData;
+
                 let currVoxels = visibleLayers[i].geojson.length;
                 if (currVoxels > maxVoxels) {
                     maxVoxels = currVoxels;
                 }
             }
 
+            const indicesArray = Object.keys(indicesDict);
+            indicesArray.sort(function(a, b){return parseInt(a)-parseInt(b)});
+
+            let dictBuild = Array(maxVoxels);
+            let dictBrush = [];
             // var brushedLayers;
             // if (typeof this.minObjs != 'undefined') {
             //     brushedLayers = Object.keys(this.minObjs);
             // }
-            var emptyDict = {};
-            for (let j = 0; j < numLayers; j++){
-                emptyDict[visibleLayers[j].propertyName] = 0
-            }
 
-            var dictBuild = Array(totalElements);
-            for (let j = 0; j < numLayers; j++){
-                for(let i = 0; i < maxVoxels; i++ ){
-                    let currentIndex = 0;
-                    if (visibleLayers[j].geojson.otherdata[i] !== undefined ) {
-                        let thisIndex = visibleLayers[j].geojson.otherdata[i][7];
-                        currentIndex = thisIndex;
-                        if (dictBuild[thisIndex] == undefined) {
-                            dictBuild[thisIndex] = {};
-                        }
-                        
-                        dictBuild[thisIndex][visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-
-                        // console.log(Object.keys(dictBuild[thisIndex]).length, dictBuild[thisIndex])
-                        // if (j == numLayers-1 ) {
-                        //     console.log(Object.keys(dictBuild[thisIndex]).length, dictBuild[thisIndex])
-                        // }
-                        // console.log(dictBuild[thisIndex])
-                        // console.log(dictBuild[thisIndex][visibleLayers[j].propertyName], [visibleLayers[j].propertyName], thisIndex)
+            for(let j = 0; j < numLayers; j++ ){
+                for (let i = 0; i < maxVoxels; i++){
+                    if (dictBuild[i] == undefined){
+                        dictBuild[i] = {};
+                    }
+                    if (indicesArray[i] in visibleLayers[j].geojson.hashedData) {
+                        dictBuild[i][visibleLayers[j].propertyName] = visibleLayers[j].geojson.hashedData[indicesArray[i]][3];
                     } else {
-                        dictBuild[currentIndex][visibleLayers[j].propertyName] = 0;
+                        dictBuild[i][visibleLayers[j].propertyName] = 0;
                     }
                 }
-            // if (visibleLayers[layerIndex].geojson.otherdata[i] !== undefined ) {
-            //     dictBuild[i] = inDict;
-            //     // testVoxels[visibleLayers[layerIndex].geojson.otherdata[i][7]] = inDictTest;
-            // } 
             }
-            
-            dictBuild = dictBuild.filter(function( element ) {
-                return element !== undefined;
-            });
 
-            console.log(dictBuild);
-        
-            // dictBrush[bool] = inBrush;
-            
-            
-            // let current = 0;
-            // let next = 0;
-            // for(let i = 0; i < maxVoxels; i++ ){
-            //     let inDict = {};
-            //     let inBrush = {};
-                
-            //     for (let j = 0; j < numLayers; j++){
-            //         if (visibleLayers[j].geojson.otherdata[i] !== undefined ) {
-            //             let thisIndex = visibleLayers[j].geojson.otherdata[i][7];
-
-            //             if (thisIndex == current) {
-            //                 inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-            //             } else {
-            //                 inDict[visibleLayers[j].propertyName] = 0;
-            //             }
-            //             // console.log(inDict)
-            //             if (j < numLayers-1 && visibleLayers[j+1].geojson.otherdata[i] !== undefined ) {
-            //                 let nextIndex = visibleLayers[j+1].geojson.otherdata[i][7];
-                            
-            //                 if (thisIndex <= nextIndex) { 
-            //                     current = nextIndex;
-            //                     next = nextIndex;
-            //                     // console.log(thisIndex, nextIndex)
-            //                 } else {
-            //                     current = thisIndex;
-            //                 }
-            //                 console.log(thisIndex, nextIndex, current)
-            //             }
-            //             // if (thisIndex >= current) {
-            //             //     inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-
-            //             //     current = thisIndex;
-            //             //     // console.log(j, current, thisIndex)
-            //             // } else {
-            //             //     inDict[visibleLayers[j].propertyName] = 'lllllllll';
-            //             // }
-            //             // console.log(inDict, j)
-            //             // inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-            //             // var layerIndex = j;
-            //         } else {
-            //             // console.log(95959595959)
-            //             // inDict[visibleLayers[j].propertyName] = 0;
-            //         }
-            //     }
-            //     console.log(inDict)
-            //     // if (visibleLayers[layerIndex].geojson.otherdata[i] !== undefined ) {
-            //     //     dictBuild[i] = inDict;
-            //     //     // testVoxels[visibleLayers[layerIndex].geojson.otherdata[i][7]] = inDictTest;
-            //     // } 
-            //     // dictBrush[bool] = inBrush;
-            // }
-
-            
-            // let dictBuild = Array(maxVoxels);
-            let dictBrush = [];
-            // let bool = 0;
-            // for(let i = 0; i < maxVoxels; i++ ){
-            //     let inDict = {};
-            //     let inBrush = {};
-            //     for (let j = 0; j < numLayers; j++){
-            //         // if (typeof this.minObjs != 'undefined') {
-            //         //     this.brushed = true;
-            //         //     var currVal = visibleLayers[j].geojson.otherdata[i][3];
-
-            //         //     if (currVal >= this.minObjs[visibleLayers[j].propertyName] && currVal <= this.maxObjs[visibleLayers[j].propertyName]) {
-            //         //         inBrush[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-            //         //         bool++;
-            //         //     }
-            //         // } 
-            //         if (visibleLayers[j].geojson.otherdata[i] !== undefined ) {
-            //             inDict[visibleLayers[j].propertyName] = visibleLayers[j].geojson.otherdata[i][3];
-            //             var layerIndex = j;
-            //         } else {
-            //             inDict[visibleLayers[j].propertyName] = 0;
-            //         }
-            //     }
-            //     if (visibleLayers[layerIndex].geojson.otherdata[i] !== undefined ) {
-            //         dictBuild[i] = inDict;
-            //         // testVoxels[visibleLayers[layerIndex].geojson.otherdata[i][7]] = inDictTest;
-            //     } 
-            //     // dictBrush[bool] = inBrush;
-            // }
             this.build(dictBuild, dictBrush)
             this.layerIndeces = layerIndeces 
         }
