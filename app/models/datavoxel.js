@@ -20,7 +20,10 @@ var Datavoxel = sequelize.define('Datavoxel', {
     },
     rowsCols: {
       type: DataTypes.JSON,
-    }
+    },
+    allIndices: {
+      type: DataTypes.JSON,
+    },
 }, {
     classMethods: {
       associate: function(models) {

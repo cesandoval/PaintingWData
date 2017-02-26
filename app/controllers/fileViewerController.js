@@ -13,9 +13,9 @@ module.exports.saveShapes = function(req, res) {
         dataProp = req.body.rasterProperty;
 
     async.waterfall([
-        async.apply(fileViewerHelper.loadData, id, req),
-        fileViewerHelper.queryRepeatedLayer,
-        fileViewerHelper.pushDataLayerTransform,
+        async.apply(fileViewerHelper.LoadData, id, req),
+        fileViewerHelper.QueryRepeatedLayer,
+        fileViewerHelper.PushDataLayerTransform,
         // pushDataLayer,
         // pushDataRaster
     ], function (err, result) {
@@ -55,8 +55,8 @@ module.exports.getDatalayers = function(req, res){
 
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
-        async.apply(fileViewerHelper.loadData, req.params.id, req.body),
-        fileViewerHelper.getGeoJSON,
+        async.apply(fileViewerHelper.LoadData, req.params.id, req.body),
+        fileViewerHelper.GetGeoJSON,
     ], function (err, result) {
         res.send({
             bBox : result[0], 

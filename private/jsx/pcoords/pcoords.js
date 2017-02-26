@@ -23,6 +23,7 @@ class PCoords extends React.Component {
             this.setState({started: true});
 
             const bounds = nprops.layers[0].bounds;
+            const indicesArray = nprops.layers[0].allIndices;
             this.lowBnd = bounds[0];
             this.highBnd = bounds[1];
 
@@ -57,19 +58,12 @@ class PCoords extends React.Component {
             let numLayers = visibleLayers.length;
 
             let maxVoxels = 0;
-            let currLayer = {};
             for (let i=0; i<visibleLayers.length; i++) {
-                var indicesDict = Object.assign({}, currLayer, visibleLayers[i].geojson.hashedData);
-                currLayer = visibleLayers[i].geojson.hashedData;
-
                 let currVoxels = visibleLayers[i].geojson.length;
                 if (currVoxels > maxVoxels) {
                     maxVoxels = currVoxels;
                 }
             }
-
-            const indicesArray = Object.keys(indicesDict);
-            indicesArray.sort(function(a, b){return parseInt(a)-parseInt(b)});
 
             let dictBuild = Array(maxVoxels);
             let dictBrush = [];

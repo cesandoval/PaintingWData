@@ -5,8 +5,8 @@ import axios from 'axios';
 
 import Layer from './layer';
 
-const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds) => ({
-    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices
 })
 
 class Layers extends React.Component {
@@ -32,6 +32,7 @@ class Layers extends React.Component {
                         type: l.geojson.geojson.features[0].geometry.type,
                         length: length,
                         // data: Array(Math.floor(Math.sqrt(length))),
+                        // OTHERDATA SHOULD BE ELIMINATED ONCE THE GRAPH CREATOR IS MIGRATED TO THE NEW VERSION
                         otherdata: Array(length),
                         hashedData: {},
                         minMax: Array(2), 
@@ -74,7 +75,7 @@ class Layers extends React.Component {
                     }
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 
-                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds);
+                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds, l.Datavoxel.allIndices);
                 }));
             });
     }

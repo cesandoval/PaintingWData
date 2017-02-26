@@ -1,18 +1,14 @@
-var fileUploadHelper = require('../../lib/fileUploadHelper');
+var fileUploadHelper = require('../../lib/fileUploadHelper');  
 
 var User = require('../models').User,
     gdal = require("gdal"),
     shapefile = require('shapefile'),
     Models = require('../models'),
     path = require('path'),
-    async = require('async'),
     fs = require('fs'),
-    ncp = require('ncp'),
-    exec = require('child_process').exec,
     formidable = require('formidable'),
-    extract = require('extract-zip'),
-    request = require('request'),
-    fileViewer = require('./fileViewerController.js');
+    request = require('request');
+
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
 }
@@ -40,24 +36,24 @@ module.exports.upload = function(req, res) {
        console.log("something went wrong! " + err);
      }
      else{
-      fileUploadHelper.extractZip(path.join(path.dirname(file.path), file.name), function(err, target_path){
+      fileUploadHelper.ExtractZip(path.join(path.dirname(file.path), file.name), function(err, target_path){
         if(err){
           console.log("Error: ", err);
           
         }
         else{
-          fileUploadHelper.verifyFiles(target_path, function(err, target_path){
+          fileUploadHelper.VerifyFiles(target_path, function(err, target_path){
             if(err){
                 console.log("Error: ", err);
                 res.redirect(200, '..');
             }
             else{
-            fileUploadHelper.getShapeFiles(target_path, function(err, shapeFiles){
+            fileUploadHelper.GetShapeFiles(target_path, function(err, shapeFiles){
               if(err){
                 console.log("Error: ", err);
               }
               else{
-                fileUploadHelper.getEPSG(target_path, function(err, epsg, bbox, centroid){
+                fileUploadHelper.GetEPSG(target_path, function(err, epsg, bbox, centroid){
                   console.log(bbox, centroid);
                   var dataFile = Models.Datafile.build();
                   dataFile.userId = req.user.id;

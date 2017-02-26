@@ -16,7 +16,8 @@ function startWorker(datalayerIds, req, callback){
         Model.Datavoxel.findById(voxelId).then(function(datavoxel) {
             datavoxel.update({
                 processed: true,
-                rowsCols: result[1]
+                rowsCols: result[1], 
+                allIndices: result[2]
             }).then(function(){
                 callback({name: datavoxel.voxelname});
             })
@@ -230,10 +231,12 @@ function cargoLoad(props, req, rowsCols, callback){
 }
 
 function parseGeoJSON(results, objProps, req, rowsCols, callback) {
-    for (var i; i<200; i++){
+    for (var i; i<2000; i++){
         console.log(i, '++++++++++++++++++')
     }
-    console.log(results);
+    var allIndices = [];
+    var currIndex = 0;
+
     var newDataJsons = {};
     var _keys = Object.keys(results);
     _keys.forEach(function(key, index){
@@ -247,6 +250,12 @@ function parseGeoJSON(results, objProps, req, rowsCols, callback) {
                     geometry: currentResult.geometry,
                     properties: { }
                 };
+
+            var index = currentResult.voxelIndex;
+            if (allIndices.includes(index) == false) {
+                allIndices[currIndex] = index;
+                currIndex +=1;
+            }
             voxel['properties'][layername] = currentResult.rastervalue;
             voxel['properties']['neighborhood'] = currentResult.neighborhood;
             voxel['properties']['property'] = currentResult.rasterProperty;
@@ -268,12 +277,12 @@ function parseGeoJSON(results, objProps, req, rowsCols, callback) {
         }
         newDataJsons[key] = newDataJSON;
     });
-
-    // console.log(newDataJsons);
-    callback(null, newDataJsons, objProps, req, rowsCols);
+    allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});    
+    
+    callback(null, newDataJsons, objProps, req, rowsCols, allIndices);
 }
 
-function pushDatajson(dataJSONs, objProps, req, rowsCols, callback) {
+function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, callback) {
     var keys = Object.keys(objProps);
     var voxelId
     async.each(keys, function(key, callback) {
@@ -290,7 +299,7 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, callback) {
             voxelId = objProps[key].datavoxelId;
         },
         function(){
-            callback(null, [voxelId, rowsCols]);
+            callback(null, [voxelId, rowsCols, allIndices]);
         });
 
 }
