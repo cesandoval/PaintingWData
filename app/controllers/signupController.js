@@ -27,8 +27,6 @@ passport.deserializeUser(function(id, done) {
 });
 
 var sendVerificationEmail = function(email, verificationLink) {
-  console.log(process.env.USEREMAIL);
-  console.log(process.env.EMAILPASSWORD);
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
