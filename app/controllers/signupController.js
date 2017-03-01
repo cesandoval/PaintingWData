@@ -3,6 +3,8 @@ var User = require('../models').User,
     bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),
     async = require('async');
+    uuid = require('uuid');
+    nodemailer = require('nodemailer');
 
 
 module.exports.show = function(req, res) {
@@ -24,20 +26,49 @@ passport.deserializeUser(function(id, done) {
     );
 });
 
+var sendVerificationEmail = function(email, verificationLink) {
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.USEREMAIL,
+        pass: process.env.EMAILPASSWORD
+    }
+  });
+
+  var mailOptions = {
+    from: '"Painting With Data Team" <' + process.env.USEREMAIL + '>',
+    to: email,
+    subject: 'Please confirm your account',
+    html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
+    text: 'Please confirm your account by clicking the following link: ${URL}'
+  };
+
+  transporter.sendMail(mailOptions, function(error, info) {
+    if(error) {
+      console.log(error);
+    }
+    console.log('Message %s sent: %s', info.messageId, info.response);
+  });
+};
 
 var signUpStrategy = 
   new LocalStrategy({
       passReqToCallback : true
     },
-    function(req, email, password, done) {  
+    function(req, email, password, done) { 
         User.findOne({
            where: {email: email},
       
         }).then(function(user) {
           
            if(user){
-
-            return done(null, false, req.flash('signUpMessage',"Email is already in use."));
+            //check if user email is verified
+            var verified = user.verified;
+            if(verified) {
+              return done(null, false, req.flash('signUpMessage',"Email is already in use."));
+            } else {
+              return done(null, false, req.flash('signUpMessage', "Please verify your email"));
+            }
            }
            else{
             if(!(req.body.password === req.body.confirm_password)){
@@ -47,11 +78,16 @@ var signUpStrategy =
             newUser.email = email
             // generate hash by doing 10 rounds of salt. Is blocking.
             var salt = bcrypt.genSaltSync(10);
+            var id = uuid.v4();
             var hash = bcrypt.hashSync(req.body.password, salt); 
             newUser.password = hash;
+            newUser.verified = false;
+            newUser.urlLink = id;
             //console.log(newUser);
             newUser.save().then(function(){
-              return done(null, newUser, req.flash('signUpMessage', "User successfully registered."));
+              //If testing locally change url to:  http://localhost:3000/users/verify/'
+              sendVerificationEmail(email, 'http://paintingwithdata.mit.edu/users/verify/' + id);
+              return done(null, newUser, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account"));
             });   
            }
            }, function(error){
@@ -72,11 +108,16 @@ var loginStrategy = new LocalStrategy({
       
     }).then(function(user) {
        if(user){  
-         if (bcrypt.compareSync(password, user.password)){
-          return done(null, user, req.flash('loginMessage', "user successfully logged in"));
+         if (user.verified){
+          if(bcrypt.compareSync(password, user.password)) {
+            return done(null, user, req.flash('loginMessage', "user successfully logged in"));
+          }
+          else {
+            return done(null, false, req.flash('loginMessage', "invalid password"));
+          }
          }
          else{
-          return done(null, false, req.flash('loginMessage', "invalid password"));
+          return done(null, false, req.flash('loginMessage', "Please verify your account"));
          }
        }
        else{

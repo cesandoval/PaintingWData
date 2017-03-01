@@ -8,9 +8,6 @@ var passport = require('passport'),
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
 
-
-console.log("==-==---=-----=-------=---------=------------=------------------=", process.env.NODE_ENV);
-
   router.get('/', function(req, res, next) {
     res.render('index', {userSignedIn: req.isAuthenticated(), user: req.user});
   });

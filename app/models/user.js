@@ -11,7 +11,16 @@ module.exports = function(sequelize, DataTypes) {
     password: {
         type: DataTypes.TEXT,
         allowNull: false
-      }
+      },
+    verified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
+    urlLink: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    }
   }, {
     classMethods: {
       associate: function(models) {
