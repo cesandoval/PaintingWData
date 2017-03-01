@@ -30,6 +30,9 @@ module.exports = {
       rowsCols: {
         type: Sequelize.JSON,
       },
+      allIndices: {
+        type: Sequelize.JSON,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

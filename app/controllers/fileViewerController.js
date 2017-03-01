@@ -41,7 +41,6 @@ module.exports.saveShapes = function(req, res) {
             if (req.user.id) {
                 console.log(req.user.id);
                 res.redirect('/layers/' + req.user.id);
-                
             }
         });
         

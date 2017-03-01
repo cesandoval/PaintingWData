@@ -47,8 +47,6 @@ module.exports.computeVoxels = function(req, res){
 };
 
 module.exports.show = function(req, res) {
-
-
     Model.Datafile.findAll({
         where : {
             userId : req.user.id,

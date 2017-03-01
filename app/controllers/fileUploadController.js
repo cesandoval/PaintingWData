@@ -85,8 +85,6 @@ module.exports.upload = function(req, res) {
                   dataFile.save().then(function(d){
                     res.send({id : d.id});
                   });
-                  
-                  
                 })  
               }
             });

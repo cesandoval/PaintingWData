@@ -86,27 +86,31 @@ export default class Pixels {
     }
 
     static parseDataJSON(datajson) {
+        console.log(datajson)
         // Matrix of data
-        // const data = datajson.geojson.data;
-        const otherData = datajson.geojson.otherdata;
-        const otherArray = new Float32Array(otherData.length * 3)
-        const addressArray = new Float32Array(otherData.length * 3)
+        const hashedData = datajson.geojson.hashedData;
+        const allIndices = datajson.allIndices;
+
+        const otherArray = new Float32Array(Object.keys(hashedData).length * 3)
+        const addressArray = new Float32Array(Object.keys(hashedData).length * 3)
 
         // const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
         const endColor = datajson.color2;
 
-        for (let i = 0, j=0; i < otherData.length; i++, j=j+3){
-            // x, y coordinates
-            otherArray[j] = otherData[i][0];
-            otherArray[j + 1] = otherData[i][1];
-            // value/weight
-            otherArray[j + 2] = otherData[i][3];
+        for (let i = 0, j=0; i < Object.keys(hashedData).length; i++, j=j+3){
+            if (typeof hashedData[allIndices[i]] !== "undefined"){
+                // x, y coordinates
+                otherArray[j] = hashedData[allIndices[i]][0];
+                otherArray[j + 1] = hashedData[allIndices[i]][1];
+                // value/weight
+                otherArray[j + 2] = hashedData[allIndices[i]][3];
 
-            // voxel address
-            addressArray[j] = otherData[i][5];
-            addressArray[j+1] = otherData[i][6];
-            addressArray[j+2] = otherData[i][7];
+                // voxel address
+                addressArray[j] = hashedData[allIndices[i]][5];
+                addressArray[j+1] = hashedData[allIndices[i]][6];
+                addressArray[j+2] = hashedData[allIndices[i]][7];
+            }
         }
 
         // Julian's Implementation, does not parse the JSON correctly
