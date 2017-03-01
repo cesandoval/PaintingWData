@@ -27,16 +27,18 @@ passport.deserializeUser(function(id, done) {
 });
 
 var sendVerificationEmail = function(email, verificationLink) {
+  console.log(process.env.USEREMAIL);
+  console.log(process.env.EMAILPASSWORD);
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'donotreplyrendezvousteam@gmail.com',
-        pass: 'W{UvmwAB/,fgnGQNDZa,ZVumn&C[%hki+CDRk7yxGttByETXyW'
+        user: process.env.USEREMAIL,
+        pass: process.env.EMAILPASSWORD
     }
   });
 
   var mailOptions = {
-    from: '"Painting With Data Team" <donotreplyrendezvousteam@gmail.com>',
+    from: '"Painting With Data Team" <' + process.env.USEREMAIL + '>',
     to: email,
     subject: 'Please confirm your account',
     html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
@@ -56,7 +58,6 @@ var signUpStrategy =
       passReqToCallback : true
     },
     function(req, email, password, done) { 
-        console.log("we made it"); 
         User.findOne({
            where: {email: email},
       
