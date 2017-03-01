@@ -16,6 +16,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      verified: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      urlLink: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
