@@ -13,10 +13,22 @@ module.exports.saveShapes = function(req, res) {
         dataProp = req.body.rasterProperty;
 
     async.waterfall([
-        async.apply(fileViewerHelper.loadData, id, req),
+        async.apply(fileViewerHelper.loadData, datafileId, req),
         fileViewerHelper.queryRepeatedLayer,
         fileViewerHelper.pushDataLayerTransform,
-        // pushDataLayer,
+        function(file, thingsArray, callback){
+              fs_extra.remove(file, err => {
+                  if (err) {
+                    console.log("Erro cleaning local directory: ", file);
+                    console.log(err, err.stack);
+                    callback(err);
+                  }
+                  else{
+                     callback(null);
+                  }
+            })
+           
+        }
         // pushDataRaster
     ], function (err, result) {
         console.log(result)
@@ -29,6 +41,7 @@ module.exports.saveShapes = function(req, res) {
             if (req.user.id) {
                 console.log(req.user.id);
                 res.redirect('/layers/' + req.user.id);
+                
             }
         });
         

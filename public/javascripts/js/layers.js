@@ -36,7 +36,7 @@ function requestMap(id, callback){
 
 function embedMap(id, centroid){
     map = L.map(id).setView(centroid, 11);
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpandmbXliNDBjZWd2M2x6bDk3c2ZtOTkifQ._QA7i5Mpkd_m30IGElHziw', {
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWJlbGJlenUiLCJhIjoiY2l6a2RyZjl6MDQ3aDJxbDR5YzVnZ2hqNCJ9.bcFsqoSDlmSmPc9mazBM5Q', {
         maxZoom: 18,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
