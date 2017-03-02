@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 
-var email = process.env.pdata_email;
-var password = process.env.pdata_password; // Obtain the username and password somehow.
+var email = process.env.USEREMAIL;
+var password = process.env.EMAILPASSWORD; // Obtain the username and password somehow.
 var transporter = nodemailer.createTransport(`smtps://${email}@gmail.com:${password}@smtp.gmail.com`);
 
 module.exports.sendMail = function(mailOptions, callback){
