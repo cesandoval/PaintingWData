@@ -34,7 +34,7 @@ function getBbox(datalayerIds, req, callback) {
         +'"datafileId"'+" in ("+idsQuery+");";
 
     connection.query(distinctQuery).spread(function(results, metadata){
-        var epsg = results[0].epsg;
+        var epsg = 4326;
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.geometry),"+
             epsg+") FROM public."+'"Datalayers"' + " AS p WHERE "
             +'"datafileId"'+" in ("+idsQuery+");";
@@ -52,11 +52,11 @@ function createDatavoxel(bbox, props, req, callback){
 
     var voxelname = req.body.voxelname;
     var currBbox = bbox;
-    currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ props[0].epsg} };
+    currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ 4326} };
 
     var newDatavoxel = Model.Datavoxel.build();
     newDatavoxel.voxelname = voxelname;
-    newDatavoxel.epsg = props[0].epsg;
+    newDatavoxel.epsg = 4326;
     newDatavoxel.userId = req.user.id;
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
@@ -79,7 +79,7 @@ function createDatavoxel(bbox, props, req, callback){
 // This function creates a Datanet around the BBox that has been computed
 // It returns the Datanet, and a list of properties of each Datafile associated with the Datanet
 function getNet(bbox, props, req, callback) {
-    var epsg = props[0].epsg;
+    var epsg = 4326;
 
     var numOfVoxels = req.body.voxelDensity;
     var coords = bbox.coordinates[0],
@@ -118,7 +118,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
     // CHANGE LAYERNAME TO VOXELNAME/////
     // ++++++++++++-++++++++++------
     var voxelname = req.body.voxelname;
-    var epsg = props[0].epsg;
+    var epsg = 4326;
     var datavoxelId = props[0].datavoxelId;
     var userId = req.user.id;
     var pointNet  = pointNet.point_net
@@ -272,7 +272,7 @@ function parseGeoJSON(results, objProps, req, rowsCols, callback) {
             userId: req.user.id,
             datavoxelId: objProps[key].datavoxelId,
             datafileId: objProps[key].datafileId,
-            epsg: objProps[key].epsg,
+            epsg: 4326,
             geojson: geoJSON,
         }
         newDataJsons[key] = newDataJSON;
@@ -289,7 +289,7 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, callback) 
             var newDataJSON = Model.Datajson.build();
             newDataJSON.layername = objProps[key].layername;
             newDataJSON.datafileId = objProps[key].datafileId;
-            newDataJSON.epsg = objProps[key].epsg;
+            newDataJSON.epsg = 4326;
             newDataJSON.datavoxelId = objProps[key].datavoxelId;
             newDataJSON.geojson = dataJSONs[key];
             newDataJSON.userId = req.user.id;
