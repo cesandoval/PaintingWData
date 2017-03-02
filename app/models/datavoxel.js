@@ -24,6 +24,9 @@ var Datavoxel = sequelize.define('Datavoxel', {
     allIndices: {
       type: DataTypes.JSON,
     },
+    ptDistance: {
+      type: DataTypes.FLOAT,
+    },
 }, {
     classMethods: {
       associate: function(models) {

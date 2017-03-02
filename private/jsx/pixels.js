@@ -86,7 +86,7 @@ export default class Pixels {
     }
 
     static parseDataJSON(datajson) {
-        console.log(datajson)
+        // console.log(datajson)
         // Matrix of data
         const hashedData = datajson.geojson.hashedData;
         const allIndices = datajson.allIndices;

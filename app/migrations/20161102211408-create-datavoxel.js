@@ -33,6 +33,9 @@ module.exports = {
       allIndices: {
         type: Sequelize.JSON,
       },
+      ptDistance: {
+        type: Sequelize.FLOAT,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

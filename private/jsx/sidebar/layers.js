@@ -23,6 +23,7 @@ class Layers extends React.Component {
         axios.get('/datajson/all/'+ datavoxelId, {options: {}})
             .then(({ data })=>{  
                 act.sideAddLayers(data.map(l => {
+                    console.log(l)
                     const length = l.geojson.geojson.features.length;
                     const propertyName = l.geojson.geojson.features[0].properties.property;
                     
@@ -43,8 +44,9 @@ class Layers extends React.Component {
                     let xDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[0])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[0]));
                     let yDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[1])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[1]));
 
-                    const lowBnd = Math.max(xDiff, yDiff)/10;
-                    const highBnd = Math.max(xDiff, yDiff)*.8;
+                    const ptDistance = l.Datavoxel.ptDistance;
+                    const lowBnd = ptDistance/10;
+                    const highBnd = ptDistance*.8;
                     const bounds = [ lowBnd, highBnd ];
 
                     const mappedGeojson = l.geojson.geojson.features.map(g => {

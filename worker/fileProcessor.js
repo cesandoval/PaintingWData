@@ -17,7 +17,8 @@ function startWorker(datalayerIds, req, callback){
             datavoxel.update({
                 processed: true,
                 rowsCols: result[1], 
-                allIndices: result[2]
+                allIndices: result[2], 
+                ptDistance: result[3]
             }).then(function(){
                 callback({name: datavoxel.voxelname});
             })
@@ -141,7 +142,13 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
     }, maxLength);
 
     var itemsProcessed = 0;
-    var firstItem = pointNet.coordinates[0][0]
+    var firstItem = pointNet.coordinates[0]
+    var secondItem = pointNet.coordinates[1]
+
+    var xDiff = Math.abs(parseFloat(firstItem[0])-parseFloat(secondItem[0]));
+    var yDiff = Math.abs(parseFloat(firstItem[1])-parseFloat(secondItem[1]));
+    var ptDistance = Math.max(xDiff, yDiff)
+
 
     for (i = 0; i < pointNet.coordinates.length; i++){
 
@@ -167,7 +174,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
             itemsProcessed++;
 
             if(itemsProcessed === pointNet.coordinates.length) {
-                callback(null, props, req, rowsCols);
+                callback(null, props, req, rowsCols, ptDistance);
             }
         });
 
@@ -203,7 +210,7 @@ function stValue(prop, callback) {
 
 }
 
-function cargoLoad(props, req, rowsCols, callback){
+function cargoLoad(props, req, rowsCols, ptDistance, callback){
     console.log("props: ", props);
     var resultsObj ={};
     var objProps = {};
@@ -223,14 +230,14 @@ function cargoLoad(props, req, rowsCols, callback){
             resultsObj[prop.datafileId] = results;
             objProps[prop.datafileId] = prop;
             if(processedProps == props.length){
-                callback(null, resultsObj, objProps, req, rowsCols);
+                callback(null, resultsObj, objProps, req, rowsCols, ptDistance);
             }
         });
     });
 
 }
 
-function parseGeoJSON(results, objProps, req, rowsCols, callback) {
+function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
     for (var i; i<2000; i++){
         console.log(i, '++++++++++++++++++')
     }
@@ -279,10 +286,10 @@ function parseGeoJSON(results, objProps, req, rowsCols, callback) {
     });
     allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});    
     
-    callback(null, newDataJsons, objProps, req, rowsCols, allIndices);
+    callback(null, newDataJsons, objProps, req, rowsCols, allIndices, ptDistance);
 }
 
-function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, callback) {
+function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance, callback) {
     var keys = Object.keys(objProps);
     var voxelId
     async.each(keys, function(key, callback) {
@@ -299,7 +306,7 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, callback) 
             voxelId = objProps[key].datavoxelId;
         },
         function(){
-            callback(null, [voxelId, rowsCols, allIndices]);
+            callback(null, [voxelId, rowsCols, allIndices, ptDistance]);
         });
 
 }
