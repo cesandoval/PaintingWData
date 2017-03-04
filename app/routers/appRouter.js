@@ -29,6 +29,7 @@ var passport = require('passport'),
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
+  router.get('/getThumbnailData/:id', isAuthenticated, fileViewerController.serveThumbnailData);
 
   router.get('/layers/:id', isAuthenticated, datalayerController.show);
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);

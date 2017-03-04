@@ -79,3 +79,17 @@ module.exports.serveMapData = function(req, res) {
         })
     });  
 }
+
+module.exports.serveThumbnailData = function(req, res) {
+    async.waterfall([
+        async.apply(fileViewerHelper.loadDatalayers, req.params.id, req.body),
+    ], function (err, result) {
+        res.send({
+            geoJSON: result[0],
+            centroid: result[2],
+            bBox : result[1], 
+            // fields : result[3],
+            // epsg: result[4]
+        })
+    });  
+}

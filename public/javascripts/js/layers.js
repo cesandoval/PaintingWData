@@ -7,6 +7,7 @@ function requestMap(id, callback){
         contentType: false, 
         success: function(data)
         {
+            console.log('===============')
             if(typeof data.error === 'undefined')
             {
                 console.log("success");

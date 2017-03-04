@@ -8,6 +8,8 @@
 //   $map.empty();
 
 // });
+console.log(64464646466464646464)
+
 
 $('#mapView').on('show.bs.modal', function(e) {
 

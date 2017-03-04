@@ -1,6 +1,5 @@
 var currId;
 var maps = {};
-
 $('[id*="mapView"]').on('hidden.bs.modal', function (e) {
   if (maps['map_thumbnail_' + currId] != null) {
     console.log('Removing map' + 'map_thumbnail_' + currId);
@@ -36,7 +35,7 @@ $('.modal').on('show.bs.modal', function(e) {
   }
 
   $.ajax({
-    url: '/getMapData/'+id,
+    url: '/getThumbnailData/'+id,
     type: 'GET',
     cache: false,
     processData: false, 
@@ -46,13 +45,10 @@ $('.modal').on('show.bs.modal', function(e) {
       if(typeof data.error === 'undefined')
       {
         console.log("success");
-        console.log(data.epsg);
         $map.removeClass('temporary_map_visuals');
         $map.empty();
-        var bBox = JSON.parse(data.bBox);
+        var bBox = data.bBox;
         var geoJSON = JSON.stringify(data.geoJSON);
-        renderFields(data.fields);
-        renderEPSG(data.epsg);
 
         var centroid = JSON.stringify(data.centroid);
         renderMap(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
@@ -76,8 +72,7 @@ $('.modal').on('show.bs.modal', function(e) {
     var mapIndex = 'map_thumbnail_' + currId;
     console.log('Current id is ' + mapIndex);
 
-    maps[mapIndex] = embedMap(mapIndex, JSON.parse(centroid).coordinates.reverse())
-    console.log(maps[mapIndex]);
+    maps[mapIndex] = embedMap(mapIndex, centroid.coordinates.reverse())
 
     bBoxCoords = [];
     bBox.coordinates[0].forEach(function(feature, i) {
@@ -91,17 +86,12 @@ $('.modal').on('show.bs.modal', function(e) {
       "weight": 1,
       "opacity": 1,
       "fillOpacity": 0.65,
-              // 'fillColor': '#ff7800'
-              'fillColor': '#D34031'
+      // 'fillColor': '#ff7800'
+      'fillColor': '#D34031'
     };
 
 
-    parsedGeoJSON = [];
-    geoJSON.forEach(function(json, i) {
-      parsedGeoJSON.push(JSON.parse(json));
-    })
-
-    L.geoJson(parsedGeoJSON, {
+    L.geoJson(geoJSON, {
       style: myStyle
     }).addTo(maps[mapIndex]);
   }
