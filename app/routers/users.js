@@ -40,6 +40,7 @@ router.post('/signup', passport.authenticate('signup',{
 }));
 
 router.get('/signout', function(req, res) {
+  console.log("tried to access this ...");
   req.logout();
   res.redirect('/');
 });

@@ -24,8 +24,7 @@ module.exports.computeVoxels = function(req, res){
 
     job ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
     manager.process(job, function (err, result){
-            console.log("------------------------------------------------");
-            console.log("done computing voxels.");
+            
             var mailOptions = {
                 from: '"Painting With Data" <sender@email.com>', // sender
                 to: req.user.email, // list of receivers
