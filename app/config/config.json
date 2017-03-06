@@ -16,7 +16,7 @@
   "production": {
     "username": "postgres",
     "password": "postgrespass",
-    "database": "PaintingWithData_Riyadh_prod",
+    "database": "PaintingWithData_Riyadh",
     "host": "52.87.253.4",
     "dialect": "postgres"
   }
