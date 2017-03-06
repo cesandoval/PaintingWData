@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
-    "host": "52.87.253.4",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
