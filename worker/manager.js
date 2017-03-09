@@ -18,6 +18,7 @@
         Manager.prototype.process = function (job, callback) {
             job.callback =  callback;
             console.log("job executing ... ");
+            console.log(job)
             this._q.push(job, function (err) {
                 console.log("job done ...");
             })

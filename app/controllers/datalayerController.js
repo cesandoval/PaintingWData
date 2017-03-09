@@ -4,7 +4,8 @@ var Model = require('../models'),
     request = require('request'),
     manager = require('../../worker/manager')(10),
     mailer = require('./mailController'),
-    app = require('../../app');
+    app = require('../../app'),
+    Channel = require('../../worker/channel');
 
 
 // This file extracts the datalayer ids from the request object and saves it on
@@ -23,6 +24,27 @@ module.exports.computeVoxels = function(req, res){
     });
 
     job ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
+    
+    var queue = 'queue';
+    Channel(queue, function(err, channel, conn) {  
+        if (err) {
+            console.error(err.stack);
+        }
+        else {
+            console.log('channel and queue created');
+            var work = {a: 12, b:35};
+            var blob = new Buffer(JSON.stringify(job))
+            channel.sendToQueue(queue, blob, {
+                persistent: true
+            });
+            setImmediate(function() {
+                channel.close();
+                conn.close();
+            });
+        }
+    });
+
+
     manager.process(job, function (err, result){
             
             var mailOptions = {
