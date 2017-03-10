@@ -1,13 +1,27 @@
 version: '2'
 services:
+  db:
+    image: mdillon/postgis
+    ports:
+     - "5432:5432"
+    environment:
+      POSTGRES_DB: PaintingWithData_Riyadh
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+      
+    
   web:
     build: .
+    links:
+     - db  
+    environment:
+      NODE_ENV: production  
+      USEREMAIL: painting.with.data@gmail.com
+      EMAILPASSWORD: postgrespass  
     ports:
      - "80:3000"
     volumes:
      - .:/code
-  db:
-    image: postgres:9.6.1
-    
+  
 
     
