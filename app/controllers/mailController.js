@@ -2,20 +2,48 @@ var nodemailer = require('nodemailer');
 
 var email = process.env.USEREMAIL;
 var password = process.env.EMAILPASSWORD; // Obtain the username and password somehow.
-var transporter = nodemailer.createTransport(`smtps://${email}@gmail.com:${password}@smtp.gmail.com`);
 
-module.exports.sendMail = function(mailOptions, callback){
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: email,
+        pass: password
+    }
+  });
 
-	transporter.sendMail(mailOptions, function(err, info){
-	    if(err){
-	    	callback(err, null);
-	        
-	    }
-	    else{
-		    callback(null, info);
-		}
-	 
-	});
+module.exports.sendVerificationEmail = function(email, verificationLink) {
+  
+  var mailOptions = {
+    from: '"Painting With Data Team" <' + email + '>',
+    to: email,
+    subject: 'Please confirm your account',
+    html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
+    text: 'Please confirm your account by clicking the following link: ${URL}'
+  };
 
-}
+  transporter.sendMail(mailOptions, function(error, info) {
+    if(error) {
+      console.log(error);
+    }
+    console.log('Message %s sent: %s', info.messageId, info.response);
+  });
+
+};
+
+module.exports.sendVoxelEmail = function(email, userId) {
+	var mailOptions = {
+    	from: '"Painting With Data" <painting.with.data@gmail.com>', 
+		to: email, 
+    	subject: 'Done Processing Voxels', 
+    	text: 'Done Processing Voxels', 
+    	html: 'Done processing voxels access them here: http://paintingwithdata.mit.edu/voxels/' + userId
+   	};
+
+   	transporter.sendMail(mailOptions, function(error, info) {
+    	if(error) {
+      		console.log(error);
+    	}
+    	console.log('Message %s sent: %s', info.messageId, info.response);
+  	});
+};
 
