@@ -24,7 +24,6 @@ module.exports.computeVoxels = function(req, res){
     });
 
     job ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
-    
     var queue = 'voxels';
     Channel(queue, function(err, channel, conn) {  
         if (err) {
@@ -32,7 +31,6 @@ module.exports.computeVoxels = function(req, res){
         }
         else {
             console.log('channel and queue created');
-            var work = {a: 12, b:35};
             var blob = new Buffer(JSON.stringify(job))
             channel.sendToQueue(queue, blob, {
                 persistent: true
@@ -63,7 +61,6 @@ module.exports.computeVoxels = function(req, res){
 
 
     //     });
-
     res.redirect('/voxels/'+ req.user.id);  
 };
 
