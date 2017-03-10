@@ -22,19 +22,8 @@ function startWorker(datalayerIds, req, callback){
                 ptDistance: result[3]
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
-                    var mailOptions = {
-                        from: '"Painting With Data" <painting.with.data@gmail.com>', // sender
-                        to: user.email, // list of receivers
-                        subject: 'Done Processing Voxels', // Subject line
-                        text: 'Done Processing Voxels', // plaintext body
-                        html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
-                    };
-                    // mailer.sendMail(mailOptions, function(err, info){
-                    //     if(err){
-                    //         console.log("error sending mail: \n", err);
-                    //     }
-                    //     console.log("Mail sent", info.response);
-                    // });
+                    //send user an email
+                    mailer.sendVoxelEmail(user.email, user.id);
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
@@ -276,7 +265,7 @@ function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
                 };
 
             var index = currentResult.voxelIndex;
-            if (allIndices.includes(index) == false) {
+            if (allIndices.indexOf(index) === -1) {
                 allIndices[currIndex] = index;
                 currIndex +=1;
             }
