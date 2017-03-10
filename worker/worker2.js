@@ -1,7 +1,7 @@
 var Channel = require('./channel'),
     proc = require('./fileProcessor').processDatalayer;
 
-var queue = 'queue';
+var queue = 'voxels';
 
 Channel(queue, function(err, channel, conn) {  
   if (err) {
@@ -39,7 +39,7 @@ Channel(queue, function(err, channel, conn) {
         setTimeout(function() {
           channel.ack(msg);
           consume();
-        }, 1e3);
+        }, 1e4);
       }
       else {
         console.log('no message, waiting...');

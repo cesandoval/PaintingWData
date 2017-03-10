@@ -25,7 +25,7 @@ module.exports.computeVoxels = function(req, res){
 
     job ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
     
-    var queue = 'queue';
+    var queue = 'voxels';
     Channel(queue, function(err, channel, conn) {  
         if (err) {
             console.error(err.stack);
@@ -45,24 +45,24 @@ module.exports.computeVoxels = function(req, res){
     });
 
 
-    manager.process(job, function (err, result){
+    // manager.process(job, function (err, result){
             
-            var mailOptions = {
-                from: '"Painting With Data" <sender@email.com>', // sender
-                to: req.user.email, // list of receivers
-                subject: 'Done Processing Voxels', // Subject line
-                text: 'Done Processing Voxels', // plaintext body
-                html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
-            };
-            // mailer.sendMail(mailOptions, function(err, info){
-            //     if(err){
-            //         console.log("error sending mail: \n", err);
-            //     }
-            //     console.log("Mail sent", info.response);
-            // });
+    //         var mailOptions = {
+    //             from: '"Painting With Data" <sender@email.com>', // sender
+    //             to: req.user.email, // list of receivers
+    //             subject: 'Done Processing Voxels', // Subject line
+    //             text: 'Done Processing Voxels', // plaintext body
+    //             html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
+    //         };
+    //         // mailer.sendMail(mailOptions, function(err, info){
+    //         //     if(err){
+    //         //         console.log("error sending mail: \n", err);
+    //         //     }
+    //         //     console.log("Mail sent", info.response);
+    //         // });
 
 
-        });
+    //     });
 
     res.redirect('/voxels/'+ req.user.id);  
 };

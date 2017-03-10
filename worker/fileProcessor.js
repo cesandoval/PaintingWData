@@ -1,6 +1,7 @@
 var async = require('async'),
     Model = require('../app/models/index'),
-    connection = require('../app/sequelize');
+    connection = require('../app/sequelize'),
+    mailer = require('../app/controllers/mailController');
 
 function startWorker(datalayerIds, req, callback){
     async.waterfall([
@@ -20,7 +21,23 @@ function startWorker(datalayerIds, req, callback){
                 allIndices: result[2], 
                 ptDistance: result[3]
             }).then(function(){
-                callback({name: datavoxel.voxelname});
+                Model.User.findById(result[4].user.id).then(function(user) {
+                    var mailOptions = {
+                        from: '"Painting With Data" <painting.with.data@gmail.com>', // sender
+                        to: user.email, // list of receivers
+                        subject: 'Done Processing Voxels', // Subject line
+                        text: 'Done Processing Voxels', // plaintext body
+                        html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
+                    };
+                    // mailer.sendMail(mailOptions, function(err, info){
+                    //     if(err){
+                    //         console.log("error sending mail: \n", err);
+                    //     }
+                    //     console.log("Mail sent", info.response);
+                    // });
+                }).then(function(){
+                    callback({name: datavoxel.voxelname});
+                })    
             })
         })
     });
@@ -306,9 +323,10 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             voxelId = objProps[key].datavoxelId;
         },
         function(){
-            callback(null, [voxelId, rowsCols, allIndices, ptDistance]);
+            callback(null, [voxelId, rowsCols, allIndices, ptDistance, req]);
         });
 
 }
+
 
 module.exports.processDatalayer = startWorker;

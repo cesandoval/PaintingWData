@@ -1,6 +1,6 @@
 var Channel = require('./channel');
 
-var queue = 'queue';
+var queue = 'voxels';
 
 Channel(queue, function(err, channel, conn) {  
   if (err) {
