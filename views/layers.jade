@@ -82,6 +82,9 @@ block pageTitle
                     br
                     label.layer-label Layer Name
                     p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                  .userlayername
+                    label.layer-label User Layer Name
+                    p(display='inline').label-body #{datafile.Datalayers[0].userLayerName}
                   .property
                     label.layer-label Data Property
                     p.label-body #{datafile.Datalayers[0].rasterProperty}
@@ -89,6 +92,7 @@ block pageTitle
                     .location
                       label.layer-label Layer Location
                       p.label-body #{datafile.Datalayers[0].location}
+
               p.label-body.text-center
                 a.modal-button.btn(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
 

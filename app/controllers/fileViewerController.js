@@ -19,7 +19,7 @@ module.exports.saveShapes = function(req, res) {
         function(file, thingsArray, callback){
               fs_extra.remove(file, err => {
                   if (err) {
-                    console.log("Erro cleaning local directory: ", file);
+                    console.log("Error cleaning local directory: ", file);
                     console.log(err, err.stack);
                     callback(err);
                   }
@@ -67,7 +67,7 @@ module.exports.getDatalayers = function(req, res){
 
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
-        async.apply(fileViewerHelper.loadData, req.params.id, req.body),
+        async.apply(fileViewerHelper.loadViewerData, req.params.id, req.body),
         fileViewerHelper.getGeoJSON,
     ], function (err, result) {
         res.send({

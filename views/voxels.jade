@@ -52,7 +52,9 @@ block pageTitle
                       br
                       p.label-body File Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
-                      br
+                      p.label-body User Layer Name
+                        label.layer-label.voxel-label #{datafile.Datalayers[0].userLayerName}
+
                       p.label-body Layer Data Property
                         label.layer-label.voxel-label #{datafile.Datalayers[0].rasterProperty}
                       p.label-body.text-right
