@@ -6,6 +6,7 @@ RUN apt-get upgrade -y
 RUN apt-get install curl -y
 RUN apt-get install git -y 
 
+
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y nodejs
 
@@ -31,6 +32,10 @@ RUN npm install --save pg pg-hstore
 RUN npm install -g sequelize-cli
 RUN npm install
 
+
+RUN apt-get install rabbitmq-server -y
+RUN npm install -g forever
+
 WORKDIR app
 RUN sequelize db:migrate 
 
@@ -42,4 +47,6 @@ WORKDIR /usr/src/app
 EXPOSE  3000
 
 # Run app using nodemon
-CMD ["nodemon", "bin/www"]
+CMD ["service", "rabbitmq-server start"]
+CMD [ "npm", "start" ]
+CMD ["forever", "worker/worker2.js"]

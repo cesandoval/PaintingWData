@@ -1,8 +1,8 @@
-var host = process.env === 'production' ? '52.87.253.4' : 'localhost';
+var host = process.env === 'production' ? '54.227.111.118' : 'localhost';
 
 var Sequelize = require('sequelize'),
     sequelize = new Sequelize('PaintingWithData_Riyadh', 'postgres', 'postgrespass', {
-        host: host,
+        host: '54.227.111.118',
         dialect: 'postgres'
     })
 

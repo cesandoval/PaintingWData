@@ -29,12 +29,12 @@ function startWorker(datalayerIds, req, callback){
                         text: 'Done Processing Voxels', // plaintext body
                         html: '<b>Done processing voxels</b>' // html body, figure out how to use the jade files
                     };
-                    // mailer.sendMail(mailOptions, function(err, info){
-                    //     if(err){
-                    //         console.log("error sending mail: \n", err);
-                    //     }
-                    //     console.log("Mail sent", info.response);
-                    // });
+                    mailer.sendMail(mailOptions, function(err, info){
+                        if(err){
+                            console.log("error sending mail: \n", err);
+                        }
+                        console.log("Mail sent", info.response);
+                    });
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
