@@ -35,7 +35,7 @@ $('.modal').on('show.bs.modal', function(e) {
   }
 
   $.ajax({
-    url: '/getThumbnailData/'+id,
+    url: '/getThumbnailData/'+currId,
     type: 'GET',
     cache: false,
     processData: false, 
