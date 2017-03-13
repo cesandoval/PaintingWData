@@ -37,6 +37,7 @@ export default class Sidebar extends React.Component {
         this.state = {showing: 'Layers', fields: initFields};
         this.changeView = this.changeView.bind(this);
         this.onClick=this.onClick.bind(this);
+        
     }
     changeView(layer) {
         this.setState({showing: layer})

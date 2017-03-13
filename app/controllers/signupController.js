@@ -4,7 +4,7 @@ var User = require('../models').User,
     passport = require('passport'),
     async = require('async');
     uuid = require('uuid');
-    nodemailer = require('nodemailer');
+    mailer = require('./mailController');
 
 
 module.exports.show = function(req, res) {
@@ -25,31 +25,6 @@ passport.deserializeUser(function(id, done) {
     }
     );
 });
-
-var sendVerificationEmail = function(email, verificationLink) {
-  var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.USEREMAIL,
-        pass: process.env.EMAILPASSWORD
-    }
-  });
-
-  var mailOptions = {
-    from: '"Painting With Data Team" <' + process.env.USEREMAIL + '>',
-    to: email,
-    subject: 'Please confirm your account',
-    html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
-    text: 'Please confirm your account by clicking the following link: ${URL}'
-  };
-
-  transporter.sendMail(mailOptions, function(error, info) {
-    if(error) {
-      console.log(error);
-    }
-    console.log('Message %s sent: %s', info.messageId, info.response);
-  });
-};
 
 var signUpStrategy = 
   new LocalStrategy({
@@ -86,7 +61,7 @@ var signUpStrategy =
             //console.log(newUser);
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
-              sendVerificationEmail(email, 'http://paintingwithdata.mit.edu/users/verify/' + id);
+              mailer.sendVerificationEmail(email, 'http://paintingwithdata.mit.edu/users/verify/' + id);
               return done(null, false, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account."));
             });   
            }
