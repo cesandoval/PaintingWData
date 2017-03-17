@@ -1,5 +1,8 @@
 extends layout
 
+link(rel='stylesheet', href='/stylesheets/mystyle.css')
+
+
 block pageTitle
   div.container.spacing-large
     div.container
@@ -22,54 +25,88 @@ block pageTitle
       p.spacing-medium.text-left Painting With Data is an open-source web application. You can view the Github repository <a target="_blank" href="https://github.com/cesandoval/PaintingWithData_Riyadh">here</a>:
 
   #team.section
-    .section_title
-      p TEAM
-      .title_under
+    h2.center TEAM
     .section_content.row.magin_bottom
       .col-sm-2
       .col-sm-8.centered_text
-        | Painting with Data was started as a research project by Carlos Sandoval. The continued development of the application has been made possible through a great group of multidisciplinary researchers at MIT. 
+        p Painting with Data was initiated by Carlos Sandoval Olascoaga as a research project. The continued development of the application has been made possible through a talented group of multidisciplinary researchers at MIT. 
       .col-sm-2
     .section_content.row
       .tm_wrapper
         .team_icon
-          img(src='img/members/williams.jpeg')
+          img(src='images/members/carlos.jpg')
         .icon_over
-          img.icon_plus.mybtn.pop_team(src='img/plus.png', name='Carlos Sandoval Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='img/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
+          img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Carlos Sandoval Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='images/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
           .icon_links
             .icon_25(style='padding:0px;')
               a(href='', target='_blank')
-                img.icon_link_img.mybtn(src='img/homepage.png')
+                img.icon_link_img.mybtn(src='images/homepage.png')
             .icon_25(style='padding:0px;')
-              img.icon_link_img.mybtn(src='img/twitter.png')
+              img.icon_link_img.mybtn(src='images/twitter.png')
             .icon_25(style='padding:0px;')
-              img.icon_link_img.mybtn(src='img/linkedin.png')
+              img.icon_link_img.mybtn(src='images/linkedin.png')
             .icon_25(style='padding:0px;')
-              img.icon_link_img.mybtn(src='img/github.png')
+              img.icon_link_img.mybtn(src='images/github.png')
         p.member_name Carlos Sandoval Olascoaga
         p.member_role Project Founder / PhD Student 
     .section_title_sm
       .title_left
-        p Current
+        p Researchers
     .section_content.row.member_cont
       .col-sm-3.tm_wrapper
         .team_icon
-          img(src='img/members/carlos.jpg')
+          img(src='images/members/abel.jpg')
         .icon_over(style='opacity: 0;')
-          img.icon_plus.mybtn.pop_team(src='img/plus.png', name='Carlos Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='img/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
+          img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Abel Tadesse', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='images/members/abel.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='abelbezu@mit.edu')
           .icon_links
             .icon_25(style='padding:0px;')
-              img.icon_link_img.mybtn(src='img/homepage.png')
+              img.icon_link_img.mybtn(src='images/homepage.png')
             .icon_25(style='padding:0px;')
-              img.icon_link_img.mybtn(src='img/twitter.png')
+              img.icon_link_img.mybtn(src='images/twitter.png')
             .icon_25(style='padding:0px;')
               a(href='https://www.linkedin.com/in/carlos-sandoval-olascoaga', target='_blank')
-                img.icon_link_img.mybtn(src='img/linkedin.png')
+                img.icon_link_img.mybtn(src='images/linkedin.png')
             .icon_25(style='padding:0px;')
               a(href='https://github.com/cesandoval', target='_blank')
-                img.icon_link_img.mybtn(src='img/github.png')
-        p.member_name Carlos Olascoaga
-        p.member_role Collaborator
+                img.icon_link_img.mybtn(src='images/github.png')
+        p.member_name Abel Tadesse
+        p.member_role UROP
+      .col-sm-3.tm_wrapper
+        .team_icon
+          img(src='images/members/yoeal.jpg')
+        .icon_over(style='opacity: 0;')
+          img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Yoeal Efrem', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='images/members/yoeal.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='yefrem@mit.edu')
+          .icon_links
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='images/homepage.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='images/twitter.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://www.linkedin.com/in/carlos-sandoval-olascoaga', target='_blank')
+                img.icon_link_img.mybtn(src='images/linkedin.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://github.com/cesandoval', target='_blank')
+                img.icon_link_img.mybtn(src='images/github.png')
+        p.member_name Yoeal Efrem
+        p.member_role UROP
+      .col-sm-3.tm_wrapper
+        .team_icon
+          img(src='images/members/dalma.jpg')
+        .icon_over(style='opacity: 0;')
+          img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Dalma Foldesi', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='images/members/dalma.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='dalma@mit.edu')
+          .icon_links
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='images/homepage.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='images/twitter.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://www.linkedin.com/in/carlos-sandoval-olascoaga', target='_blank')
+                img.icon_link_img.mybtn(src='images/linkedin.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://github.com/cesandoval', target='_blank')
+                img.icon_link_img.mybtn(src='images/github.png')
+        p.member_name Dalma Foldesi
+        p.member_role Research Assistant
 
 script(type='text/javascript', src="/javascripts/myui.js")
 

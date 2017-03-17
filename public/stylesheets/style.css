@@ -572,3 +572,160 @@ textarea:focus, .form-control:focus, input:focus, input:active{
     opacity: 0.8;
 }
 
+.tm_wrapper {
+    margin-bottom: 40px;
+}
+
+.team_icon {
+    height: 200px;
+    width: 200px;
+    border-radius: 100px;
+    margin: 0 auto;
+}
+
+.team_icon img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    object-fit: cover;
+}
+
+.team_icon img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    object-fit: cover;
+}
+
+img {
+    vertical-align: middle;
+}
+
+img {
+    border: 0;
+}
+
+.icon_over {
+    background-color: rgba(255,255,255,1);
+    height: 200px;
+    width: 200px;
+    border-radius: 100px;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    transform: translateX(-50%);
+    z-index: 2;
+    transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+}
+
+.section_title {
+    width: 100%;
+}
+
+
+p {
+    margin: 0 0 10px;
+}
+
+.title_under {
+    width: 44px;
+    border-bottom: 4px solid black;
+    margin: 0 auto;
+}
+
+.magin_bottom {
+    padding-bottom: 60px;
+}
+
+.row {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+.section_content {
+    margin-top: 35px;
+    font-weight: 300;
+    font-size: 15px;
+    min-height: 100px;
+    padding-bottom: 50px;
+    position: relative;
+}
+
+.icon_plus {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+.mybtn {
+    opacity: 0.6;
+    transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+}
+
+.icon_links {
+    width: 80%;
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    transform: translateX(-50%);
+}
+
+.icon_25 {
+    float: left;
+    width: 24%;
+}
+
+.icon_link_img {
+    width: 37px;
+    padding-left: 7px;
+}
+
+.mybtn {
+    opacity: 0.6;
+    transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+}
+
+.member_name {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 500;
+    margin-bottom: 0px;
+}
+
+.member_role {
+    text-align: center;
+    font-size: 13px;
+}
+
+.section_title_sm {
+    margin-top: 70px;
+    height: 35px;
+}
+
+.title_left {
+    /*border-left: 2px solid black;*/
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-left: 10px;
+}
+
+.section_title_sm p {
+    margin: 0 auto;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+
+
+
