@@ -22,6 +22,9 @@ html
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
 
+    //- link(href='https://www.mapbox.com/base/latest/base.css', rel='stylesheet')
+    link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
+
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
     //- //reference our site-specific css
@@ -31,6 +34,10 @@ html
     link(rel='stylesheet', href='/stylesheets/build.css')
     link(rel='stylesheet', href='/stylesheets/login.css')
 
+
+
+    //- // Mapbox Libraries
+    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
 
     //- // D3 libs
     script(type='text/javascript', src="/javascripts/js/d3.js")
@@ -74,7 +81,7 @@ html
     hr
 
     div.footer
-      p &copy; Carlos Sandoval Olascoaga, CDDL 2017.
+      p &copy; Carlos Sandoval Olascoaga 2017.
 
 script.
   $('.dropdown').on('show.bs.dropdown', function() {

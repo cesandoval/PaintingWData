@@ -12,22 +12,22 @@ block pageTitle
     
   .container(style = "margin-top: 10px").spacing-large
     .row.spacing-large
-        h1.center Voxels
+        h1.center My Voxel Projects
 
     .col-md-6(style="padding: 30px;").col-md-offset-3
       if datavoxels.length != 0
         .row.text-center
-          h3.spacing Open a voxel by selecting it below.
+          h3.spacing To open a voxel, first select it from the library below
         .row.spacing.text-center
           button.btn.btn-gray.btn-jumbotron#openVoxel(style="width: 100px; height: 100px; line-height: 90px;") Open Voxel
 
     .row
       if datavoxels.length == 0
-        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No datafiles found  &nbsp;
+        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No voxel projects found  &nbsp;
         <br>
         div.text-center
           a(href = "/layers/{datavoxel.userId}")
-            btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Build a datavoxel!
+            btn.btn-gray.btn-jumbotron.strong(style="width: 210px; height: 210px; line-height: 210px;") Build a voxel project!
 
       for datavoxel in datavoxels
         if datavoxel.id

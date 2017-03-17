@@ -15,11 +15,11 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
     ul.nav.navbar-nav.navbar-left
       li
         a(href='/about') About
-      li
-        a(href='/documentation') Documentation
+      //- li
+      //-   a(href='/documentation') Documentation
       if userSignedIn
         li
-          a(href='/app') Application
+          a(href='/voxels/#{user.id}') Application
       
     ul.nav.navbar-nav.navbar-right
       if userSignedIn
@@ -31,7 +31,7 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
           br(style="padding-top: 20px;")
           a.li(href='/layers/#{user.id}', style="line-height: 30px;").dropdown-item My Layers
           br
-          a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Voxels
+          a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Projects
           br.spacing
           a.dropdown-item.li(href='/users/signout', style="line-height: 30px;") Logout
 

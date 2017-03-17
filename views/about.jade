@@ -1,20 +1,78 @@
 extends layout
 
 block pageTitle
-  div.jumbotron
+  div.container.spacing-large
     div.container
       .row.spacing-large
          h1.center About Painting with Data
       .row
         div(class='about_images')
           .col-sm-3
-            img(src="http://localhost:3000/images/(1).jpg", style="width:100%; display: inline-block;")
+            img(src="../images/(1).jpg", style="width:100%; display: inline-block;")
           .col-sm-3
-            img(src="http://localhost:3000/images/(2).jpg", style="width:100%; display: inline-block;")
+            img(src="../images/(2).jpg", style="width:100%; display: inline-block;")
           .col-sm-3
-            img(src="http://localhost:3000/images/(3).jpg", style="width:100%; display: inline-block;")
+            img(src="../images/(3).jpg", style="width:100%; display: inline-block;")
 
   div.container
     .row.spacing-large
-      p Painting with Data, an open-source web-application is proposed as a first step to constructing urban computing tools that are transparent, open-ended, collective, visual, and non-deterministic, considering the city as a problem of organized complexity. Painting with Data proposes an urban computing tool that moves beyond quantification mechanisms as the primary driver of urban modeling. Alternatively, this thesis proposes an iterative process between the world, its abstractions and representations, and the designer. In this sense, the representational models are generative: they provide a reflective interface that integrates personal perception, cognition, and notation.
-      p Painting with Data, utilizes voxels, a computer graphics technique, combined with a graph database as an alternative data representation. Its technological and theoretical features propose a hybrid approach to urban computing, combining functional and representational modeling to provide users with an agency in representation, an ability to compute visually, and to lower the barriers of entry to urban modeling through real-time user interaction. Such models can create intuitions of the relational structures among urban dynamics, providing personal and contextual transparency to the modeling process, and motivating civic engagement in policy-making. 
+      p.spacing-medium.text-left <strong>Painting with Data</strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction. Painting with Data is a first step to constructing urban computing tools that are transparent, open-ended, collective, visual, and non-deterministic, considering the city as a problem of organized complexity. 
+      p.spacing-medium.text-left With an account, users are able to upload spatial data and create projects that are accessible anytime they log in. You simply need a valid email address and shapefiles to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles. Future functionality will include point and line data. 
+      p.spacing-medium.text-left Painting with Data, utilizes voxels, a computer graphics technique, combined with a graph database as an alternative data representation. Its technological and theoretical features provide a hybrid approach to urban computing, combining functional and representational modeling to provide users with an agency in representation, an ability to compute visually, and to lower the barriers of entry to urban modeling through real-time user interaction. Such models can create intuitions of the relational structures among urban dynamics, providing personal and contextual transparency to the modeling process, and motivating civic engagement in policy-making.
+      p.spacing-medium.text-left Painting With Data is an open-source web application. You can view the Github repository <a target="_blank" href="https://github.com/cesandoval/PaintingWithData_Riyadh">here</a>:
+
+  #team.section
+    .section_title
+      p TEAM
+      .title_under
+    .section_content.row.magin_bottom
+      .col-sm-2
+      .col-sm-8.centered_text
+        | Painting with Data was started as a research project by Carlos Sandoval. The continued development of the application has been made possible through a great group of multidisciplinary researchers at MIT. 
+      .col-sm-2
+    .section_content.row
+      .tm_wrapper
+        .team_icon
+          img(src='img/members/williams.jpeg')
+        .icon_over
+          img.icon_plus.mybtn.pop_team(src='img/plus.png', name='Carlos Sandoval Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='img/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
+          .icon_links
+            .icon_25(style='padding:0px;')
+              a(href='', target='_blank')
+                img.icon_link_img.mybtn(src='img/homepage.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='img/twitter.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='img/linkedin.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='img/github.png')
+        p.member_name Carlos Sandoval Olascoaga
+        p.member_role Project Founder / PhD Student 
+    .section_title_sm
+      .title_left
+        p Current
+    .section_content.row.member_cont
+      .col-sm-3.tm_wrapper
+        .team_icon
+          img(src='img/members/carlos.jpg')
+        .icon_over(style='opacity: 0;')
+          img.icon_plus.mybtn.pop_team(src='img/plus.png', name='Carlos Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='img/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
+          .icon_links
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='img/homepage.png')
+            .icon_25(style='padding:0px;')
+              img.icon_link_img.mybtn(src='img/twitter.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://www.linkedin.com/in/carlos-sandoval-olascoaga', target='_blank')
+                img.icon_link_img.mybtn(src='img/linkedin.png')
+            .icon_25(style='padding:0px;')
+              a(href='https://github.com/cesandoval', target='_blank')
+                img.icon_link_img.mybtn(src='img/github.png')
+        p.member_name Carlos Olascoaga
+        p.member_role Collaborator
+
+script(type='text/javascript', src="/javascripts/myui.js")
+
+
+    
+    

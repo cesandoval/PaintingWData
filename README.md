@@ -46,7 +46,7 @@ npm install -g sequelize-cli
 * To start the worker, run `node worker/index.js` and go to a separate tab in your browser and navigate to `localhost:8899`
 * After each update on the code, stop and restart the worker, and refresh the page.
 
-## Copyright (c) 2016, Carlos Sandoval Olascoaga, CDDL. All rights reserved.
+## Copyright (c) 2016, Carlos Sandoval Olascoaga. All rights reserved.
 
 Redistribution and use in source form, with or without
 modification, are permitted provided that the following conditions are met:

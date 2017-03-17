@@ -15,9 +15,10 @@ block pageTitle
       .row.spacing-large
         h1.center Layers
 
-      .row.spacing-large
+      .row.spacing-small
         .col-md-6.col-md-offset-3
-          p.text-center Info about layers & what they represent. Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          h4.spacing-large.text-center This is your library of layers. Select layers below that you would like to add to a voxel project.
+          p.text-center To compute a voxel first select the set of layers you want to combine. To select a layer click on it once, to deselect click it again.
 
       .row.text-center
         span.glyphicon.glyphicon-triangle-bottom &#xe114;
@@ -29,42 +30,15 @@ block pageTitle
 
     .row
       if datafiles.length == 0
-        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No datafiles found  &nbsp;
+        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No layers found  &nbsp;
         <br>
         div.text-center
           a(href = "/upload")
-            btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Upload a datafile
-
+            btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Upload a layer
       if datafiles.length != 0
-        .row
-          .col-md-4
-          .col-md-4(style="padding: 30px;")
-            .row.text-center
-                h3.spacing Compute voxels for a set of layers by selecting them below. Click on the layer again to deselect.
-            .row
-              form(method='post', action='/layers')
-                input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Voxel name...')
-                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
-                <br>
-                .row.spacing-large
-                  .col-md-3
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;") Density
-                  .col-md-9
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;")   10000 
-                    input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
-                <br>
-                .row.spacing
-                  .input-group-btn.text-center
-                    button.btn.btn-gray.btn-jumbotron(type='submit') Compute
-      .row.text-center
-        span.glyphicon.glyphicon-triangle-bottom &#xe114;
-        br
-        span.glyphicon.glyphicon-triangle-bottom &#xe114;
-        br
-        span.glyphicon.glyphicon-triangle-bottom &#xe114;
-      
-      div.spacing-large
+        div.text-center
+          a(href = "/upload")
+            btn.btn-gray.btn-jumbotron.strong(style="width: 150px; height: 150px; line-height: 150px;") Upload a layer
 
   .container
       .row
@@ -121,6 +95,37 @@ block pageTitle
                           p.label-body #{datafile.Datalayers[0].description}
                       label.layer-label Uploaded On
                         p.label-body #{datafile.Datalayers[0].createdAt.toUTCString()}
+
+    if datafiles.length != 0
+      .row
+        .col-md-4
+        .col-md-4(style="padding: 30px;")
+          .row.text-center
+              h2.spacing Compute a Voxel
+          .row
+            form(method='post', action='/layers')
+              input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Project name...')
+              input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+              <br>
+              .row.spacing-large
+                .col-md-3
+                  p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;") Density
+                .col-md-9
+                  p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;")   10000 
+                  input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
+                  p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
+              <br>
+              .row.spacing
+                .input-group-btn.text-center
+                  button.btn.btn-gray.btn-jumbotron(type='submit') Compute
+    .row.text-center
+      span.glyphicon.glyphicon-triangle-bottom &#xe114;
+      br
+      span.glyphicon.glyphicon-triangle-bottom &#xe114;
+      br
+      span.glyphicon.glyphicon-triangle-bottom &#xe114;
+    
+    div.spacing-large
     
   script.
     var mySlider = $("input.slider").bootstrapSlider();
