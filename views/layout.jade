@@ -103,6 +103,106 @@ script.
 
    $(document).ready(function() {
     var height = $(".navbar").height();
-    $(".dropdown-menu").top(height);
+    //- $(".dropdown-menu").top(height);
   });
-    
+
+script.
+  d3.selectAll(".tm_wrapper .icon_over").on("mouseover", function () {
+    d3.select(this).style("opacity", 0.6);
+  }).on("mouseout", function () {
+    d3.select(this).style("opacity", 0);
+  });
+
+
+  $(".pop_team").click(function () {
+      //console.log($(this).attr("bio1"));
+
+      d3.select("body").append("div")
+          .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
+          ;
+
+      var thisholder = d3.select("body").append("div")
+          .attr("class", "pop_team_box").style("top", $(document).scrollTop() + window.innerHeight * 0.2 + "px");
+
+      thisholder
+          .append("img").attr("src", "images/thex.png").attr("class", "close_expanded");
+
+      var left_panel = thisholder.append("div").attr("class","col-sm-5 box_column");
+      var right_panel = thisholder.append("div").attr("class","col-sm-7 box_column left_mark");
+
+      left_panel.append("img").attr("class","member_box_img").attr("src",$(this).attr("img_url"));
+      left_panel.append("p").attr("class","member_box_title").text($(this).attr("name"));
+      left_panel.append("p").attr("class","member_box_email").text($(this).attr("email"));
+
+      var r1_1_0 = left_panel.append("div").attr("class", "icon_links_box");
+
+      if ($(this).attr("home_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("home_url") + '" target="_blank"><img src="images/homepage.png" class="icon_link_img mybtn"></a>');
+      }
+
+      else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/homepage.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("twitter_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("twitter_url") + '" target="_blank"><img src="images/twitter.png" class="icon_link_img mybtn"></a>');
+      }
+      else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/twitter.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("linkedin_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("linkedin_url") + '" target="_blank"><img src="images/linkedin.png" class="icon_link_img mybtn"></a>');
+      } else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/linkedin.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("github_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("github_url") + '" target="_blank"><img src="images/github.png" class="icon_link_img mybtn"></a>');
+      } else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/github.png" class="icon_link_img mybtn">');
+      }
+
+      right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio1"));
+      if($(this).attr("bio2")){
+          right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio2"));
+      }
+      if($(this).attr("bio3")){
+          right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio3"));
+      }
+
+      $(".pop_team_box .close_expanded").click(function () {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
+
+      $(".pop_team_box_back").click(function () {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
+      
+  });
