@@ -68,7 +68,8 @@ router.post('/reset-password/', function(req, res) {
   var password = req.body.password;
   var passwordVerify = req.body.passwordVerify;
   if(password !== passwordVerify) {
-    res.redirect('localhost:3000/users/reset-password/' + id);
+    //locally change to localhost:3000
+    res.redirect('http://paintingwithdata.mit.edu/users/reset-password/' + id);
   }
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(password, salt); 
