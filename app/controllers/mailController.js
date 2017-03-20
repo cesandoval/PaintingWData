@@ -52,8 +52,8 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
       from: '"Painting With Data" <painting.with.data@gmail.com>', 
     to: email, 
       subject: 'Reset Password', 
-      text: 'Reset Passwords', 
-      html: 'Go to paintingwithdata.mit.edu/reset-password/: ' + passwordLink
+      text: 'Reset Password', 
+      html: 'Click this link to reset your password: http://paintingwithdata.mit.edu/users/reset-password/' + passwordLink
     };
 
     transporter.sendMail(mailOptions, function(error, info) {

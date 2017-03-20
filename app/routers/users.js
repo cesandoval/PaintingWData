@@ -5,7 +5,7 @@ var isAuthenticated = require('../controllers/signupController').isAuthenticated
 var User = require('../models').User;
 var mailer = require('../controllers/mailController');
 var bcrypt = require('bcrypt-nodejs');
-var async = require('async');
+var uuid = require('uuid');
 
 router.get('/login', function(req, res, next){
   res.render('users/login', { title: 'Express', message: req.flash('loginMessage') });
@@ -32,7 +32,7 @@ router.post('/login',
 );
 
 router.get('/reset-password', function(req, res) {
-  res.render('users/resetPassword');
+  res.render('users/resetPassword', {message: ""});
 });
 
 router.post('/reset-password-email', function(req, res) {
@@ -41,8 +41,8 @@ router.post('/reset-password-email', function(req, res) {
       where: {email: email}
     }).then(function(user){
       if(user === null) {
-        //put error message here that email is not registered!
-        req.flash('signUpMessage',"Email does not exist");
+        //email is not registered!
+        res.render('users/resetPassword', {message: "Email is not registered"});
         return;
       }
       mailer.sendResetPasswordEmail(email, user.urlLink);
@@ -56,32 +56,31 @@ router.get('/reset-password/:id', function(req, res) {
     where: {urlLink: id}
   }).then(function(user) {
     if(user === null) {
-      res.redirect('/')
+      res.redirect('/');
     } else {
-      res.render('users/changePassword', user);
+      res.render('users/changePassword', {message: ""});
     } 
   });
 });
 
-router.post('/reset-password', function(req, res) {
-  console.log("here");
-  console.log(req);
-  var id = req.params.id;
+router.post('/reset-password/', function(req, res) {
+  var id = req.headers.referer.split("/")[5];
   var password = req.body.password;
   var passwordVerify = req.body.passwordVerify;
-  console.log(password, passwordVerify);
   if(password !== passwordVerify) {
-    return;
+    res.redirect('localhost:3000/users/reset-password/' + id);
   }
   var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(req.body.password, salt); 
+  var hash = bcrypt.hashSync(password, salt); 
 
   User.findOne({
     where: {urlLink: id}
   }).then(function(user) {
     user.password = hash;
+    //reset urlLink after password changed
+    user.urlLink = uuid.v4();
     user.save();
-    res.redirect('users/login');
+    res.redirect('/');
   });
 
 });
@@ -108,6 +107,8 @@ router.get('/verify/:id', function(req, res) {
   }).then(function(user) {
     if(user) {
       user.verified = true;
+      //reset urlLink after account verified
+      user.urlLink = uuid.v4();
       user.save();
       res.redirect('/users/login');
     } else {
