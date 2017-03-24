@@ -47,3 +47,21 @@ module.exports.sendVoxelEmail = function(email, userId) {
   	});
 };
 
+module.exports.sendResetPasswordEmail = function(email, passwordLink) {
+  var mailOptions = {
+      from: '"Painting With Data" <painting.with.data@gmail.com>', 
+    to: email, 
+      subject: 'Reset Password', 
+      text: 'Reset Password', 
+      html: 'Click this link to reset your password: http://paintingwithdata.mit.edu/users/reset-password/' + passwordLink
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if(error) {
+          console.log(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
+    });
+
+}
+
