@@ -87,3 +87,153 @@ append content
     script(src='/javascripts/js/d3.parcoords.js')
     script(src='/javascripts/bundle.js')
     script(src='/javascripts/queryButton.js')
+
+
+    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
+    link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
+    meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    style.
+        *{
+            user-select:none;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background:#000;
+        }
+        #pivot {
+            -webkit-transform-style:preserve-3d;
+            perspective:600px;
+            position:absolute;
+            left:-200%;
+            right:-200%;
+            top:-200%;
+            bottom:-200%;
+        }
+        #grid {
+            background:url('assets/grid.png');
+            width:100%;
+            height:100%;
+            position:absolute;
+            -webkit-transform-origin:center center;
+            perspective-origin:120px;
+            display:none;
+        }
+        #webgl{
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            position:absolute;
+            opacity:1;
+        }
+        .spinner {
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            opacity: 1;
+            pointer-events:none;
+            transition:all 0.25s;
+        }
+        .spinner:after {
+            opacity:1;
+            width:50px;
+            height:50px;
+            background-size: 30px;
+        }
+        .elev:hover #elevation {
+            display:block;
+        }
+        .elev canvas {
+            cursor: crosshair;
+        }
+        canvas {
+            cursor:-webkit-grab;
+        }
+        canvas:active{
+            cursor:-webkit-grabbing;
+        }
+        #compass {
+            perspective:100px;
+            position: absolute;
+            background:rgba(0,0,0,0.7);
+            z-index: 99;
+            bottom: 0;
+            left: 0;
+            padding: 10px 16px;
+            opacity: 0.9;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px;
+            cursor:hand;
+        }
+        #compass:hover {
+            background:steelblue;
+        }
+        #compass:hover:after{
+            content:"RESET";
+            color:white;
+            text-align:center;
+            font-size:0.75em;
+            line-height:42px;
+        }
+        #compass:hover img {
+            display:none;
+        }
+        #caption {
+            color:orange;
+        }
+        .count-icon{
+            background:rgba(0,0,0,0);
+        }
+        .count-icon div{
+            width:3px;
+            height:3px;
+            border-radius:50%;
+            background:aqua;
+            margin:6px;
+            transition:all 0.25s;
+        }
+        .count-icon:hover div{
+            border:0px solid #424b50;
+            width:10px;
+            height:10px;
+            margin:2px;
+            background:orange;
+        }
+        .dragger {
+            float:right;
+            font-weight:bold;
+        }
+        .short.rounded-toggle{
+            margin:8px;
+        }
+        .filterreset{
+            transform:rotate(180deg);
+            cursor:pointer;
+            color:#999;
+        }
+        .filterreset:hover{
+            background:#999;
+            color:white;
+        }
+        @media screen and (max-width: 680px) {
+            #sidebar {
+                display:none;
+            }
+        }
+    style(type='text/css').
+    #pivot
+    #grid
+    #webgl
+    #elevation
+    #progress.spinner.pad1.z100
+    #compass(onclick='updateCompass(true)')
+    img(src='assets/compass.svg', width='28')
+    script(src='libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
+    script(src='libs/utilities.js')
+    script(src='libs/three.min.js')
+    script(src='libs/app.js')
+    script(src='libs/OrbitControls.js')

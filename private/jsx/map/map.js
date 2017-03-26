@@ -28,6 +28,8 @@ class MapCanvas extends React.Component {
             const canvas = newProps.map;
             const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
 
+            // const addMap = PaintGraph.Pixels.addMap(canvas, bbox);
+
             this.setState({layersAdded: true});
 
             newProps.layers.map((layer, n)=>{
