@@ -90,7 +90,7 @@ append content
 
 
     script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
-    link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
+    //- link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
     //- meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     style.
         #pivot {
@@ -103,7 +103,7 @@ append content
             bottom:-200%;
         }
         #grid {
-            background:url('assets/grid.png');
+            background:url('/images/assets/grid.png');
             width:100%;
             height:100%;
             position:absolute;
@@ -218,8 +218,8 @@ append content
     //- #webgl
     //- #elevation
     //- #progress.spinner.pad1.z100
-    #compass(onclick='updateCompass(true)')
-    img(src='/images/assets/compass.svg', width='28')
+    //- #compass(onclick='updateCompass(true)')
+    //- img(src='/images/assets/compass.svg', width='28')
     script(src='/javascripts/libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
     script(src='/javascripts/libs/utilities.js')
     //- script(src='/javascripts/libs/three.min.js')

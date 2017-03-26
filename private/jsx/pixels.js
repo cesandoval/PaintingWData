@@ -69,6 +69,274 @@ export default class Pixels {
         thiscam.position.set(newPos.x, newPos.y, newPos.z);
     }
 
+    static buildMapbox(graph, canvas, bbox) {
+        var meshes = 0;
+        var parserRequests = 0;
+        var updaterRequests = 0;
+        var finished = 0;
+        //compass functionality
+        var pivot = document.querySelector('#grid')
+        var compass = document.querySelector('#compass img')
+        var screenPosition;
+        
+        function updateCompass(reset){
+            var styling;
+            if (reset) {
+                canvas.controls.straighten();
+                canvas.controls.autoRotate=false;
+                styling = '';
+            }
+            else {
+                var angle = canvas.controls.getAzimuthalAngle()*180/Math.PI;
+                var pitch = canvas.controls.getPolarAngle()*180/Math.PI;
+                styling = 'rotateX('+pitch+'deg) rotateZ('+angle+'deg)'
+            }
+            compass.style['-webkit-transform'] = styling
+            pivot.style['-webkit-transform'] = styling
+            pivot.style['display'] = 'block'
+        }
+
+        //set up scene
+        // var width  = window.innerWidth,
+        //     height = window.innerHeight;
+
+        //set up renderer
+        // var renderer = new THREE.WebGLRenderer({alpha:true});
+        // graph.renderer.setSize(width, height)
+        // document.getElementById('webgl').appendChild(graph.renderer.domElement);
+
+        // //set up camera
+        // // camera.position.y = 12000;
+        // // render();
+
+        // // function render() {
+        // //     controls.update();
+        // //     requestAnimationFrame(render);
+        // //     renderer.render(scene, camera);
+        // // }
+
+
+        var raycaster = new THREE.Raycaster();
+        console.log(canvas.controls)
+        // console.log( getBaseLog(0.5, canvas.controls.target.distanceTo(controls.object.position)/12000))
+
+        // function getZoom(){
+        //     var pt = canvas.controls.target.distanceTo(controls.object.position);
+        //     return Math.min(
+        //         Math.max(
+        //             getBaseLog(0.5, pt/12000)+4,
+        //             0
+        //         )
+        //     ,22);
+        // }
+
+        // var tilesToGet = 0;
+        // var inspectElevation = false;
+
+        // function assembleUrl(img, coords){
+        //     // console.log(img, coords)
+        //     var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
+        //     var res = img ? '@2x.png' :'@2x.pngraw';
+
+        //     //domain sharding
+        //     var serverIndex = 2*(coords[1]%2)+coords[2]%2
+        //     var server = ['a','b','c','d'][serverIndex]
+        //     //return 'sample.png'
+        //     return 'https://'+server+'.tiles.mapbox.com/v4/'+tileset+'/'+slashify(coords)+res+'?access_token=pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg'
+        // }
+
+
+        // var basePlane = new THREE.PlaneBufferGeometry(basePlaneDimension*100, basePlaneDimension*100, 1, 1);
+
+        // var mat = new THREE.MeshBasicMaterial( {
+        //     wireframe: true,
+        //     opacity:0
+        //     //transparent: true
+        // } );
+
+        // var plane = new THREE.Mesh( basePlane, mat );
+        // plane.rotation.x = -0.5*Math.PI;
+        // plane.opacity=0
+        // graph.scene.add( plane );
+
+        // // calculates which tiles are in view to download
+        // var updater = new Worker('workers/updatetile.js');
+        // updater.addEventListener('message', function(e) {
+
+        //     var cb = e.data;
+        //     var queue = cb.getTiles[0].length;
+        //     if (queue>0) {
+        //         getTiles(cb.getTiles);
+        //         updateTileVisibility();
+        //     }
+        // }, false)
+
+        // //converts RGB values to elevation
+        // var parserPool = [];
+
+        // for (var p=0; p<4; p++){
+        //     var parser = new Worker('workers/parseelevationworker.js');
+
+        //     // whenever parser returns a mesh, make mesh
+        //     parser.addEventListener('message', function(e) {
+        //         var time = Date.now();
+        //         var cb = e.data;
+        //         parserRequests++
+        //         if(cb.makeMesh) makeMesh(cb.makeMesh)
+        //         else console.log(cb)
+        //     }, false)
+        //     parserPool.push(parser)
+        // }
+
+
+        // //initial tile load
+        // window.setTimeout(function(){
+        //     updateCompass()
+        // }, 500);
+
+        // function updateTiles(){
+
+        //     zoom = Math.floor(getZoom());
+
+        //     var ul = {x:-1,y:-1,z:-1};
+        //     var ur = {x:1,y:-1,z:-1};
+        //     var lr = {x:1,y:1,z:1};
+        //     var ll = {x:-1,y:1,z:1};
+
+        //     var corners = [ul, ur, lr, ll, ul].map(function(corner){
+        //         raycaster.setFromCamera(corner, canvas.camera);
+        //         return raycaster.intersectObject(plane)[0].point;
+        //     })
+
+        //     if (corners[0] === screenPosition) return;
+        //     else screenPosition = corners[0];
+
+        //     updater.postMessage([zoom,corners])
+
+
+        // }
+
+        // // given a list of elevation and imagery tiles, download
+        // function getTiles([tiles,elevation]){
+
+        //     document.querySelector('#progress').style.opacity = 1;
+
+        //     tiles =
+        //     tiles.map(function(tile){return slashify(tile)})
+
+
+        //     tilesToGet+= tiles.length;
+        //     updaterRequests+=tiles.length
+
+        //     elevation.forEach(function(coords){
+
+        //         //download the elevation image
+        //         getPixels(assembleUrl(null, coords),
+
+        //             function(err, pixels) {
+        //                 // usually a water tile-- fill with 0 elevation
+        //                 if (err) pixels = null
+        //                 var parserIndex = 2*(coords[1]%2)+coords[2]%2
+        //                 parserPool[parserIndex]
+        //                     .postMessage([pixels, coords, tiles,parserIndex])
+        //             }
+        //         )
+        //     })
+
+        // }
+
+
+        // function makeMesh([data, [z,x,y]]){
+        //     meshes++
+
+        //     var tileSize = basePlaneDimension/(Math.pow(2,z));
+        //     var vertices = 128;
+        //     var segments = vertices-1;
+
+        //     // get image to drape
+        //     var texture = new THREE.TextureLoader()
+        //     .load(
+
+        //         //url
+        //         assembleUrl(true, [z,x,y]),
+
+        //         //callback function
+        //         function(err, resp){
+        //             tilesToGet--
+        //                 finished++
+
+        //             // scene.remove(placeholder)
+        //             plane.visible=true
+
+        //             if (tilesToGet===0) {
+        //                 document.querySelector('#progress').style.opacity = 0;
+        //                 console.log('STABLE')
+        //                 updateTileVisibility()
+        //             }
+
+        //         }
+        //     );
+
+        //     // set material
+        //     var material = new THREE.MeshBasicMaterial({map: texture});
+
+        //     data = resolveSeams(data, neighborTiles,[z,x,y])
+        //     var geometry = new THREE.PlaneBufferGeometry(tileSize, tileSize, segments, segments);
+
+        //     geometry.attributes.position.array = new Float32Array(data);
+
+        //     // var placeholder = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({wireframe:true,color:0x999999}));
+        //     // scene.add(placeholder);
+
+        //     var plane = new THREE.Mesh(geometry, material);
+
+        //     plane.coords = slashify([z,x,y])
+        //     plane.zoom = z;
+        //     graph.scene.add(plane)
+        //     plane.visible=false
+        // };
+
+
+        // var zoom = getZoom();
+
+        // // function toggleElevation(){
+        // //     inspectElevation = !inspectElevation
+        // //     var className = inspectElevation ? 'elev' : ''
+        // //     document.querySelector('#webgl').className = className;
+        // // }
+        // function setCenter(lnglat){
+        //     var pxCoords = project(lnglat)
+        //     canvas.camera.position.x = pxCoords.x;
+        //     canvas.camera.position.z = pxCoords.z;
+        //     canvas.controls.moveTo(pxCoords, canvas.camera.position.y);
+
+        //     markerx.setLatLng(lnglat.reverse());
+
+        //     window.setTimeout(function(){updateTiles()},100);
+        //     updateCompass(true);
+        // }
+
+        // window.addEventListener( 'resize', onWindowResize, false );
+
+        // function onWindowResize() {
+        //     canvas.camera.aspect = window.innerWidth / window.innerHeight;
+        //     canvas.camera.updateProjectionMatrix();
+        //     graph.renderer.setSize( window.innerWidth, window.innerHeight );
+        //     updateTiles()
+        // }
+
+        // function updateTileVisibility(){
+        //     var zoom = Math.floor(getZoom())
+        //     //update tile visibility based on zoom
+        //     for (var s=0; s<graph.scene.children.length; s++){
+        //         var child = graph.scene.children[s];
+        //         if (child.zoom === zoom || child.zoom === undefined) child.visible = true
+        //         else child.visible = false;
+        //     }
+        // }
+
+    }
+
     // Create a InstancedBufferGeometry Object
     // See Three.js Docs for more info
     initGeometry() {
