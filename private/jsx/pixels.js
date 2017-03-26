@@ -117,8 +117,8 @@ export default class Pixels {
 
 
         var raycaster = new THREE.Raycaster();
-        console.log(canvas.controls)
-        // console.log( getBaseLog(0.5, canvas.controls.target.distanceTo(controls.object.position)/12000))
+        console.log(canvas.controls.target.distanceTo(canvas.controls.object.position))
+        // console.log( getBaseLog(0.5, canvas.controls.target.distanceTo(canvas.controls.object.position)/12000))
 
         // function getZoom(){
         //     var pt = canvas.controls.target.distanceTo(controls.object.position);
