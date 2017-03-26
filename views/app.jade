@@ -91,16 +91,8 @@ append content
 
     script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
     link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
-    meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
+    //- meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     style.
-        *{
-            user-select:none;
-        }
-        body {
-            margin: 0;
-            overflow: hidden;
-            background:#000;
-        }
         #pivot {
             -webkit-transform-style:preserve-3d;
             perspective:600px;
@@ -148,12 +140,12 @@ append content
         .elev canvas {
             cursor: crosshair;
         }
-        canvas {
-            cursor:-webkit-grab;
-        }
-        canvas:active{
-            cursor:-webkit-grabbing;
-        }
+        //- canvas {
+        //-     cursor:-webkit-grab;
+        //- }
+        //- canvas:active{
+        //-     cursor:-webkit-grabbing;
+        //- }
         #compass {
             perspective:100px;
             position: absolute;
@@ -219,21 +211,17 @@ append content
             background:#999;
             color:white;
         }
-        @media screen and (max-width: 680px) {
-            #sidebar {
-                display:none;
-            }
-        }
-    style(type='text/css').
-    #pivot
-    #grid
-    #webgl
-    #elevation
-    #progress.spinner.pad1.z100
+
+    //- style(type='text/css').
+    //- #pivot
+    //- #grid
+    //- #webgl
+    //- #elevation
+    //- #progress.spinner.pad1.z100
     #compass(onclick='updateCompass(true)')
-    img(src='assets/compass.svg', width='28')
-    script(src='libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
-    script(src='libs/utilities.js')
-    script(src='libs/three.min.js')
-    script(src='libs/app.js')
-    script(src='libs/OrbitControls.js')
+    img(src='/images/assets/compass.svg', width='28')
+    script(src='/javascripts/libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
+    script(src='/javascripts/libs/utilities.js')
+    //- script(src='/javascripts/libs/three.min.js')
+    script(src='/javascripts/libs/app.js')
+    //- script(src='/javascripts/libs/OrbitControls.js')
