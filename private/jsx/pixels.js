@@ -79,6 +79,10 @@ export default class Pixels {
         var pivot = document.querySelector('#grid')
         var compass = document.querySelector('#compass img')
         var screenPosition;
+
+        console.log(location)
+        setView_T(canvas.controls,location.hash)
+        window.setTimeout(function(){updateTiles()},1000);
         
         function updateCompass(reset){
             var styling;
@@ -113,7 +117,7 @@ export default class Pixels {
         var inspectElevation = false;
 
         function assembleUrl(img, coords){
-            console.log(img, coords)
+            // console.log(img, coords)
             var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
             var res = img ? '@2x.png' :'@2x.pngraw';
 
@@ -139,7 +143,7 @@ export default class Pixels {
         // calculates which tiles are in view to download
         var updater = new Worker('/javascripts/workers/updatetile.js');
         updater.addEventListener('message', function(e) {
-            console.log(e)
+            // console.log(e)
             var cb = e.data;
             var queue = cb.getTiles[0].length;
             if (queue>0) {
@@ -159,7 +163,7 @@ export default class Pixels {
                 var time = Date.now();
                 var cb = e.data;
                 parserRequests++
-                console.log(e)
+                // console.log(e)
                 if(cb.makeMesh) makeMesh(cb.makeMesh)
                 else console.log(cb)
             }, false)
@@ -258,8 +262,8 @@ export default class Pixels {
             var material = new THREE.MeshBasicMaterial({map: texture});
 
             data = resolveSeams(canvas, data, neighborTiles,[z,x,y])
-            console.log(data)
-            console.log([z,x,y], neighborTiles)
+            // console.log(data)
+            // console.log([z,x,y], neighborTiles)
             var geometry = new THREE.PlaneBufferGeometry(tileSize, tileSize, segments, segments);
 
             geometry.attributes.position.array = new Float32Array(data);
@@ -275,8 +279,6 @@ export default class Pixels {
             plane.visible=false
         };
 
-        console.log(location)
-        setView(canvas.controls,location.hash)
 
 
         var zoom = getZoom();

@@ -105,7 +105,7 @@ function resolveSeams(canvas, data, neighborTiles, [z,x,y]){
 }
 
 
-function setView(controls,location){
+function setView_T(controls,location){
     var hash = location
         .replace('#','')
         .split('/').map(
@@ -113,7 +113,6 @@ function setView(controls,location){
                 return parseFloat(str)
             }
         );
-    console.log(hash)
 
     if (hash.length === 5){
         [zoom, lat, lng, bearing, pitch] = hash
@@ -141,8 +140,7 @@ function setView(controls,location){
         bearing = 0; 
         pitch = 0.1; 
         var pxCoords = project([lng,lat]);
-        console.log(pxCoords);
-        // controls.target.copy(pxCoords);
+        controls.target.copy(pxCoords);
 
         var distance = Math.pow(0.5,(zoom-4))*12000;
         bearing = radicalize(bearing);
@@ -150,10 +148,9 @@ function setView(controls,location){
         var c={};
         c.x = pxCoords.x-Math.sin(bearing)*Math.sin(pitch)*distance;
         c.z = pxCoords.z+Math.cos(bearing)*Math.sin(pitch)*distance;
-        console.log(c)
 
-        // c.y = Math.cos(pitch)*distance
-        // controls.object.position.copy(c)
+        c.y = Math.cos(pitch)*distance
+        controls.object.position.copy(c)
     }
 }
 function radicalize(degrees){

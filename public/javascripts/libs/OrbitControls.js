@@ -406,6 +406,7 @@
         // set start position
 		// THE START LOCATION WILL COME FROM THE CENTROID OF THE VOXEL
 		console.log(location)
+		console.log(57575757575757)
         setView(this,location.hash)
 
 
