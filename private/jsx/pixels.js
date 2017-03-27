@@ -64,7 +64,7 @@ export default class Pixels {
         let offset = radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5);
         let thiscam = canvas.camera;
         let newPos = new THREE.Vector3(aabbCenter.x, offset, aabbCenter.z)
-        console.log(aabbCenter.x, offset, aabbCenter.z)
+        // console.log(aabbCenter.x, offset, aabbCenter.z)
 
         //set camera position and target
         thiscam.position.set(newPos.x, newPos.y, newPos.z);
@@ -80,7 +80,7 @@ export default class Pixels {
         var compass = document.querySelector('#compass img')
         var screenPosition;
 
-        console.log(location)
+        // console.log(location)
         setView_T(canvas.controls,location.hash)
         window.setTimeout(function(){updateTiles()},1000);
         

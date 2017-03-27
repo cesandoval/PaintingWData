@@ -8,7 +8,7 @@
 /*global THREE, console */
 
 ( function () {
-
+	
 	function OrbitConstraint ( object ) {
 
 		this.object = object;
@@ -198,7 +198,8 @@
 		};
 
 		this.update = function() {
-
+			console.log('loaded orbitzzzzzzzzz')
+			console.log(48484848484848484)
 			var offset = new THREE.Vector3();
 
 			// so camera.up is the orbit axis
@@ -405,9 +406,8 @@
 
         // set start position
 		// THE START LOCATION WILL COME FROM THE CENTROID OF THE VOXEL
-		console.log(location)
-		console.log(57575757575757)
-        setView(this,location.hash)
+
+        // setView(this,location.hash)
 
 
 		// for reset
