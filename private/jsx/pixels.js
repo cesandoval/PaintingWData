@@ -117,7 +117,8 @@ export default class Pixels {
 
         function assembleUrl(img, coords){
             // console.log(img, coords)
-            var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
+            // var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
+            var tileset = img ? 'mapbox.light' : 'mapbox.terrain-rgb';//
             var res = img ? '@2x.png' :'@2x.pngraw';
 
             //domain sharding
