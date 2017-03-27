@@ -198,8 +198,6 @@
 		};
 
 		this.update = function() {
-			console.log('loaded orbitzzzzzzzzz')
-			console.log(48484848484848484)
 			var offset = new THREE.Vector3();
 
 			// so camera.up is the orbit axis

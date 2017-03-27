@@ -55,9 +55,6 @@ export default class Pixels {
         testCenter.x = (testMax.x + testMin.x) * 0.5;
         testCenter.z = (testMax.y + testMin.y) * 0.5;
         testCenter.y = (testMax.z + testMin.z) * 0.5;
-        console.log(projectedMax, projectedMin);
-        console.log(testCenter)
-
         canvas.controls.target = testCenter;
 
         // Compute world AABB "radius" (approx: better if BB height)
@@ -373,6 +370,8 @@ export default class Pixels {
 
         for (let i = 0, j=0; i < Object.keys(hashedData).length; i++, j=j+3){
             if (typeof hashedData[allIndices[i]] !== "undefined"){
+
+                var currProjPt = project([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]]);
                 // x, y coordinates
                 otherArray[j] = hashedData[allIndices[i]][0];
                 otherArray[j + 1] = hashedData[allIndices[i]][1];
@@ -385,7 +384,9 @@ export default class Pixels {
                 addressArray[j+2] = hashedData[allIndices[i]][7];
             }
         }
-
+        console.log(otherArray)
+        console.log(currProjPt)
+        console.log([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]])
         // Julian's Implementation, does not parse the JSON correctly
         //  But is memory efficient... FIX ME!!!!
         // for (let i = 0; i < data.length; i++){
