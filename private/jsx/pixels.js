@@ -82,7 +82,6 @@ export default class Pixels {
 
         // console.log(location)
         setView_T(canvas.controls,location.hash)
-        window.setTimeout(function(){updateTiles()},1000);
         
         function updateCompass(reset){
             var styling;
@@ -193,10 +192,9 @@ export default class Pixels {
             else screenPosition = corners[0];
 
             updater.postMessage([zoom,corners])
-
-
         }
 
+        window.updateTiles = updateTiles;
         // given a list of elevation and imagery tiles, download
         function getTiles([tiles,elevation]){
 
