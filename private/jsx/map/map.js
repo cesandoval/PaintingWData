@@ -53,6 +53,9 @@ class MapCanvas extends React.Component {
                 <div className="map" id="mapCanvas"/>
                 <div id="pivot"/>
                 <div id="grid"/>
+                <div id='compass' onclick='updateCompass(true)'>
+                    <img src='/images/assets/compass.svg' width='28'/>
+                </div>
             </div>
         );
     }

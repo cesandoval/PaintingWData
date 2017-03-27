@@ -78,7 +78,7 @@ for (var c=0; c<rowCount; c+=3) {
 }
 
 //fill seam between elevation tiles by adopting the edge of neighboring tiles
-function resolveSeams(data, neighborTiles, [z,x,y]){
+function resolveSeams(canvas, data, neighborTiles, [z,x,y]){
     //iterate through neighbors
     neighborTiles.forEach(function(tile, index){
 
@@ -88,7 +88,7 @@ function resolveSeams(data, neighborTiles, [z,x,y]){
         })
 
         //if neighbor exists,
-        var neighbor = scene.getObjectByProperty('coords',slashify(targetTile));
+        var neighbor = canvas.scene.getObjectByProperty('coords',slashify(targetTile));
         if (neighbor){
             // indices that need to be overwritten
             var indicesToChange = row[index];
@@ -141,7 +141,8 @@ function setView(controls,location){
         bearing = 0; 
         pitch = 0.1; 
         var pxCoords = project([lng,lat]);
-        controls.target.copy(pxCoords);
+        console.log(pxCoords);
+        // controls.target.copy(pxCoords);
 
         var distance = Math.pow(0.5,(zoom-4))*12000;
         bearing = radicalize(bearing);
@@ -149,9 +150,10 @@ function setView(controls,location){
         var c={};
         c.x = pxCoords.x-Math.sin(bearing)*Math.sin(pitch)*distance;
         c.z = pxCoords.z+Math.cos(bearing)*Math.sin(pitch)*distance;
+        console.log(c)
 
-        c.y = Math.cos(pitch)*distance
-        controls.object.position.copy(c)
+        // c.y = Math.cos(pitch)*distance
+        // controls.object.position.copy(c)
     }
 }
 function radicalize(degrees){
