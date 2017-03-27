@@ -57,6 +57,7 @@ export default class Pixels {
         testCenter.y = (testMax.z + testMin.z) * 0.5;
         canvas.controls.target = testCenter;
 
+        console.log(testCenter)
         // Compute world AABB "radius" (approx: better if BB height)
         let diag = new THREE.Vector3();
         diag = diag.subVectors(testMax, testMin);
@@ -295,7 +296,6 @@ export default class Pixels {
             // scene.add(placeholder);
 
             var plane = new THREE.Mesh(geometry, material);
-
             plane.coords = slashify([z,x,y])
             plane.zoom = z;
             graph.scene.add(plane)
@@ -370,11 +370,13 @@ export default class Pixels {
 
         for (let i = 0, j=0; i < Object.keys(hashedData).length; i++, j=j+3){
             if (typeof hashedData[allIndices[i]] !== "undefined"){
-
                 var currProjPt = project([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]]);
                 // x, y coordinates
-                otherArray[j] = hashedData[allIndices[i]][0];
-                otherArray[j + 1] = hashedData[allIndices[i]][1];
+                otherArray[j] = currProjPt.x;
+                otherArray[j + 1] = currProjPt.z;
+                // // x, y coordinates
+                // otherArray[j] = hashedData[allIndices[i]][0];
+                // otherArray[j + 1] = hashedData[allIndices[i]][1];
                 // value/weight
                 otherArray[j + 2] = hashedData[allIndices[i]][3];
 
@@ -384,9 +386,9 @@ export default class Pixels {
                 addressArray[j+2] = hashedData[allIndices[i]][7];
             }
         }
-        console.log(otherArray)
+        // console.log(otherArray)
         console.log(currProjPt)
-        console.log([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]])
+        // console.log([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]])
         // Julian's Implementation, does not parse the JSON correctly
         //  But is memory efficient... FIX ME!!!!
         // for (let i = 0; i < data.length; i++){
@@ -428,10 +430,15 @@ export default class Pixels {
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]
-            translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
-            values.setX(currIndex, remap(dataArray[i+2]));
-            originalValues.setX(currIndex, remap(dataArray[i+2]));
+            translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, dataArray[i+1]);
+            // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
+            // values.setX(currIndex, remap(dataArray[i+2]));
+            // originalValues.setX(currIndex, remap(dataArray[i+2]));
+            var testVal = 10;
+            values.setX(currIndex, testVal);
+            originalValues.setX(currIndex, testVal);
         }
+        console.log(values)
         this.setAttributes(geometry, translations, values, originalValues);
     }
 
@@ -498,7 +505,16 @@ export default class Pixels {
     }
 
     addToScene(scene){
+        var cubeGeometry = new THREE.SphereGeometry(1, 100);
+        var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xFF6600, side: THREE.DoubleSide, transparent: true, opacity: 0.9, depthTest: false});
+        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        var a = -13362.013098226178;
+        var b = 0 
+        var c = -8062.564460489317
+        cube.position.set( a, b, c );
+        scene.add(cube)
         scene.add( this.mesh );
+        console.log(scene)
     }
 
 }
