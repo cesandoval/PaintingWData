@@ -41,30 +41,56 @@ export default class Pixels {
         let radius = 0;
         let newBbox = bbox[0]
 
-        aabbMin.x = newBbox[0][0];
-        aabbMin.y = -newBbox[0][1];
-        aabbMin.z = 0;
-        aabbMax.x = newBbox[2][0];
-        aabbMax.y = -newBbox[2][1];
-        aabbMax.z = 0;
+        let projectedMin = project([newBbox[0][0],newBbox[0][1]]);
+        let projectedMax = project([newBbox[2][0],newBbox[2][1]]);
+        let testMin = new THREE.Vector3();
+        let testMax = new THREE.Vector3();
+        testMin.x = projectedMin.x;
+        testMin.y = projectedMin.z;
+        testMin.z = projectedMin.y;
+        testMax.x = projectedMax.x;
+        testMax.y = projectedMax.z;
+        testMax.z = projectedMax.y;
+        let testCenter = new THREE.Vector3();
+        testCenter.x = (testMax.x + testMin.x) * 0.5;
+        testCenter.z = (testMax.y + testMin.y) * 0.5;
+        testCenter.y = (testMax.z + testMin.z) * 0.5;
+        console.log(projectedMax, projectedMin);
+        console.log(testCenter)
 
-        // Compute world AABB center
-        let aabbCenter = new THREE.Vector3();
-        aabbCenter.x = (aabbMax.x + aabbMin.x) * 0.5;
-        aabbCenter.z = (aabbMax.y + aabbMin.y) * 0.5;
-        aabbCenter.y = (aabbMax.z + aabbMin.z) * 0.5;
-        canvas.controls.target = aabbCenter;
+        canvas.controls.target = testCenter;
 
         // Compute world AABB "radius" (approx: better if BB height)
         let diag = new THREE.Vector3();
-        diag = diag.subVectors(aabbMax, aabbMin);
+        diag = diag.subVectors(testMax, testMin);
+
+        // aabbMin.x = newBbox[0][0];
+        // aabbMin.y = -newBbox[0][1];
+        // aabbMin.z = 0;
+        // aabbMax.x = newBbox[2][0];
+        // aabbMax.y = -newBbox[2][1];
+        // aabbMax.z = 0;
+
+        // // Compute world AABB center
+        // let aabbCenter = new THREE.Vector3();
+        // aabbCenter.x = (aabbMax.x + aabbMin.x) * 0.5;
+        // aabbCenter.z = (aabbMax.y + aabbMin.y) * 0.5;
+        // aabbCenter.y = (aabbMax.z + aabbMin.z) * 0.5;
+
+        // canvas.controls.target = aabbCenter;
+
+        // // Compute world AABB "radius" (approx: better if BB height)
+        // let diag = new THREE.Vector3();
+        // diag = diag.subVectors(aabbMax, aabbMin);
         radius = diag.length() * 0.5;
 
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset = radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5);
         let thiscam = canvas.camera;
-        let newPos = new THREE.Vector3(aabbCenter.x, offset, aabbCenter.z)
-        // console.log(aabbCenter.x, offset, aabbCenter.z)
+        // let newPos = new THREE.Vector3(aabbCenter.x, offset, aabbCenter.z)
+        
+        // THIS ONE IS PROJECTED......
+        let newPos = new THREE.Vector3(testCenter.x, offset, testCenter.z)
 
         //set camera position and target
         thiscam.position.set(newPos.x, newPos.y, newPos.z);
@@ -81,7 +107,8 @@ export default class Pixels {
         var screenPosition;
 
         // console.log(location)
-        setView_T(canvas.controls,location.hash)
+        this.zoomExtent(canvas, bbox)
+        // setView_T(canvas.controls,location.hash)
         
         function updateCompass(reset){
             var styling;
