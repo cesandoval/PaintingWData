@@ -141,11 +141,10 @@ export default class Pixels {
         var inspectElevation = false;
 
         function assembleUrl(img, coords){
-            console.log('assembleUrl()')
             
             const mapboxStyle = window.mapboxStyle || 'mapbox.light'
 
-            console.log(mapboxStyle)
+            // console.log('assembleUrl()', 'mapboxStyle', mapboxStyle)
 
             // console.log(img, coords)
             // var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
@@ -228,6 +227,14 @@ export default class Pixels {
         }
 
         window.updateTiles = updateTiles;
+
+        // refresh tiles already downloaded
+        function refreshTiles(){
+            updater.postMessage({refresh: true})
+        }
+
+        window.refreshTiles = refreshTiles;
+
         // given a list of elevation and imagery tiles, download
         function getTiles([tiles,elevation]){
 

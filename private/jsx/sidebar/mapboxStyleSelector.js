@@ -14,7 +14,10 @@ class MapboxStyleSelector extends React.Component {
     this.setState({ mapboxStyle: e.target.value });
 
     window.mapboxStyle = e.target.value;
-    updateTiles()
+    
+    refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
+    updateTiles() // call window.updateTiles() to update the tiles.
+
   }
 
   render() {
