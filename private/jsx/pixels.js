@@ -394,7 +394,6 @@ export default class Pixels {
             values.setX(currIndex, remap(dataArray[i+2]));
             originalValues.setX(currIndex, remap(dataArray[i+2]));
         }
-        console.log(highBnd, lowBnd, this.minVal, this.maxVal)
         this.setAttributes(geometry, translations, values, originalValues);
     }
 
@@ -470,7 +469,6 @@ export default class Pixels {
         // cube.position.set( a, b, c );
         // scene.add(cube)
         scene.add( this.mesh );
-        console.log(scene)
     }
 
 }
