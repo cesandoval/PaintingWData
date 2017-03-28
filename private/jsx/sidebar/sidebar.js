@@ -6,7 +6,6 @@ import NodeTypes from './nodetypes'
 import * as act from '../store/actions';
 import OpacitySlider from './opacitySlider';
 import KnnSlider from './knnSlider';
-import MapboxStyleSelector from './MapboxStyleSelector';
 
 const initFields = [
     {
@@ -67,7 +66,6 @@ export default class Sidebar extends React.Component {
                 <div className="sliders">
                     <OpacitySlider> </OpacitySlider>
                     <KnnSlider> </KnnSlider>
-                    <MapboxStyleSelector> </MapboxStyleSelector>
                 </div>
             </div>
         );
