@@ -2,7 +2,6 @@ var fileUploadHelper = require('../../lib/fileUploadHelper'),
     Models = require('../models'),
     path = require('path'),
     fs = require('fs'),
-    awsfs = require('../../lib/awsFs'),
     formidable = require('formidable');
     fs_extra = require('fs-extra')
 
@@ -53,29 +52,6 @@ module.exports.upload = function(req, res) {
                 }
                 else{
                   fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
-
-                    if(process.env.NODE_ENV === 'production'){
-                      //save everything in s3
-                      awsfs.uploadToBucket(zipDir, `paintingwithdata/${targetName}/zipped`, function(err){
-                        if(err){
-                          console.log("Error uploading zip file: ")
-                          console.log(err, err.stack)
-                        }
-                        else{
-                          console.log(targetPath);
-                          awsfs.uploadDirectoryToBucket(targetPath, `paintingwithdata/${targetName}/extracted`, function(err){
-                            if(err){
-                              console.log("Error");
-                              console.log(err, err.stack);
-                            }
-                            else{
-                              console.log(`Files in ${targetPath} have been successfuly uploaded to s3`);
-                            }
-                          });
-                        }
-                      });
-                    }
-
                     var dataFile = Models.Datafile.build();
                     dataFile.userId = req.user.id;
                     dataFile.location = targetPath;
