@@ -28,6 +28,8 @@ class MapCanvas extends React.Component {
             const canvas = newProps.map;
             const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
 
+            const addMap = PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox);
+
             this.setState({layersAdded: true});
 
             newProps.layers.map((layer, n)=>{
@@ -49,6 +51,8 @@ class MapCanvas extends React.Component {
             <div>
                 <PCoords />
                 <div className="map" id="mapCanvas"/>
+                <div id="pivot"/>
+                <div id="grid"/>
             </div>
         );
     }

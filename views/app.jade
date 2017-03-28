@@ -1,11 +1,15 @@
 extends layout
 
 append content
+    script(type='text/javascript', src="/javascripts/libs/OrbitControls.js")
+
     script.
         var datavoxelId = #{datavoxelId};
     div.mainWindow
         div#react
 
+    #progress.spinner.pad1.z100
+    
     link(rel="stylesheet", href="/stylesheets/app.css")
     link(rel="stylesheet", href="/stylesheets/d3.parcoords.css")
 
@@ -70,9 +74,9 @@ append content
         float vProd = max(0.0, dot(vNormal, light));
 
         vec3 modColor = vec3(0.0, 0.0, 0.0);
-        modColor.x = ((endColor.x - startColor.x) * (vSize*300.0)) + startColor.x;
-        modColor.y = ((endColor.y - startColor.y) * (vSize*300.0)) + startColor.y;
-        modColor.z = ((endColor.z - startColor.z) * (vSize*300.0)) + startColor.z;
+        modColor.x = ((endColor.x - startColor.x) * (vSize*1.5)) + startColor.x;
+        modColor.y = ((endColor.y - startColor.y) * (vSize*1.5)) + startColor.y;
+        modColor.z = ((endColor.z - startColor.z) * (vSize*1.5)) + startColor.z;
         gl_FragColor = vec4(modColor, transparency);
 
         }
@@ -82,8 +86,122 @@ append content
         var value = mySlider.bootstrapSlider('getValue');
 
     script(src='/javascripts/js/three.js')
-    script(src='/javascripts/js/OrbitControls.js')
+    //- script(src='/javascripts/js/OrbitControls.js')
     script(src='/javascripts/js/d3.js')
     script(src='/javascripts/js/d3.parcoords.js')
     script(src='/javascripts/bundle.js')
     script(src='/javascripts/queryButton.js')
+
+    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
+    style.
+        #pivot {
+            -webkit-transform-style:preserve-3d;
+            perspective:600px;
+            position:absolute;
+            left:-200%;
+            right:-200%;
+            top:-200%;
+            bottom:-200%;
+        }
+        #grid {
+            background:url('/images/assets/grid.png');
+            width:100%;
+            height:100%;
+            position:absolute;
+            -webkit-transform-origin:center center;
+            perspective-origin:120px;
+            display:none;
+        }
+        .spinner {
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 45%;
+            opacity: 1;
+            pointer-events:none;
+            transition:all 0.25s;
+            z-index: 1000000;
+        }
+        .spinner:after {
+            opacity:1;
+            width:50px;
+            height:50px;
+            background-size: 30px;
+            z-index: 1000000;
+        }
+        .elev:hover #elevation {
+            display:block;
+        }
+        .elev canvas {
+            cursor: crosshair;
+        }
+        #compass {
+            perspective:100px;
+            position: absolute;
+            background:rgba(0,0,0,0.7);
+            z-index: 99;
+            bottom: 0;
+            left: 0;
+            padding: 10px 16px;
+            opacity: 0.9;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px;
+            cursor:hand;
+        }
+        #compass:hover {
+            background:steelblue;
+        }
+        #compass:hover:after{
+            content:"RESET";
+            color:white;
+            text-align:center;
+            font-size:0.75em;
+            line-height:42px;
+        }
+        #compass:hover img {
+            display:none;
+        }
+        #caption {
+            color:orange;
+        }
+        .count-icon{
+            background:rgba(0,0,0,0);
+        }
+        .count-icon div{
+            width:3px;
+            height:3px;
+            border-radius:50%;
+            background:aqua;
+            margin:6px;
+            transition:all 0.25s;
+        }
+        .count-icon:hover div{
+            border:0px solid #424b50;
+            width:10px;
+            height:10px;
+            margin:2px;
+            background:orange;
+        }
+        .dragger {
+            float:right;
+            font-weight:bold;
+        }
+        .short.rounded-toggle{
+            margin:8px;
+        }
+        .filterreset{
+            transform:rotate(180deg);
+            cursor:pointer;
+            color:#999;
+        }
+        .filterreset:hover{
+            background:#999;
+            color:white;
+        }
+    
+    script(src='/javascripts/libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
+    script(src='/javascripts/libs/utilities.js')
+    script(src='/javascripts/libs/app.js')
+    script(src='/javascripts/libs/OrbitControls.js')
