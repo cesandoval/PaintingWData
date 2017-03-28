@@ -389,13 +389,10 @@ export default class Pixels {
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]
-            translations.setXYZ(currIndex, dataArray[i], 0.3 + this.layerN * 0.00001, dataArray[i+1]);
-            // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
+            translations.setXYZ(currIndex, dataArray[i], 0.3 + this.layerN * 0.001, dataArray[i+1]);
+            // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]); 
             values.setX(currIndex, remap(dataArray[i+2]));
             originalValues.setX(currIndex, remap(dataArray[i+2]));
-            // var testVal = 0.5;
-            // values.setX(currIndex, testVal);
-            // originalValues.setX(currIndex, testVal);
         }
         console.log(highBnd, lowBnd, this.minVal, this.maxVal)
         this.setAttributes(geometry, translations, values, originalValues);

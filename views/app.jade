@@ -2,11 +2,14 @@ extends layout
 
 append content
     script(type='text/javascript', src="/javascripts/libs/OrbitControls.js")
+
     script.
         var datavoxelId = #{datavoxelId};
     div.mainWindow
         div#react
 
+    #progress.spinner.pad1.z100
+    
     link(rel="stylesheet", href="/stylesheets/app.css")
     link(rel="stylesheet", href="/stylesheets/d3.parcoords.css")
 
@@ -71,9 +74,9 @@ append content
         float vProd = max(0.0, dot(vNormal, light));
 
         vec3 modColor = vec3(0.0, 0.0, 0.0);
-        modColor.x = ((endColor.x - startColor.x) * (vSize*3.0)) + startColor.x;
-        modColor.y = ((endColor.y - startColor.y) * (vSize*3.0)) + startColor.y;
-        modColor.z = ((endColor.z - startColor.z) * (vSize*3.0)) + startColor.z;
+        modColor.x = ((endColor.x - startColor.x) * (vSize*1.5)) + startColor.x;
+        modColor.y = ((endColor.y - startColor.y) * (vSize*1.5)) + startColor.y;
+        modColor.z = ((endColor.z - startColor.z) * (vSize*1.5)) + startColor.z;
         gl_FragColor = vec4(modColor, transparency);
 
         }
@@ -89,10 +92,7 @@ append content
     script(src='/javascripts/bundle.js')
     script(src='/javascripts/queryButton.js')
 
-
     script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
-    //- link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
-    //- meta(name='viewport', content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0')
     style.
         #pivot {
             -webkit-transform-style:preserve-3d;
@@ -112,14 +112,6 @@ append content
             perspective-origin:120px;
             display:none;
         }
-        #webgl{
-            left:0;
-            right:0;
-            top:0;
-            bottom:0;
-            position:absolute;
-            opacity:1;
-        }
         .spinner {
             margin: 0 auto;
             position: absolute;
@@ -128,12 +120,14 @@ append content
             opacity: 1;
             pointer-events:none;
             transition:all 0.25s;
+            z-index: 1000000;
         }
         .spinner:after {
             opacity:1;
             width:50px;
             height:50px;
             background-size: 30px;
+            z-index: 1000000;
         }
         .elev:hover #elevation {
             display:block;
@@ -141,12 +135,6 @@ append content
         .elev canvas {
             cursor: crosshair;
         }
-        //- canvas {
-        //-     cursor:-webkit-grab;
-        //- }
-        //- canvas:active{
-        //-     cursor:-webkit-grabbing;
-        //- }
         #compass {
             perspective:100px;
             position: absolute;
@@ -212,17 +200,8 @@ append content
             background:#999;
             color:white;
         }
-
-    //- style(type='text/css').
-    //- #pivot
-    //- #grid
-    //- #webgl
-    //- #elevation
-    #progress.spinner.pad1.z100
-    //- #compass(onclick='updateCompass(true)')
-    //-     img(src='/images/assets/compass.svg', width='28')
+    
     script(src='/javascripts/libs/sm.js', note='THIS WAS MODIFIED TO PROJECT TO DECIMAL PIXELS')
     script(src='/javascripts/libs/utilities.js')
-    //- script(src='/javascripts/libs/three.min.js')
     script(src='/javascripts/libs/app.js')
     script(src='/javascripts/libs/OrbitControls.js')
