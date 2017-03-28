@@ -1,6 +1,8 @@
 extends layout
 
 append content
+    script(type='text/javascript', src="/javascripts/libs/OrbitControls.js")
+
     script.
         var datavoxelId = #{datavoxelId};
     div.mainWindow
@@ -82,8 +84,9 @@ append content
         var value = mySlider.bootstrapSlider('getValue');
 
     script(src='/javascripts/js/three.js')
-    script(src='/javascripts/js/OrbitControls.js')
+    //- script(src='/javascripts/js/OrbitControls.js')
     script(src='/javascripts/js/d3.js')
     script(src='/javascripts/js/d3.parcoords.js')
     script(src='/javascripts/bundle.js')
     script(src='/javascripts/queryButton.js')
+    script(src='/javascripts/libs/OrbitControls.js')
