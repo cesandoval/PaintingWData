@@ -12,6 +12,7 @@ self.addEventListener('message', function(e) {
     // refresh tiles already downloaded
     if(e.data.refresh) {
         imagery = {}
+        return true;
     }
 
 	var cb = e.data;
