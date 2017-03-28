@@ -96,6 +96,24 @@
     right: 120px;
 }
 
+#mapStyleOptionsButton{
+    width: 180px;
+    position: absolute;
+    z-index: 10;
+    left: 0px;
+    bottom: 0px;
+}
+
+#mapStyleOptions{
+    width: 180px;
+    position: absolute;
+    margin: 4px 0px;
+    text-align: center;
+    z-index: 4;
+    left: 160px;
+    bottom: 0px;
+}
+
 #somShow {
     position: absolute;
     width:100px;
