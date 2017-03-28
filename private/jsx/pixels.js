@@ -36,8 +36,6 @@ export default class Pixels {
 
     // Zoom Extent based on geo's bbox
     static zoomExtent(canvas, bbox) {
-        let aabbMin = new THREE.Vector3();
-        let aabbMax = new THREE.Vector3();
         let radius = 0;
         let newBbox = bbox[0]
 
@@ -57,35 +55,14 @@ export default class Pixels {
         testCenter.y = (testMax.z + testMin.z) * 0.5;
         canvas.controls.target = testCenter;
 
-        console.log(testCenter)
         // Compute world AABB "radius" (approx: better if BB height)
         let diag = new THREE.Vector3();
         diag = diag.subVectors(testMax, testMin);
-
-        // aabbMin.x = newBbox[0][0];
-        // aabbMin.y = -newBbox[0][1];
-        // aabbMin.z = 0;
-        // aabbMax.x = newBbox[2][0];
-        // aabbMax.y = -newBbox[2][1];
-        // aabbMax.z = 0;
-
-        // // Compute world AABB center
-        // let aabbCenter = new THREE.Vector3();
-        // aabbCenter.x = (aabbMax.x + aabbMin.x) * 0.5;
-        // aabbCenter.z = (aabbMax.y + aabbMin.y) * 0.5;
-        // aabbCenter.y = (aabbMax.z + aabbMin.z) * 0.5;
-
-        // canvas.controls.target = aabbCenter;
-
-        // // Compute world AABB "radius" (approx: better if BB height)
-        // let diag = new THREE.Vector3();
-        // diag = diag.subVectors(aabbMax, aabbMin);
         radius = diag.length() * 0.5;
 
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset = radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5);
         let thiscam = canvas.camera;
-        // let newPos = new THREE.Vector3(aabbCenter.x, offset, aabbCenter.z)
         
         // THIS ONE IS PROJECTED......
         let newPos = new THREE.Vector3(testCenter.x, offset, testCenter.z)
@@ -104,9 +81,7 @@ export default class Pixels {
         var compass = document.querySelector('#compass img')
         var screenPosition;
 
-        // console.log(location)
         this.zoomExtent(canvas, bbox)
-        // setView_T(canvas.controls,location.hash)
         
         function updateCompass(reset){
             var styling;
@@ -261,7 +236,6 @@ export default class Pixels {
             // get image to drape
             var texture = new THREE.TextureLoader()
             .load(
-
                 //url
                 assembleUrl(true, [z,x,y]),
 
@@ -286,8 +260,6 @@ export default class Pixels {
             var material = new THREE.MeshBasicMaterial({map: texture});
 
             data = resolveSeams(canvas, data, neighborTiles,[z,x,y])
-            // console.log(data)
-            // console.log([z,x,y], neighborTiles)
             var geometry = new THREE.PlaneBufferGeometry(tileSize, tileSize, segments, segments);
 
             geometry.attributes.position.array = new Float32Array(data);
@@ -386,9 +358,7 @@ export default class Pixels {
                 addressArray[j+2] = hashedData[allIndices[i]][7];
             }
         }
-        // console.log(otherArray)
-        console.log(currProjPt)
-        // console.log([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]])
+
         // Julian's Implementation, does not parse the JSON correctly
         //  But is memory efficient... FIX ME!!!!
         // for (let i = 0; i < data.length; i++){
@@ -400,17 +370,6 @@ export default class Pixels {
         //         array[(i * data.length + j) * 3 + 2] = data[i][j][3];
         //     }
         // }
-
-
-        // Old implementation using a datajson.geojson array
-        // Very memory inefficient
-        //for (var i = 0, j = 0; i < data.length * data[0].length; i++, j = j + 3) {
-            //// x, y coordinates
-            //array[j]   = (datajson.geojson[i].geometry.coordinates[0]*2 - 1)*300;
-            //array[j+1] = (datajson.geojson[i].geometry.coordinates[1]*2 - 1)*300;
-            //// Value
-            //array[j+2] = datajson.geojson[i].properties[datajson.name];
-        //}
         const bounds = [this.lowBnd, this.highBnd];
 
         return { otherArray, startColor, endColor, addressArray, bounds};
@@ -430,15 +389,15 @@ export default class Pixels {
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]
-            translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, dataArray[i+1]);
+            translations.setXYZ(currIndex, dataArray[i], 0.3 + this.layerN * 0.00001, dataArray[i+1]);
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
-            // values.setX(currIndex, remap(dataArray[i+2]));
-            // originalValues.setX(currIndex, remap(dataArray[i+2]));
-            var testVal = 10;
-            values.setX(currIndex, testVal);
-            originalValues.setX(currIndex, testVal);
+            values.setX(currIndex, remap(dataArray[i+2]));
+            originalValues.setX(currIndex, remap(dataArray[i+2]));
+            // var testVal = 0.5;
+            // values.setX(currIndex, testVal);
+            // originalValues.setX(currIndex, testVal);
         }
-        console.log(values)
+        console.log(highBnd, lowBnd, this.minVal, this.maxVal)
         this.setAttributes(geometry, translations, values, originalValues);
     }
 
@@ -505,14 +464,14 @@ export default class Pixels {
     }
 
     addToScene(scene){
-        var cubeGeometry = new THREE.SphereGeometry(1, 100);
-        var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xFF6600, side: THREE.DoubleSide, transparent: true, opacity: 0.9, depthTest: false});
-        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        var a = -13362.013098226178;
-        var b = 0 
-        var c = -8062.564460489317
-        cube.position.set( a, b, c );
-        scene.add(cube)
+        // var cubeGeometry = new THREE.SphereGeometry(1, 100);
+        // var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xFF6600, side: THREE.DoubleSide, transparent: true, opacity: 0.9, depthTest: false});
+        // var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        // var a = -13362.013098226178;
+        // var b = 0 
+        // var c = -8062.564460489317
+        // cube.position.set( a, b, c );
+        // scene.add(cube)
         scene.add( this.mesh );
         console.log(scene)
     }

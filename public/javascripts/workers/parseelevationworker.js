@@ -34,20 +34,20 @@ self.addEventListener('message', function(e) {
     var z = coords[0];
     var x = coords[1];
     var y = coords[2];
-    //console.log(time+' started #'+parserIndex)
 
-    var elevations = [];
+    // var elevations = [];
 
-    if (pixels) {
-        //colors => elevations
-        for (var e = 0; e<pixels.data.length; e+=4){
-            var R = pixels.data[e];
-            var G = pixels.data[e+1];
-            var B = pixels.data[e+2];
-            elevations.push(-10000 + ((R * 256 * 256 + G * 256 + B) * 0.1))
-        }
-    }
-    else elevations = new Array(1048576).fill(0);
+    // if (pixels) {
+    //     //colors => elevations
+    //     for (var e = 0; e<pixels.data.length; e+=4){
+    //         var R = pixels.data[e];
+    //         var G = pixels.data[e+1];
+    //         var B = pixels.data[e+2];
+    //         elevations.push(-10000 + ((R * 256 * 256 + G * 256 + B) * 0.1))
+    //     }
+    // }
+    // else elevations = new Array(1048576).fill(0);
+    elevations = new Array(1048576).fill(0);
 
     // figure out tile coordinates of the 16 grandchildren of this tile
     var sixteenths = [];
