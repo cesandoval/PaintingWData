@@ -141,9 +141,16 @@ export default class Pixels {
         var inspectElevation = false;
 
         function assembleUrl(img, coords){
+            console.log('assembleUrl()')
+            
+            const mapboxStyle = window.mapboxStyle || 'mapbox.light'
+
+            console.log(mapboxStyle)
+
             // console.log(img, coords)
             // var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
-            var tileset = img ? 'mapbox.light' : 'mapbox.terrain-rgb';//
+            var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb';//
+
             var res = img ? '@2x.png' :'@2x.pngraw';
 
             //domain sharding
