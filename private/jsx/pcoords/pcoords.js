@@ -107,7 +107,7 @@ class PCoords extends React.Component {
                 var keys = Object.keys( d );
                 return blue_to_brown(d[keys[0]]); 
             }) 
-            .alpha(0.05)
+            .alpha(0.35)
             .render()
             .createAxes()
             .reorderable()

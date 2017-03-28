@@ -444,7 +444,8 @@ export default class Pixels {
             
             
         })
-
+        console.log(fragmentShader)
+        console.log(typeof(fragmentShader))
         material.transparent = true;
         return material;
     }
