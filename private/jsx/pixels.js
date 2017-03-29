@@ -3,7 +3,7 @@ export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
-    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0, bounds=[]){
+    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0, bounds=[], shaderText=''){
         this.lowBnd = bounds[0];
         this.highBnd = bounds[1];
 
@@ -26,12 +26,17 @@ export default class Pixels {
         if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
             console.error("Wrong sized data array passed to Pixels constructor!");
 
+        // Define the Shader
+        this.shaderText = shaderText;
+        
         this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
         this.initTransValsAttrs(this.geometry, dataArray, this.addresses, this.lowBnd, this.highBnd);
         this.material = this.initMaterial(this.lowBnd, this.highBnd);
 
         this.addToScene(graph.scene);
+
+
     }
 
     // Zoom Extent based on geo's bbox
@@ -421,11 +426,6 @@ export default class Pixels {
     }
 
     initMaterial(lowBnd, highBnd){
-        let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
-        shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/(lowBnd*10)));
-        let modifiedShader = fragmentShader;
-        modifiedShader.textContent = shaderContent;
-
         let material = new THREE.RawShaderMaterial({
             uniforms: {
                 show: {
@@ -459,7 +459,7 @@ export default class Pixels {
                 }
             },
             vertexShader: document.getElementById('vertexShader').textContent,
-            fragmentShader: modifiedShader.textContent     
+            fragmentShader: this.shaderText    
             
         })
         material.transparent = true;

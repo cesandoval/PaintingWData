@@ -5,8 +5,8 @@ import axios from 'axios';
 
 import Layer from './layer';
 
-const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices) => ({
-    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText
 })
 
 class Layers extends React.Component {
@@ -49,6 +49,10 @@ class Layers extends React.Component {
                     const highBnd = ptDistance*1.2;
                     const bounds = [ lowBnd, highBnd ];
 
+                    // Define the Shader
+                    let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
+                    shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
+
                     const mappedGeojson = l.geojson.geojson.features.map(g => {
                         // Shouldn't need to parse
                         //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
@@ -76,8 +80,9 @@ class Layers extends React.Component {
                         transGeojson.hashedData[mappedGeojson[i][7]] = mappedGeojson[i];
                     }
                     transGeojson.minMax= [minVal, maxVal]
+                    console.log(shaderContent)
                     return createLayer(l.layername, propertyName, true, 
-                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds, l.Datavoxel.allIndices);
+                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds, l.Datavoxel.allIndices, shaderContent);
                 }));
             });
     }

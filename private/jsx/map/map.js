@@ -40,7 +40,7 @@ class MapCanvas extends React.Component {
 
                 // Creates the Pixels object
                 const P = new PaintGraph.Pixels(this.props.map, circle, out.otherArray, out.startColor, out.endColor, 
-                                        layer.geojson.minMax, out.addressArray, layer.rowsCols.cols, layer.rowsCols.rows, n, layer.bounds);
+                                        layer.geojson.minMax, out.addressArray, layer.rowsCols.cols, layer.rowsCols.rows, n, layer.bounds, layer.shaderText);
 
                 act.mapAddGeometry(layer.name, P);
             });
