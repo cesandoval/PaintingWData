@@ -7,12 +7,33 @@ import Button from 'react-bootstrap/lib/Button';
 export default class extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            pcoords: false, 
+        };
     }
-    showData() {
-        
+    componentDidMount() {
+        const gElement = document.getElementById('parcoords')
+        console.log(gElement);
+    }
 
+    showData() {
+        // console.log(this.refs.email)
+        console.log(58585858585)
+        // console.log(this)
+        // console.log(props)
     }
+
+    componentWillReceiveProps(newProps){
+        // Get layers once they appear
+        // Map them to Pixels objects
+        // Add the pixel geometries to the map
+        console.log(99999)
+        if (newProps.layers.length > 0 && !this.state.layersAdded) {
+            // Sets the camera to the voxels' bbox 
+            console.log(7474747474, newProps)
+        }
+    }
+
     render() {
         return(
             <div className="options--react">

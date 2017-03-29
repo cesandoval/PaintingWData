@@ -407,6 +407,11 @@ export default class Pixels {
     }
 
     initMaterial(lowBnd, highBnd){
+        let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
+        shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/(lowBnd*10)));
+        let modifiedShader = fragmentShader;
+        modifiedShader.textContent = shaderContent;
+
         let material = new THREE.RawShaderMaterial({
             uniforms: {
                 show: {
@@ -440,12 +445,9 @@ export default class Pixels {
                 }
             },
             vertexShader: document.getElementById('vertexShader').textContent,
-            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
-            
+            fragmentShader: modifiedShader.textContent     
             
         })
-        console.log(fragmentShader)
-        console.log(typeof(fragmentShader))
         material.transparent = true;
         return material;
     }

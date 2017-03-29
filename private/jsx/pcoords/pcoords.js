@@ -169,7 +169,7 @@ class PCoords extends React.Component {
     }
     render() {
         return(
-            <div id="parcoords" className="parcoords" style={this.style()}></div>
+            <div id="parcoords" className="parcoords" ref='parcoords' style={this.style()}></div>
         );
     }
 }

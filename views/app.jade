@@ -41,7 +41,7 @@ append content
             vTest = vec4(position, 1.0);
 
             float nshow = show;
-            if (!(size > min -0.00001 && size < max)) { nshow = 0.0; }
+            if (!(size > min - 0.00001 && size < max + 0.00001)) { nshow = 0.0; }
 
             vSize = size;
 
