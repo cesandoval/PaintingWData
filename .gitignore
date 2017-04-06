@@ -2,7 +2,12 @@
 /node_modules
 # we dont want to add the shape_files directory either
 /app/controllers/shape_files
+/app/controllers/tmp
+lib/shape_files/
+
 tasks.txt
+instructions
+ngrok
 # we dont want temp files
 .swp
 
