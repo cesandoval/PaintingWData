@@ -16,7 +16,7 @@ export default class extends React.Component {
     }
     componentDidMount() {
         const gElement = document.getElementById('parcoords')
-        console.log(gElement);
+        // console.log(gElement);
     }
 
     showData() {

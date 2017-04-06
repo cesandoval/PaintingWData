@@ -33,8 +33,8 @@ class PCoords extends React.Component {
             const layerIndeces = {};
             const layersNameProperty = {}
             for (let i = 0; i<nprops.layers.length; i++) {
-                layerIndeces[nprops.layers[i].propertyName] = i
-                layersNameProperty[nprops.layers[i].propertyName] = nprops.layers[i].name;
+                layerIndeces[nprops.layers[i].name+'_'+nprops.layers[i].propertyName] = i
+                layersNameProperty[nprops.layers[i].name+'_'+nprops.layers[i].propertyName] = nprops.layers[i].name;
                 mins[i] = nprops.layers[i].geojson.minMax[0];
                 maxs[i] = nprops.layers[i].geojson.minMax[1];
             }
@@ -78,13 +78,12 @@ class PCoords extends React.Component {
                         dictBuild[i] = {};
                     }
                     if (indicesArray[i] in visibleLayers[j].geojson.hashedData) {
-                        dictBuild[i][visibleLayers[j].propertyName] = visibleLayers[j].geojson.hashedData[indicesArray[i]][3];
+                        dictBuild[i][visibleLayers[j].name+'_'+visibleLayers[j].propertyName] = visibleLayers[j].geojson.hashedData[indicesArray[i]][3];
                     } else {
-                        dictBuild[i][visibleLayers[j].propertyName] = 0;
+                        dictBuild[i][visibleLayers[j].name+'_'+visibleLayers[j].propertyName] = 0;
                     }
                 }
             }
-
             this.build(dictBuild, dictBrush)
             this.layerIndeces = layerIndeces 
         }

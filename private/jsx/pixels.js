@@ -123,11 +123,6 @@ export default class Pixels {
         function assembleUrl(img, coords){
             
             const mapboxStyle = window.mapboxStyle || 'mapbox.light'
-
-            // console.log('assembleUrl()', 'mapboxStyle', mapboxStyle)
-
-            // console.log(img, coords)
-            // var tileset = img ? 'mapbox.streets-satellite' : 'mapbox.terrain-rgb';//
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb';//
 
             var res = img ? '@2x.png' :'@2x.pngraw';
@@ -268,7 +263,6 @@ export default class Pixels {
 
                     if (tilesToGet===0) {
                         document.querySelector('#progress').style.opacity = 0;
-                        console.log('STABLE')
                         updateTileVisibility()
                     }
 
@@ -282,9 +276,6 @@ export default class Pixels {
             var geometry = new THREE.PlaneBufferGeometry(tileSize, tileSize, segments, segments);
 
             geometry.attributes.position.array = new Float32Array(data);
-
-            // var placeholder = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({wireframe:true,color:0x999999}));
-            // scene.add(placeholder);
 
             var plane = new THREE.Mesh(geometry, material);
             plane.coords = slashify([z,x,y])
@@ -366,8 +357,6 @@ export default class Pixels {
                 otherArray[j] = currProjPt.x;
                 otherArray[j + 1] = currProjPt.z;
                 // // x, y coordinates
-                // otherArray[j] = hashedData[allIndices[i]][0];
-                // otherArray[j + 1] = hashedData[allIndices[i]][1];
                 // value/weight
                 otherArray[j + 2] = hashedData[allIndices[i]][3];
 
@@ -477,14 +466,6 @@ export default class Pixels {
     }
 
     addToScene(scene){
-        // var cubeGeometry = new THREE.SphereGeometry(1, 100);
-        // var cubeMaterial = new THREE.MeshBasicMaterial({color: 0xFF6600, side: THREE.DoubleSide, transparent: true, opacity: 0.9, depthTest: false});
-        // var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        // var a = -13362.013098226178;
-        // var b = 0 
-        // var c = -8062.564460489317
-        // cube.position.set( a, b, c );
-        // scene.add(cube)
         scene.add( this.mesh );
     }
 
