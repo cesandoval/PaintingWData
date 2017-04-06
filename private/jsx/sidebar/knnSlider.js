@@ -150,7 +150,7 @@ class KnnSlider extends React.Component {
         return(
             <div className="knn-slider">
                 <div className="row">
-                    <p className="slider-name"> # Nearest Neighbors </p>
+                    <p className="slider-name"> SMOOTHING </p>
                 </div>
                 <div className="row">
                     <div className="col-md-1">
