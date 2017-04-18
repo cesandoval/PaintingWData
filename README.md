@@ -61,10 +61,9 @@ $ sequelize db:migrate
 $ cd app
 $ sequelize db:migrate:undo:all
 ```
-* Start **rabbitmq**:
-    * Google search: `connect to rabbitmq server`
-    * On OSX command: `/usr/local/sbin/rabbitmq-server`
-* Start the **worker** on a different windown: 
+* Start **redis server**:
+    * Google search: `install/connect to redis server locally`
+* Start the **worker** on a different window: 
     * `cd` into the webapp directory
     * `node worker/worker2`
     * After each update on the code, stop and restart the worker, and refresh the page.

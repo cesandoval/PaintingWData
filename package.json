@@ -41,6 +41,7 @@
     "pg": "6.0.1",
     "rangeslider.js": "^2.3.0",
     "react-bootstrap": "^0.30.7",
+    "redis-server": "^1.1.0",
     "request": "^2.73.0",
     "s3": "^4.4.0",
     "sequelize": "3.23.4",
