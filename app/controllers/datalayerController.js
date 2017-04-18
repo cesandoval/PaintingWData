@@ -5,6 +5,7 @@ var Model = require('../models'),
     manager = require('../../worker/manager')(10),
     app = require('../../app'),
     Channel = require('../../worker/channel');
+    processVoxels = require('../../worker/worker2').processVoxels;
 
 // This file extracts the datalayer ids from the request object and saves it on
 // the datalayerIds object. 
@@ -19,24 +20,15 @@ module.exports.computeVoxels = function(req, res){
         }
     });
 
-    job ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
-    var queue = 'voxels';
-    Channel(queue, function(err, channel, conn) {  
-        if (err) {
-            console.error(err.stack);
-        }
-        else {
-            console.log('channel and queue created');
-            var blob = new Buffer(JSON.stringify(job))
-            channel.sendToQueue(queue, blob, {
-                persistent: true
-            });
-            setImmediate(function() {
-                channel.close();
-                conn.close();
-            });
-        }
-    });
+    var req ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
+    var datalayerIds = [];
+    req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
+        if(datalayerId !== ""){
+            datalayerIds.push(datalayerId);
+            }
+        });
+
+    processVoxels([datalayerIds, req], function(){}); //done is a callback, probably send email here
 
     res.redirect('/voxels/'+ req.user.id);  
 };

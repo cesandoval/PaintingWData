@@ -11,6 +11,20 @@ var passport = require('passport');
     session = require('cookie-session'),
     jsonParser = bodyParser.json();
 
+ 
+var RedisServer = require('redis-server');
+ 
+// Simply pass the port that you want a Redis server to listen on.
+var server = new RedisServer(6379);
+ 
+server.open((err) => {
+  if (err === null) {
+    console.log("redis server connected")
+    // You may now connect a client to the Redis
+    // server bound to `server.port` (e.g. 6379).
+  }
+});
+
 
 var app = express();
 
