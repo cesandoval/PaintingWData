@@ -18,7 +18,7 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * [PostgreSQL](https://www.postgresql.org/download/)
     * When installing PostgreSQL, username should be `postgres`, and password `postgrespass`. An installation guide can be found [here](http://www.bostongis.com/PrinterFriendly.aspx?content_name=postgis_tut01).
 * [PostGIS](http://postgis.net/install/ )
-* [RabbitMQ](https://www.rabbitmq.com/download.html)
+* [Redis](https://redis.io/topics/quickstart)
 * [Node & npm](https://nodejs.org/en/)
 * [Homebrew](https://brew.sh/): If developing on OSX, a useful package manager.
 
@@ -63,6 +63,7 @@ $ sequelize db:migrate:undo:all
 ```
 * Start **redis server**:
     * Google search: `install/connect to redis server locally`
+    * On OSX: `redis-server /usr/local/etc/redis.conf`
 * Start the **worker** on a different window: 
     * `cd` into the webapp directory
     * `node worker/worker2`
