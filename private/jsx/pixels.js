@@ -343,15 +343,19 @@ export default class Pixels {
         const hashedData = datajson.geojson.hashedData;
         const allIndices = datajson.allIndices;
 
-        const otherArray = new Float32Array(Object.keys(hashedData).length * 3)
-        const addressArray = new Float32Array(Object.keys(hashedData).length * 3)
+        const otherArray = new Float32Array(allIndices.length * 3)
+        const addressArray = new Float32Array(allIndices.length * 3)
 
         // const array = new Float32Array(data.length * data[0].length * 3);
         const startColor = datajson.color1;
         const endColor = datajson.color2;
 
-        for (let i = 0, j=0; i < Object.keys(hashedData).length; i++, j=j+3){
+        for (let i = 0, j=0; i < allIndices.length; i++, j=j+3){
+            if (typeof hashedData[allIndices[i]] == "undefined"){
+                // console.log(allIndices[i], j, i)
+            }
             if (typeof hashedData[allIndices[i]] !== "undefined"){
+                // console.log(allIndices[i], j, i)
                 var currProjPt = project([hashedData[allIndices[i]][0], hashedData[allIndices[i]][1]]);
                 // x, y coordinates
                 otherArray[j] = currProjPt.x;

@@ -210,7 +210,7 @@ function pointQuery(prop, callback){
     rasterQuery = `
     SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + `g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
     FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
-    WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +3+`
+    WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
     AND ST_Within(p.geometry, g.geometry);`
     // 117, 45
 

@@ -2,7 +2,6 @@ var Model = require('../models'),
     async = require('async'),
     path = require('path'),
     request = require('request'),
-    manager = require('../../worker/manager')(10),
     app = require('../../app'),
     Channel = require('../../worker/channel');
     processVoxels = require('../../worker/worker2').processVoxels;
