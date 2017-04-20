@@ -42,9 +42,9 @@ function getBbox(datalayerIds, req, callback) {
 
     connection.query(distinctQuery).spread(function(results, metadata){
         var epsg = 4326;
-        var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.geometry),"+
-            epsg+") FROM public."+'"Datalayers"' + " AS p WHERE "
-            +'"datafileId"'+" in ("+idsQuery+");";
+        var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+
+            epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "
+            +'id'+" in ("+idsQuery+");";
 
         var props = results;
         connection.query(bboxQuery).spread(function(results, metadata){
@@ -157,7 +157,6 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
 
 
     for (i = 0; i < pointNet.coordinates.length; i++){
-
         var point = {
             type: 'Point',
             coordinates: pointNet.coordinates[i],
@@ -189,28 +188,53 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
 }
 
 function pointQuery(prop, callback){
+    // rasterQuery2 = `
+    // SELECT ST_Extent(p.geometry)
+    // FROM public.` +'"Datanets"' + ` AS p
+    // WHERE p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
+    // ;`
+    // connection.query(rasterQuery2).spread(function(results, metadata){
+    //     console.log(results.length, 888888888)
+    //     console.log(results)
+    // });
+
+    // rasterQuery3 = `
+    // SELECT p.geometry
+    // FROM public.` +'"Datalayers"' + ` AS p
+    // WHERE p.`+'"datafileId"'+ "=" + prop.datafileId+`
+    // ;`
+    // connection.query(rasterQuery3).spread(function(results, metadata){
+    //     console.log(results.length, 77777777)
+    // });
+
     rasterQuery = `
     SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + `g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
     FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
-    WHERE ST_Intersects(g.geometry, p.geometry) AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
-    AND g.`+'"datafileId"'+ "=" + prop.datafileId +";"
+    WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +3+`
+    AND ST_Within(p.geometry, g.geometry);`
+    // 117, 45
 
     // rasterQuery = `
     // SELECT p.geometry as pt, CASE WHEN ST_Intersects(g.geometry, p.geometry) = TRUE THEN g.rasterval ELSE 0 end as pt_props
     // FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g
     // WHERE  p.` +'"datavoxelId"' + "=" +props[0].datavoxelId+`
     // AND g.`+'"datafileId"'+ "=" + props[0].datafileId +";"
-
+    console.log(prop.datafileId, prop.datavoxelId)
     connection.query(rasterQuery).spread(function(results, metadata){
+        console.log(results.length)
         callback(results);
     });
 }
 
 function stValue(prop, callback) {
-    var raw_query = "SELECT ST_AsGeoJSON(p.geometry), ST_Value(r.rast, 1, p.geometry) As rastervalue FROM public."
-        +'"Datanets"' + " AS p, public.dataraster AS r WHERE ST_Intersects(r.rast, p.geometry) AND p."
-        +'"datavoxelId"' + "=" +prop.datavoxelId+" AND r.datafileid="+ prop.datafileId +";"
+    var raw_query = `
+    SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + 'r.layername, ' + `ST_Value(r.rast, 1, p.geometry) As rastervalue 
+    FROM public.`+'"Datanets"' + ` AS p, public.dataraster AS r 
+    WHERE ST_Intersects(r.rast, p.geometry) AND p.`+'"datavoxelId"' + "=" +prop.datavoxelId+" AND r.datafileid="+ prop.datafileId +";"
+    console.log(raw_query)
     connection.query(raw_query).spread(function(results, metadata){
+        console.log(results.length)
+        // 2153, 1433, 3028
         callback(results);
     });
 

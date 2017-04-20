@@ -392,7 +392,8 @@ export default class Pixels {
         const values = this.initAttribute(allElements, 1, true);
         const originalValues = this.initAttribute(allElements, 1, true);
 
-        const remap = x => (highBnd-lowBnd)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
+        const valDiff = highBnd-lowBnd;
+        const remap = x => (valDiff)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
         const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){

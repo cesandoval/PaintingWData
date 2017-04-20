@@ -16,6 +16,7 @@ module.exports.saveShapes = function(req, res) {
         async.apply(fileViewerHelper.loadData, datafileId, req),
         fileViewerHelper.queryRepeatedLayer,
         fileViewerHelper.pushDataLayerTransform,
+        // fileViewerHelper.pushDataRaster,
         function(file, thingsArray, callback){
               fs_extra.remove(file, err => {
                   if (err) {

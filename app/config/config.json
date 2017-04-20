@@ -1,27 +1,28 @@
 {
   "development": {
+    "logging": false,
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
     "host": "localhost",
-    "dialect": "postgres",
-    "logging": false
+    "dialect": "postgres"
+    
   },
   "test": {
+    "logging": false,
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh_test",
     "host": "54.227.111.118",
-    "dialect": "postgres",
-    "logging": false
+    "dialect": "postgres"
   },
   "production": {
+    "logging": false,
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
     "host": "54.227.111.118",
-    "dialect": "postgres",
-    "logging": false
+    "dialect": "postgres"
   }
 
 

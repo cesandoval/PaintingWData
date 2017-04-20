@@ -1,5 +1,4 @@
-var Model = require('../models'),
-    connection = require('../sequelize.js');
+var Model = require('../models');
  
  
 module.exports.show = function(req, res) {
