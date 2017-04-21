@@ -6,48 +6,7 @@ var Model = require('../models'),
 
 module.exports.saveShapes = function(req, res) {
     processShapes([req, res], function(){});
-    var id = req.user.id,
-        newEpsg = req.body.epsg,
-        datafileId = req.body.datafileId,
-        location = req.body.location,
-        layerName = req.body.layername,
-        description = req.body.description,
-        dataProp = req.body.rasterProperty;
-
-    async.waterfall([
-        async.apply(fileViewerHelper.loadData, datafileId, req),
-        fileViewerHelper.queryRepeatedLayer,
-        fileViewerHelper.pushDataLayerTransform,
-        // fileViewerHelper.pushDataRaster,
-        function(file, thingsArray, callback){
-              fs_extra.remove(file, err => {
-                  if (err) {
-                    console.log("Error cleaning local directory: ", file);
-                    console.log(err, err.stack);
-                    callback(err);
-                  }
-                  else{
-                     callback(null);
-                  }
-            })
-           
-        }
-        // pushDataRaster
-    ], function (err, result) {
-        console.log(result)
-        Model.Datafile.find({
-            where : {
-                userId : req.user.id,
-            }
-        }).then(function(datafiles){
-
-            if (req.user.id) {
-                console.log(req.user.id);
-                res.redirect('/layers/' + req.user.id);
-            }
-        });
-        
-    });
+    res.redirect('/layers/' + req.user.id);
 }
 
 module.exports.getDatalayers = function(req, res){

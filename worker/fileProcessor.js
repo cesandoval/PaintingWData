@@ -2,8 +2,11 @@ var async = require('async'),
     Model = require('../app/models/index'),
     connection = require('../app/sequelize'),
     mailer = require('../app/controllers/mailController');
+    fileViewerHelper = require('../lib/fileViewerHelper');
+    model = require('../app/models');
+    fs_extra = require('fs-extra');
 
-function startWorker(datalayerIds, req, callback){
+function startVoxelWorker(datalayerIds, req, callback){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
@@ -32,7 +35,7 @@ function startWorker(datalayerIds, req, callback){
     });
 };
 
-function startShapeWorker(req, res) {
+function startShapeWorker(req, res, callback) {
     var id = req.user.id,
         newEpsg = req.body.epsg,
         datafileId = req.body.datafileId,
@@ -62,7 +65,7 @@ function startShapeWorker(req, res) {
         // pushDataRaster
     ], function (err, result) {
         console.log(result)
-        Model.Datafile.find({
+        model.Datafile.find({
             where : {
                 userId : req.user.id,
             }
@@ -70,7 +73,6 @@ function startShapeWorker(req, res) {
 
             if (req.user.id) {
                 console.log(req.user.id);
-                res.redirect('/layers/' + req.user.id);
             }
         });
         
@@ -385,6 +387,5 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
 
 }
 
-
-module.exports.processDatalayer = startWorker;
-module.exports.processShapes = startShapeWorker;
+module.exports.processDatalayer = startVoxelWorker;
+module.exports.pushShapes = startShapeWorker;

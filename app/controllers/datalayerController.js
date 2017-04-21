@@ -19,7 +19,7 @@ module.exports.computeVoxels = function(req, res){
         }
     });
 
-    var req ={'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
+    var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
     var datalayerIds = [];
     req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
         if(datalayerId !== ""){

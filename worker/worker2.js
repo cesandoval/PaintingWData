@@ -1,11 +1,11 @@
 var Channel = require('./channel'),
     proc = require('./fileProcessor').processDatalayer;
-    processShapes = require('./fileProcessor').processShapes;
+    pushShapes = require('./fileProcessor').pushShapes;
 
 var redisConfig;  
 
 var RedisServer = require('redis-server');
- 
+
 // Simply pass the port that you want a Redis server to listen on.
 var server = new RedisServer(6379);
  
@@ -85,12 +85,12 @@ function processShapes(data, done) {
     });
 }
 
-queue.process('saveLayer', (job, done) => {  
+queue.process('saveLayer', (job, done) => { 
   var data = job.data;
   var req = data[0];
   var res = data[1];
-  
-  processShapes(req, res, function (message) {
+
+  pushShapes(req, res, function (message) {
     console.log(message);
   }); 
   done();
