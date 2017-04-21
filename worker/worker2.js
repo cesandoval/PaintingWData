@@ -1,5 +1,6 @@
 var Channel = require('./channel'),
     proc = require('./fileProcessor').processDatalayer;
+    processShapes = require('./fileProcessor').processShapes;
 
 var redisConfig;  
 
@@ -56,8 +57,6 @@ function processVoxels(data, done) {
 }
 
 queue.process('computeVoxel', (job, done) => {  
-  // This is the data we sent into the #create() function call earlier
-  // We're setting it to a constant here so we can do some guarding against accidental writes
   var data = job.data;
   var datalayerIds = data[0];
   var req = data[1];
@@ -68,6 +67,36 @@ queue.process('computeVoxel', (job, done) => {
   done();
 });
 
+
+function processShapes(data, done) {
+  queue.create('saveLayer', data)
+    .priority('critical')
+    .attempts(2)
+    .backoff(true)
+    .removeOnComplete(true)
+    .save((err) => {
+      if (err) {
+        console.error(err);
+        done(err);
+      }
+      if (!err) {
+        done();
+      }
+    });
+}
+
+queue.process('saveLayer', (job, done) => {  
+  var data = job.data;
+  var req = data[0];
+  var res = data[1];
+  
+  processShapes(req, res, function (message) {
+    console.log(message);
+  }); 
+  done();
+});
+
 module.exports = {
-  processVoxels: processVoxels
+  processVoxels: processVoxels,
+  processShapes: processShapes
 }

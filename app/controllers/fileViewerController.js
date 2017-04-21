@@ -1,9 +1,11 @@
 var fileViewerHelper = require('../../lib/fileViewerHelper');
+    processShapes = require('../../worker/worker2').processShapes;
 
 var Model = require('../models'),
     async = require('async');
 
 module.exports.saveShapes = function(req, res) {
+    processShapes([req, res], function(){});
     var id = req.user.id,
         newEpsg = req.body.epsg,
         datafileId = req.body.datafileId,

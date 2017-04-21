@@ -32,6 +32,51 @@ function startWorker(datalayerIds, req, callback){
     });
 };
 
+function startShapeWorker(req, res) {
+    var id = req.user.id,
+        newEpsg = req.body.epsg,
+        datafileId = req.body.datafileId,
+        location = req.body.location,
+        layerName = req.body.layername,
+        description = req.body.description,
+        dataProp = req.body.rasterProperty;
+
+    async.waterfall([
+        async.apply(fileViewerHelper.loadData, datafileId, req),
+        fileViewerHelper.queryRepeatedLayer,
+        fileViewerHelper.pushDataLayerTransform,
+        // fileViewerHelper.pushDataRaster,
+        function(file, thingsArray, callback){
+              fs_extra.remove(file, err => {
+                  if (err) {
+                    console.log("Error cleaning local directory: ", file);
+                    console.log(err, err.stack);
+                    callback(err);
+                  }
+                  else{
+                     callback(null);
+                  }
+            })
+           
+        }
+        // pushDataRaster
+    ], function (err, result) {
+        console.log(result)
+        Model.Datafile.find({
+            where : {
+                userId : req.user.id,
+            }
+        }).then(function(datafiles){
+
+            if (req.user.id) {
+                console.log(req.user.id);
+                res.redirect('/layers/' + req.user.id);
+            }
+        });
+        
+    });
+}
+
 // This function creates a BBox around all the Datalayers selected
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
 function getBbox(datalayerIds, req, callback) {
@@ -342,3 +387,4 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
 
 
 module.exports.processDatalayer = startWorker;
+module.exports.processShapes = startShapeWorker;
