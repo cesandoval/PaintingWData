@@ -8,6 +8,7 @@ class Layer extends React.Component {
         this.changeVisibility = this.changeVisibility.bind(this);
         this.changeColor = this.changeColor.bind(this);
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this);
+        console.log(props)
     }
     changeVisibility(e) {
         act.sideUpdateLayer(this.props.name, 'visible', e.target.checked);
@@ -42,7 +43,7 @@ class Layer extends React.Component {
             <div className="layers__single">
                 <div className="row">
                     <div className="col-md-6">
-                        <p className="layer-label">{this.props.name}</p>
+                        <p className="layer-label">{this.props.userPropName}</p>
                     </div>
                 </div>
                 <div className="row">

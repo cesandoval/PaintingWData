@@ -5,8 +5,8 @@ import axios from 'axios';
 
 import Layer from './layer';
 
-const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText) => ({
-    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
 })
 
 class Layers extends React.Component {
@@ -82,7 +82,7 @@ class Layers extends React.Component {
 
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 
-                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds, l.Datavoxel.allIndices, shaderContent);
+                                    l.color1, l.color2, transGeojson, l.Datavoxel.bbox.coordinates, l.Datavoxel.rowsCols, bounds, l.Datavoxel.allIndices, shaderContent, l.Datafile.Datalayers[0].userLayerName);
                 }));
             });
     }
@@ -93,6 +93,7 @@ class Layers extends React.Component {
                     <Layer
                         key={i}
                         propName={layer.propertyName}
+                        userPropName={layer.userLayerName}
                         name={layer.name}
                         visible={layer.visible}
                         color1={layer.color1}

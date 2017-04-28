@@ -219,7 +219,6 @@ function pointQuery(prop, callback){
     // FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g
     // WHERE  p.` +'"datavoxelId"' + "=" +props[0].datavoxelId+`
     // AND g.`+'"datafileId"'+ "=" + props[0].datafileId +";"
-    console.log(prop.datafileId, prop.datavoxelId)
     connection.query(rasterQuery).spread(function(results, metadata){
         console.log(results.length)
         callback(results);

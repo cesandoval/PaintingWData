@@ -10,7 +10,10 @@ module.exports.getDatajsons = function(req, res){
 	Model.Datajson.findAll({where: {
 		datavoxelId: req.params.datavoxelId,
 		},
-        include: [{model: Model.Datavoxel}]
+        include: [{model: Model.Datavoxel}, {model: Model.Datafile, include: [{
+            model: Model.Datalayer,
+            limit: 1}] 
+			}]
         }).then(function(datajsons){
 		res.json(datajsons);
 	});
