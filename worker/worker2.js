@@ -1,6 +1,6 @@
 var Channel = require('./channel'),
-    proc = require('./fileProcessor').processDatalayer;
-    pushShapes = require('./fileProcessor').pushShapes;
+    proc = require('./fileProcessor').processDatalayer,
+    pushTheShapes = require('./fileProcessor').pushShapes;
 
 var redisConfig;  
 
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 var kue = require('kue'), 
-queue = kue.createQueue(redisConfig);
+var queue = kue.createQueue(redisConfig);
 
 //data -> datalayerIds, and req
 //done is callback
@@ -90,7 +90,7 @@ queue.process('saveLayer', (job, done) => {
   var req = data[0];
   var res = data[1];
 
-  pushShapes(req, res, function (message) {
+  pushTheShapes(req, res, function (message) {
     console.log(message);
   }); 
   done();

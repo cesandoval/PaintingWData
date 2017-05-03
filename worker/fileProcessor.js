@@ -36,13 +36,14 @@ function startVoxelWorker(datalayerIds, req, callback){
 };
 
 function startShapeWorker(req, res, callback) {
-    var id = req.user.id,
-        newEpsg = req.body.epsg,
-        datafileId = req.body.datafileId,
-        location = req.body.location,
-        layerName = req.body.layername,
-        description = req.body.description,
-        dataProp = req.body.rasterProperty;
+    var id = req.user.id;
+    var newEpsg = req.body.epsg;
+    var datafileId = req.body.datafileId;
+    var location = req.body.location;
+    var layerName = req.body.layername;
+    var description = req.body.description;
+    var dataProp = req.body.rasterProperty;
+    console.log(id);
 
     async.waterfall([
         async.apply(fileViewerHelper.loadData, datafileId, req),

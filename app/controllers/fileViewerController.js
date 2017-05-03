@@ -1,11 +1,11 @@
 var fileViewerHelper = require('../../lib/fileViewerHelper');
-    processShapes = require('../../worker/worker2').processShapes;
+    processTheShapes = require('../../worker/worker2').processShapes;
 
 var Model = require('../models'),
     async = require('async');
 
 module.exports.saveShapes = function(req, res) {
-    processShapes([req, res], function(){});
+    processTheShapes([req, res], function(){});
     res.redirect('/layers/' + req.user.id);
 }
 
