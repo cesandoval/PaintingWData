@@ -1,6 +1,7 @@
 var Channel = require('./channel'),
     proc = require('./fileProcessor').processDatalayer,
-    pushTheShapes = require('./fileProcessor').pushShapes;
+    pushTheShapes = require('./fileProcessor').pushShapes,
+    util = require('util');
 
 var redisConfig;  
 
@@ -35,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 var kue = require('kue'), 
-var queue = kue.createQueue(redisConfig);
+    queue = kue.createQueue(redisConfig);
 
 //data -> datalayerIds, and req
 //done is callback
@@ -69,6 +70,9 @@ queue.process('computeVoxel', (job, done) => {
 
 
 function processShapes(data, done) {
+  // console.log(data)
+  // data = util.inspect(data);
+  // console.log(data[0])
   queue.create('saveLayer', data)
     .priority('critical')
     .attempts(2)
@@ -76,6 +80,9 @@ function processShapes(data, done) {
     .removeOnComplete(true)
     .save((err) => {
       if (err) {
+        console.log(999999999)
+        // console.log(util.inspect(data))
+        // console.log(done)
         console.error(err);
         done(err);
       }
@@ -87,10 +94,12 @@ function processShapes(data, done) {
 
 queue.process('saveLayer', (job, done) => { 
   var data = job.data;
-  var req = data[0];
-  var res = data[1];
-
-  pushTheShapes(req, res, function (message) {
+  var req = data;
+  // var res = data[1];
+  console.log(888888888888)
+  // console.log(data)
+  // console.log(JSON.parse(data))
+  pushTheShapes(req, function (message) {
     console.log(message);
   }); 
   done();

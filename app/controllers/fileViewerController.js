@@ -1,11 +1,27 @@
-var fileViewerHelper = require('../../lib/fileViewerHelper');
-    processTheShapes = require('../../worker/worker2').processShapes;
+var fileViewerHelper = require('../../lib/fileViewerHelper'),
+    processTheShapes = require('../../worker/worker2').processShapes,
+    util = require('util');
 
 var Model = require('../models'),
     async = require('async');
 
 module.exports.saveShapes = function(req, res) {
-    processTheShapes([req, res], function(){});
+    var newReq = {
+        body: { 
+            rasterProperty: req.body.rasterProperty,
+            datafileId : req.body.datafileId,
+            layername: req.body.layername,
+            description : req.body.description,
+            location : req.body.location,
+            epsg: req.body.epsg
+        },
+        user: {
+            id: req.user.id
+        }
+    }
+
+    // console.log(typeof(util.inspect(req)))
+    processTheShapes(newReq, function(){});
     res.redirect('/layers/' + req.user.id);
 }
 

@@ -35,7 +35,7 @@ function startVoxelWorker(datalayerIds, req, callback){
     });
 };
 
-function startShapeWorker(req, res, callback) {
+function startShapeWorker(req, callback) {
     var id = req.user.id;
     var newEpsg = req.body.epsg;
     var datafileId = req.body.datafileId;
