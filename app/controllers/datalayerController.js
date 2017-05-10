@@ -27,7 +27,7 @@ module.exports.computeVoxels = function(req, res){
             }
         });
 
-    processVoxels([datalayerIds, req], function(){}); //done is a callback, probably send email here
+    processVoxels([datalayerIds, req], function(){}); 
 
     res.redirect('/voxels/'+ req.user.id);  
 };
