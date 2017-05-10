@@ -1,10 +1,12 @@
 var Channel = require('./channel'),
-    proc = require('./fileProcessor').processDatalayer;
+    proc = require('./fileProcessor').processDatalayer,
+    pushTheShapes = require('./fileProcessor').pushShapes,
+    util = require('util');
 
 var redisConfig;  
 
 var RedisServer = require('redis-server');
- 
+
 // Simply pass the port that you want a Redis server to listen on.
 var server = new RedisServer(6379);
  
@@ -34,7 +36,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 var kue = require('kue'), 
-queue = kue.createQueue(redisConfig);
+    queue = kue.createQueue(redisConfig);
 
 //data -> datalayerIds, and req
 //done is callback
@@ -56,8 +58,6 @@ function processVoxels(data, done) {
 }
 
 queue.process('computeVoxel', (job, done) => {  
-  // This is the data we sent into the #create() function call earlier
-  // We're setting it to a constant here so we can do some guarding against accidental writes
   var data = job.data;
   var datalayerIds = data[0];
   var req = data[1];
@@ -68,6 +68,44 @@ queue.process('computeVoxel', (job, done) => {
   done();
 });
 
+
+function processShapes(data, done) {
+  // console.log(data)
+  // data = util.inspect(data);
+  // console.log(data[0])
+  queue.create('saveLayer', data)
+    .priority('critical')
+    .attempts(2)
+    .backoff(true)
+    .removeOnComplete(true)
+    .save((err) => {
+      if (err) {
+        console.log(999999999)
+        // console.log(util.inspect(data))
+        // console.log(done)
+        console.error(err);
+        done(err);
+      }
+      if (!err) {
+        done();
+      }
+    });
+}
+
+queue.process('saveLayer', (job, done) => { 
+  var data = job.data;
+  var req = data;
+  // var res = data[1];
+  console.log(888888888888)
+  // console.log(data)
+  // console.log(JSON.parse(data))
+  pushTheShapes(req, function (message) {
+    console.log(message);
+  }); 
+  done();
+});
+
 module.exports = {
-  processVoxels: processVoxels
+  processVoxels: processVoxels,
+  processShapes: processShapes
 }

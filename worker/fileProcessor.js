@@ -2,8 +2,11 @@ var async = require('async'),
     Model = require('../app/models/index'),
     connection = require('../app/sequelize'),
     mailer = require('../app/controllers/mailController');
+    fileViewerHelper = require('../lib/fileViewerHelper');
+    model = require('../app/models');
+    fs_extra = require('fs-extra');
 
-function startWorker(datalayerIds, req, callback){
+function startVoxelWorker(datalayerIds, req, callback){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
@@ -31,6 +34,51 @@ function startWorker(datalayerIds, req, callback){
         })
     });
 };
+
+function startShapeWorker(req, callback) {
+    var id = req.user.id;
+    var newEpsg = req.body.epsg;
+    var datafileId = req.body.datafileId;
+    var location = req.body.location;
+    var layerName = req.body.layername;
+    var description = req.body.description;
+    var dataProp = req.body.rasterProperty;
+    console.log(id);
+
+    async.waterfall([
+        async.apply(fileViewerHelper.loadData, datafileId, req),
+        fileViewerHelper.queryRepeatedLayer,
+        fileViewerHelper.pushDataLayerTransform,
+        // fileViewerHelper.pushDataRaster,
+        function(file, thingsArray, callback){
+              fs_extra.remove(file, err => {
+                  if (err) {
+                    console.log("Error cleaning local directory: ", file);
+                    console.log(err, err.stack);
+                    callback(err);
+                  }
+                  else{
+                     callback(null);
+                  }
+            })
+           
+        }
+        // pushDataRaster
+    ], function (err, result) {
+        console.log(result)
+        model.Datafile.find({
+            where : {
+                userId : req.user.id,
+            }
+        }).then(function(datafiles){
+
+            if (req.user.id) {
+                console.log(req.user.id);
+            }
+        });
+        
+    });
+}
 
 // This function creates a BBox around all the Datalayers selected
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
@@ -340,5 +388,5 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
 
 }
 
-
-module.exports.processDatalayer = startWorker;
+module.exports.processDatalayer = startVoxelWorker;
+module.exports.pushShapes = startShapeWorker;

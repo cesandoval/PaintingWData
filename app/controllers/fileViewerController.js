@@ -1,51 +1,37 @@
-var fileViewerHelper = require('../../lib/fileViewerHelper');
+var fileViewerHelper = require('../../lib/fileViewerHelper'),
+    processTheShapes = require('../../worker/worker2').processShapes,
+    mailController = require('./mailController')
+    util = require('util');
+    var User = require('../models').User;
 
 var Model = require('../models'),
     async = require('async');
 
 module.exports.saveShapes = function(req, res) {
-    var id = req.user.id,
-        newEpsg = req.body.epsg,
-        datafileId = req.body.datafileId,
-        location = req.body.location,
-        layerName = req.body.layername,
-        description = req.body.description,
-        dataProp = req.body.rasterProperty;
-
-    async.waterfall([
-        async.apply(fileViewerHelper.loadData, datafileId, req),
-        fileViewerHelper.queryRepeatedLayer,
-        fileViewerHelper.pushDataLayerTransform,
-        // fileViewerHelper.pushDataRaster,
-        function(file, thingsArray, callback){
-              fs_extra.remove(file, err => {
-                  if (err) {
-                    console.log("Error cleaning local directory: ", file);
-                    console.log(err, err.stack);
-                    callback(err);
-                  }
-                  else{
-                     callback(null);
-                  }
-            })
-           
+    var newReq = {
+        body: { 
+            rasterProperty: req.body.rasterProperty,
+            datafileId : req.body.datafileId,
+            layername: req.body.layername,
+            description : req.body.description,
+            location : req.body.location,
+            epsg: req.body.epsg
+        },
+        user: {
+            id: req.user.id
         }
-        // pushDataRaster
-    ], function (err, result) {
-        console.log(result)
-        Model.Datafile.find({
-            where : {
-                userId : req.user.id,
-            }
-        }).then(function(datafiles){
+    }
+    
 
-            if (req.user.id) {
-                console.log(req.user.id);
-                res.redirect('/layers/' + req.user.id);
-            }
-        });
-        
+    // console.log(typeof(util.inspect(req)))
+    processTheShapes(newReq, function(){
+        User.findById(req.user.id).then(function(user){
+            mailController.sendLayerEmail(user.email ,req.user.id);
+        },
+        function(err){}
+        );   
     });
+    res.redirect('/layers/' + req.user.id);
 }
 
 module.exports.getDatalayers = function(req, res){

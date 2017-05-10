@@ -36,18 +36,21 @@ module.exports.upload = function(req, res) {
         var zipDir = path.join(path.dirname(file.path), file.name);
         fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
           if(err){
+            // error with file formqt
             console.log("Error: ", err);
             
           }
           else{
             fileUploadHelper.verifyFiles(targetPath, function(err, targetPath){
               if(err){
+                  //if file is messed up, file doesn't contain one of the extensions required 
                   console.log("Error: ", err);
                   res.redirect(200, '..');
               }
               else{
               fileUploadHelper.getShapeFiles(targetPath, function(err, shapeFiles){
                 if(err){
+                  // geometry is messed up
                   console.log("Error: ", err);
                 }
                 else{
