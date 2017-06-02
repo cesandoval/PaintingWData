@@ -30,7 +30,7 @@ npm -g install  nodemon
 ```
 
 ### Building for Development
-* `git clone https://github.com/cesandoval/PaintingWithData.git`
+* `git clone https://github.com/cesandoval/PaintingWithData_Riyadh.git`
 * `cd` into the webapp directory
 * `npm install` will install all the node and bower modules needed locally for development.
 * Create a new spatially enabled database. Through pgAdmin, or the command line.    
