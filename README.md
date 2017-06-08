@@ -26,7 +26,8 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * On a terminal, run the following commands:
 ```
 npm -g install sequelize-cli
-npm -g install  nodemon
+npm -g install nodemon
+npm install -g gulp-cli
 ```
 
 ### Building for Development
