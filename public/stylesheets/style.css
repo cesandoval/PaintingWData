@@ -790,6 +790,21 @@ p {
     font-size: 17px;
 }
 
+.flash {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    background-image: linear-gradient(to bottom,#f2dede 0,#e7c3c3 100%);
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    text-align: center;
+}
+
 
 
 

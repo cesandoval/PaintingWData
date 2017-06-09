@@ -29,6 +29,17 @@ function upload(e)
         data.append(key, value);
     });
 
+    var flashHandler = $('#flashes');
+
+    flashHandler.on('flash', function(event, message){
+        var flash = $('<div class="flash">');
+        flash.text(message);
+        flash.on('click', function(){
+            $(this).remove();
+            });
+        $(this).append(flash);
+    });
+
     $.ajax({
         url: '/upload',
         xhr: function () {
@@ -66,14 +77,19 @@ function upload(e)
             }
             else
             {
+                console.log("54444444");
                 console.log('ERRORS: ' + data.error);
             }
         },
         error: function(jqXHR, textStatus, errorThrown)
         {
             console.log("the errors happened here");
+            console.log("55555555");
             console.log('ERRORS: ' + textStatus);
             // STOP LOADING SPINNER
+            // Change this for a message to the user that actually displays....
+            // $('#error_container').html('this is only a test').show();
+            flashHandler.trigger('flash', ['The file upload failed. Try a different file.'])
         }
     });
 }
