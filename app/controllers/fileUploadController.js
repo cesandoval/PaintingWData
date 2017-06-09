@@ -31,13 +31,15 @@ module.exports.upload = function(req, res, next) {
         fs.rename(file.path, path.join(form.uploadDir, file.name), function(err){
         if(err){
           console.log("something went wrong! " + err);
+          res.status(400).send({
+            message: 'Error unzipping.'
+          });
         }//
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
           fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
             if(err){
               console.log("Error: ", err);
-              req.flash('message',"Email is already in use.")
               res.status(400).send({
                 message: 'Error with the File Format. Upload a Different File.'
               });
@@ -58,8 +60,10 @@ module.exports.upload = function(req, res, next) {
                 fileUploadHelper.getShapeFiles(targetPath, function(err, shapeFiles){
                   if(err){
                     // geometry is messed up
-                    console.log(7777777)
                     console.log("Error: ", err);
+                    res.status(400).send({
+                      message: 'Problems with geometry.'
+                    });
                   }
                   else{
                     fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
