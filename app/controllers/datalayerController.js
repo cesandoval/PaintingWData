@@ -11,25 +11,73 @@ var Model = require('../models'),
 // The datalayer objects are all strings containing ids. Eg "3", "7" ...
 
 module.exports.computeVoxels = function(req, res){
-    var datalayerIds = [];
-    var datalayerIdString = req.body.datalayerIds;
-    req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-        if(datalayerId !== ""){
-            datalayerIds.push(datalayerId);
-        }
-    });
+    console.log(req.body)
 
-    var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
-    var datalayerIds = [];
-    req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-        if(datalayerId !== ""){
-            datalayerIds.push(datalayerId);
+    // $ = cheerio.load('<div id = "flashes"</div>');
+    // console.log(flashHandler)
+    // var flashHandler = $('#flashes');
+
+    // flashHandler.on('flash', function(event, message){
+    //     var flash = $('<div class="flash">');
+    //     flash.text(message);
+    //     flash.on('click', function(){
+    //         $(this).remove();
+    //         });
+    //     $(this).append(flash);
+    // });
+    if  (req.body.datalayerIds !== ''){
+        var datalayerIds = [];
+        var datalayerIdString = req.body.datalayerIds;
+        req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
+            if(datalayerId !== ""){
+                datalayerIds.push(datalayerId);
             }
         });
 
-    processVoxels([datalayerIds, req], function(){}); 
+        if (req.body.layerButton == 'delete') {
+            Model.Datafile.destroy({
+                where: {
+                    id: datalayerIds
+                }
+            }).then(function(numOfDestroyed){
+                console.log(numOfDestroyed)
 
-    res.redirect('/voxels/'+ req.user.id);  
+                Model.Datalayer.destroy({
+                    where: {
+                        datafileId: datalayerIds
+                    }
+                }).then(function(numOfDestroyed){
+                    console.log(numOfDestroyed)
+
+                    // add message for deleted layers
+                    res.redirect('/layers/'+ req.user.id);  
+                })
+            }); 
+        } else {
+            var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
+            var datalayerIds = [];
+            req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
+                if(datalayerId !== ""){
+                    datalayerIds.push(datalayerId);
+                    }
+                });
+
+            processVoxels([datalayerIds, req], function(){}); 
+
+            res.redirect('/voxels/'+ req.user.id);  
+        }
+    } else {
+        console.log('select layers!!!!');
+        res.locals.error_messages = req.flash('layerAlert');
+        // req.flash('layerAlert', "You haven't selected layers to compute. Please select at least one layer");
+        // flashHandler.trigger('flash', ['The file upload failed. Try a different file.'])
+
+
+        // res.redirect('/layers/'+ req.user.id); 
+        // res.redirect('/layers/'+ req.user.id, {warningMessage: "You haven't selected layers to compute. Please select at least one layer"});
+        res.redirect('/layers/'+ req.user.id); 
+
+    } 
 };
 
 module.exports.show = function(req, res) {

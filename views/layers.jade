@@ -115,9 +115,33 @@ block pageTitle
                   input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
                   p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
               <br>
+
+              //- #flashes
+              //- //- if (message.length > 0)
+              //- //-   #some
+              //-   //- .message.layerAlert
+              //-   //-   span= messages.layerAlert
+              //- if (message)
+              //-   #somesy #{message}
+              //- if (messages)
+              //-   #somesy #{messages.layerAlert}
+
+              //- div
+              //- code.formattedDebug= message
+              //- div
+              //- code.formattedDebug= messages
+              //- div
+              //- code.formattedDebug= error_messages
+              //-   - console.log(message)
+              //-   - console.log(messages)
+
               .row.spacing
                 .input-group-btn.text-center
-                  button.btn.btn-gray.btn-jumbotron(type='submit') Compute
+                  button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="compute") Compute
+
+                .input-group-btn.text-center
+                  button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="delete", formaction="/layers") Delete Layer
+
     .row.text-center
       span.glyphicon.glyphicon-triangle-bottom &#xe114;
       br
