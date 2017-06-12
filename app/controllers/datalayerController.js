@@ -113,3 +113,34 @@ module.exports.showVoxels= function(req, res) {
         });
 }
 
+
+module.exports.transformVoxels = function(req, res) {
+    console.log(req.body)
+
+    if  (req.body.datavoxelIds !== ''){
+        var deleteId = parseInt(req.body.datavoxelIds);
+
+        Model.Datavoxel.destroy({
+            where: {
+                id: deleteId
+            }
+        }).then(function(numOfDestroyed){
+            console.log(numOfDestroyed)
+
+            // add message for deleted layers
+            res.redirect('/voxels/'+ req.user.id);  
+        }); 
+
+    } else {
+        console.log('select layers!!!!');
+        res.locals.error_messages = req.flash('layerAlert');
+        // req.flash('layerAlert', "You haven't selected layers to compute. Please select at least one layer");
+        // flashHandler.trigger('flash', ['The file upload failed. Try a different file.'])
+
+
+        // res.redirect('/layers/'+ req.user.id); 
+        // res.redirect('/layers/'+ req.user.id, {warningMessage: "You haven't selected layers to compute. Please select at least one layer"});
+        res.redirect('/voxels/'+ req.user.id); 
+
+    } 
+}

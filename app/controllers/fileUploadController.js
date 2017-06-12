@@ -27,7 +27,7 @@ module.exports.upload = function(req, res, next) {
     form.on('end', function() {
       var file = files[0];
       var whitelist = [];
-      if("undefined" !== typeof file.path) {
+      if("undefined" !== typeof file) {
         fs.rename(file.path, path.join(form.uploadDir, file.name), function(err){
         if(err){
           console.log("something went wrong! " + err);

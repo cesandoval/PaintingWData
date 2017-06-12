@@ -20,6 +20,12 @@ block pageTitle
           h3.spacing To open a voxel, first select it from the library below
         .row.spacing.text-center
           button.btn.btn-gray.btn-jumbotron#openVoxel(style="width: 100px; height: 100px; line-height: 90px;") Open Voxel
+        
+        form(method='post', action='/voxels')
+          .input-group-btn.text-center
+            button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="delete", formaction="/voxels") Delete Voxel
+            input.form-control.hidden(style="width: 100%", name = "datavoxelIds" ,id="selectedLayers", type='hidden')
+
 
     .row
       if datavoxels.length == 0
@@ -32,6 +38,7 @@ block pageTitle
       for datavoxel in datavoxels
         if datavoxel.id
           .col-sm-6.col-md-4
+            //- this is where i need to add the form stuff
             .thumbnail.datavoxel(selected = "false", id="datavoxel_#{datavoxel.id}", style="z-index: 1;")
               .caption.text-center
                 .layername
