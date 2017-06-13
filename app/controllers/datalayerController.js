@@ -46,10 +46,15 @@ module.exports.computeVoxels = function(req, res){
                     where: {
                         datafileId: datalayerIds
                     }
-                }).then(function(numOfDestroyed){
+                }).then(function(layeOfDestroyed){
                     console.log(numOfDestroyed)
 
                     // add message for deleted layers
+                    if (numOfDestroyed == 1) {
+                        req.flash('layerAlert', "Your layer has been deleted");
+                    } else {
+                        req.flash('layerAlert', "Your layers have been deleted");
+                    }
                     res.redirect('/layers/'+ req.user.id);  
                 })
             }); 
@@ -68,13 +73,7 @@ module.exports.computeVoxels = function(req, res){
         }
     } else {
         console.log('select layers!!!!');
-        res.locals.error_messages = req.flash('layerAlert');
-        // req.flash('layerAlert', "You haven't selected layers to compute. Please select at least one layer");
-        // flashHandler.trigger('flash', ['The file upload failed. Try a different file.'])
-
-
-        // res.redirect('/layers/'+ req.user.id); 
-        // res.redirect('/layers/'+ req.user.id, {warningMessage: "You haven't selected layers to compute. Please select at least one layer"});
+        req.flash('layerAlert', "You haven't selected layers. Please select at least one layer.");
         res.redirect('/layers/'+ req.user.id); 
 
     } 
@@ -90,7 +89,7 @@ module.exports.show = function(req, res) {
             limit: 1}]
         }).then(function(datafiles){
 
-            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user});
+            res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
         });  
 }
 
