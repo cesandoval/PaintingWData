@@ -1,5 +1,5 @@
 # PaintingWithData_Riyadh
-Urban computing platform through voxels and a graph backend. The proposes a new urban mapping paradigm. Riyadh Implementation of Painting with Data. 
+Urban computing platform through voxels and a graph backend. The proposes a new urban mapping paradigm. 
 
 ![alt text](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/public/images/painting_with_data.PNG "Painting With Data Interface")
 
