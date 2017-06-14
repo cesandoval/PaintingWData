@@ -27,6 +27,9 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.GEOMETRY,
         allowNull: true
       },
+      deleted: {
+        type: DataTypes.BOOLEAN,
+      },
   }, {
 
     classMethods: {

@@ -19,7 +19,3 @@ $datavoxel.click(function(){
 		$selectedLayers.val(selectedVoxelId);
 	}
 });
-
-$openVoxel.click(function(){
-	  window.location.href = "/app/"+selectedVoxelId;
-});

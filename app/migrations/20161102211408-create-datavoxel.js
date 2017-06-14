@@ -36,6 +36,9 @@ module.exports = {
       ptDistance: {
         type: Sequelize.FLOAT,
       },
+      deleted: {
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

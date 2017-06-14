@@ -46,6 +46,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
       allowNull: true
     },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+    },
   }, {
     classMethods: {
       associate: function(models) {
