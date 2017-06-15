@@ -44,10 +44,6 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 
             Contains styles for the parallel coordinates widget
 
-        * `graph-creator.css`
-
-            Contains styles for the visual programming widget
-
         * `jquery-ui.css`
 
             Base jquery UI styles. Some modifications for the application
@@ -76,30 +72,6 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
             * `spectrum.js`
             
             * `three.js`
-
-        * **voxel**
-
-            Contains a placeholder geometry library
-
-            * `PixelGrid.js`
-
-                Currently implements a simple neighborhood index, property setters, coordinate setters, and neighborhood queries
-
-        * `graph-creator.js`
-        
-            Contains the code for the visual programming language widget. Additional nodes can be added here.
-
-        * `parallel_coordinates.js`
-        
-            Contains code to construct and populate the parallel coordinates widget
-
-        * `three_voxel.js`
-        
-            Contains the code to construct the client-side of the application, makes calls to the other scripts to construct the UI and interact with the user
-
-        * `uiVoxel.js`
-
-            Contains code to construct the elements of the UI; mainly used for constructing buttons, sidebars, etc with jquery
 
 
 ### Copyright (c) 2016, Carlos Sandoval Olascoaga. All rights reserved.
