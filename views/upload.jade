@@ -6,6 +6,9 @@ block pageTitle
       .row.spacing-large
          h1.center Upload Data
 
+      if (uploadAlert)
+        .alert.alert-danger(role='alert') #{uploadAlert}
+
       .row
         .col-md-6.col-md-offset-3
           h4.spacing-large.text-center Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
@@ -24,9 +27,6 @@ block pageTitle
             input(id="file-selector",  name = "zip_file", type="file")
         p.text-center
           a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
-      .row
-        .col-md-6.col-md-offset-3
-          #flashes
           
       .row.spacing  
           div.progress.hidden(style="backround-color: white")

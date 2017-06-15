@@ -87,9 +87,7 @@ function upload(e)
             console.log("55555555");
             console.log('ERRORS: ' + textStatus);
             // STOP LOADING SPINNER
-            // Change this for a message to the user that actually displays....
-            // $('#error_container').html('this is only a test').show();
-            flashHandler.trigger('flash', ['The file upload failed. Try a different file.'])
+            window.location.replace("/upload");
         }
     });
 }

@@ -6,7 +6,7 @@ var fileUploadHelper = require('../../lib/fileUploadHelper'),
     fs_extra = require('fs-extra')
 
 module.exports.show = function(req, res) {
-    res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user});
+    res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user, uploadAlert: req.flash('uploadAlert')[0]});
 }
 
 module.exports.upload = function(req, res, next) {
@@ -21,6 +21,11 @@ module.exports.upload = function(req, res, next) {
     });
     form.on('error', function(err) {
       console.log('Error while uploading file: \n' + err);
+
+      req.flash('uploadAlert', 'Error while uploading file: \n' + err);
+      res.status(400).send({
+        message: 'Errors with the upload.'
+      });
     });
 
     // once all the files have been uploaded, send a response to the client
@@ -31,62 +36,65 @@ module.exports.upload = function(req, res, next) {
         fs.rename(file.path, path.join(form.uploadDir, file.name), function(err){
         if(err){
           console.log("something went wrong! " + err);
+
+          req.flash('uploadAlert', "Error unzipping. Upload a Different File.");
           res.status(400).send({
-            message: 'Error unzipping.'
+            message: 'Errors with the upload.'
           });
-        }//
+        }
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
           fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
             if(err){
-              console.log("Error: ", err);
+              console.log("Error 1: ", err);
+
+              req.flash('uploadAlert', "Error with the File Format. Upload a Different File.");
               res.status(400).send({
-                message: 'Error with the File Format. Upload a Different File.'
+                message: 'Errors with the upload.'
               });
-
-              // error with file formqt
-
-              
             }
             else{
               fileUploadHelper.verifyFiles(targetPath, function(err, targetPath){
                 if(err){
                     //if file is messed up, file doesn't contain one of the extensions required 
-                    console.log(8888888)
-                    console.log("Error: ", err);
-                    res.redirect(200, '..');
+                    console.log("Error 2: ", err);
+
+                    req.flash('uploadAlert', "Error with your upload, it might be missing some required files. Upload a Different File.");
+                    res.status(400).send({
+                      message: 'Errors with the upload.'
+                    });
                 }
                 else{
-                fileUploadHelper.getShapeFiles(targetPath, function(err, shapeFiles){
-                  if(err){
-                    // geometry is messed up
-                    console.log("Error: ", err);
-                    res.status(400).send({
-                      message: 'Problems with geometry.'
-                    });
-                  }
-                  else{
-                    fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
-                      var dataFile = Models.Datafile.build();
-                      dataFile.userId = req.user.id;
-                      dataFile.location = targetPath;
-                      dataFile.filename = shapeFiles[0];
-                      dataFile.epsg = epsg;
-                      dataFile.centroid = centroid;
-                      dataFile.bbox = bbox;
-                      dataFile.save().then(function(d){
-                        res.send({id : d.id});
+                  fileUploadHelper.getShapeFiles(targetPath, function(err, shapeFiles){
+                    if(err){
+                      // geometry is messed up
+
+                      req.flash('uploadAlert', "Problems with geometry.. Upload a Different File.");
+                      res.status(400).send({
+                        message: 'Errors with the upload.'
                       });
-                    })  
-                  }
-                });
-              }})
-            }
-          });
-        }
-      });
-    };
-      
+                    }
+                    else{
+                      fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
+                        var dataFile = Models.Datafile.build();
+                        dataFile.userId = req.user.id;
+                        dataFile.location = targetPath;
+                        dataFile.filename = shapeFiles[0];
+                        dataFile.epsg = epsg;
+                        dataFile.centroid = centroid;
+                        dataFile.bbox = bbox;
+                        dataFile.save().then(function(d){
+                          res.send({id : d.id});
+                        });
+                      })  
+                    }
+                  });
+                }})
+              }
+            });
+          }
+        });
+      };
     });
 
     // parse the incoming request containing the form data
