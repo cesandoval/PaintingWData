@@ -6,7 +6,7 @@ import * as Action from '../store/actions.js';
 import * as consts  from '../store/consts.js';
 
 import Slider from './Slider.js';
-
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 
 class VPL extends React.Component{
@@ -66,7 +66,7 @@ class VPL extends React.Component{
     this.windowMouseDown = this.windowMouseDown.bind(this);
     this.windowMouseUp   = this.windowMouseUp.bind(this);
     this.getCloseNode    = this.getCloseNode.bind(this);
-    this.linkExists      = this.linkExists.bind(this);
+    this.isValidLink      = this.isValidLink.bind(this);
 
 
     this.createNodeObject= this.createNodeObject.bind(this);
@@ -179,12 +179,21 @@ class VPL extends React.Component{
     return links;
   }
 
-  linkExists(source, target, type){
+  isValidLink(link){
+      let source = link.sourceNode;
+      let target = link.targetNode;
+      let type   = link.type; 
       let linksListRep = source.ref + "_" + target.ref + "_" + type;
-      if(this.linksList[linksListRep]){
-          return true;
+      if(target.type === consts.LAYER_NODE){
+          return false;
       }
-      return false;
+      if(this.linksList[linksListRep]){
+          return false;
+      }
+      if(type === "BOTTOM" && (target.type === consts.NOT_NODE)){
+          return false;
+      }
+      return true;
   }
   windowMouseDown(event){
       this.dp.mouseHeld = true;
@@ -209,7 +218,6 @@ class VPL extends React.Component{
             let closeEnoughNode = this.getCloseNode(mouse)[0];
             
             if(!(closeEnoughNode == null)){
-                if(!this.linkExists(this.nodesMap[this.dp.nodeForConst], closeEnoughNode.node, closeEnoughNode.type)){
                     let newLink = {
                         ref : "link_" + this.props.links.length,
                         sourceNode: this.nodesMap[this.dp.nodeForConst],
@@ -219,6 +227,7 @@ class VPL extends React.Component{
                         type : closeEnoughNode.type,
 
                     }
+                if(this.isValidLink(newLink)){
                     console.log("created new Link");
                     Action.vlangAddLink(newLink);
                 }
@@ -720,15 +729,31 @@ class VPL extends React.Component{
   render(){
     return (
         <div className = "pull-right col-md-10 vplContainer">
-            <svg ref ={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
-                {this.linkMarker()}
-                {this.props.nodes.map((node, index) => {
-                    return this.createNodeObject(node, index);  
-                })}
-                {this.props.links.map((link, index) => {
-                    return this.createLinkObject(link, index);
-                })}
-            </svg>   
+            <div className = "row">
+            <div className = "col-md-10"></div>
+            <div className = "col-md-2">
+              <DropdownButton title={"Add Node"}  id={`dropdown-basic-1`}>
+                <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
+                <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
+                <MenuItem onClick = {this.addAndNode}>And Node</MenuItem>
+                <MenuItem onClick = {this.addOrNode}>Or Node</MenuItem>
+                <MenuItem onClick = {this.addNotNode}>Not Node</MenuItem>
+                <MenuItem onClick = {this.addLayerNode}>Layer Node</MenuItem>
+               </DropdownButton>
+            </div>
+
+            </div>
+            <div className = "row">
+              <svg ref ={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+                  {this.linkMarker()}
+                  {this.props.nodes.map((node, index) => {
+                      return this.createNodeObject(node, index);  
+                  })}
+                  {this.props.links.map((link, index) => {
+                      return this.createLinkObject(link, index);
+                  })}
+              </svg> 
+            </div>  
         </div>
     );
   }

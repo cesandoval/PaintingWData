@@ -9,7 +9,7 @@ export default class extends React.Component {
     render() {
         return(
             <div className="mapMain">
-                <Options />
+                // <Options />
                 <Sidebar />
                 <Map />
 
