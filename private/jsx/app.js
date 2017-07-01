@@ -4,6 +4,7 @@ import Sidebar from './sidebar/sidebar';
 import Options from './options/options';
 import Map from './map/map';
 
+
 export default class extends React.Component {
     render() {
         return(
@@ -11,6 +12,7 @@ export default class extends React.Component {
                 <Options />
                 <Sidebar />
                 <Map />
+
             </div>
         );
     }

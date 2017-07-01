@@ -54,3 +54,41 @@ export const mapAddGeometry = (name, geometry) => (
         geometry
     })
 )
+
+export const vlangAddLink = link => (
+    store.dispatch({
+        type: c.VLANG_ADD_LINK,
+        link
+    })
+) 
+
+export const vlangRemoveLink = index => (
+    store.dispatch({
+        type: c.VLANG_REMOVE_LINK,
+        index
+    })
+)
+
+export const vlangAddNode = node => (
+    store.dispatch({
+        type: c.VLANG_ADD_NODE,
+        node
+    })
+)
+
+export const vlangRemoveNode = index => (
+    store.dispatch({
+        type: c.VLANG_REMOVE_NODE,
+        index
+    })
+)
+
+
+export const vlangMoveNode = (index, newPosition)  => (
+    store.dispatch({
+        type: c.VLANG_UPDATE_NODE_POSITION,
+        index: index,
+        position: newPosition
+
+    })
+)
