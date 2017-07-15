@@ -225,6 +225,10 @@ ul.dropdown-menu {
   background-position: -10vw -10vh;
 }
 
+.options--react{
+    z-index: 10000;
+}
+
 .red-circle-bg {
     background-image: url(/images/red_circles.svg);
     background-repeat: no-repeat;

@@ -1,0 +1,110 @@
+
+svg > rect {
+  fill: #ecf0f1;
+
+}
+.vplContainer{
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+svg .node{
+  cursor: move;
+}
+
+.btn{
+  width: 100%;
+}
+
+input {
+  width: 100%;
+}
+
+
+svg > rect.activeNode {
+  fill: greenyellow;
+}
+
+svg > path.tempLink {
+  stroke : 'black';
+  stroke-width: 2px;
+  fill : transparent;
+}
+
+svg > path.link {
+  stroke : #717171;
+  stroke-width: 2px;
+  fill : transparent;
+
+}
+
+svg > path.tempLink {
+  stroke : #27ae60;
+  stroke-width: 2px;
+
+
+}
+
+
+g rect.nodeMain{
+  fill: #ecf0f1;
+  stroke: #ccc;
+  rx: 2px;
+  ry: 2px;
+   
+}
+
+g rect.nodeInput {
+  fill: #fff;
+  stroke: #ccc;
+  
+   
+}
+g text.nodeInputLabel{
+  font-family: Monospace;
+  fill: #4a4a4a;
+}
+
+g text.nodeText{
+  font-family: Monospace;
+  fill: #536469;
+}
+
+g.sliderContainer rect{
+  fill: #b5b5b5;
+  cursor: pointer;
+}
+
+g.sliderContainer circle{
+  fill: #757575;
+  cursor: pointer;
+}
+
+g circle.activeCircle{
+  fill: green;
+}
+
+a {
+  color: #2980b9;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #c0392b;
+  text-decoration: none;
+}
+
+
+
+/* Debug styles */
+
+div.rectContainer{
+  background: #eee;
+  font-family: monospace;
+  font-size: 10px;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 10px;
+  border : 1px solid #ddd;
+  padding: 10px;
+
+}

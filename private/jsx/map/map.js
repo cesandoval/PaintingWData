@@ -3,6 +3,7 @@ import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 import PCoords from '../pcoords/pcoords';
+import VPL from '../vprog/Vpl';
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -49,6 +50,7 @@ class MapCanvas extends React.Component {
     render() {
         return(
             <div>
+                <VPL />
                 <PCoords />
                 <div className="map" id="mapCanvas"/>
                 <div id="pivot"/>
