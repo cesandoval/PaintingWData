@@ -89,6 +89,7 @@ class VPL extends React.Component{
     this.addLayerNode    = this.addLayerNode.bind(this);
 
 
+
     $(window).on('keydown', this.handleKeyDown);
     $(window).on('keyup', this.handleKeyUp);
     $(window).on('mousemove', this.displayMouseInfo);
@@ -261,8 +262,6 @@ class VPL extends React.Component{
         
     }
     else{
-        
-        
         this.mouseInNode = true;
         this.dp.nodeUnderMouse = node;
         this.dp.nodeUnderMouseRef = $(node).attr('id');
@@ -285,11 +284,10 @@ class VPL extends React.Component{
         }
     }
     else{
-       
         let translation = this.dp.nodeUnderMouse.getAttributeNS(null, "transform").slice(10,-1).split(',');
         let sx = parseInt(translation[0].replace(/ /g,''));
         let sy = parseInt(translation[1].replace(/ /g,''));
-        Action.vlangMoveNode(this.getLinkIndex(this.props.nodes, this.dp.nodeUnderMouseRef), {x: sx, y: sy});
+        Action.vlangMoveNode(this.getLinkIndex(this.props.nodes, this.dp.nodeUnderMouseRef), {x: sx, y: sy}, this.props.nodes);
       
     }
      
@@ -314,7 +312,6 @@ class VPL extends React.Component{
             }
         
             else{
-                
                 let node = this.nodesMap[this.dp.nodeUnderMouseRef];
                 
                 if(this.dp.nodeUnderMouse){  
@@ -448,6 +445,8 @@ class VPL extends React.Component{
 
   createNodeObject(node, key){
       let p = node.position;
+      let property = node.property;
+      let userLayerName = node.userLayerName;
       return(
         <g className = {"node"}
            id = {node.ref}
@@ -459,16 +458,16 @@ class VPL extends React.Component{
            transform = {`translate(${node.translate.x},${node.translate.y})`}
         >
         {
-           this.decideNodeType(node.type, p)
+           this.decideNodeType(node.type, p, property, userLayerName)
         }
         </g>
       );
   }
 
-  decideNodeType(type, p){
+  decideNodeType(type, p, property, userLayerName){
     switch(type){
         case consts.LAYER_NODE:
-            return  this.LayerNode(p);
+            return  this.LayerNode(p, property, userLayerName);
         case consts.MULTIPLICATION_NODE:
             return  this.MultiplicationNode(p);
         case consts.AND_NODE:
@@ -500,7 +499,6 @@ class VPL extends React.Component{
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
                     
             </text>
-            <Slider position={p}/>
         </g>
         );
   }
@@ -522,7 +520,6 @@ class VPL extends React.Component{
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
                     
             </text>
-            <Slider position={p}/>
         </g>
         );
   }
@@ -543,7 +540,6 @@ class VPL extends React.Component{
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
                     
             </text>
-            <Slider position={p}/>
         </g>
         );
   }
@@ -562,7 +558,6 @@ class VPL extends React.Component{
             <text className = {"nodeText"} x = {p.x + 85} y = {p.y + 25} fontSize={"20"}>              
                     OR
             </text>
-            <Slider position={p}/>
         </g>
     ); 
   }
@@ -584,32 +579,28 @@ class VPL extends React.Component{
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
                     
             </text>
-            <Slider position={p}/>
         </g>
     ); 
   }
 
- LayerNode(p){
+ LayerNode(p,  property, userLayerName){
      return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
             x = {p.x} y = {p.y} ></rect>        
             <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>         
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 15} fontSize={"10"}>              
-                    Lorem ipsum dolor sit
+            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 15} fontSize={"20"}>              
+                    {userLayerName}
             </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    consectetur adipiscing
+            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
+                    {property}
             </text>
             <Slider position={p}/>
         </g>
     ); 
   }
   
-  
-  
-
 
   createLinkObject(link, key){
     if(link.type === 'BOTTOM'){
@@ -683,6 +674,7 @@ class VPL extends React.Component{
     this.addNode(consts.NOT_NODE);
   }
   addLayerNode(){
+    console.log(consts, 6666666666)
     this.addNode(consts.LAYER_NODE);
   }
 
@@ -738,7 +730,6 @@ class VPL extends React.Component{
                 <MenuItem onClick = {this.addAndNode}>And Node</MenuItem>
                 <MenuItem onClick = {this.addOrNode}>Or Node</MenuItem>
                 <MenuItem onClick = {this.addNotNode}>Not Node</MenuItem>
-                <MenuItem onClick = {this.addLayerNode}>Layer Node</MenuItem>
                </DropdownButton>
             </div>
 
@@ -760,7 +751,7 @@ class VPL extends React.Component{
 }
 
 const mapStateToProps = (state) =>{
-    
+    console.log(state)
     return {nodes: state.vpl.nodes, links: state.vpl.links};
 };
 

@@ -1,7 +1,6 @@
 import * as consts from '../consts';
 import * as Action from '../actions';
 
-
 let node1 = { ref: "node_1", type: consts.LAYER_NODE, position: {x:100, y:100}, translate: {x: 0, y: 0}};
 let node2 = { ref: "node_2", type: consts.MULTIPLICATION_NODE, position: {x:400, y:50}, translate: {x: 0, y: 0}};
 
@@ -24,8 +23,10 @@ let link2  = { ref: "link_2", sourceNode: node1, targetNode: node3, source: pos(
 let link3  = { ref: "link_3", sourceNode: node1, targetNode: node4, source: pos(node1), target: pos(node4), type: "TOP"}; 
 
 const initialState = {
-    nodes: [node1, node2, node3, node4],
-    links: [link1, link2, link3]
+    nodes: [],
+    links: []
+    // nodes: [node1, node2, node3, node4],
+    // links: [link1, link2, link3]
 }
 
 
@@ -78,7 +79,7 @@ export default (state=initialState, action) => {
                 };
         case consts.VLANG_UPDATE_NODE_POSITION:
             let oldNode = state.nodes[action.index];
-            let newNode = { ref: oldNode.ref, type: oldNode.type, position: oldNode.position, translate: action.position };
+            let newNode = { ref: oldNode.ref, type: oldNode.type, position: oldNode.position, translate: action.position,  name: action.props[action.index].name, userLayerName:action.props[action.index].userLayerName, property:action.props[action.index].property };
 
             return  {
                  nodes: [
@@ -89,7 +90,15 @@ export default (state=initialState, action) => {
                     links: [
                         ...state.links,
                     ]    
-            }
+            };
+        case consts.VLANG_ADD_LAYERS:
+            let allNodes = []
+            action.layers.map((layer, index) => {
+                let nodeIndex = "node_"+parseInt(parseInt(index)+1);
+                let currNode = { ref: nodeIndex, type: consts.LAYER_NODE, position: {x:100, y:100+150*index}, translate: {x: 0, y: 0}, name:layer.name, userLayerName:layer.userLayerName, property:layer.property};
+                allNodes[index] = currNode;
+            })
+            state.nodes = allNodes;
 
         default:
             return state;

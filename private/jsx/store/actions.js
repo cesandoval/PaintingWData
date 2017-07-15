@@ -84,11 +84,19 @@ export const vlangRemoveNode = index => (
 )
 
 
-export const vlangMoveNode = (index, newPosition)  => (
+export const vlangMoveNode = (index, newPosition, props)  => (
     store.dispatch({
         type: c.VLANG_UPDATE_NODE_POSITION,
         index: index,
-        position: newPosition
+        position: newPosition,
+        props: props
 
+    })
+)
+
+export const vlangAddLayers = layers  => (
+    store.dispatch({
+        type: c.VLANG_ADD_LAYERS,
+        layers
     })
 )

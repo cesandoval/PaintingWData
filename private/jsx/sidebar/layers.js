@@ -22,6 +22,10 @@ class Layers extends React.Component {
         // GET RID OF DATA... THIS SHOULD BE DONE ON THE FLY WITH A TRANSFORM
         axios.get('/datajson/all/'+ datavoxelId, {options: {}})
             .then(({ data })=>{  
+                act.vlangAddLayers(data.map(l=> {
+                    let property = l.geojson.geojson.features[0].properties.property;
+                    return {userLayerName: l.Datafile.Datalayers[0].userLayerName, name: l.geojson.layername, property:property};
+                }))
                 act.sideAddLayers(data.map(l => {
                     const length = l.geojson.geojson.features.length;
                     const propertyName = l.geojson.geojson.features[0].properties.property;

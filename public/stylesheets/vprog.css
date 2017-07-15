@@ -5,6 +5,7 @@ svg > rect {
 }
 .vplContainer{
   z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.35);
 }
 svg .node{
   cursor: move;

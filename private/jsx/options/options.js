@@ -21,7 +21,7 @@ export default class extends React.Component {
 
     showData() {
         // console.log(this.refs.email)
-        console.log(58585858585)
+        // console.log(58585858585)
         // console.log(this)
         // console.log(props)
     }
