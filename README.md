@@ -1,5 +1,5 @@
 # PaintingWithData_Riyadh
-Urban computing platform through voxels and a graph backend. The proposes a new urban mapping paradigm. Riyadh Implementation of Painting with Data. 
+Urban computing platform through voxels and a graph backend. The proposes a new urban mapping paradigm. 
 
 ![alt text](https://github.com/cesandoval/PaintingWithData_Riyadh/blob/master/public/images/painting_with_data.PNG "Painting With Data Interface")
 
@@ -26,11 +26,12 @@ This site is built as a [Node.js](https://nodejs.org/en/) application. It uses [
 * On a terminal, run the following commands:
 ```
 npm -g install sequelize-cli
-npm -g install  nodemon
+npm -g install nodemon
+npm install -g gulp-cli
 ```
 
 ### Building for Development
-* `git clone https://github.com/cesandoval/PaintingWithData.git`
+* `git clone https://github.com/cesandoval/PaintingWithData_Riyadh.git`
 * `cd` into the webapp directory
 * `npm install` will install all the node and bower modules needed locally for development.
 * Create a new spatially enabled database. Through pgAdmin, or the command line.    
@@ -77,25 +78,3 @@ $ sequelize db:migrate:undo:all
 * [mapbox](https://www.mapbox.com/)
 
 ## Copyright (c) 2016, Carlos Sandoval Olascoaga. All rights reserved.
-
-Redistribution and use in source form, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-2. Neither the name of the copyright holder nor the names of its contributors
-may be used to endorse or promote products derived from this software without
-specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

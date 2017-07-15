@@ -31,6 +31,9 @@ module.exports = {
         type: Sequelize.GEOMETRY,
         allowNull: true
       },
+      deleted: {
+        type: Sequelize.BOOLEAN,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

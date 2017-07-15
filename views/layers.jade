@@ -6,7 +6,7 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/layers.css")
   link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
-  script(src="/javascripts/js/layers.js")
+  script(src="/javascripts/layers.js")
   script(src="/javascripts/js/bootstrap-slider.js")
   script.
   
@@ -14,6 +14,9 @@ block pageTitle
     .container
       .row.spacing-large
         h1.center Layers
+
+      if (layerAlert)
+        .alert.alert-danger(role='alert') #{layerAlert}
 
       .row.spacing-small
         .col-md-6.col-md-offset-3
@@ -105,7 +108,7 @@ block pageTitle
           .row
             form(method='post', action='/layers')
               input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Project name...')
-              input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden', placeholder='Jane Doe')
+              input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden')
               <br>
               .row.spacing-large
                 .col-md-3
@@ -115,9 +118,16 @@ block pageTitle
                   input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
                   p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
               <br>
+
+
+
               .row.spacing
                 .input-group-btn.text-center
-                  button.btn.btn-gray.btn-jumbotron(type='submit') Compute
+                  button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="compute") Compute
+
+                .input-group-btn.text-center
+                  button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="delete", formaction="/layers") Delete Layer
+
     .row.text-center
       span.glyphicon.glyphicon-triangle-bottom &#xe114;
       br

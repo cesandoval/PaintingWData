@@ -63,5 +63,25 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
       console.log('Message %s sent: %s', info.messageId, info.response);
     });
 
-}
+};
+
+
+module.exports.sendLayerEmail = function(email, userId) {
+  var mailOptions = {
+      from: '"Painting With Data" <painting.with.data@gmail.com>', 
+    to: email, 
+      subject: 'Done Uploading Layer', 
+      text: 'Done Uploading Layer', 
+      html: 'Done uploading layer access it here: http://paintingwithdata.mit.edu/layers/' + userId
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if(error) {
+          console.log(error);
+      }
+      console.log('Message %s sent: %s', info.messageId, info.response);
+    });
+};
+
+
 

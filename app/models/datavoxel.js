@@ -27,6 +27,9 @@ var Datavoxel = sequelize.define('Datavoxel', {
     ptDistance: {
       type: DataTypes.FLOAT,
     },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+    },
 }, {
     classMethods: {
       associate: function(models) {

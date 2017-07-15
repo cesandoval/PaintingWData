@@ -32,8 +32,10 @@ var passport = require('passport'),
   router.get('/getThumbnailData/:id', isAuthenticated, fileViewerController.serveThumbnailData);
 
   router.get('/layers/:id', isAuthenticated, datalayerController.show);
-  router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
+
+  router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
+  router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);  
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
