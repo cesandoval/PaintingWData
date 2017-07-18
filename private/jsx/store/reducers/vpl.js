@@ -98,7 +98,10 @@ export default (state=initialState, action) => {
                 let currNode = { ref: nodeIndex, type: consts.LAYER_NODE, position: {x:100, y:100+150*index}, translate: {x: 0, y: 0}, name:layer.name, userLayerName:layer.userLayerName, property:layer.property};
                 allNodes[index] = currNode;
             })
-            state.nodes = allNodes;
+            return {
+                nodes: allNodes,
+                links: []
+            }
 
         default:
             return state;

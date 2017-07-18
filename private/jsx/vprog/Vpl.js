@@ -27,7 +27,8 @@ class VPL extends React.Component{
       
 
     }
-    
+    this.newProps = {};
+
     this.linksMap = this.refToElement(this.props.links);
     this.nodesMap = this.refToElement(this.props.nodes);
     this.nodeToLink = this.populateNodeToLink(this.props);
@@ -72,9 +73,14 @@ class VPL extends React.Component{
     this.createNodeObject= this.createNodeObject.bind(this);
     this.AdditionNode     = this.AdditionNode.bind(this);
     this.MultiplicationNode     = this.MultiplicationNode.bind(this);
+    this.DivisionNode = this.DivisionNode.bind(this);
+    this.LogarithmNode = this.LogarithmNode.bind(this);
     this.AndNode     = this.AndNode.bind(this);
     this.OrNode     = this.OrNode.bind(this);
     this.NotNode     = this.NotNode.bind(this);
+
+    this.evalAdditionNode = this.evalAdditionNode.bind(this);
+    this.evalMultiplicationNode = this.evalMultiplicationNode.bind(this);
 
     // this is just for debugging ...
     this.addNode         = this.addNode.bind(this);
@@ -83,10 +89,14 @@ class VPL extends React.Component{
     this.displayMouseInfo= this.displayMouseInfo.bind(this);
     this.addAdditionNode = this.addAdditionNode.bind(this);
     this.addMultiplicationNode = this.addMultiplicationNode.bind(this);
+    this.addDivisionNode = this.addDivisionNode.bind(this);
+    this.addLogarithmNode = this.addLogarithmNode.bind(this);
     this.addNotNode      = this.addNotNode.bind(this);
     this.addOrNode       = this.addOrNode.bind(this);
     this.addAndNode      = this.addAndNode.bind(this);
     this.addLayerNode    = this.addLayerNode.bind(this);
+
+    this.addVoxelGeometry = this.addVoxelGeometry.bind(this);
 
 
 
@@ -95,7 +105,12 @@ class VPL extends React.Component{
     $(window).on('mousemove', this.displayMouseInfo);
 
      
+  }
 
+  componentWillReceiveProps(newProps){
+    this.newProps = newProps;
+    // console.log(newProps, 8888888)
+    // console.log(this.newProps)
   }
 
   displayMouseInfo(event){
@@ -441,12 +456,11 @@ class VPL extends React.Component{
       
   }
 
-
-
   createNodeObject(node, key){
       let p = node.position;
       let property = node.property;
       let userLayerName = node.userLayerName;
+      let name = node.name;
       return(
         <g className = {"node"}
            id = {node.ref}
@@ -458,18 +472,50 @@ class VPL extends React.Component{
            transform = {`translate(${node.translate.x},${node.translate.y})`}
         >
         {
-           this.decideNodeType(node.type, p, property, userLayerName)
+           this.decideNodeType(node.type, p, property, userLayerName, name)
         }
         </g>
       );
   }
 
-  decideNodeType(type, p, property, userLayerName){
+  evaluateNodeType(type, geometry1, geometry2={}){
+    switch(type){
+        case consts.MULTIPLICATION_NODE:
+            return  this.evalMultiplicationNode(geometry1, geometry2);
+        // case consts.DIVISION_NODE:
+        //         return this.evalDivisionNode(p);
+        // case consts.LOG_NODE:
+        //         return this.evalLogarithmNode(p);
+        // case consts.AND_NODE:
+        //     return  this.evalAndNode(p);
+        // case consts.OR_NODE:
+        //     return  this.evalOrNode(p);
+        // case consts.NOT_NODE:
+        //     return  this.evalNotNode(p);
+        default:
+            return  this.evalAdditionNode(geometry1, geometry2);
+    }
+  };
+
+  evalMultiplicationNode(geometry1, geometry2) {
+    console.log(geometry1)
+    console.log(geometry2)
+  }
+
+  evalAdditionNode(geometry1, geometry2) {
+      
+  }
+
+  decideNodeType(type, p, property, userLayerName, name){
     switch(type){
         case consts.LAYER_NODE:
-            return  this.LayerNode(p, property, userLayerName);
+            return  this.LayerNode(p, property, userLayerName, name);
         case consts.MULTIPLICATION_NODE:
             return  this.MultiplicationNode(p);
+        case consts.DIVISION_NODE:
+                return this.DivisionNode(p);
+        case consts.LOG_NODE:
+                return this.LogarithmNode(p);
         case consts.AND_NODE:
             return  this.AndNode(p);
         case consts.OR_NODE:
@@ -523,6 +569,47 @@ class VPL extends React.Component{
         </g>
         );
   }
+
+  DivisionNode(p){
+      return(
+       <g>
+            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
+            x = {p.x} y = {p.y} ></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
+            <text className = {"nodeText"} x = {p.x + 50} y = {p.y + 25} fontSize={"20"}>              
+                    DIVIDE 
+            </text>
+             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
+                    
+            </text>
+        </g>
+        );
+  }
+
+  LogarithmNode(p){
+      return(
+       <g>
+            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
+            x = {p.x} y = {p.y} ></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
+            <text className = {"nodeText"} x = {p.x + 50} y = {p.y + 25} fontSize={"20"}>              
+                    LOGARITHM
+            </text>
+             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
+                    
+            </text>
+        </g>
+        );
+  }
+
   AndNode(p){
       return(
        <g>
@@ -583,20 +670,20 @@ class VPL extends React.Component{
     ); 
   }
 
- LayerNode(p,  property, userLayerName){
+ LayerNode(p,  property, userLayerName, name){
      return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
             x = {p.x} y = {p.y} ></rect>        
             <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>         
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 15} fontSize={"20"}>              
+            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 25} fontSize={"20"}>              
                     {userLayerName}
             </text>
-            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
+            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 45 } fontSize={"10"}>                
                     {property}
             </text>
-            <Slider position={p}/>
+            <Slider position={p} index={name}/>
         </g>
     ); 
   }
@@ -655,6 +742,23 @@ class VPL extends React.Component{
   }
 
   addNode(nodeType){
+    let geometry = {
+        startColor: this.newProps.layers[0].color1,
+        endColor: this.newProps.layers[0].color2,
+        minMax: this.newProps.layers[0].geojson.minMax,
+        addressArray: this.newProps.map.geometries['Asthma_ED_Visit'].addresses,
+        properties: this.newProps.map.geometries['Asthma_ED_Visit'].geometry.attributes,
+        cols: this.newProps.layers[0].rowsCols.cols,
+        rows: this.newProps.layers[0].rowsCols.rows,
+        bounds: this.newProps.layers[0].bounds,
+        shaderText: this.newProps.layers[0].shaderText,
+        n: 3,
+        name: 'test'
+    }
+    this.addVoxelGeometry(geometry)
+    console
+    this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
 
@@ -663,6 +767,12 @@ class VPL extends React.Component{
   }
   addMultiplicationNode(){
     this.addNode(consts.MULTIPLICATION_NODE);
+  }
+  addDivisionNode(){
+    this.addNode(consts.DIVISION_NODE);
+  }
+  addLogarithmNode(){
+    this.addNode(consts.LOG_NODE);
   }
   addOrNode(){
     this.addNode(consts.OR_NODE);
@@ -674,7 +784,6 @@ class VPL extends React.Component{
     this.addNode(consts.NOT_NODE);
   }
   addLayerNode(){
-    console.log(consts, 6666666666)
     this.addNode(consts.LAYER_NODE);
   }
 
@@ -718,6 +827,27 @@ class VPL extends React.Component{
 
   }
 
+  addVoxelGeometry(geometry) {
+    // this.newProps.map.geometries is a Pixels object
+    // this.newProps.map.instance is a Graph object
+    // PaintGraph.Pixels
+    const map = this.newProps.map.instance;
+    const circle = new THREE.CircleBufferGeometry(1, 20);
+    const otherArray = [];
+
+    const P = new PaintGraph.Pixels(map, circle, otherArray, geometry.startColor, geometry.endColor, geometry.minMax, 
+        geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
+    // console.log(P)
+    // Action.vlangAddVoxel(geometry);
+    Action.mapAddGeometry('test', P);
+
+
+
+    // const bbox = newProps.layers[0].bbox;
+    // const canvas = newProps.map;
+    // const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
+  }
+
   render(){
     return (
         <div className = "pull-right col-md-10 vplContainer">
@@ -727,6 +857,8 @@ class VPL extends React.Component{
               <DropdownButton title={"Add Node"}  id={`dropdown-basic-1`}>
                 <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
                 <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
+                <MenuItem onClick = {this.addDivisionNode}>Division Node</MenuItem>
+                <MenuItem onClick = {this.addLogarithmNode}>Logarithm Node</MenuItem> 
                 <MenuItem onClick = {this.addAndNode}>And Node</MenuItem>
                 <MenuItem onClick = {this.addOrNode}>Or Node</MenuItem>
                 <MenuItem onClick = {this.addNotNode}>Not Node</MenuItem>
@@ -751,8 +883,7 @@ class VPL extends React.Component{
 }
 
 const mapStateToProps = (state) =>{
-    console.log(state)
-    return {nodes: state.vpl.nodes, links: state.vpl.links};
+    return {nodes: state.vpl.nodes, links: state.vpl.links, map: state.map, layers: state.sidebar.layers};
 };
 
 export default connect(mapStateToProps)(VPL);
