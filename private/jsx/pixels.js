@@ -32,7 +32,7 @@ export default class Pixels {
             this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
             this.initTransValsAttrs(this.geometry, dataArray, this.addresses, this.lowBnd, this.highBnd);
         } else if (vLang == true) {
-            this.vlangBuildPixels(this.geometry, this.addresses, properties);
+            this.vlangBuildPixels(this.geometry, properties);
             this.numElements = this.addresses / this.ELEMENTS_PER_ITEM;
         }
 
@@ -391,15 +391,15 @@ export default class Pixels {
 
     }
 
-    vlangBuildPixels(geometry, addresses, properties) { 
-        const translations = this.initAttribute(properties.size.count * 3, 3, true);
-        const values = this.initAttribute(properties.size.count, 1, true);
-        const originalValues = this.initAttribute(properties.size.count, 1, true);
+    vlangBuildPixels(geometry, properties) { 
+        const translations = this.initAttribute(properties.size.length * 3, 3, true);
+        const values = this.initAttribute(properties.size.length, 1, true);
+        const originalValues = this.initAttribute(properties.size.length, 1, true);
 
-        for (let i = 0, j = 0; j < properties.size.count; i = i + 3, j++){
-            translations.setXYZ(j, properties.translation.array[i], properties.translation.array[i+1], properties.translation.array[i+2]);
-            values.setX(j, properties.size.array[j]);
-            originalValues.setX(j, properties.size.array[j]);
+        for (let i = 0, j = 0; j < properties.size.length; i = i + 3, j++){
+            translations.setXYZ(j, properties.translation[i], properties.translation[i+1], properties.translation[i+2]);
+            values.setX(j, properties.size[j]);
+            originalValues.setX(j, properties.size[j]);
         }
 
         this.setAttributes(geometry, translations, values, originalValues);
@@ -415,7 +415,6 @@ export default class Pixels {
 
         const valDiff = highBnd-lowBnd;
         const remap = x => (valDiff)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
-        const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]

@@ -79,6 +79,7 @@ class VPL extends React.Component{
     this.OrNode     = this.OrNode.bind(this);
     this.NotNode     = this.NotNode.bind(this);
 
+    this.getNotZero = this.getNotZero.bind(this);
     this.evalAdditionNode = this.evalAdditionNode.bind(this);
     this.evalMultiplicationNode = this.evalMultiplicationNode.bind(this);
 
@@ -456,6 +457,16 @@ class VPL extends React.Component{
       
   }
 
+  getNotZero(number1, number2) {
+      if (number1 != 0) {
+          return number1;
+      } else if (number2 != 0) {
+          return number2;
+      } else {
+          return 0;
+      }
+  }
+
   createNodeObject(node, key){
       let p = node.position;
       let property = node.property;
@@ -500,6 +511,57 @@ class VPL extends React.Component{
   evalMultiplicationNode(geometry1, geometry2) {
     console.log(geometry1)
     console.log(geometry2)
+
+    const arraySize = geometry1.geometry.attributes.size.count;
+    // const sizeArray = new Float32Array(arraySize); 
+    const originalSizeArray = new Float32Array(arraySize); 
+    const translationArray = new Float32Array(arraySize*3);
+
+    let max = Number.NEGATIVE_INFINITY;
+    let min = Number.POSITIVE_INFINITY;
+    let transArray1 = geometry1.geometry.attributes.translation.array;
+    let transArray2 = geometry2.geometry.attributes.translation.array;
+    for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){
+        translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
+        translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
+        translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
+        let currVal = geometry1.geometry.attributes.size.array[j] * geometry2.geometry.attributes.size.array[j];
+        if (currVal<min) {min = currVal;};
+        if (currVal>max) {max = currVal;};
+        // sizeArray[j] = currVal;
+        originalSizeArray[j] = currVal;
+    }
+    
+    const valDiff = geometry1.highBnd-geometry1.lowBnd;
+    const remap = function(x) {
+        if (x != 0) {
+            return (valDiff)*((x-min)/(max-min))+geometry1.lowBnd;
+        } else {
+            return 0;
+        }
+    }
+
+    let remapOriginalSize = originalSizeArray.map(remap);
+    let remapSize = remapOriginalSize.slice(0);
+    let props = {
+        size: remapOriginalSize,
+        translation: translationArray
+    }
+
+    let geometry = {
+        startColor: this.newProps.layers[0].color1,
+        endColor: this.newProps.layers[0].color2,
+        minMax: this.newProps.layers[0].geojson.minMax,
+        addressArray: this.newProps.map.geometries['Asthma_ED_Visit'].addresses,
+        properties: props,
+        cols: this.newProps.layers[0].rowsCols.cols,
+        rows: this.newProps.layers[0].rowsCols.rows,
+        bounds: this.newProps.layers[0].bounds,
+        shaderText: this.newProps.layers[0].shaderText,
+        n: this.newProps.layers.length + 1,
+        name: 'test'
+    }
+    this.addVoxelGeometry(geometry)
   }
 
   evalAdditionNode(geometry1, geometry2) {
@@ -742,21 +804,6 @@ class VPL extends React.Component{
   }
 
   addNode(nodeType){
-    let geometry = {
-        startColor: this.newProps.layers[0].color1,
-        endColor: this.newProps.layers[0].color2,
-        minMax: this.newProps.layers[0].geojson.minMax,
-        addressArray: this.newProps.map.geometries['Asthma_ED_Visit'].addresses,
-        properties: this.newProps.map.geometries['Asthma_ED_Visit'].geometry.attributes,
-        cols: this.newProps.layers[0].rowsCols.cols,
-        rows: this.newProps.layers[0].rowsCols.rows,
-        bounds: this.newProps.layers[0].bounds,
-        shaderText: this.newProps.layers[0].shaderText,
-        n: 3,
-        name: 'test'
-    }
-    this.addVoxelGeometry(geometry)
-    console
     this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
 
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
@@ -828,24 +875,13 @@ class VPL extends React.Component{
   }
 
   addVoxelGeometry(geometry) {
-    // this.newProps.map.geometries is a Pixels object
-    // this.newProps.map.instance is a Graph object
-    // PaintGraph.Pixels
     const map = this.newProps.map.instance;
     const circle = new THREE.CircleBufferGeometry(1, 20);
     const otherArray = [];
 
     const P = new PaintGraph.Pixels(map, circle, otherArray, geometry.startColor, geometry.endColor, geometry.minMax, 
         geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
-    // console.log(P)
-    // Action.vlangAddVoxel(geometry);
-    Action.mapAddGeometry('test', P);
-
-
-
-    // const bbox = newProps.layers[0].bbox;
-    // const canvas = newProps.map;
-    // const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
+    Action.mapAddGeometry(geometry.name, P);
   }
 
   render(){
