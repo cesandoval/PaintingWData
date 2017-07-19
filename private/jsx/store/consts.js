@@ -15,13 +15,13 @@ export const VLANG_UPDATE_NODE_POSITION = "VLANG_UPDATE_NODE_POSITION";
 
 export const VLANG_ADD_LAYERS = "VLANG_ADD_LAYERS";
 
-
-
 export const LAYER_NODE = "LAYER_NODE";
 export const ADDITION_NODE = "ADD_NODE";
 export const MULTIPLICATION_NODE = "MULTIPLICATION_NODE";
+export const DIVISION_NODE = "DIVISION_NODE";
 export const AND_NODE = "AND_NODE";
 export const OR_NODE = "OR_NODE";
 export const NOT_NODE = "NOT_NODE";
+export const LOG_NODE = "LOG_NODE";
 
 

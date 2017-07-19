@@ -3,7 +3,7 @@ export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
-    constructor(graph, geometryObject, dataArray, startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0, bounds=[], shaderText=''){
+    constructor(graph, geometryObject, dataArray=[], startColor, endColor, minMax, addresses, pxWidth=200, pxHeight=200, n=0, bounds=[], shaderText='', vLang=false, properties={}){
         this.lowBnd = bounds[0];
         this.highBnd = bounds[1];
 
@@ -22,21 +22,24 @@ export default class Pixels {
         this.layerN = n;
         this.addresses = addresses;
 
-        // Sanity Check
-        if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
-            console.error("Wrong sized data array passed to Pixels constructor!");
-
         // Define the Shader
         this.shaderText = shaderText;
         
-        this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
+        if (!(vLang)) {
+            // Sanity Check
+            if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
+                console.error("Wrong sized data array passed to Pixels constructor!");
+            this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
+            this.initTransValsAttrs(this.geometry, dataArray, this.addresses, this.lowBnd, this.highBnd);
+        } else if (vLang == true) {
+            this.vlangBuildPixels(this.geometry, properties);
+            this.numElements = this.addresses / this.ELEMENTS_PER_ITEM;
+        }
 
-        this.initTransValsAttrs(this.geometry, dataArray, this.addresses, this.lowBnd, this.highBnd);
         this.material = this.initMaterial(this.lowBnd, this.highBnd);
 
+        // Pixels.vlangBuildPixels();
         this.addToScene(graph.scene);
-
-
     }
 
     // Zoom Extent based on geo's bbox
@@ -388,6 +391,20 @@ export default class Pixels {
 
     }
 
+    vlangBuildPixels(geometry, properties) { 
+        const translations = this.initAttribute(properties.size.length * 3, 3, true);
+        const values = this.initAttribute(properties.size.length, 1, true);
+        const originalValues = this.initAttribute(properties.size.length, 1, true);
+
+        for (let i = 0, j = 0; j < properties.size.length; i = i + 3, j++){
+            translations.setXYZ(j, properties.translation[i], properties.translation[i+1], properties.translation[i+2]);
+            values.setX(j, properties.size[j]);
+            originalValues.setX(j, properties.size[j]);
+        }
+
+        this.setAttributes(geometry, translations, values, originalValues);
+    }
+
     initTransValsAttrs(geometry, dataArray, addresses, lowBnd, highBnd) {
         const allElements = this.pxWidth * this.pxHeight;
         const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
@@ -398,10 +415,10 @@ export default class Pixels {
 
         const valDiff = highBnd-lowBnd;
         const remap = x => (valDiff)*((x-this.minVal)/(this.maxVal-this.minVal))+lowBnd;
-        const mapColor = x => (x-this.minVal)/(this.maxVal-this.minVal);
 
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++){
             let currIndex = addresses[i+2]
+            // console.log(currIndex)
             translations.setXYZ(currIndex, dataArray[i], 0.3 + this.layerN * 0.001, dataArray[i+1]);
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]); 
             values.setX(currIndex, remap(dataArray[i+2]));
