@@ -87,6 +87,7 @@ class VPL extends React.Component{
     this.multiplyNodes = this.multiplyNodes.bind(this);
     this.addNodes = this.addNodes.bind(this);
     this.subtractNodes = this.subtractNodes.bind(this);
+    this.logNode = this.logNode.bind(this);
 
     // this is just for debugging ...
     this.addNode         = this.addNode.bind(this);
@@ -500,11 +501,11 @@ class VPL extends React.Component{
         case consts.MULTIPLICATION_NODE:
             return  this.evalArithmeticNode(geometry1, geometry2, this.multiplyNodes, type);
         case consts.DIVISION_NODE:
-                return this.evalDivisionNode(p);
+                return this.evalArithmeticNode(geometry1, geometry2, this.divideNodes, type);
         case consts.SUBTRACTION_NODE:
-                return this.evalDivisionNode(p);
+                return this.evalArithmeticNode(geometry1, geometry2, this.subtractNodes, type);
         // case consts.LOG_NODE:
-        //         return this.evalLogarithmNode(p);
+        //         return this.evalArithmeticNode(geometry1, geometry2, this.logNode, type);
         // case consts.AND_NODE:
         //     return  this.evalAndNode(p);
         // case consts.OR_NODE:
@@ -512,7 +513,7 @@ class VPL extends React.Component{
         // case consts.NOT_NODE:
         //     return  this.evalNotNode(p);
         default:
-            // This if for addition
+            // This is for addition
             return  this.evalArithmeticNode(geometry1, geometry2, this.addNodes, type);
     }
   };
@@ -538,6 +539,11 @@ class VPL extends React.Component{
       return geomVal1 - geomVal2;
   }
 
+  logNode(geomVal1, geomVal2) {
+      return Math.log(geomVal1)
+  }
+
+  
   evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
     console.log(geometry1)
     console.log(geometry2)
@@ -854,7 +860,8 @@ class VPL extends React.Component{
 
   addNode(nodeType){
     // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType('DIVISION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    this.evaluateNodeType('SUBTRACTION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
 
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
