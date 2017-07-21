@@ -11,3 +11,6 @@ ngrok
 # we dont want temp files
 .swp
 
+/worker/dump.rdb
+/public/.DS_Store
+/public/javascripts/.DS_Store
