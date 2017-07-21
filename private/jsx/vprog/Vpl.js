@@ -71,6 +71,7 @@ class VPL extends React.Component{
 
 
     this.createNodeObject= this.createNodeObject.bind(this);
+    this.SubtractionNode = this.SubtractionNode.bind(this);
     this.AdditionNode     = this.AdditionNode.bind(this);
     this.MultiplicationNode     = this.MultiplicationNode.bind(this);
     this.DivisionNode = this.DivisionNode.bind(this);
@@ -80,8 +81,12 @@ class VPL extends React.Component{
     this.NotNode     = this.NotNode.bind(this);
 
     this.getNotZero = this.getNotZero.bind(this);
-    this.evalAdditionNode = this.evalAdditionNode.bind(this);
-    this.evalMultiplicationNode = this.evalMultiplicationNode.bind(this);
+    this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
+
+    this.divideNodes = this.divideNodes.bind(this);
+    this.multiplyNodes = this.multiplyNodes.bind(this);
+    this.addNodes = this.addNodes.bind(this);
+    this.subtractNodes = this.subtractNodes.bind(this);
 
     // this is just for debugging ...
     this.addNode         = this.addNode.bind(this);
@@ -89,6 +94,7 @@ class VPL extends React.Component{
     this.printMaps       = this.printMaps.bind(this);
     this.displayMouseInfo= this.displayMouseInfo.bind(this);
     this.addAdditionNode = this.addAdditionNode.bind(this);
+    this.addSubractionNode = this.addSubractionNode.bind(this);
     this.addMultiplicationNode = this.addMultiplicationNode.bind(this);
     this.addDivisionNode = this.addDivisionNode.bind(this);
     this.addLogarithmNode = this.addLogarithmNode.bind(this);
@@ -492,9 +498,11 @@ class VPL extends React.Component{
   evaluateNodeType(type, geometry1, geometry2={}){
     switch(type){
         case consts.MULTIPLICATION_NODE:
-            return  this.evalMultiplicationNode(geometry1, geometry2);
-        // case consts.DIVISION_NODE:
-        //         return this.evalDivisionNode(p);
+            return  this.evalArithmeticNode(geometry1, geometry2, this.multiplyNodes, type);
+        case consts.DIVISION_NODE:
+                return this.evalDivisionNode(p);
+        case consts.SUBTRACTION_NODE:
+                return this.evalDivisionNode(p);
         // case consts.LOG_NODE:
         //         return this.evalLogarithmNode(p);
         // case consts.AND_NODE:
@@ -504,11 +512,33 @@ class VPL extends React.Component{
         // case consts.NOT_NODE:
         //     return  this.evalNotNode(p);
         default:
-            return  this.evalAdditionNode(geometry1, geometry2);
+            // This if for addition
+            return  this.evalArithmeticNode(geometry1, geometry2, this.addNodes, type);
     }
   };
 
-  evalMultiplicationNode(geometry1, geometry2) {
+  divideNodes(geomVal1, geomVal2) {
+      let result = geomVal1 / geomVal2;
+      if (Number.POSITIVE_INFINITY == result) {
+          return 0;
+      } else { 
+        return geomVal1 / geomVal2;
+      }
+  }
+
+  multiplyNodes(geomVal1, geomVal2) {
+      return geomVal1 * geomVal2;
+  }
+
+  addNodes(geomVal1, geomVal2) {
+      return geomVal1 + geomVal2;
+  }
+
+  subtractNodes(geomVal1, geomVal2) {
+      return geomVal1 - geomVal2;
+  }
+
+  evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
     console.log(geometry1)
     console.log(geometry2)
 
@@ -525,10 +555,9 @@ class VPL extends React.Component{
         translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
         translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
         translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-        let currVal = geometry1.geometry.attributes.size.array[j] * geometry2.geometry.attributes.size.array[j];
+        let currVal = nodeOperation(geometry1.geometry.attributes.size.array[j], geometry2.geometry.attributes.size.array[j]);
         if (currVal<min) {min = currVal;};
         if (currVal>max) {max = currVal;};
-        // sizeArray[j] = currVal;
         originalSizeArray[j] = currVal;
     }
     
@@ -552,21 +581,18 @@ class VPL extends React.Component{
         startColor: this.newProps.layers[0].color1,
         endColor: this.newProps.layers[0].color2,
         minMax: this.newProps.layers[0].geojson.minMax,
-        addressArray: this.newProps.map.geometries['Asthma_ED_Visit'].addresses,
+        addressArray: this.newProps.map.geometries[Object.keys(this.newProps.map.geometries)[0]].addresses,
         properties: props,
         cols: this.newProps.layers[0].rowsCols.cols,
         rows: this.newProps.layers[0].rowsCols.rows,
         bounds: this.newProps.layers[0].bounds,
         shaderText: this.newProps.layers[0].shaderText,
         n: this.newProps.layers.length + 1,
-        name: 'test'
+        name: nodeName
     }
     this.addVoxelGeometry(geometry)
   }
 
-  evalAdditionNode(geometry1, geometry2) {
-      
-  }
 
   decideNodeType(type, p, property, userLayerName, name){
     switch(type){
@@ -574,6 +600,8 @@ class VPL extends React.Component{
             return  this.LayerNode(p, property, userLayerName, name);
         case consts.MULTIPLICATION_NODE:
             return  this.MultiplicationNode(p);
+        case consts.SUBTRACTION_NODE:
+            return this.SubtractionNode(p);
         case consts.DIVISION_NODE:
                 return this.DivisionNode(p);
         case consts.LOG_NODE:
@@ -603,6 +631,27 @@ class VPL extends React.Component{
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
             <text className = {"nodeText"} x = {p.x + 80} y = {p.y + 25} fontSize={"20"}>              
                     ADD
+            </text>
+             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
+                    
+            </text>
+        </g>
+        );
+  }
+
+  SubtractionNode(p){
+      return(
+       <g>
+            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
+            x = {p.x} y = {p.y} ></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
+            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
+            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
+            <text className = {"nodeText"} x = {p.x + 55} y = {p.y + 25} fontSize={"20"}>              
+                    SUBTRACT
             </text>
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
                     
@@ -643,7 +692,7 @@ class VPL extends React.Component{
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 50} y = {p.y + 25} fontSize={"20"}>              
+            <text className = {"nodeText"} x = {p.x + 65} y = {p.y + 25} fontSize={"20"}>              
                     DIVIDE 
             </text>
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
@@ -662,7 +711,7 @@ class VPL extends React.Component{
             <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 50} y = {p.y + 25} fontSize={"20"}>              
+            <text className = {"nodeText"} x = {p.x + 45} y = {p.y + 25} fontSize={"20"}>              
                     LOGARITHM
             </text>
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
@@ -683,7 +732,7 @@ class VPL extends React.Component{
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
             <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 80} y = {p.y + 25} fontSize={"20"}>              
+            <text className = {"nodeText"} x = {p.x + 85} y = {p.y + 25} fontSize={"20"}>              
                     AND
             </text>
              <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
@@ -804,13 +853,17 @@ class VPL extends React.Component{
   }
 
   addNode(nodeType){
-    this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    this.evaluateNodeType('DIVISION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
 
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
 
   addAdditionNode(){
     this.addNode(consts.ADDITION_NODE);
+  }
+  addSubractionNode(){
+    this.addNode(consts.SUBTRACTION_NODE);
   }
   addMultiplicationNode(){
     this.addNode(consts.MULTIPLICATION_NODE);
@@ -892,6 +945,7 @@ class VPL extends React.Component{
             <div className = "col-md-2">
               <DropdownButton title={"Add Node"}  id={`dropdown-basic-1`}>
                 <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
+                <MenuItem onClick = {this.addSubractionNode}>Subtraction Node</MenuItem>
                 <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
                 <MenuItem onClick = {this.addDivisionNode}>Division Node</MenuItem>
                 <MenuItem onClick = {this.addLogarithmNode}>Logarithm Node</MenuItem> 
