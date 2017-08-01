@@ -1,3 +1,4 @@
+/*
 $(function(){
     var vplContainer = $(".vplContainer");
     var parcoordsContainer = $(".parcoords");
@@ -27,3 +28,4 @@ $(function(){
     })
 
 });
+*/
