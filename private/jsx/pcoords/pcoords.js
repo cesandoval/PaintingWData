@@ -19,7 +19,7 @@ class PCoords extends React.Component {
         this.calcRanges = this.calcRanges.bind(this);
     }
     componentWillReceiveProps(nprops){
-        if(true && nprops.layers.length > 0){
+        if(!this.state.started && nprops.layers.length > 0){ 
             this.setState({started: true});
 
             const bounds = nprops.layers[0].bounds;
