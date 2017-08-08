@@ -48,10 +48,15 @@ class MapCanvas extends React.Component {
         }
     }
     render() {
+        const mapOptionShow = this.props.mapOptionShow
         return(
             <div>
-                <VPL />
-                <PCoords />
+                <div style={{display: (mapOptionShow == 'VPL' ? '' : 'none')}}>
+                    <VPL />
+                </div>
+                <div style={{display: (mapOptionShow == 'PCoords' ? '' : 'none')}}>
+                    <PCoords />
+                </div>
                 <div className="map" id="mapCanvas"/>
                 <div id="pivot"/>
                 <div id="grid"/>
@@ -60,4 +65,4 @@ class MapCanvas extends React.Component {
     }
 }
 
-export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance}))(MapCanvas);
+export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance, mapOptionShow: s.map.optionShow}))(MapCanvas);
