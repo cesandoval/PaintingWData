@@ -20,6 +20,7 @@ class OptionsMapStytle extends React.Component {
     render() {
         return(
             <select value={this.state.mapboxStyle} onChange={this.changeStytle}>
+                <option value="empty"> Empty </option>
                 <option value="mapbox.streets"> Streets </option>
                 <option value="mapbox.light"> Light </option>
                 <option value="mapbox.dark"> Dark </option>
