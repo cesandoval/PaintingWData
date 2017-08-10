@@ -48,6 +48,9 @@ class OptionsMapStyle extends React.Component {
         this.setState({ mapboxStyle: style })
 
         this.updateMapStyle(style)
+
+        if(style == 'empty')
+            this.props.onHide()
     }
 
     componentWillReceiveProps({show}){
