@@ -5,14 +5,14 @@ import * as act from '../store/actions';
 
 import OptionsButton from './optionsButton';
 import OptionsForm  from './optionsForm';
-import OptionsMapStytle  from './optionsMapStytle';
+import OptionsMapStyle  from './optionsMapStyle';
 import Button from 'react-bootstrap/lib/Button';
 
 class Options extends React.Component {
     constructor(props){
         super(props);
         this.state = {};
-        this.state.optionsMapStyleShow = false
+        this.state.optionsMapStyleShow = true
 
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(this);
 
@@ -40,8 +40,8 @@ class Options extends React.Component {
         }
     }
     toggleOptionsMapStyleShow(){
+        console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow });
-        console.log('toggleOptionsMapStyleShow', this.state.optionsMapStyleShow)
 
     }
     render() {
@@ -49,7 +49,7 @@ class Options extends React.Component {
             <div className="options--react">
                 <OptionsForm/>
                 <div id="mapStyleOptions" style={{display: (this.state.optionsMapStyleShow ? '' : 'none')}}>
-                    <OptionsMapStytle/>
+                    <OptionsMapStyle mapStyle="mapbox.light" show={this.state.optionsMapStyleShow}/>
                 </div>
                 <Button id="mapStyleOptionsButton" className="buttons graphText btn buttonsText" onClick={this.toggleOptionsMapStyleShow}> Map Style </Button>
                 <Button id="dataShow" className="buttons dataText btn buttonsText" onClick={()=>this.toggleOptionShow('PCoords')}> Query Data </Button>
