@@ -55,7 +55,7 @@ class Options extends React.Component {
                         onHide={()=>{this.setState({optionsMapStyleShow: false})}}
                     />
                 </div>
-                <Button id="mapStyleOptionsButton" className="buttons graphText btn buttonsText" onClick={this.toggleOptionsMapStyleShow}> Map Style </Button>
+                <Button id="mapStyleOptionsButton" className="buttons graphText btn buttonsText" onClick={this.toggleOptionsMapStyleShow}>{this.state.optionsMapStyleShow ? 'Hide Map' : 'Show Map'}</Button>
                 <Button id="dataShow" className="buttons dataText btn buttonsText" onClick={()=>this.toggleOptionShow('PCoords')}> Query Data </Button>
                 <Button id="graphShow" className="buttons graphText btn buttonsText" onClick={()=>this.toggleOptionShow('VPL')}> Compute Data </Button>
             </div>
