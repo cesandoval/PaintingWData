@@ -102,6 +102,8 @@ export default class Graph {
 
     render() {
         this.renderer.render(this.scene, this.camera);
-        window.requestAnimationFrame( this.render.bind(this) );
+
+        // window.requestAnimationFrame( this.render.bind(this) );
+        setTimeout(this.render.bind(this), 1000); // do not under 1000
     }
 }
