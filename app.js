@@ -14,6 +14,7 @@ var passport = require('passport');
  
 var RedisServer = require('redis-server');
  
+process.env.NODE_ENV = 'production';
 // Simply pass the port that you want a Redis server to listen on.
 var server = new RedisServer(6379);
  

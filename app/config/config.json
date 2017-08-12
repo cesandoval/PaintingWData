@@ -21,7 +21,7 @@
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
-    "host": "pwd.cvyt4sv5tkgm.us-west-1.rds.amazonaws.com",
+    "host": "pwd.cvyt4sv5tkgm.us-west-1.rds.amazonaws.com:5432",
     "dialect": "postgres"
   }
 
