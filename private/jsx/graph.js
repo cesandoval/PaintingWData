@@ -126,7 +126,7 @@ export default class Graph {
         this.renderer.setSize( Math.floor(window.innerWidth * 0.799) , window.innerHeight );
     }
 
-    renderSec(sec = 1) {
+    renderSec(sec = 1, label = '') {
 
         const untilTime = Date.now() + sec * 1000
 
@@ -138,7 +138,7 @@ export default class Graph {
             this.render()
         }
 
-        console.log(`renderSec(${sec}), until ${this.renderUntil}`)
+        console.log(`renderSec(${sec}) until ${this.renderUntil}. ${label}`)
     }
 
     render() {

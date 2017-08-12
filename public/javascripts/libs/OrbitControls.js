@@ -431,7 +431,7 @@
 		//pan(100,100000)
 		this.update = function () {
 			if(window.renderSec)
-				window.renderSec(2) // maybe 1 sec
+				window.renderSec(2, 'MapControls') // maybe 1 sec
 
 
 			if ( this.autoRotate && state === STATE.NONE ) {
