@@ -5,6 +5,9 @@ import axios from 'axios';
 
 import Layer from './layer';
 
+// const color10 = d3.scaleOrdinal(d3.schemeCategory10).range() // d3.js v4 (backup)
+const color10 = d3.scale.category10().range() // d3.js v3
+
 const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
     name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
 })
@@ -26,7 +29,7 @@ class Layers extends React.Component {
                     let property = l.geojson.geojson.features[0].properties.property;
                     return {userLayerName: l.Datafile.Datalayers[0].userLayerName, name: l.geojson.layername, property:property};
                 }))
-                act.sideAddLayers(data.map(l => {
+                act.sideAddLayers(data.map((l, index) => {
                     const length = l.geojson.geojson.features.length;
                     const propertyName = l.geojson.geojson.features[0].properties.property;
                     
@@ -83,6 +86,10 @@ class Layers extends React.Component {
                         transGeojson.otherdata[i] = mappedGeojson[i];
                         transGeojson.hashedData[mappedGeojson[i][7]] = mappedGeojson[i];
                     }
+
+                    // TODO: more than 10 color
+                    l.color1 = color10[index % 10]
+                    l.color2 = d3.rgb(l.color1).brighter().toString()
 
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 
