@@ -8,6 +8,13 @@ import Layer from './layer';
 // const color10 = d3.scaleOrdinal(d3.schemeCategory10).range() // d3.js v4 (backup)
 const color10 = d3.scale.category10().range() // d3.js v3
 
+// shuffle the color10
+for (let i = color10.length; i; i--) {
+    let j = Math.floor(Math.random() * i);
+    [color10[i - 1], color10[j]] = [color10[j], color10[i - 1]];
+}
+
+
 const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
     name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
 })
