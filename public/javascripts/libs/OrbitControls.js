@@ -288,7 +288,8 @@
 						scope.needsUpdate = window.setInterval(function(time){
 							if (Date.now()-scope.lastMove < 150) return
 							else {
-								updateTiles()
+								if(window.updateTiles)
+									updateTiles()
 								window.clearInterval(scope.needsUpdate)
 								scope.needsUpdate = false
 							}
