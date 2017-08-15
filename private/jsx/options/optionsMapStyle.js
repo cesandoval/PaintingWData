@@ -56,10 +56,11 @@ class OptionsMapStyle extends React.Component {
     componentWillReceiveProps({show}){
         console.log(`componentWillReceiveProps(${show})`)
 
-        const mapStyle = this.state.mapboxStyle
+        // const mapStyle = this.state.mapboxStyle
+        const mapStyle = this.state.mapboxStyle == 'empty' ? this.props.mapStyle : this.state.mapboxStyle
 
         if(show)
-            this.updateMapStyle(mapStyle)
+            this.changeMapStyle(mapStyle)
         else
             this.updateMapStyle('empty')
 
