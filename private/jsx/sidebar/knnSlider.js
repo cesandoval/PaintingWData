@@ -34,6 +34,9 @@ class KnnSlider extends React.Component {
                 this.getKNN(this.geometries[key], key, this.layersNeighbors[key], numberOfNeighbors);
             }
         }
+
+        if(window.renderSec)
+            window.renderSec(1, 'KnnSlider') 
     }
 
     neighborsOf(layer) {
@@ -139,6 +142,8 @@ class KnnSlider extends React.Component {
     }
 
     changeKNN(e){
+        // TODO: is this function useless?
+
         this.setState({knn: e.target.value});
         // for (var geo in this.props.geometries) {
         //     let geometry = this.props.geometries[geo];
