@@ -153,6 +153,9 @@ class PCoords extends React.Component {
             pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
         }
+
+        if(window.renderSec)
+            window.renderSec(1, 'pcoords.js')
     }
     style() {
         return {

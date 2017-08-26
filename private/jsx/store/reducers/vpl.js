@@ -31,6 +31,9 @@ const initialState = {
 
 
 export default (state=initialState, action) => {
+    if(window.renderSec)
+        window.renderSec(1, 'vpl reducers') 
+
     switch (action.type) {
         case consts.VLANG_ADD_LINK:
             return {               

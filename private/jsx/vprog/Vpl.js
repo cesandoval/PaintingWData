@@ -266,6 +266,9 @@ class VPL extends React.Component{
         }
       }
     this.dp.nodeForConst = null;
+
+    if(window.renderSec)
+      window.renderSec(0.5, 'vpl mouseUp') 
   }
 
   handleMouseDown(event){

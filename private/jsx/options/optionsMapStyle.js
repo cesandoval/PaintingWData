@@ -31,6 +31,9 @@ class OptionsMapStyle extends React.Component {
         const started = window.refreshTiles && window.updateTiles && true
         console.log(`updateMapStyle(${style})`, started)
 
+        if(window.renderSec)
+            window.renderSec(1, 'updateMapStyle')
+
         if(started) {
             try{
                 refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
