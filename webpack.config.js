@@ -30,7 +30,8 @@ module.exports = {
     entry: [
         // './app/index.js',
         // 'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
-        'webpack-dev-server/client?http://localhost:3000/',
+        // 'webpack-dev-server/client?http://localhost:3000/',
+        'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
         './private/jsx/entry.js',
         // 'webpack-dev-server/client?http://localhost:8080/',
     ],
@@ -38,8 +39,8 @@ module.exports = {
     output: {
         // path: path.resolve(__dirname, './dist'),
         // publicPath: '/dist/',
-        path: path.resolve(__dirname, './public/javascripts'),
-        publicPath: '/public/javascripts',
+        path: path.resolve(__dirname, './public/'),
+        publicPath: '/javascripts/',
         filename: 'bundle.js'
     },
     /*
@@ -141,16 +142,18 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         // no reload page when any error (optional)
         new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
-        new webpack.optimize.OccurenceOrderPlugin(),
+        // new webpack.optimize.OccurenceOrderPlugin(), it is now enabled by default
     ],
     resolve: {
         alias: {}
     },
     // devServer: {
     //     inline: true,
-    //     port: 8008,
+    //     port: 3000,
+    //     hot: true,
     //     historyApiFallback: true,
     //     noInfo: true,
+    //     contentBase: './public/',
     // },
     performance: {
         hints: false
