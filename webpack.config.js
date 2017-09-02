@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -28,18 +28,25 @@ module.exports = {
     // This means they will be the "root" imports that are included in JS bundle.
     // The first two entry points enable "hot" CSS and auto-refreshes for JS.
     entry: [
-        './app/index.js',
+        // './app/index.js',
+        // 'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr',
+        'webpack-dev-server/client?http://localhost:3000/',
+        './private/jsx/entry.js',
+        // 'webpack-dev-server/client?http://localhost:8080/',
     ],
-    entry: './src/main.js',
+    // entry: './src/main.js',
     output: {
-        path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
-        filename: 'build.js'
+        // path: path.resolve(__dirname, './dist'),
+        // publicPath: '/dist/',
+        path: path.resolve(__dirname, './public/javascripts'),
+        publicPath: '/public/javascripts',
+        filename: 'bundle.js'
     },
+    /*
     output: {
         // Next line is not used in dev but WebpackDevServer crashes without it:
         path: paths.appBuild,
-        // Add /* filename */ comments to generated require()s in the output.
+        // Add / [filename] / comments to generated require()s in the output.
         pathinfo: true,
         // This does not produce a real file. It's just the virtual path that is
         // served by WebpackDevServer in development. This is the JS bundle
@@ -54,16 +61,18 @@ module.exports = {
         path: `${__dirname}/dist`,
         filename: 'index_bundle.js',
     },
+    */
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
-    }
+    },
     module: {
         loaders: [
             // Process JS with Babel.
             {
                 test: /\.jsx?$/,
-                loaders: ['react-hot', 'babel-loader'],
+                loaders: ['react-hot-loader', 'babel-loader'],
                 exclude: /node_modules/,
+                /*
                 query: {
                     presets: ['es2015', 'react'],
                     cacheDirectory: findCacheDir({
@@ -79,6 +88,7 @@ module.exports = {
                     // directory for faster rebuilds.
                     cacheDirectory: true,
                 },
+                */
             },
 
             // { test: /\.css$/, loader: "style!css" },
@@ -124,9 +134,14 @@ module.exports = {
         ],
     },
     plugins: [
-        HTMLWebpackPluginConfig,
+        // HTMLWebpackPluginConfig,
         // This is necessary to emit hot updates (currently CSS only):
+        
+        // this provide hot-reload function
         new webpack.HotModuleReplacementPlugin(),
+        // no reload page when any error (optional)
+        new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
+        new webpack.optimize.OccurenceOrderPlugin(),
     ],
     resolve: {
         alias: {}
@@ -144,7 +159,4 @@ module.exports = {
     // Turn off performance hints during development because we don't do any
     // splitting or minification in interest of speed. These warnings become
     // cumbersome.
-    performance: {
-        hints: false,
-    },
 };

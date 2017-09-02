@@ -11,6 +11,11 @@ var passport = require('passport');
     session = require('cookie-session'),
     jsonParser = bodyParser.json();
 
+var webpack = require('webpack'),
+    webpackDevMiddleware = require('webpack-dev-middleware'),
+    webpackHotMiddleware = require('webpack-hot-middleware'),
+    webpackConfig = require('./webpack.config');
+
  
 var RedisServer = require('redis-server');
  
@@ -27,6 +32,36 @@ server.open((err) => {
 
 
 var app = express();
+
+var compiler = webpack(webpackConfig);
+
+app.use(webpackDevMiddleware(compiler, {
+  hot: true,
+  filename: 'bundle.js',
+  publicPath: webpackConfig.output.publicPath,
+  noInfo: true,
+  stats: {
+      colors: true
+  },
+  historyApiFallback: true,
+}));
+ 
+app.use(webpackHotMiddleware(compiler, {
+  log: console.log,
+  path: '/__webpack_hmr',
+  heartbeat: 10 * 1000,
+}))
+
+/*
+const port = 3000;
+app.listen(port, function(error) {
+    if (error) {
+        console.error(error);
+    } else {
+        console.info('==> ?  Listening on port %s. Open up http://localhost:%s/ in your browser.', port, port);
+    }
+});
+*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
