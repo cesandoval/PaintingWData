@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/www",
     "build": "gulp build",
-    "start": "node ./bin/www"
+    "start": "cross-env NODE_ENV=production node ./bin/www"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
