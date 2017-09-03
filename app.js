@@ -11,6 +11,7 @@ var passport = require('passport');
     session = require('cookie-session'),
     jsonParser = bodyParser.json();
 
+
  
 var RedisServer = require('redis-server');
  
@@ -28,6 +29,39 @@ server.open((err) => {
 
 
 var app = express();
+
+if ('production' == app.get('env')) {
+  // just for production code
+}
+
+if ('development' == app.get('env')) {
+  // just for development code
+  console.info('setting dev server...')
+  var webpack = require('webpack'),
+    webpackDevMiddleware = require('webpack-dev-middleware'),
+    webpackHotMiddleware = require('webpack-hot-middleware'),
+    webpackConfig = require('./webpack.config');
+
+  var compiler = webpack(webpackConfig);
+
+  app.use(webpackDevMiddleware(compiler, {
+    hot: true,
+    filename: 'bundle.js',
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: true,
+    stats: {
+      colors: true,
+    },
+    historyApiFallback: true,
+  }));
+
+  app.use(webpackHotMiddleware(compiler, {
+    log: console.log,
+    path: '/__webpack_hmr',
+    heartbeat: 10 * 1000,
+  }))
+
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -111,15 +145,17 @@ if (app.get('env') === 'development') {
   });
 }
 
- // production error handler
- // no stacktraces leaked to user
- app.use(function(err, req, res, next) {
-   res.status(err.status || 500);
-   res.json({
-     message: err.message,
-     error: {}
-   });
- });
+// production error handler
+// no stacktraces leaked to user
+if (app.get('env') === 'production') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.json({
+      message: err.message,
+      error: {}
+    });
+  });
+}
 
 console.log(38383838383, app.get('env') )
 module.exports = app;
