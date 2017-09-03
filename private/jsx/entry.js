@@ -17,6 +17,9 @@ if (window.PaintGraph !== undefined) {
     };
 }
 
+if (module.hot) {
+	module.hot.accept();
+}
 
 
 render(

@@ -72,6 +72,25 @@ $ sequelize db:migrate:undo:all
 * Navigate back to the root directory (`cd ..`) and run `nodemon` to start the server 
 * Run on browser `http://localhost:3000/` to view the website locally
 
+
+## Build and Server Setup
+
+``` bash
+# install dependencies
+npm install
+
+# build for production
+npm run build
+
+# serve at localhost:3000
+npm run start
+
+# serve with [hot reload] at localhost:3000
+npm run dev
+
+
+```
+
 ## Frontend libraries and platforms:
 * [three.js](https://threejs.org/)
 * [D3](https://d3js.org/)
