@@ -39,9 +39,9 @@ module.exports = {
     output: {
         // path: path.resolve(__dirname, './dist'),
         // publicPath: '/dist/',
-        path: path.resolve(__dirname, './public/javascripts/'),
+        path: path.resolve(__dirname, './public/'),
         publicPath: '/javascripts/',
-        filename: 'bundle.js'
+        filename: 'javascripts/bundle.js'
     },
     /*
     output: {
