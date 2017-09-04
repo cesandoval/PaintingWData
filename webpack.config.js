@@ -34,25 +34,21 @@ module.exports = {
             // Process JS with Babel.
             {
                 test: /\.jsx?$/,
-                loaders: ['react-hot-loader', 'babel-loader'],
                 exclude: /node_modules/,
-                /*
-                query: {
-                    presets: ['es2015', 'react'],
-                    cacheDirectory: findCacheDir({
-                        name: 'react-scripts'
-                    }),
-                    plugins: [
-                        'react-hot-loader/babel'
-                    ]
-                },
-                options: {
-                    // This is a feature of `babel-loader` for webpack (not Babel itself).
-                    // It enables caching results in ./node_modules/.cache/babel-loader/
-                    // directory for faster rebuilds.
-                    cacheDirectory: true,
-                },
-                */
+                use: [{
+                    loader: 'react-hot-loader'
+                }, {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015', 'react'],
+                        plugins: ['transform-runtime'],
+                        // This is a feature of `babel-loader` for webpack (not Babel itself).
+                        // It enables caching results in ./node_modules/.cache/babel-loader/
+                        // directory for faster rebuilds.
+                        cacheDirectory: true,
+                  },
+                }]
+            },
             {
                 test: /\.css$/,
                 loader: 'style-loader!css-loader'
