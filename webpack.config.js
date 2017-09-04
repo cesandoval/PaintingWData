@@ -24,7 +24,7 @@ module.exports = {
         // This does not produce a real file. It's just the virtual path that is
         // serve in development. This is the JS bundle
         // containing code from all our entry points, and the Webpack runtime.
-        filename: 'javascripts/bundle.js'
+        filename: 'bundle.js' 
     },
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
