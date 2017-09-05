@@ -82,7 +82,7 @@ npm install
 # build for production
 npm run build
 
-# serve at localhost:3000
+# serve in production mode at localhost:3000
 npm run start
 
 # serve with [hot reload] at localhost:3000
