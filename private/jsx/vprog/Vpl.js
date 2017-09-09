@@ -9,6 +9,8 @@ import Slider from './Slider.js';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 
+// TODO: typo fix (addSubractionNode -> addSubtractionNode)
+
 class VPL extends React.Component{
   constructor(props){
     super(props);
@@ -270,8 +272,9 @@ class VPL extends React.Component{
       }
     this.dp.nodeForConst = null;
 
-    if(window.renderSec)
-      window.renderSec(0.5, 'vpl mouseUp') 
+    // if(window.renderSec)
+      // window.renderSec(0.5, 'vpl mouseUp') // might be not necessary
+
   }
 
   handleMouseDown(event){
@@ -632,7 +635,7 @@ class VPL extends React.Component{
             return this.nodeSVG(p, type, 1)
             // return  this.NotNode(p);
         default:
-            return  this.NotNode(p, 'default'); // TODO: what is default?
+            return  this.nodeSVG(p, 'default'); // TODO: what is default?
             // return  this.AdditionNode(p);
     }
   };
@@ -898,6 +901,8 @@ class VPL extends React.Component{
   }
 
   addNode(nodeType){
+    // TODO: WIP
+
     // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
     this.evaluateNodeType('SUBTRACTION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
     // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
