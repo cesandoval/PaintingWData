@@ -80,6 +80,9 @@ class VPL extends React.Component{
     this.OrNode     = this.OrNode.bind(this);
     this.NotNode     = this.NotNode.bind(this);
 
+    this.nodeSVG = this.nodeSVG.bind(this);
+
+
     this.getNotZero = this.getNotZero.bind(this);
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
@@ -608,23 +611,56 @@ class VPL extends React.Component{
         case consts.LAYER_NODE:
             return  this.LayerNode(p, property, userLayerName, name);
         case consts.MULTIPLICATION_NODE:
-            return  this.MultiplicationNode(p);
+            return this.nodeSVG(p, type, 2)
+            // return  this.MultiplicationNode(p);
         case consts.SUBTRACTION_NODE:
-            return this.SubtractionNode(p);
+            return this.nodeSVG(p, type, 2)
+            // return this.SubtractionNode(p);
         case consts.DIVISION_NODE:
-                return this.DivisionNode(p);
+            return this.nodeSVG(p, type, 2)
+            // return this.DivisionNode(p);
         case consts.LOG_NODE:
-                return this.LogarithmNode(p);
+            return this.nodeSVG(p, type, 1)
+            // return this.LogarithmNode(p);
         case consts.AND_NODE:
-            return  this.AndNode(p);
+            return this.nodeSVG(p, type, 2)
+            // return  this.AndNode(p);
         case consts.OR_NODE:
-            return  this.OrNode(p);
+            return this.nodeSVG(p, type, 2)
+            // return  this.OrNode(p);
         case consts.NOT_NODE:
-            return  this.NotNode(p);
+            return this.nodeSVG(p, type, 1)
+            // return  this.NotNode(p);
         default:
-            return  this.AdditionNode(p);
+            return  this.NotNode(p, 'default'); // TODO: what is default?
+            // return  this.AdditionNode(p);
     }
   };
+
+
+  nodeSVG(p, name, inputNum){
+      return(
+          <g>
+              <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
+              x = {p.x} y = {p.y} ></rect>
+              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
+              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>I</text>
+              {
+                (inputNum > 1) &&
+                (<g>
+                    <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
+                    <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>I</text>
+                </g>)
+              }
+              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
+              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
+              <text className = {"nodeText"} x = {p.x + 102} y = {p.y + 25} fontSize={"16"} style={{textAnchor: 'middle'}}>
+                      {name.replace(/_NODE/g, '')}
+              </text>
+              <Slider position={p} index={name}/>
+          </g>
+          );
+  }
 
 
   AdditionNode(p){
