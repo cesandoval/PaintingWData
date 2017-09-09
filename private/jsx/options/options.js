@@ -29,15 +29,14 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
-        // Get layers once they appear
-        // Map them to Pixels objects
-        // Add the pixel geometries to the map
-        console.log(99999)
-        // TODO: check this function
-        if (newProps.layers && newProps.layers.length > 0 && !this.state.layersAdded) {
-            // Sets the camera to the voxels' bbox 
-            console.log(7474747474, newProps)
-        }
+        // // Get layers once they appear
+        // // Map them to Pixels objects
+        // // Add the pixel geometries to the map
+        // // TODO: check this function
+        // if (newProps.layers && newProps.layers.length > 0 && !this.state.layersAdded) {
+        //     // Sets the camera to the voxels' bbox 
+        //     console.log(7474747474, newProps)
+        // }
     }
     toggleOptionsMapStyleShow(){
         console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)
