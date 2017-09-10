@@ -89,10 +89,6 @@ class VPL extends React.Component{
     this.getNotZero = this.getNotZero.bind(this);
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
-    this.divideNodes = this.divideNodes.bind(this);
-    this.multiplyNodes = this.multiplyNodes.bind(this);
-    this.addNodes = this.addNodes.bind(this);
-    this.subtractNodes = this.subtractNodes.bind(this);
     this.logNode = this.logNode.bind(this);
 
     // this is just for debugging ...
@@ -506,14 +502,14 @@ class VPL extends React.Component{
       );
   }
 
-  evaluateNodeType(type, geometry1, geometry2={}){
+  evaluateNodeType(type, geometry1, geometry2={}, names=[]){
     switch(type){
         case consts.MULTIPLICATION_NODE:
-            return  this.evalArithmeticNode(geometry1, geometry2, this.multiplyNodes, type);
+            return  this.evalArithmeticNode(geometry1, geometry2, type, math.dotMultiply, names);
         case consts.DIVISION_NODE:
-                return this.evalArithmeticNode(geometry1, geometry2, this.divideNodes, type);
+                return this.evalArithmeticNode(geometry1, geometry2, type, math.dotDivide, names);
         case consts.SUBTRACTION_NODE:
-                return this.evalArithmeticNode(geometry1, geometry2, this.subtractNodes, type);
+                return this.evalArithmeticNode(geometry1, geometry2, type, math.subtract, names);
         // case consts.LOG_NODE:
         //         return this.evalArithmeticNode(geometry1, geometry2, this.logNode, type);
         // case consts.AND_NODE:
@@ -524,62 +520,47 @@ class VPL extends React.Component{
         //     return  this.evalNotNode(p);
         default:
             // This is for addition
-            return  this.evalArithmeticNode(geometry1, geometry2, this.addNodes, type);
+            return  this.evalArithmeticNode(geometry1, geometry2, type, math.add, names);
     }
   };
-
-  divideNodes(geomVal1, geomVal2) {
-      let result = geomVal1 / geomVal2;
-      if (Number.POSITIVE_INFINITY == result) {
-          return 0;
-      } else { 
-        return geomVal1 / geomVal2;
-      }
-  }
-
-  multiplyNodes(geomVal1, geomVal2) {
-      return geomVal1 * geomVal2;
-  }
-
-  addNodes(geomVal1, geomVal2) {
-      return geomVal1 + geomVal2;
-  }
-
-  subtractNodes(geomVal1, geomVal2) {
-      return geomVal1 - geomVal2;
-  }
 
   logNode(geomVal1, geomVal2) {
       return Math.log(geomVal1)
   }
 
   
-  evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
+  evalArithmeticNode(geometry1, geometry2, nodeName, mathFunction, names) {
     const arraySize = geometry1.geometry.attributes.size.count;
     const hashedData = {};
     const allIndices = this.newProps.layers[0].allIndices;
 
-    const originalSizeArray = new Float32Array(arraySize); 
     const translationArray = new Float32Array(arraySize*3);
 
-    let max = Number.NEGATIVE_INFINITY;
-    let min = Number.POSITIVE_INFINITY;
     let transArray1 = geometry1.geometry.attributes.translation.array;
     let transArray2 = geometry2.geometry.attributes.translation.array;
+
+    let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
+    let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
+    let sizeArray = mathFunction(geomArray1, geomArray2);
+
     for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){
         translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
         translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
         translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-        let currVal = nodeOperation(geometry1.geometry.attributes.size.array[j], geometry2.geometry.attributes.size.array[j]);
-        if (currVal<min) {min = currVal;};
-        if (currVal>max) {max = currVal;};
-        originalSizeArray[j] = currVal;
         if (allIndices.includes(j)) {
             let hashedArray = Array(8);
-            hashedArray[3] = currVal;
+            hashedArray[3] = sizeArray[j];
             hashedData[j] = hashedArray;
         }
     }
+
+    let min = math.min(Array.from(sizeArray));
+    let max;
+    if (nodeName == 'DIVISION_NODE') {
+        max = math.max(sizeArray.filter(item => item !== Number.POSITIVE_INFINITY));
+    } else {
+        max = math.max(sizeArray);
+    }    
     
     const valDiff = geometry1.highBnd-geometry1.lowBnd;
     const remap = function(x) {
@@ -590,7 +571,7 @@ class VPL extends React.Component{
         }
     }
 
-    let remapOriginalSize = originalSizeArray.map(remap);
+    let remapOriginalSize = sizeArray.map(remap);
     let remapSize = remapOriginalSize.slice(0);
     let props = {
         size: remapOriginalSize,
@@ -609,7 +590,8 @@ class VPL extends React.Component{
         name: nodeName,
         length: Math.max(geometry1.numElements, geometry2.numElements),
         hashedData: hashedData, 
-        allIndices: allIndices
+        allIndices: allIndices,
+        propVals: names
     }
     this.addVoxelGeometry(geometry)
   }
@@ -916,7 +898,7 @@ class VPL extends React.Component{
     // TODO: WIP
 
     // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType(nodeType, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    this.evaluateNodeType(nodeType, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
     // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
     
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
@@ -1040,7 +1022,7 @@ class VPL extends React.Component{
         length: geometry.length,
         hashedData: geometry.hashedData
     };
-    Action.sideAddLayer(createLayer(layerName, 'propertyName', true, 
+    Action.sideAddLayer(createLayer(layerName, geometry.propVals.toString(), true, 
         color1, color2, geoJSON, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, geometry.allIndices, geometry.shaderText, layerName))
   }
 
