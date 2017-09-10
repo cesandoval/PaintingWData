@@ -640,6 +640,8 @@ class VPL extends React.Component{
         case consts.NOT_NODE:
             return this.nodeSVG(p, type, 1)
             // return  this.NotNode(p);
+        case consts.ADDITION_NODE: 
+            return this.nodeSVG(p, type, 2)
         default:
             return  this.nodeSVG(p, 'default'); // TODO: what is default?
             // return  this.AdditionNode(p);
@@ -675,6 +677,7 @@ class VPL extends React.Component{
 
 
   AdditionNode(p){
+      console.log(p)
       return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
