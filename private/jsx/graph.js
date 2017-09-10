@@ -44,12 +44,18 @@ export default class Graph {
 
     // Create a Renderer
     initRenderer(width, height, pixelRatio) {
-        var renderer = new THREE.WebGLRenderer({ precision: "mediump", antialias: true });
+        var renderer = new THREE.WebGLRenderer({ precision: "mediump", antialias: true, preserveDrawingBuffer: true });
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( width, height )
         renderer.setClearColor(new THREE.Color('white'));
 
-        window.render = ()=>{renderer.render(this.scene, this.camera);}
+        window.render = () => renderer.render(this.scene, this.camera)
+        
+        window.getScreenShot = () => {
+            const img = renderer.domElement.toDataURL( 'image/jpeg' )
+            const w = window.open('about:blank','PaintingWithData Screenshot')
+            w.document.write("<img src='"+img+"' alt='PaintingWithData Screenshot'/>")
+        }
 
         return renderer;
     }
