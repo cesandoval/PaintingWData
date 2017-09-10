@@ -554,9 +554,6 @@ class VPL extends React.Component{
 
   
   evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
-    console.log(geometry1)
-    console.log(geometry2)
-
     const arraySize = geometry1.geometry.attributes.size.count;
     // const sizeArray = new Float32Array(arraySize); 
     const originalSizeArray = new Float32Array(arraySize); 
@@ -593,8 +590,6 @@ class VPL extends React.Component{
     }
 
     let geometry = {
-        startColor: this.newProps.layers[0].color1,
-        endColor: this.newProps.layers[0].color2,
         minMax: this.newProps.layers[0].geojson.minMax,
         addressArray: this.newProps.map.geometries[Object.keys(this.newProps.map.geometries)[0]].addresses,
         properties: props,
@@ -904,9 +899,9 @@ class VPL extends React.Component{
     // TODO: WIP
 
     // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType('SUBTRACTION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    this.evaluateNodeType(nodeType, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
     // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
-
+    
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
 
@@ -983,9 +978,48 @@ class VPL extends React.Component{
     const circle = new THREE.CircleBufferGeometry(1, 20);
     const otherArray = [];
 
-    const P = new PaintGraph.Pixels(map, circle, otherArray, geometry.startColor, geometry.endColor, geometry.minMax, 
+    const color10 = d3.scale.category10().range(); // d3.js v3
+    // shuffle the color10
+    for (let i = color10.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [color10[i - 1], color10[j]] = [color10[j], color10[i - 1]];
+    }
+
+    let color1 = color10[geometry.n % 10];
+    let color2 = d3.rgb(color1).brighter().toString();
+
+    let currentLayers = [];
+    for (let i=0; i < this.props.layers.length; i++) {
+        currentLayers.push(this.props.layers[i].name);
+    }
+    let layerName
+    if (! currentLayers.includes(geometry.name)) {
+        layerName = geometry.name;
+    } else {
+        for (let layerNum in currentLayers) {
+            if (currentLayers[layerNum].startsWith(geometry.name+'_')){
+                let n = currentLayers[layerNum].lastIndexOf("_");
+                let layerIndex = currentLayers[layerNum].substring(n+1);
+
+                if (!isNaN(layerIndex)) {
+                    let newLayerIndex = parseInt(currentLayers[layerNum].slice(n+1))+1;
+                    layerName = currentLayers[layerNum].slice(0,n+1)+newLayerIndex;
+                }
+            } else {
+                layerName = geometry.name+'_1';
+            }
+        }
+    }
+    
+    // let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
+    // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
+
+    const P = new PaintGraph.Pixels(map, circle, otherArray, color1, color2, geometry.minMax, 
         geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
-    Action.mapAddGeometry(geometry.name, P);
+    Action.mapAddGeometry(layerName, P);
+
+    Action.sideAddLayer(createLayer(layerName, 'propertyName', true, 
+        color1, color2, {}, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, [], geometry.shaderText, layerName))
   }
 
   render(){
@@ -1022,6 +1056,10 @@ class VPL extends React.Component{
     );
   }
 }
+
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
+})
 
 const mapStateToProps = (state) =>{
     return {nodes: state.vpl.nodes, links: state.vpl.links, map: state.map, layers: state.sidebar.layers};
