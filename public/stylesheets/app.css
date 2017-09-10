@@ -179,12 +179,11 @@ input[type=checkbox]{
 
 input[type="color" i] {
     margin: 0;
-    border: 1px solid white;
+    border: 0px solid white;
     background-color: transparent;
-    padding-right: 5px;
-    padding-left: 0;
-    width: 25px;
-    height: 25px;
+    padding: 1px;
+    width: 22px;
+    height: 26px;
     display: inline-block;
 
     -webkit-appearance: none;

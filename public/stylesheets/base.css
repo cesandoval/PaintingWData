@@ -122,6 +122,15 @@
     background-color: white;
 }
 
+#add-node-dropdown{
+    top: 10px;
+    padding: 6px 12px;
+}
+
+#add-node-dropdown + ul{
+    background-color: white;
+    top: 45px;
+}
 
 #somShow {
     position: absolute;
