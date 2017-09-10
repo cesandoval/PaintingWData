@@ -6,6 +6,7 @@ import * as Action from '../store/actions.js';
 import * as consts  from '../store/consts.js';
 
 import Slider from './Slider.js';
+import Panel from './Panel.js';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 
@@ -15,7 +16,7 @@ class VPL extends React.Component{
   constructor(props){
     super(props);
     this.width = 200;
-    this.height = 100;
+    this.height = 130;
     this.style = {
       rx: '2px',
       ry: '2px',
@@ -655,6 +656,8 @@ class VPL extends React.Component{
               <text className = {"nodeText"} x = {p.x + 102} y = {p.y + 25} fontSize={"16"} style={{textAnchor: 'middle'}}>
                       {name.replace(/_NODE/g, '')}
               </text>
+
+              <Panel position={p} index={name}/>
               <Slider position={p} index={name}/>
           </g>
           );
@@ -838,6 +841,7 @@ class VPL extends React.Component{
                     {property}
             </text>
             <Slider position={p} index={name}/>
+            <Panel position={p} index={name}/>
         </g>
     ); 
   }
@@ -1028,7 +1032,7 @@ class VPL extends React.Component{
             <div className = "row">
             <div className = "col-md-10"></div>
             <div className = "col-md-2">
-              <DropdownButton title={"Add Node"}  id={`dropdown-basic-1`}>
+              <DropdownButton title={"Add Node"}  id={`add-node-dropdown`}>
                 <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
                 <MenuItem onClick = {this.addSubractionNode}>Subtraction Node</MenuItem>
                 <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
