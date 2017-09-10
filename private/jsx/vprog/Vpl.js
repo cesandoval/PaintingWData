@@ -549,7 +549,9 @@ class VPL extends React.Component{
   
   evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
     const arraySize = geometry1.geometry.attributes.size.count;
-    // const sizeArray = new Float32Array(arraySize); 
+    const hashedData = {};
+    const allIndices = this.newProps.layers[0].allIndices;
+
     const originalSizeArray = new Float32Array(arraySize); 
     const translationArray = new Float32Array(arraySize*3);
 
@@ -565,6 +567,11 @@ class VPL extends React.Component{
         if (currVal<min) {min = currVal;};
         if (currVal>max) {max = currVal;};
         originalSizeArray[j] = currVal;
+        if (allIndices.includes(j)) {
+            let hashedArray = Array(8);
+            hashedArray[3] = currVal;
+            hashedData[j] = hashedArray;
+        }
     }
     
     const valDiff = geometry1.highBnd-geometry1.lowBnd;
@@ -592,7 +599,10 @@ class VPL extends React.Component{
         bounds: this.newProps.layers[0].bounds,
         shaderText: this.newProps.layers[0].shaderText,
         n: this.newProps.layers.length + 1,
-        name: nodeName
+        name: nodeName,
+        length: Math.max(geometry1.numElements, geometry2.numElements),
+        hashedData: hashedData, 
+        allIndices: allIndices
     }
     this.addVoxelGeometry(geometry)
   }
@@ -977,8 +987,13 @@ class VPL extends React.Component{
         geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
     Action.mapAddGeometry(layerName, P);
 
+    let geoJSON = {
+        minMax: geometry.minMax,
+        length: geometry.length,
+        hashedData: geometry.hashedData
+    };
     Action.sideAddLayer(createLayer(layerName, 'propertyName', true, 
-        color1, color2, {}, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, [], geometry.shaderText, layerName))
+        color1, color2, geoJSON, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, geometry.allIndices, geometry.shaderText, layerName))
   }
 
   render(){

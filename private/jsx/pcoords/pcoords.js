@@ -21,6 +21,7 @@ class PCoords extends React.Component {
     componentWillReceiveProps(nprops){
         // if(true && nprops.layers.length > 0){ 
         if(!this.state.started && nprops.layers.length > 0){ 
+            // console.log(nprops, 8484848484)
             this.setState({started: true});
 
             const bounds = nprops.layers[0].bounds;
@@ -72,6 +73,8 @@ class PCoords extends React.Component {
             // if (typeof this.minObjs != 'undefined') {
             //     brushedLayers = Object.keys(this.minObjs);
             // }
+            // console.log(visibleLayers)
+            // console.log(nprops.layers)
 
             for(let j = 0; j < numLayers; j++ ){
                 for (let i = 0; i < maxVoxels; i++){
@@ -85,6 +88,7 @@ class PCoords extends React.Component {
                     }
                 }
             }
+
             this.build(dictBuild, dictBrush)
             this.layerIndeces = layerIndeces 
         }
