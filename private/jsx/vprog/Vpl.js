@@ -559,7 +559,8 @@ class VPL extends React.Component{
 
     let min = math.min(Array.from(sizeArray));
     let max;
-    if (nodeName == 'DIVISION_NODE') {
+
+    if (node.name == 'DIVISION_NODE') {
         max = math.max(sizeArray.filter(item => item !== Number.POSITIVE_INFINITY));
     } else {
         max = math.max(sizeArray);
@@ -916,7 +917,8 @@ class VPL extends React.Component{
     }
 
     let color1 = color10[(this.newProps.layers.length + 1) % 10];
-    let color2 = d3.rgb(color1).brighter().toString();
+    let color2 = color1
+    // let color2 = d3.rgb(color1).brighter().toString()
 
     let currentLayers = [];
     for (let i=0; i < this.props.layers.length; i++) {

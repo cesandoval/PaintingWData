@@ -96,7 +96,8 @@ class Layers extends React.Component {
 
                     // TODO: more than 10 color
                     l.color1 = color10[index % 10]
-                    l.color2 = d3.rgb(l.color1).brighter().toString()
+                    l.color2 = l.color1
+                    // l.color2 = d3.rgb(l.color1).brighter().toString()
 
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 
