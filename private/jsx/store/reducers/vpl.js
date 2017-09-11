@@ -81,8 +81,12 @@ export default (state=initialState, action) => {
                     links: newLinks
                 };
         case consts.VLANG_UPDATE_NODE_POSITION:
-            let oldNode = state.nodes[action.index];
-            let newNode = { ref: oldNode.ref, type: oldNode.type, position: oldNode.position, translate: action.position,  name: action.props[action.index].name, userLayerName:action.props[action.index].userLayerName, property:action.props[action.index].property };
+            let newNode = state.nodes[action.index];
+
+            newNode.translate = action.position
+            newNode.name = action.props[action.index].name
+            newNode.userLayerName = action.props[action.index].userLayerName
+            newNode.property = action.props[action.index].property
 
             return  {
                  nodes: [
