@@ -559,7 +559,7 @@ class VPL extends React.Component{
 
     let min = math.min(Array.from(sizeArray));
     let max;
-    if (nodeName == 'DIVISION_NODE') {
+    if (node.type == 'DIVISION_NODE') {
         max = math.max(sizeArray.filter(item => item !== Number.POSITIVE_INFINITY));
     } else {
         max = math.max(sizeArray);
