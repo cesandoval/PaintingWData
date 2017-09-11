@@ -47,11 +47,17 @@ class Panel extends React.Component{
 
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
+
+        pixels.material.uniforms.startColor.value.set(e.target.value)
+        pixels.material.uniforms.endColor.value.set(e.target.value)
+
+        /* // using two color options for each layer
         if (e.target.name == 'color1'){
             pixels.material.uniforms.startColor.value.set(e.target.value)
         } else {
             pixels.material.uniforms.endColor.value.set(e.target.value)
         }
+        */
     }
 
     toggleVisibility(e) {
@@ -103,8 +109,8 @@ class Panel extends React.Component{
             <g>
                 <foreignObject x={this.props.position.x + 20} y={this.props.position.y + 95} style={{cursor: 'pointer'}}>
                     <div style={{position: 'fixed', display: 'flex', width: '157px', justifyContent: 'space-around', alignItems: 'center'}}>
-                        <input title="color picker" type="color" name="color1" value={this.state.color1} onChange={this.changeColor} />
-                        <input title="color picker" type="color" name="color2" value={this.state.color2} onChange={this.changeColor} />
+                        <input type="color" name="color1" value={this.state.color1} onChange={this.changeColor} />
+                        {/* <input type="color" name="color2" value={this.state.color2} onChange={this.changeColor} /> */}
                         <div onClick={this.toggleVisibility}>
                             {
                             this.state.visible == 1 ?

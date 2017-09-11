@@ -31,11 +31,17 @@ class Layer extends React.Component {
 
         // Get geometry
         let pixels = this.props.geometries[this.props.name]
+
+        pixels.material.uniforms.startColor.value.set(e.target.value)
+        pixels.material.uniforms.endColor.value.set(e.target.value)
+
+        /* // using two color options for each layer
         if (e.target.name == 'color1'){
             pixels.material.uniforms.startColor.value.set(e.target.value)
         } else {
             pixels.material.uniforms.endColor.value.set(e.target.value)
         }
+        */
     }
     render() {
         return(
@@ -53,7 +59,7 @@ class Layer extends React.Component {
                         <div className="text-right">
                             <input type="checkbox" checked={this.props.visible} onChange={this.handleCheckedEvent} name={this.props.name}/>
                             <input type="color" name="color1" value={this.props.color1} onChange={this.changeColor} />
-                            <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} />
+                            {/* <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} /> */}
                         </div>
                     </div>
                 </div>
