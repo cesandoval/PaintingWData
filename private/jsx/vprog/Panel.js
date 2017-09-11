@@ -6,13 +6,16 @@ import $ from 'jquery';
 class Panel extends React.Component{
 
     constructor(props){
-        super(props);
+        super(props)
+        this.props = props
+
         this.state = {
             visible: true,
-            color1: '#000000',
-            color2: '#000000',
+            // color1: '#000000',
+            // color2: '#000000',
+            color1: this.props.color1,
+            color2: this.props.color2,
         }
-        this.props = props
 
         this.changeColor = this.changeColor.bind(this);
         this.toggleVisibility = this.toggleVisibility.bind(this);
