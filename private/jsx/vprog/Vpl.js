@@ -513,8 +513,8 @@ class VPL extends React.Component{
             return this.evalArithmeticNode(geometry1, geometry2, node, math.dotDivide, names);
         case consts.SUBTRACTION_NODE:
             return this.evalArithmeticNode(geometry1, geometry2, node, math.subtract, names);
-        // case consts.LOG_NODE:
-        //     return this.evalArithmeticNode(geometry1, geometry2, this.logNode, type);
+        case consts.LOG_NODE:
+            return this.evalArithmeticNode(geometry1, geometry2, node, this.logNode, names);
         // case consts.AND_NODE:
         //     return  this.evalAndNode(p);
         // case consts.OR_NODE:
@@ -527,8 +527,30 @@ class VPL extends React.Component{
     }
   };
 
-  logNode(geomVal1, geomVal2) {
-      return Math.log(geomVal1)
+  logNode(geomArray1, geomArray2) {
+    const valDiff = 10;
+
+    let min = math.min(Array.from(geomArray1));
+    let max = math.max(Array.from(geomArray1));
+
+    const remap = function(x) {
+        if (x != 0) {
+            return (valDiff)*((x-min)/(max-min))+min;
+        } else {
+            return 0;
+        }
+    }
+
+    let newSizeArray = math.log(geomArray1.map(remap));
+    let newMin = math.min(newSizeArray.filter(item => item !== Number.NEGATIVE_INFINITY));
+    const notInfinity = function(x) {
+        if (x == Number.NEGATIVE_INFINITY) {
+            return newMin;
+        } else {
+            return x;
+        }
+    }
+    return newSizeArray.map(notInfinity);
   }
 
   
