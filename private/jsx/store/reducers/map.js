@@ -6,7 +6,7 @@ const initialMapState = {
     instance: null,
     started: false,
     geometries: {},
-    optionShow: 'PCoords'
+    optionShow: 'VPL'
 }
 
 export default (state=initialMapState, action) => {

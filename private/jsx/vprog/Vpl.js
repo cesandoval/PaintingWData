@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
+import _ from 'lodash';
 
 import * as Action from '../store/actions.js';
 import * as consts  from '../store/consts.js';
@@ -9,6 +10,16 @@ import Slider from './Slider.js';
 import Panel from './Panel.js';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
+const nodeInputNumber = {
+  [consts.MULTIPLICATION_NODE]: 2,
+  [consts.SUBTRACTION_NODE]: 2,
+  [consts.DIVISION_NODE]: 2,
+  [consts.LOG_NODE]: 1,
+  [consts.AND_NODE]: 2,
+  [consts.OR_NODE]: 2,
+  [consts.NOT_NODE]: 1,
+  [consts.ADDITION_NODE]: 2,
+}
 
 // TODO: typo fix (addSubractionNode -> addSubtractionNode)
 
@@ -256,6 +267,7 @@ class VPL extends React.Component{
                 if(this.isValidLink(newLink)){
                     console.log("created new Link");
                     Action.vlangAddLink(newLink);
+                    this.linkToComputeNode(newLink)
                 }
                 else{
                     console.log("link found ... didnt create");
@@ -635,28 +647,28 @@ class VPL extends React.Component{
         case consts.LAYER_NODE:
             return  this.LayerNode(p, property, userLayerName, name);
         case consts.MULTIPLICATION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.MULTIPLICATION_NODE]})
             // return  this.MultiplicationNode(p);
         case consts.SUBTRACTION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.SUBTRACTION_NODE]})
             // return this.SubtractionNode(p);
         case consts.DIVISION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.DIVISION_NODE]})
             // return this.DivisionNode(p);
         case consts.LOG_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.LOG_NODE]})
             // return this.LogarithmNode(p);
         case consts.AND_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.AND_NODE]})
             // return  this.AndNode(p);
         case consts.OR_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.OR_NODE]})
             // return  this.OrNode(p);
         case consts.NOT_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.NOT_NODE]})
             // return  this.NotNode(p);
         case consts.ADDITION_NODE: 
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: nodeInputNumber[consts.ADDITION_NODE]})
         default:
             // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
             // return  this.AdditionNode(p);
@@ -973,10 +985,28 @@ class VPL extends React.Component{
     }
 
     // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType(node, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
+    // this.evaluateNodeType(node, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
     // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
     
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
+  }
+
+  linkToComputeNode(link){
+    // let newLink = {
+    //     ref : "link_" + this.props.links.length,
+    //     sourceNode: this.nodesMap[this.dp.nodeForConst],
+    //     targetNode: closeEnoughNode.node,
+    //     source : pos(this.nodesMap[this.dp.nodeForConst]),
+    //     target : pos(closeEnoughNode.node),
+    //     type : closeEnoughNode.type,
+    // }
+
+    const targetNodeInput = _.filter(objects, _.matches({'targetNode': link.targetNode}))
+
+    if(targetNodeInput.length == nodeInputNumber[link.targetNode.type])
+      // this.evaluateNodeType(link.targetNode, this.newProps.map.geometries[link.sourceNode.layerName], this.newProps.map.geometries[link.targetNode.layerName], [link.sourceNode.layerName, link.targetNode.layerName])
+
+    console.log('linkToComputeNode', link, targetNodeInput)
   }
 
   addAdditionNode(){
