@@ -41,7 +41,10 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['es2015', 'react'],
-                        plugins: ['transform-runtime'],
+                        plugins: [
+                            'transform-runtime',
+                            'transform-class-properties',
+                        ],
                         // This is a feature of `babel-loader` for webpack (not Babel itself).
                         // It enables caching results in ./node_modules/.cache/babel-loader/
                         // directory for faster rebuilds.
