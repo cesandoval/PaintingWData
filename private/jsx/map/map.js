@@ -3,7 +3,7 @@ import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 import PCoords from '../pcoords/pcoords';
-import VPL from '../vprog/Vpl';
+import VPL from '../vprog/rVpl';
 
 class MapCanvas extends React.Component {
     constructor(props) {
