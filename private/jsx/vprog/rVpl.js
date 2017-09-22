@@ -9,12 +9,39 @@ import Slider from './Slider.js';
 import Panel from './Panel.js';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
+import * as NodeType from './nodeTypes'
+// console.log('NodeType', Object.keys(NodeType))
+
 
 // TODO: typo fix (addSubractionNode -> addSubtractionNode)
+// TODO: remove color2
+
+const style = {
+  node: {
+    rx: '2px', // rect radius
+    // ry: '2px', // same as rx
+    minWidth: 200,
+    minHeight: 130,
+    plug: {
+      height: 20,
+      width: 20,
+      marginTop: 30,
+    },
+    topOffset: 5,
+    fontSize: { // px unit
+      nodeName: 16,
+      propertyName: 10,
+      plugName: 14,
+    },
+  }
+}
+
 
 class VPL extends React.Component{
   constructor(props){
     super(props);
+
+    /*
     this.width = 200;
     this.height = 130;
     this.style = {
@@ -27,9 +54,9 @@ class VPL extends React.Component{
       tltlo:  5, // top left text left offset
       tltto:  20, // top left text top offset
       niClassName: "nodeInput",
-      
-
     }
+    */
+
     this.newProps = {};
 
     this.linksMap = this.refToElement(this.props.links);
@@ -74,6 +101,8 @@ class VPL extends React.Component{
 
 
     this.createNodeObject= this.createNodeObject.bind(this);
+
+    /*
     this.SubtractionNode = this.SubtractionNode.bind(this);
     this.AdditionNode     = this.AdditionNode.bind(this);
     this.MultiplicationNode     = this.MultiplicationNode.bind(this);
@@ -82,6 +111,7 @@ class VPL extends React.Component{
     this.AndNode     = this.AndNode.bind(this);
     this.OrNode     = this.OrNode.bind(this);
     this.NotNode     = this.NotNode.bind(this);
+    */
 
     this.nodeSVG = this.nodeSVG.bind(this);
 
@@ -91,11 +121,16 @@ class VPL extends React.Component{
 
     this.logNode = this.logNode.bind(this);
 
+    // Ask: which is for debugging ???
     // this is just for debugging ...
+
     this.addNode         = this.addNode.bind(this);
     this.removeLink      = this.removeLink.bind(this);
     this.printMaps       = this.printMaps.bind(this);
     this.displayMouseInfo= this.displayMouseInfo.bind(this);
+
+    // addNodeType
+    /*
     this.addAdditionNode = this.addAdditionNode.bind(this);
     this.addSubractionNode = this.addSubractionNode.bind(this);
     this.addMultiplicationNode = this.addMultiplicationNode.bind(this);
@@ -105,6 +140,7 @@ class VPL extends React.Component{
     this.addOrNode       = this.addOrNode.bind(this);
     this.addAndNode      = this.addAndNode.bind(this);
     this.addLayerNode    = this.addLayerNode.bind(this);
+    */
 
     this.addVoxelGeometry = this.addVoxelGeometry.bind(this);
 
@@ -633,7 +669,14 @@ class VPL extends React.Component{
 
     switch(type){
         case consts.LAYER_NODE:
-            return  this.LayerNode(p, property, userLayerName, name);
+          return  this.LayerNode(p, property, userLayerName, name);
+        default:
+          const inputs = NodeType[type].inputs
+          const inputNum = Object.keys(inputs).length ? Object.keys(inputs).length : 0
+
+          return this.nodeSVG({ color1, color2, p, layerName, inputNum, inputs, type})
+
+        /*
         case consts.MULTIPLICATION_NODE:
             return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
             // return  this.MultiplicationNode(p);
@@ -660,12 +703,75 @@ class VPL extends React.Component{
         default:
             // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
             // return  this.AdditionNode(p);
+        */
     }
   };
 
-
-  nodeSVG({color1, color2, p, layerName, inputNum}){
+  nodeSVG({color1, color2, p, layerName, inputNum, inputs, type}){
       console.log(`nodeSVG({${color1}, ${color2}, ${p}, ${layerName}, ${inputNum}})`, p)
+
+      p = {x: 0, y: 0}
+
+      const output = NodeType[type].output
+
+      // const nodeName = layerName
+      const nodeName = NodeType[type].fullName
+      const Style = style.node
+
+      // const nodeWidth = nodeName.length > 10 ? Style.minWidth + (nodeName.length - 10) * Style.fontSize.nodeName * 0.6 : Style.minWidth // 0.6 is the font width/height ratio
+      const nodeWidth = Style.minWidth
+      const nodeHeight = Style.minHeight 
+
+      return(
+          <g id="layerName" className="node">
+              <rect className="background" width={nodeWidth} height={nodeHeight} x="0" y="0" style={{fill: '#ecf0f1', stroke: '#ccc', rx: '2px'}}></rect>
+
+              {/* Output Plugs */}
+              { Object.entries(inputs)
+                  .map(([input, abbr], index) =>
+                    <g
+                      className="plug" data-input={input} 
+                      transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
+                    >
+                      <rect width={Style.plug.width} height={Style.plug.height} 
+                        x ={0} y={- Style.plug.height / 2} style={{fill: '#fff', stroke: '#ccc',}}
+                      ></rect>
+                      <text
+                        x={Style.plug.width / 2} y={0}
+                        fontSize={Style.fontSize.plugName} 
+                        style={{textAnchor: 'middle', fontFamily: 'Monospace', fill: '#4a4a4a', dominantBaseline: 'central' }}
+                      >{ abbr }</text>
+                    </g>
+                  )
+              }
+
+              {/* Output Plug */}
+              <g
+                className="plug" data-output={output} 
+                transform={`translate(${nodeWidth - Style.plug.width}, ${Style.plug.height / 2 + Style.topOffset})`}
+              >
+                <rect width={Style.plug.width} height={Style.plug.height} 
+                  x ={0} y={- Style.plug.height / 2} style={{fill: '#fff', stroke: '#ccc',}}
+                ></rect>
+                <text
+                  x={Style.plug.width / 2} y={0}
+                  fontSize={Style.fontSize.plugName} 
+                  style={{textAnchor: 'middle', fontFamily: 'Monospace', fill: '#4a4a4a', dominantBaseline: 'central' }}
+                >{ output[0] }</text>
+              </g>
+
+              <text x={nodeWidth / 2} y="25" fontSize={Style.fontSize.nodeName + 'px'} style={{textAnchor: 'middle', fontFamily: 'Monospace', fill: '#536469',}}>
+                {nodeName}
+              </text>
+
+              {/* TODO: modify slider width */}
+              <Slider position={p} index={layerName}/> 
+              
+              <Panel color1={color1} color2={color2} position={p} index={layerName}/>
+          </g>
+          );      
+
+      /*
       return(
           <g>
               <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
@@ -689,9 +795,11 @@ class VPL extends React.Component{
               <Slider position={p} index={layerName}/>
           </g>
           );
+      */
   }
 
 
+  /*
   AdditionNode(p){
       console.log(p)
       return(
@@ -855,6 +963,7 @@ class VPL extends React.Component{
         </g>
     ); 
   }
+  */
 
  LayerNode(p,  property, userLayerName, name){
      return(
@@ -979,6 +1088,7 @@ class VPL extends React.Component{
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
 
+  /*
   addAdditionNode(){
     this.addNode(consts.ADDITION_NODE);
   }
@@ -1006,6 +1116,7 @@ class VPL extends React.Component{
   addLayerNode(){
     this.addNode(consts.LAYER_NODE);
   }
+  */
 
   removeNode(){
       let x = parseInt($('#moveX').val());
@@ -1079,14 +1190,18 @@ class VPL extends React.Component{
             <div className = "col-md-10"></div>
             <div className = "col-md-2">
               <DropdownButton title={"Add Node"}  id={`add-node-dropdown`}>
-                <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
-                <MenuItem onClick = {this.addSubractionNode}>Subtraction Node</MenuItem>
-                <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
-                <MenuItem onClick = {this.addDivisionNode}>Division Node</MenuItem>
-                <MenuItem onClick = {this.addLogarithmNode}>Logarithm Node</MenuItem> 
-                <MenuItem onClick = {this.addAndNode}>And Node</MenuItem>
-                <MenuItem onClick = {this.addOrNode}>Or Node</MenuItem>
-                <MenuItem onClick = {this.addNotNode}>Not Node</MenuItem>
+                { Object.entries(NodeType)
+                    .map( ([key, node]) =>
+                      key != 'LAYER'
+                      ? <MenuItem 
+                          key={key} 
+                          onClick={() => {this.addNode(key)}}
+                        >
+                          { node.fullName + ' Node' }
+                        </MenuItem>
+                      : ''
+                    )
+                }
                </DropdownButton>
             </div>
 
