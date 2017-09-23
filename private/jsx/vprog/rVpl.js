@@ -15,6 +15,7 @@ import * as NodeType from './nodeTypes'
 
 // TODO: typo fix (addSubractionNode -> addSubtractionNode)
 // TODO: remove color2
+// TODO: nodeSVG() for dataset layer
 
 const style = {
   node: {
@@ -41,9 +42,10 @@ class VPL extends React.Component{
   constructor(props){
     super(props);
 
-    /*
     this.width = 200;
     this.height = 130;
+    
+    /*
     this.style = {
       rx: '2px',
       ry: '2px',
@@ -81,8 +83,10 @@ class VPL extends React.Component{
       nodeForConst : null,
     }
 
-
+    /* unused function
     this.logicalNode     = this.props.node;
+    */
+
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp   = this.handleMouseUp.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -126,8 +130,11 @@ class VPL extends React.Component{
 
     this.addNode         = this.addNode.bind(this);
     this.removeLink      = this.removeLink.bind(this);
+
+    /* unused function
     this.printMaps       = this.printMaps.bind(this);
     this.displayMouseInfo= this.displayMouseInfo.bind(this);
+    */
 
     // addNodeType
     /*
@@ -148,7 +155,10 @@ class VPL extends React.Component{
 
     $(window).on('keydown', this.handleKeyDown);
     $(window).on('keyup', this.handleKeyUp);
+
+    /*
     $(window).on('mousemove', this.displayMouseInfo);
+    */
 
      
   }
@@ -159,6 +169,7 @@ class VPL extends React.Component{
     // console.log(this.newProps)
   }
 
+  /* unused functions
   displayMouseInfo(event){
       $("#clientX").html(event.clientX);
       $("#clientY").html(event.clientY);
@@ -180,6 +191,7 @@ class VPL extends React.Component{
     console.log("Link To Node: ", this.linkToNode);
     console.log("Links List: ", this.linksList);
   }
+  */
 
   componentDidMount(){
     $('svg').on('mousemove', this.handleMouseMove);
@@ -966,6 +978,27 @@ class VPL extends React.Component{
   */
 
  LayerNode(p,  property, userLayerName, name){
+
+    const Style = style.node  
+
+    return(
+      <g>
+        <rect className={"nodeMain"} width={Style.minWidth} height ={Style.minHeight} 
+        x={p.x} y={p.y} ></rect>        
+        <rect className={"nodeInput"} width={Style.plug.width} height={Style.plug.height} x={p.x + Style.minWidth - 20} y ={p.y + Style.topOffset}></rect>         
+        <text className={"nodeInputLabel"} x={p.x + 5 + Style.minWidth - 20} y={p.y + 20} fontSize={"15"}>O</text>
+        <text className={"nodeText"} x={p.x + 30} y={p.y + 25} fontSize={"20"}>              
+                {userLayerName}
+        </text>
+        <text className={"nodeText"} x={p.x + 30} y={p.y + 45 } fontSize={"10"}>                
+                {property}
+        </text>
+        <Slider position={p} index={name}/>
+        <Panel position={p} index={name}/>
+      </g>
+
+
+    /* 
      return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
@@ -981,7 +1014,10 @@ class VPL extends React.Component{
             <Slider position={p} index={name}/>
             <Panel position={p} index={name}/>
         </g>
-    ); 
+    */
+
+
+    );
   }
   
 

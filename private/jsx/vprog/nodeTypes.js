@@ -83,8 +83,8 @@ export const SUB = {
 export const DIV = {
   fullName: 'Division',
   inputs: {
-    'N': 'Numerator',
-    'D': 'Denominator',
+    'Numerator': 'N',
+    'Denominator': 'D',
   },
   output: 'Output',
   options: {
