@@ -15,7 +15,7 @@ import * as NodeType from './nodeTypes'
 
 // TODO: typo fix (addSubractionNode -> addSubtractionNode)
 // TODO: remove color2
-// TODO: nodeSVG() for dataset layer
+// TODO: nodeSVG() for dataset layer. need property?
 
 const style = {
   node: {
@@ -83,7 +83,7 @@ class VPL extends React.Component{
       nodeForConst : null,
     }
 
-    /* unused function
+    /* this function is defined but never used
     this.logicalNode     = this.props.node;
     */
 
@@ -129,7 +129,10 @@ class VPL extends React.Component{
     // this is just for debugging ...
 
     this.addNode         = this.addNode.bind(this);
+
+    /* unused function
     this.removeLink      = this.removeLink.bind(this);
+    */
 
     /* unused function
     this.printMaps       = this.printMaps.bind(this);
@@ -451,11 +454,13 @@ class VPL extends React.Component{
             + " " + target.x + "," + target.y;
     }
 
+  /* this function is defined but never used
   createTempLink(startPosition, endPosition){
       return (
           <path className={"tempLink"} d={this.diagonal(startPosition, endPosition)} />
       );
   }
+  */
 
   currentMousePosition(event){
     return {
@@ -477,6 +482,7 @@ class VPL extends React.Component{
            
   }
 
+  /* this function is defined but never used
   createRangeSlider(){
       return(
         <g id="rangeSlider">
@@ -494,6 +500,7 @@ class VPL extends React.Component{
         </g>    
       );
   }
+  */
 
   getCloseNode(position){
       let p = position;
@@ -1154,15 +1161,21 @@ class VPL extends React.Component{
   }
   */
 
+
+  /* this function is defined but never used
   removeNode(){
       let x = parseInt($('#moveX').val());
       let y = parseInt($('#moveY').val());
       let position = {x: x, y: y};
       Action.vlangMoveNode(0, position);
   }
+  */
+  
+  /* unused function
   removeLink(){
       Action.vlangRemoveLink(this.getLinkIndex(this.props.links, 'link_1'));
   }
+  */
 
   linkMarker(){
     return(
