@@ -12,6 +12,9 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 import * as NodeType from './nodeTypes'
 // console.log('NodeType', Object.keys(NodeType))
 
+import {Nodes, Links} from './mockData'
+// console.log('mockData', {nodes, links})
+
 
 // TODO: typo fix (addSubractionNode -> addSubtractionNode)
 // TODO: remove color2
@@ -163,13 +166,54 @@ class VPL extends React.Component{
     $(window).on('mousemove', this.displayMouseInfo);
     */
 
-     
+    this.state = {
+      Nodes,
+      Links,
+    }
+
+    this.checked = {
+      datasetNode: false,
+    }
+
+  }
+
+  // create the dataset nodes if they're not exitst.
+  initDatasetNode = () => {
+    const datasets = this.props.layers
+    console.log('initDatasetNode()', datasets)
+
+    datasets.map( (dataset, index) => {
+      console.log('dataset', dataset)
+      if(!Nodes[dataset.name]){
+        const datasetNode = {
+          name: dataset.name,
+          type: 'LAYER',
+          options: {},
+          position: {
+            x: 50,
+            y: 50 + 150 * index,
+          },
+          color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.4').toString(),
+          opacity: 0.5,
+          visibility: true,
+        }
+        Nodes[dataset.name] = datasetNode
+      }
+    })
+
+    this.setState({Nodes})
+
+    return datasets.length > 0
   }
 
   componentWillReceiveProps(newProps){
     this.newProps = newProps;
     // console.log(newProps, 8888888)
     // console.log(this.newProps)
+
+    if(!this.checked.datasetNode){
+      this.checked.datasetNode = this.initDatasetNode()
+    }
   }
 
   /* unused functions
@@ -538,10 +582,12 @@ class VPL extends React.Component{
   createNodeObject(node, key){
       // console.log(`createNodeObject(${node}, ${key})`, node)
 
+      /* unused
       let p = node.position;
       let property = node.property;
       let userLayerName = node.userLayerName;
       let name = node.name;
+      */
       
       return(
         <g className = {"node"}
@@ -682,8 +728,13 @@ class VPL extends React.Component{
   }
 
 
-  decideNodeType({ color1, color2, layerName, type, position, property, userLayerName, name }){
-    console.log(`decideNodeType(${type}, ${position}, ${property}, ${userLayerName}, ${name})`)
+  decideNodeType(node){
+    console.log(`decideNodeType()`, node)
+
+    return this.nodeSVG(node)
+
+
+    /*
     const p = position
 
     switch(type){
@@ -693,7 +744,8 @@ class VPL extends React.Component{
           const inputs = NodeType[type].inputs
           const inputNum = Object.keys(inputs).length ? Object.keys(inputs).length : 0
 
-          return this.nodeSVG({ color1, color2, p, layerName, inputNum, inputs, type})
+          return this.nodeSVG({ color, name, inputs, type })
+    */
 
         /*
         case consts.MULTIPLICATION_NODE:
@@ -723,18 +775,19 @@ class VPL extends React.Component{
             // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
             // return  this.AdditionNode(p);
         */
-    }
+    // }
   };
 
-  nodeSVG({color1, color2, p, layerName, inputNum, inputs, type}){
-      console.log(`nodeSVG({${color1}, ${color2}, ${p}, ${layerName}, ${inputNum}})`, p)
+  nodeSVG({color, name, type}){
+      console.log(`nodeSVG({${color}, ${name}, ${type}})`)
 
-      p = {x: 0, y: 0}
+      //const p = {x: 0, y: 0}
 
+      const inputs = NodeType[type].inputs
       const output = NodeType[type].output
 
       // const nodeName = layerName
-      const nodeName = NodeType[type].fullName
+      const nodeName = name || NodeType[type].fullName
       const Style = style.node
 
       // const nodeWidth = nodeName.length > 10 ? Style.minWidth + (nodeName.length - 10) * Style.fontSize.nodeName * 0.6 : Style.minWidth // 0.6 is the font width/height ratio
@@ -742,6 +795,7 @@ class VPL extends React.Component{
       const nodeHeight = Style.minHeight 
 
       return(
+          // TODO: add key attr for g
           <g id="layerName" className="node">
               <rect className="background" width={nodeWidth} height={nodeHeight} x="0" y="0" style={{fill: '#ecf0f1', stroke: '#ccc', rx: '2px'}}></rect>
 
@@ -784,11 +838,14 @@ class VPL extends React.Component{
               </text>
 
               {/* TODO: modify slider width */}
+              {/*
               <Slider position={p} index={layerName}/> 
-              
               <Panel color1={color1} color2={color2} position={p} index={layerName}/>
+              */}
+
           </g>
           );      
+
 
       /*
       return(
@@ -1228,8 +1285,11 @@ class VPL extends React.Component{
         length: geometry.length,
         hashedData: geometry.hashedData
     };
+
+    /* don't add node layer to sidebar
     Action.sideAddLayer(createLayer(geometry.layerName, geometry.propVals.toString(), true, 
         color1, color2, geoJSON, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, geometry.allIndices, geometry.shaderText, geometry.layerName))
+    */
   }
 
   render(){
@@ -1258,9 +1318,30 @@ class VPL extends React.Component{
             <div className = "row">
               <svg ref ={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
                   {this.linkMarker()}
-                  {this.props.nodes.map((node, index) => {
+
+
+                  {
+                    Object.entries(Nodes)
+                      .map(([key, node], index) => {
+                        node.name = node.name ? node.name : node.type
+                        // index += 3
+                        node.translate = node.position
+
+                        return this.createNodeObject(node, index);  
+                      })
+                  }
+
+                  {
+                    /*
+                    this.props.nodes.map((node, index) => {
+                    console.log('props.nodes', node)
+                    // if(node.type == 'LAYER_NODE')
                       return this.createNodeObject(node, index);  
-                  })}
+                    })
+                    */
+                  }
+
+
                   {this.props.links.map((link, index) => {
                       return this.createLinkObject(link, index);
                   })}
@@ -1271,9 +1352,11 @@ class VPL extends React.Component{
   }
 }
 
+/* don't add node layer to sidebar
 const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
     name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
 })
+*/
 
 const mapStateToProps = (state) =>{
     return {nodes: state.vpl.nodes, links: state.vpl.links, map: state.map, layers: state.sidebar.layers};
