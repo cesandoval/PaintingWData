@@ -80,12 +80,15 @@ class VPL extends React.Component{
 
     this.newProps = {};
 
+    /*
     this.linksMap = this.refToElement(this.props.links);
     this.nodesMap = this.refToElement(this.props.nodes);
     this.nodeToLink = this.populateNodeToLink(this.props);
     this.linkToNode = this.populateLinkToNode(this.props);
     this.linksList = this.populateLinksList(this.props);
+    */
 
+    /*
     this.dp = {
       mouseInNode: false,
       nodeUnderMouse: null,
@@ -101,11 +104,13 @@ class VPL extends React.Component{
       tempLink: false,
       nodeForConst : null,
     }
+    */
 
     /* this function is defined but never used
     this.logicalNode     = this.props.node;
     */
 
+    /*
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp   = this.handleMouseUp.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -121,6 +126,7 @@ class VPL extends React.Component{
     this.windowMouseUp   = this.windowMouseUp.bind(this);
     this.getCloseNode    = this.getCloseNode.bind(this);
     this.isValidLink      = this.isValidLink.bind(this);
+    */
 
 
     this.createNodeObject= this.createNodeObject.bind(this);
@@ -138,8 +144,10 @@ class VPL extends React.Component{
 
     this.nodeSVG = this.nodeSVG.bind(this);
 
-
+    /*
     this.getNotZero = this.getNotZero.bind(this);
+    */
+
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
     this.logNode = this.logNode.bind(this);
@@ -389,12 +397,13 @@ class VPL extends React.Component{
 
   componentDidUpdate(nextProps){
     console.log('props changed ...')
+    /*
     this.linksMap = this.refToElement(this.props.links);
     this.nodesMap = this.refToElement(this.props.nodes);
     this.nodeToLink = this.populateNodeToLink(this.props);
     this.linkToNode = this.populateLinkToNode(this.props);
     this.linksList  = this.populateLinksList(this.props);
-    
+    */
   }
 
   updateNodes = () => {
@@ -512,6 +521,7 @@ class VPL extends React.Component{
       })
   }
 
+  /*
   refToElement(elements){
       let nodesMap = {};
       elements.map((node) =>{
@@ -747,6 +757,9 @@ class VPL extends React.Component{
         }
     }
   }
+  */
+
+
   diagonal(source, target) {
         return "M" + source.x + "," + source.y
             + "C" + (source.x + target.x) / 2 + "," + source.y
@@ -762,6 +775,8 @@ class VPL extends React.Component{
   }
   */
 
+
+  /*
   currentMousePosition(event){
     return {
         x : event.pageX - $('svg').offset().left,
@@ -781,6 +796,7 @@ class VPL extends React.Component{
         return wantedIndex
            
   }
+  */
 
   /* this function is defined but never used
   createRangeSlider(){
@@ -802,6 +818,7 @@ class VPL extends React.Component{
   }
   */
 
+  /*
   getCloseNode(position){
       let p = position;
       let closeEnoughNodes = [];
@@ -834,6 +851,7 @@ class VPL extends React.Component{
           return 0;
       }
   }
+  */
 
   createNodeObject(node, key){
       // console.log(`createNodeObject(${node}, ${key})`, node)
@@ -1300,6 +1318,7 @@ class VPL extends React.Component{
   }
   */
 
+  /* 
  LayerNode(p,  property, userLayerName, name){
 
     const Style = style.node  
@@ -1321,7 +1340,6 @@ class VPL extends React.Component{
       </g>
 
 
-    /* 
      return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
@@ -1337,11 +1355,11 @@ class VPL extends React.Component{
             <Slider position={p} index={name}/>
             <Panel position={p} index={name}/>
         </g>
-    */
 
 
     );
   }
+  */
   
 
   createLinkObject(link, key){
@@ -1363,6 +1381,7 @@ class VPL extends React.Component{
     return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 
+  /*
   NoLinkFoundException()
   { 
       return "No link found";
@@ -1395,6 +1414,7 @@ class VPL extends React.Component{
           y: position.y + 15
       }
   }
+  */
 
   addNode(type){
     // TODO: WIP
@@ -1504,7 +1524,7 @@ class VPL extends React.Component{
     );
   }
 
-
+  /*
   moveLinkStartTo(link, position){
      let l = this.linksMap[link];
      var ogl = this.getOutgoingLinkPosition(position);
@@ -1522,6 +1542,7 @@ class VPL extends React.Component{
      $(this.refs[link]).attr('d', this.diagonal(ogl, icl));
 
   }
+  */
 
   addVoxelGeometry(geometry) {
     const map = this.newProps.map.instance;
