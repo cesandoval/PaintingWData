@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
+import Rx from 'rxjs/Rx'
+
 
 import * as Action from '../store/actions.js';
 import * as consts  from '../store/consts.js';
@@ -39,6 +41,20 @@ const style = {
     },
   }
 }
+
+function observer(label = '') {
+  return {
+    // next: (n) => console.log(label, 'Next: ', n),
+    error: (e) => console.log(label, 'Error: ', e),
+    complete: (c) => console.log(label, 'Completed'),
+  }
+}
+
+const body = document.body;
+const mouseDown$ = Rx.Observable.fromEvent(body, "mousedown");
+const mouseUp$ = Rx.Observable.fromEvent(body, 'mouseup');
+const mouseMove$ = Rx.Observable.fromEvent(body, 'mousemove');
+const empty$ = Rx.Observable.empty()
 
 
 class VPL extends React.Component{
@@ -241,9 +257,63 @@ class VPL extends React.Component{
   */
 
   componentDidMount(){
+    
+    /*
     $('svg').on('mousemove', this.handleMouseMove);
     $('svg').on('mousedown', this.windowMouseDown);// TODO: revisit this, do you have to listen to the event 
     $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
+    */
+
+    const mouseTracker$ = mouseDown$
+      .do((down)=>{console.log(down)})
+      .map(down => {
+
+        const nodeDOM = down.target.closest('g.node')
+        const plugDOM = down.target.closest('g.plug')
+
+        const nodeKey = nodeDOM.getAttribute('data-key')
+        const [x, y] = nodeDOM.getAttribute('transform').match(/\d+/g)
+        const origin = {nodeKey, x, y}
+
+        return mouseMove$
+          .takeUntil(mouseUp$)
+          .map(move => {
+
+            return {move, down, origin}
+          })
+
+      })
+      .concatAll()
+      .do(({move, down}) => {
+        // prevent text/element selection with cursor drag
+        down.preventDefault()
+        move.preventDefault()
+      })
+      .share()
+
+    const moveNode$ = mouseTracker$
+      .filter(({origin}) => origin.nodeKey )
+      // .do(({down, move, origin}) => {console.log('moveNode$', {move, down, origin})})
+      // .throttleTime(100) // limit execution time for opt performance
+      .map(({down, move, origin}) => ({
+          nodeKey: origin.nodeKey,
+          origin,
+          x: Number(origin.x) + (move.clientX - down.clientX),
+          y: Number(origin.y) + (move.clientY - down.clientY),
+        })
+      )
+      // .do(({nodeKey, x, y}) => {
+      .do(({origin, x, y}) => {
+        // console.log("nodeMove", {nodeKey, x, y})
+
+        const newPosition = ({x, y})
+        const nodeKey = origin.nodeKey
+        const moveNode = {nodeKey, newPosition}
+
+        this.moveNode(moveNode)
+      })
+      .subscribe(observer('moveNode$'))
+
   } 
 
   componentDidUpdate(nextProps){
@@ -254,6 +324,16 @@ class VPL extends React.Component{
     this.linkToNode = this.populateLinkToNode(this.props);
     this.linksList  = this.populateLinksList(this.props);
     
+  }
+
+  updateNodes = () => {
+    this.setState({Nodes})
+  }
+
+  moveNode = ({nodeKey, newPosition}) => {
+    console.log('moveNode()', {nodeKey, newPosition})
+    Nodes[nodeKey].position = newPosition
+    this.updateNodes()
   }
 
   refToElement(elements){
@@ -588,15 +668,16 @@ class VPL extends React.Component{
       let userLayerName = node.userLayerName;
       let name = node.name;
       */
+      const nodeRef = 'node_' + key
       
       return(
-        <g className = {"node"}
-           id = {node.ref}
-           key = {key}
-           onMouseOver  = {this.handleMouseOver}
-           onMouseLeave = {this.handleMouseLeave}
-           onMouseUp    = {this.handleMouseUp}
-           onMouseDown  = {this.handleMouseDown}
+        <g className="node"
+           ref={nodeRef}
+           data-key={key}
+           // onMouseOver  = {this.handleMouseOver}
+           // onMouseLeave = {this.handleMouseLeave}
+           // onMouseUp    = {this.handleMouseUp}
+           // onMouseDown  = {this.handleMouseDown}
            transform = {`translate(${node.translate.x},${node.translate.y})`}
         >
         {
@@ -796,7 +877,7 @@ class VPL extends React.Component{
 
       return(
           // TODO: add key attr for g
-          <g id="layerName" className="node">
+          <g data-node-name={nodeName}>
               <rect className="background" width={nodeWidth} height={nodeHeight} x="0" y="0" style={{fill: '#ecf0f1', stroke: '#ccc', rx: '2px'}}></rect>
 
               {/* Output Plugs */}
@@ -1327,7 +1408,7 @@ class VPL extends React.Component{
                         // index += 3
                         node.translate = node.position
 
-                        return this.createNodeObject(node, index);  
+                        return this.createNodeObject(node, key);  
                       })
                   }
 
