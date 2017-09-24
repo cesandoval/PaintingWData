@@ -182,9 +182,13 @@ class VPL extends React.Component{
     $(window).on('mousemove', this.displayMouseInfo);
     */
 
+
     this.state = {
       Nodes,
       Links,
+      tempLink: {
+        from: {x: 50, y: 50}, to: {x: 50, y: 50},
+      }
     }
 
     this.checked = {
@@ -270,17 +274,33 @@ class VPL extends React.Component{
 
         const nodeDOM = down.target.closest('g.node')
         const plugDOM = down.target.closest('g.plug')
+        const svgDOM = down.target.closest('svg')
 
-        const nodeKey = nodeDOM.getAttribute('data-key')
-        const [x, y] = nodeDOM.getAttribute('transform').match(/\d+/g)
-        const origin = {nodeKey, x, y}
+        if(plugDOM)
+          down.purpose = 'link'
+        else if(nodeDOM)
+          down.purpose = 'move'
+        else
+          down.purpose = 'none'
+        
+        switch(down.purpose) {
+          case ('move'): {
+            const [x, y] = nodeDOM.getAttribute('transform').match(/\d+/g)
+            down.info = {x, y, nodeDOM}
+            break;
+          }
+          case ('link'): {
+            const nodeKey = nodeDOM.getAttribute('data-key')
+            down.info = {nodeDOM, plugDOM, svgDOM}
+            break;
+          }
+        }
+
+        console.log('down purpose : ', down.purpose, down.info)
 
         return mouseMove$
           .takeUntil(mouseUp$)
-          .map(move => {
-
-            return {move, down, origin}
-          })
+          .map(move => ({move, down}))
 
       })
       .concatAll()
@@ -291,28 +311,58 @@ class VPL extends React.Component{
       })
       .share()
 
+
     const moveNode$ = mouseTracker$
-      .filter(({origin}) => origin.nodeKey )
-      // .do(({down, move, origin}) => {console.log('moveNode$', {move, down, origin})})
+      .filter(({down}) => down.purpose == 'move' )
+      // .do(({down, move}) => {console.log('moveNode$', {move, down})})
       // .throttleTime(100) // limit execution time for opt performance
-      .map(({down, move, origin}) => ({
-          nodeKey: origin.nodeKey,
-          origin,
-          x: Number(origin.x) + (move.clientX - down.clientX),
-          y: Number(origin.y) + (move.clientY - down.clientY),
+      .map(({down, move}) => ({
+          nodeKey: down.info.nodeDOM.getAttribute('data-key'),
+          x: Number(down.info.x) + (move.clientX - down.clientX),
+          y: Number(down.info.y) + (move.clientY - down.clientY),
         })
       )
-      // .do(({nodeKey, x, y}) => {
-      .do(({origin, x, y}) => {
+      .do(({nodeKey, x, y}) => {
         // console.log("nodeMove", {nodeKey, x, y})
-
         const newPosition = ({x, y})
-        const nodeKey = origin.nodeKey
         const moveNode = {nodeKey, newPosition}
 
         this.moveNode(moveNode)
       })
       .subscribe(observer('moveNode$'))
+
+
+    const linkNode$ = mouseTracker$
+      .filter(({down}) => down.purpose == 'link' )
+      // .do(({down, link}) => {console.log('linkNode$', {link, down})})
+      // .throttleTime(100) // limit execution time for opt performance
+      .do(({down, move}) => {
+          const plugRect = down.info.plugDOM.getBoundingClientRect()
+          const svgRect = down.info.svgDOM.getBoundingClientRect()
+
+          const from = {
+            x: plugRect.right - svgRect.left,
+            y: plugRect.top + plugRect.height / 2 - svgRect.top,
+          }
+          const to = {
+            x: move.clientX - svgRect.left,
+            y: move.clientY - svgRect.top,
+          }
+
+          console.log('this.moveTempLink(from, to)', from, to)
+          this.moveTempLink({from, to})
+
+        }
+      )
+      .subscribe(observer('linkNode$'))
+
+
+    const endMouse$ = mouseUp$
+      .do((up) => {
+        // console.log('endMouse$', up)
+        this.moveTempLink({from: {x: 0, y: 0}, to: {x: 0, y: 0}})
+      })
+      .subscribe(observer('endMouse$'))
 
   } 
 
@@ -334,6 +384,16 @@ class VPL extends React.Component{
     console.log('moveNode()', {nodeKey, newPosition})
     Nodes[nodeKey].position = newPosition
     this.updateNodes()
+  }
+
+  createTempLink = () => {
+    return (
+        <path markerEnd="url(#Triangle)" ref="tempLink" key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
+    );
+  }
+
+  moveTempLink = ({from, to}) => {
+    this.setState({tempLink: {from, to}})
   }
 
   refToElement(elements){
@@ -810,7 +870,7 @@ class VPL extends React.Component{
 
 
   decideNodeType(node){
-    console.log(`decideNodeType()`, node)
+    // console.log(`decideNodeType()`, node)
 
     return this.nodeSVG(node)
 
@@ -860,7 +920,7 @@ class VPL extends React.Component{
   };
 
   nodeSVG({color, name, type}){
-      console.log(`nodeSVG({${color}, ${name}, ${type}})`)
+      // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
 
       //const p = {x: 0, y: 0}
 
@@ -884,7 +944,7 @@ class VPL extends React.Component{
               { Object.entries(inputs)
                   .map(([input, abbr], index) =>
                     <g
-                      className="plug" data-input={input} 
+                      className="plug" data-plug-type="input" data-input={input} 
                       transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
                     >
                       <rect width={Style.plug.width} height={Style.plug.height} 
@@ -901,7 +961,7 @@ class VPL extends React.Component{
 
               {/* Output Plug */}
               <g
-                className="plug" data-output={output} 
+                className="plug" data-plug-type="output" data-output={output} 
                 transform={`translate(${nodeWidth - Style.plug.width}, ${Style.plug.height / 2 + Style.topOffset})`}
               >
                 <rect width={Style.plug.width} height={Style.plug.height} 
@@ -1410,9 +1470,7 @@ class VPL extends React.Component{
 
                         return this.createNodeObject(node, key);  
                       })
-                  }
 
-                  {
                     /*
                     this.props.nodes.map((node, index) => {
                     console.log('props.nodes', node)
@@ -1423,9 +1481,20 @@ class VPL extends React.Component{
                   }
 
 
-                  {this.props.links.map((link, index) => {
+
+
+                  {
+                    // do not display temp link when its `from` and `to` is the same
+                    // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
+                    (JSON.stringify(this.state.tempLink.from) != JSON.stringify(this.state.tempLink.to)) 
+                    ? this.createTempLink() : ''
+
+                    /*
+                    this.props.links.map((link, index) => {
                       return this.createLinkObject(link, index);
-                  })}
+                    })
+                    */
+                  }
               </svg> 
             </div>  
         </div>
