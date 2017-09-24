@@ -396,6 +396,56 @@ class VPL extends React.Component{
     this.setState({tempLink: {from, to}})
   }
 
+  createLink = ({linkKey, from, to}) => {
+    const linkRef = 'link_' + linkKey
+    return (
+        <path markerEnd="url(#Triangle)" ref={linkRef} key={linkKey} className={"link"} d={this.diagonal(from, to)}></path>
+    );
+  }
+
+  createLinks = () => {
+    const outputs = this.state.Links.outputs
+
+    const svgDOM = document.querySelector('svg.vpl')
+    if(!svgDOM)
+      return '';
+
+    return Object.entries(outputs)
+      .map(([outputNode, input], index) => {
+
+        const svgRect = svgDOM.getBoundingClientRect()
+
+        const outputNodeDOM = this.refs['node_' + outputNode]
+        const outputPlugDOM = this.refs[`${outputNode}_plug_output`]
+
+        console.log('outputNodeDOM', outputNodeDOM)
+
+        return Object.entries(input)
+          .map(([inputNode, inputKey], index) => {
+            
+            const inputNodeDOM = this.refs['node_' + inputNode]
+            const inputPlugDOM = this.refs[`${inputNode}_plug_input_${inputKey}`]
+            
+            const linkKey = `${outputNode}_${inputNode}`
+
+            const outputPlugRect = outputPlugDOM.getBoundingClientRect()
+            const inputPlugRect = inputPlugDOM.getBoundingClientRect()
+
+            const from = {
+              x: outputPlugRect.right - svgRect.left,
+              y: outputPlugRect.top + outputPlugRect.height / 2 - svgRect.top,
+            }
+            const to = {
+              x: inputPlugRect.left - svgRect.left,
+              y: inputPlugRect.top + inputPlugRect.height / 2 - svgRect.top,
+            }
+
+            console.log('createLink({linkKey, from, to})', linkKey, from, to)
+            return this.createLink({linkKey, from, to})
+          })
+      })
+  }
+
   refToElement(elements){
       let nodesMap = {};
       elements.map((node) =>{
