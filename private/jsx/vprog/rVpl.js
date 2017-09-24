@@ -301,6 +301,10 @@ class VPL extends React.Component{
         return mouseMove$
           .takeUntil(mouseUp$)
           .map(move => ({move, down}))
+          .combineLatest( // get the lastest mouse up event
+            mouseUp$.mapTo(true).startWith(false).take(2),
+            ({move, down}, up) => ({move, down, up})
+          )
 
       })
       .concatAll()
@@ -345,8 +349,9 @@ class VPL extends React.Component{
             y: plugRect.top + plugRect.height / 2 - svgRect.top,
           }
           const to = {
-            x: move.clientX - svgRect.left,
-            y: move.clientY - svgRect.top,
+            // minus 2 to avoid targeting the `link` element.
+            x: move.clientX - svgRect.left - 2,
+            y: move.clientY - svgRect.top - 2,
           }
 
           console.log('this.moveTempLink(from, to)', from, to)
@@ -354,15 +359,31 @@ class VPL extends React.Component{
 
         }
       )
-      .subscribe(observer('linkNode$'))
-
-
-    const endMouse$ = mouseUp$
-      .do((up) => {
-        // console.log('endMouse$', up)
+      .filter(({up}) => up)
+      .do(({down, move, up}) => {
+        // clear temp link
         this.moveTempLink({from: {x: 0, y: 0}, to: {x: 0, y: 0}})
+
+        const toPlugDOM = move.target.closest('g[data-plug]')
+
+        if(toPlugDOM){
+          const toPlugType = toPlugDOM.getAttribute('data-plug-type')
+          // console.log('toPlugType= ', toPlugType)
+
+          if(toPlugType == 'input'){
+            // className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="output" data-output={output} 
+            const srcNode = down.info.plugDOM.getAttribute('data-node-key')
+
+            // className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="input" data-input={input} 
+            const toNode = toPlugDOM.getAttribute('data-node-key')
+            const toInput = toPlugDOM.getAttribute('data-input')
+
+            this.linkNode({srcNode, toNode, toInput})
+          }
+        }
+
       })
-      .subscribe(observer('endMouse$'))
+      .subscribe(observer('linkNode$'))
 
   } 
 
@@ -384,6 +405,51 @@ class VPL extends React.Component{
     console.log('moveNode()', {nodeKey, newPosition})
     Nodes[nodeKey].position = newPosition
     this.updateNodes()
+  }
+
+  linkNode = ({srcNode, toNode, toInput}) => {
+    console.log('linkNode()', srcNode, toNode, toInput)
+
+    // const inputs = {
+    //   [toNode]: {
+    //     [toInput]: srcNode,
+    //   },
+    // }
+    // const outputs = {
+    //   [srcNode]: {
+    //     [toNode]: toInput,
+    //   },
+    // }
+
+    const links = this.state.Links
+
+    // limitation of link
+    if(srcNode == toNode)
+      return console.log('linkNode(): link same node')
+
+    if(links.inputs[toNode] && links.inputs[toNode][toInput]){
+      console.log('linkNode(): one input only allow one link')
+      delete links.outputs[links.inputs[toNode][toInput]][toNode]
+    }
+
+    // inputs
+    if(links.inputs[toNode])
+      links.inputs[toNode][toInput] = srcNode
+    else
+      links.inputs[toNode] = {
+        [toInput]: srcNode,
+      }
+
+    // outputs
+    if(links.outputs[srcNode])
+      links.outputs[srcNode][toNode] = toInput
+    else
+      links.outputs[srcNode]= {
+        [toNode]: toInput,
+      }
+
+    this.setState({Links: links})
+
   }
 
   createTempLink = () => {
@@ -969,7 +1035,7 @@ class VPL extends React.Component{
     // }
   };
 
-  nodeSVG({color, name, type}){
+  nodeSVG({color, name, type, nodeKey}){
       // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
 
       //const p = {x: 0, y: 0}
@@ -994,7 +1060,8 @@ class VPL extends React.Component{
               { Object.entries(inputs)
                   .map(([input, abbr], index) =>
                     <g
-                      className="plug" data-plug-type="input" data-input={input} 
+                      ref={`${nodeKey}_plug_input_${input}`}
+                      className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="input" data-input={input} 
                       transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
                     >
                       <rect width={Style.plug.width} height={Style.plug.height} 
@@ -1011,7 +1078,8 @@ class VPL extends React.Component{
 
               {/* Output Plug */}
               <g
-                className="plug" data-plug-type="output" data-output={output} 
+                ref={`${nodeKey}_plug_output`}
+                className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="output" data-output={output} 
                 transform={`translate(${nodeWidth - Style.plug.width}, ${Style.plug.height / 2 + Style.topOffset})`}
               >
                 <rect width={Style.plug.width} height={Style.plug.height} 
@@ -1507,7 +1575,7 @@ class VPL extends React.Component{
 
             </div>
             <div className = "row">
-              <svg ref ={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+              <svg className="vpl" ref={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
                   {this.linkMarker()}
 
 
@@ -1517,6 +1585,7 @@ class VPL extends React.Component{
                         node.name = node.name ? node.name : node.type
                         // index += 3
                         node.translate = node.position
+                        node.nodeKey = key
 
                         return this.createNodeObject(node, key);  
                       })
@@ -1531,13 +1600,14 @@ class VPL extends React.Component{
                   }
 
 
-
-
                   {
                     // do not display temp link when its `from` and `to` is the same
                     // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
                     (JSON.stringify(this.state.tempLink.from) != JSON.stringify(this.state.tempLink.to)) 
                     ? this.createTempLink() : ''
+                  }
+                  {
+                    this.createLinks()
 
                     /*
                     this.props.links.map((link, index) => {
@@ -1545,6 +1615,7 @@ class VPL extends React.Component{
                     })
                     */
                   }
+
               </svg> 
             </div>  
         </div>
