@@ -212,19 +212,17 @@ class VPL extends React.Component{
 
     datasets.map( (dataset, index) => {
       console.log('dataset', dataset)
+
+      // TODO: generate hash key for datasets. 
       if(!Nodes[dataset.name]){
-        const datasetNode = {
-          name: dataset.name,
-          type: 'LAYER',
-          options: {},
-          position: {
-            x: 50,
-            y: 50 + 150 * index,
-          },
-          color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.4').toString(),
-          opacity: 0.5,
-          visibility: true,
+        const datasetNode = this.newNodeObj('LAYER')
+
+        datasetNode.position = {
+          x: 50,
+          y: 50 + 150 * index,
         }
+        datasetNode.name = dataset.name
+
         Nodes[dataset.name] = datasetNode
       }
     })
@@ -233,6 +231,25 @@ class VPL extends React.Component{
 
     return datasets.length > 0
   }
+
+  newNodeObj = (type) => {
+    const nodesLength = Object.keys(Nodes).length
+
+    const newNode = {
+      name: type,
+      type: type,
+      options: {},
+      position: {
+        x: 50 + 200 * (nodesLength / 4),
+        y: 50 + 100 * (nodesLength % 4),
+      },
+      color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.4').toString(),
+      opacity: 0.5,
+      visibility: true,
+    }
+
+    return newNode;
+  } 
 
   componentWillReceiveProps(newProps){
     this.newProps = newProps;
@@ -882,6 +899,10 @@ class VPL extends React.Component{
   }
 
   evaluateNodeType(node, geometry1, geometry2={}, names=[]){
+
+    return  this.evalArithmeticNode(geometry1, geometry2, node, NodeType[node.type].arithmetic, names);
+
+    /*
     switch(node.type){
         case consts.MULTIPLICATION_NODE:
             return  this.evalArithmeticNode(geometry1, geometry2, node, math.dotMultiply, names);
@@ -901,6 +922,7 @@ class VPL extends React.Component{
             // This is for addition
             return  this.evalArithmeticNode(geometry1, geometry2, node, math.add, names);
     }
+    */
   };
 
   logNode(geomArray1, geomArray2) {
@@ -1419,6 +1441,12 @@ class VPL extends React.Component{
   addNode(type){
     // TODO: WIP
 
+    const nodeHashKey = (+new Date).toString(32) + Math.floor(Math.random()* 36).toString(36)
+    Nodes[nodeHashKey] = this.newNodeObj(type)
+
+    this.setState({Nodes})
+
+    /*
     const color10 = d3.scale.category10().range(); // d3.js v3
     // shuffle the color10
     for (let i = color10.length; i; i--) {
@@ -1465,7 +1493,10 @@ class VPL extends React.Component{
     // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
     
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
+    */
   }
+
+
 
   /*
   addAdditionNode(){
