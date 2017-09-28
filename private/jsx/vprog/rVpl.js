@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import Rx from 'rxjs/Rx'
+import _ from 'lodash'
+
 
 
 import * as Action from '../store/actions.js';
@@ -408,6 +410,7 @@ class VPL extends React.Component{
         }
 
       })
+      .do(() => {this.linkThenComputeNode()})
       .subscribe(observer('linkNode$'))
 
   }
@@ -552,6 +555,92 @@ class VPL extends React.Component{
             return this.createLink({linkKey, from, to})
           })
       })
+  }
+
+  linkThenComputeNode = ()=> {
+
+    /*
+    inputs: { // for arithmetic iterate
+      // [toNode]: {
+      //   [toInput]: srcNode,
+      // },
+      '$nodeC':{
+        'Minuend': '$nodeA',
+        'Subtrahend': '$nodeB',
+      },
+      '$nodeD':{
+        'Numerator': '$nodeB',
+        'Denominator': '',
+      },
+    },
+    outputs: { // for checking the limitation of links
+      // [srcNode]: {
+      //   [toNode]: toInput,
+      // },
+      '$nodeA':{
+        '$nodeC': 'Minuend',
+      },
+      '$nodeB':{
+        '$nodeC': 'Subtrahend',
+        '$nodeD': 'Numerator',
+      },
+    },
+    */
+
+    const nodes = this.state.Nodes
+    window.nodes = nodes
+
+    const datasetNodes = Object.entries(nodes)
+      .filter(([key, value]) => value.type == 'DATASET')
+      .map(([key, value]) => key)
+
+    const outputs = _.cloneDeep(this.state.Links.outputs)
+    const inputs = _.cloneDeep(this.state.Links.inputs)
+
+
+    // collect node inputs if inputs enough like node type setting
+    const nodeInputsFromNode = {}
+
+    Object.entries(inputs)
+      .map(([toNodeKey, inputsSrcNode], index) => {
+        const toNode = nodes[toNodeKey]
+        const toNodeTypeInputs = Object.keys(NodeType[toNode.type].inputs)
+
+        const toNodeInputs = toNodeTypeInputs.map(input => inputsSrcNode[input])
+        if((toNodeInputs.filter(f => f).length) == (toNodeTypeInputs.length)){
+          console.log(toNodeKey, 'enough input')
+          nodeInputsFromNode[toNodeKey] = inputsSrcNode
+        } else {
+          console.log(toNodeKey, 'less input')
+        }
+      })
+
+    console.log({nodeInputsFromNode})
+
+
+    // getting a output Tree Structure to check the order of output.
+    const nodeOutputTree = {}
+
+    const getOutputToNode = (output) => {
+      Object.keys(output).map(toNodeKey => {
+        if(outputs[toNodeKey]){
+          output[toNodeKey] = outputs[toNodeKey]
+          getOutputToNode(output[toNodeKey])
+        } else
+          output[toNodeKey] = true
+      })
+    }
+
+    datasetNodes.map(datasetNodeKey => {
+      if(outputs[datasetNodeKey]){
+        nodeOutputTree[datasetNodeKey] = outputs[datasetNodeKey]
+        getOutputToNode(nodeOutputTree[datasetNodeKey])
+      }
+    })
+
+    console.log({nodeOutputTree})
+
+    return {nodeInputsFromNode, nodeOutputTree}
   }
 
   /*
