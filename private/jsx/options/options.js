@@ -29,6 +29,52 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
+        // if (SVG.supported) {
+        //     // var draw = SVG('drawing')
+        //     // var circle = draw.circle(100)
+        //     // circle.attr({
+        //     //     fill: '#f06'
+        //     //     , 'fill-opacity': 0.5
+        //     //     , 'stroke-width': 0
+        //     //   });
+        //     // circle.center(10,10);
+        //     // console.log(rect)
+        //     // console.log(rect.svg())
+        // } else {
+        //     alert('SVG not supported')
+        // }
+
+        // let geoms = newProps.map.geometries;
+        // let layers = Object.keys(geoms);
+        // let test = geoms[layers[0]];
+        // // const testGeom = test['geometry'];
+        // console.log(test)
+
+        // var draw = SVG('drawing')
+        // var circle = draw.circle(100)
+        // circle.attr({
+        //     fill: '#f06'
+        //     , 'fill-opacity': 0.5
+        //     , 'stroke-width': 0
+        // });
+        // circle.center(10,10);
+        // circle.radius(45);
+        // circle.center(40,40);
+
+
+        
+        // const testTranslation = testGeom.translation;
+        // const testSize = testGeom.size;
+
+        // for (i = 0; i < 100; i++) { 
+        //     var circle = draw.circle(i)
+        //     // circle.attr({
+        //     //     fill: '#f06'
+        //     //     , 'fill-opacity': 0.5
+        //     //     , 'stroke-width': 0
+        //     // });
+        //     // circle.center(10,10);
+        // }
         // // Get layers once they appear
         // // Map them to Pixels objects
         // // Add the pixel geometries to the map
