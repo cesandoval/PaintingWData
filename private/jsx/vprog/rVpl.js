@@ -215,7 +215,7 @@ class VPL extends React.Component{
 
       // TODO: generate hash key for datasets. 
       if(!Nodes[dataset.name]){
-        const datasetNode = this.newNodeObj('LAYER')
+        const datasetNode = this.newNodeObj('DATASET')
 
         datasetNode.position = {
           x: 50,
@@ -1612,7 +1612,7 @@ class VPL extends React.Component{
               <DropdownButton title={"Add Node"}  id={`add-node-dropdown`}>
                 { Object.entries(NodeType)
                     .map( ([key, node]) =>
-                      key != 'LAYER'
+                      key != 'DATASET'
                       ? <MenuItem 
                           key={key} 
                           onClick={() => {this.addNode(key)}}

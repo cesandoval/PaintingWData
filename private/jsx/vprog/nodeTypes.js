@@ -18,8 +18,8 @@ const NodeType = {
 */
 
 
-export const LAYER = {
-  fullName: 'Layer',
+export const DATASET = {
+  fullName: 'Dataset',
   inputs: {
   },
   output: 'Output',
