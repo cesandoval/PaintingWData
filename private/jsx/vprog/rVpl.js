@@ -293,7 +293,7 @@ class VPL extends React.Component{
     $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
     */
 
-    const mouseTracker$ = mouseDown$
+    this.mouseTracker$ = mouseDown$
       .do((down)=>{console.log(down)})
       .map(down => {
 
@@ -341,10 +341,10 @@ class VPL extends React.Component{
       .share()
 
 
-    const moveNode$ = mouseTracker$
+    this.moveNode$ = this.mouseTracker$
       .filter(({down}) => down.purpose == 'move' )
       // .do(({down, move}) => {console.log('moveNode$', {move, down})})
-      // .throttleTime(100) // limit execution time for opt performance
+      // .throttleTime(30) // limit execution time for opt performance
       .map(({down, move}) => ({
           nodeKey: down.info.nodeDOM.getAttribute('data-key'),
           x: Number(down.info.x) + (move.clientX - down.clientX),
@@ -361,10 +361,10 @@ class VPL extends React.Component{
       .subscribe(observer('moveNode$'))
 
 
-    const linkNode$ = mouseTracker$
+    this.linkNode$ = this.mouseTracker$
       .filter(({down}) => down.purpose == 'link' )
       // .do(({down, link}) => {console.log('linkNode$', {link, down})})
-      // .throttleTime(100) // limit execution time for opt performance
+      // .throttleTime(30) // limit execution time for opt performance
       .do(({down, move}) => {
           const plugRect = down.info.plugDOM.getBoundingClientRect()
           const svgRect = down.info.svgDOM.getBoundingClientRect()
@@ -410,7 +410,14 @@ class VPL extends React.Component{
       })
       .subscribe(observer('linkNode$'))
 
-  } 
+  }
+
+  componentWillUnmount(){
+    console.log('componentWillUnmount', 'unsubscribe observer')
+    this.mouseTracker$.unsubscribe()
+    this.moveNode$.unsubscribe()
+    this.linkNode$.unsubscribe()
+  }
 
   componentDidUpdate(nextProps){
     console.log('props changed ...')
