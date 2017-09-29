@@ -26,7 +26,12 @@ gulp.task('build', function() {
         extensions: ['.js'],
         debug: true
     })
-    .transform(babelify, {presets: ['es2015', 'react']})
+    .transform(babelify, {
+        presets: ['es2015', 'react'],
+        plugins: [
+            'transform-class-properties',
+        ],
+    })
     .bundle()
     .on('error', errHandler)
     .pipe(source('bundle.js'))
