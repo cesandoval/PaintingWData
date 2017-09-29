@@ -44,11 +44,11 @@ class Options extends React.Component {
         //     alert('SVG not supported')
         // }
 
-        // let geoms = newProps.map.geometries;
-        // let layers = Object.keys(geoms);
-        // let test = geoms[layers[0]];
-        // // const testGeom = test['geometry'];
-        // console.log(test)
+        let geoms = newProps.map.geometries;
+
+        console.log(geoms)
+        let exportTest = PaintGraph.Exporter.exportSVG(geoms);
+        console.log(exportTest)
 
         // var draw = SVG('drawing')
         // var circle = draw.circle(100)
@@ -57,11 +57,19 @@ class Options extends React.Component {
         //     , 'fill-opacity': 0.5
         //     , 'stroke-width': 0
         // });
-        // circle.center(10,10);
+        // // circle.center(10,10);
         // circle.radius(45);
         // circle.center(40,40);
 
-
+        // var circle = draw.circle(100)
+        // circle.attr({
+        //     fill: '#f06'
+        //     , 'fill-opacity': 0.5
+        //     , 'stroke-width': 0
+        // });
+        // circle.center(60,10);
+        // circle.radius(45);
+        // console.log(circle.svg())
         
         // const testTranslation = testGeom.translation;
         // const testSize = testGeom.size;
