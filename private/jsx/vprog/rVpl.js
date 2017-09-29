@@ -640,7 +640,39 @@ class VPL extends React.Component{
 
     console.log({nodeOutputTree})
 
-    return {nodeInputsFromNode, nodeOutputTree}
+
+    let outputOrder = [[]]
+
+    const getOutputOrder = (tree, depth) => {
+      // console.log(`S getOutputOrder(${depth})`, tree)
+      let depthNodes = []
+      let deepDepth = depth + 1
+
+      Object.entries(tree).map(([nodeKey, value]) => {
+        if(nodeInputsFromNode[nodeKey]){
+          depthNodes.push(nodeKey)
+          getOutputOrder(value, deepDepth)
+        }
+      })
+
+      // console.log(`E getOutputOrder(${depth})`, tree, depthNodes)
+      outputOrder[depth] = outputOrder[depth] ? [...outputOrder[depth], ...depthNodes] : [...depthNodes]
+    }
+
+    Object.entries(nodeOutputTree).map(([nodeKey, value]) => {
+      outputOrder[0].push(nodeKey)
+      getOutputOrder(value, 1)
+    })
+
+    outputOrder = _.uniq(_.flatten(outputOrder))
+    console.log({outputOrder})
+
+    window.nodeOutputTree = nodeOutputTree
+    window.nodeInputsFromNode = nodeInputsFromNode
+    window.outputOrder = outputOrder
+
+    return {nodeInputsFromNode, nodeOutputTree, outputOrder}
+
   }
 
   /*
