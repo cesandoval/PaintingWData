@@ -146,9 +146,7 @@ class VPL extends React.Component{
 
     this.nodeSVG = this.nodeSVG.bind(this);
 
-    /*
     this.getNotZero = this.getNotZero.bind(this);
-    */
 
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
@@ -671,8 +669,34 @@ class VPL extends React.Component{
     window.nodeInputsFromNode = nodeInputsFromNode
     window.outputOrder = outputOrder
 
-    return {nodeInputsFromNode, nodeOutputTree, outputOrder}
 
+    // TODO: save computed data to this state
+    // TODO: refactoring this function. some node have over than 3 inputs ,or it has different input order.
+    const computeNodeThenAddVoxel = (node, inputNodes)=>{
+      const geometries = this.newProps.map.geometries
+      console.log(`S compute ${node.type} ${node.nodeKey}`, geometries, inputNodes, node)
+      let geometry1 = geometries[inputNodes[0]]
+      let geometry2 = geometries[inputNodes[1]]
+      console.log(`E compute ${node.type} ${node.nodeKey}`, {node, inputNodes, geometry1, geometry2})
+
+      if(geometry1 && geometry2)
+        this.evalArithmeticNode(geometry1, geometry2, node, NodeType[node.type].arithmetic)
+    }
+
+    Object.entries(nodes).map(([nodeKey, node]) => {
+      if(node.type != 'DATASET')
+        Action.mapRemoveGeometry(nodeKey)
+    })
+
+    outputOrder.map(nodeKey =>{
+      const node = nodes[nodeKey]
+      if(node.type != 'DATASET'){
+        const inputNodes = Object.values(nodeInputsFromNode[nodeKey])
+        computeNodeThenAddVoxel(node, inputNodes)
+      }
+    })
+
+    return {nodeInputsFromNode, nodeOutputTree, outputOrder}
   }
 
   /*
@@ -995,6 +1019,7 @@ class VPL extends React.Component{
       return closeEnoughNodes;
       
   }
+  */
 
   getNotZero(number1, number2) {
       if (number1 != 0) {
@@ -1005,7 +1030,6 @@ class VPL extends React.Component{
           return 0;
       }
   }
-  */
 
   createNodeObject(node, key){
       // console.log(`createNodeObject(${node}, ${key})`, node)
@@ -1089,6 +1113,7 @@ class VPL extends React.Component{
   }
 
   
+  // TODO: refactoring this function. some node have over than 3 inputs ,or it has different input order.
   evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
     const arraySize = geometry1.geometry.attributes.size.count;
     const hashedData = {};
@@ -1117,7 +1142,7 @@ class VPL extends React.Component{
     let min = math.min(Array.from(sizeArray));
     let max;
 
-    if (node.type == 'DIVISION_NODE') {
+    if (node.type == 'DIVISION') {
         max = math.max(sizeArray.filter(item => item !== Number.POSITIVE_INFINITY));
     } else {
         max = math.max(sizeArray);
@@ -1150,13 +1175,13 @@ class VPL extends React.Component{
         n: this.newProps.layers.length + 1,
         name: node.name,
         type: node.type,
-        layerName: node.layerName,
+        layerName: node.nodeKey,
         length: Math.max(geometry1.numElements, geometry2.numElements),
         hashedData: hashedData, 
         allIndices: allIndices,
         propVals: names,
-        color1: node.color1,
-        color2: node.color2,
+        color1: node.color,
+        color2: node.color,
     }
     this.addVoxelGeometry(geometry)
   }

@@ -25,19 +25,19 @@ export const Nodes = {
 		type: 'LOG',
 		options: {},
 		position: {
-			x: 200,
-			y: 150,
+			x: 300,
+			y: 100,
 		},
 		color: '#282912',
 		opacity: 0.5,
 		visibility: true,
 	},
 	'$nodeB': {
-		type: 'LOG',
+		type: 'MULT',
 		options: {},
 		position: {
-			x: 200,
-			y: 350,
+			x: 300,
+			y: 300,
 		},
 		color: '#282912',
 		opacity: 0.5,
@@ -47,7 +47,7 @@ export const Nodes = {
 		type: 'SUB',
 		options: {},
 		position: {
-			x: 500,
+			x: 550,
 			y: 140,
 		},
 		color: '#282912',
@@ -58,7 +58,7 @@ export const Nodes = {
 		type: 'DIV',
 		options: {},
 		position: {
-			x: 500,
+			x: 550,
 			y: 300,
 		},
 		color: '#282912',

@@ -74,10 +74,7 @@ export const SUB = {
   output: 'Output',
   options: {
   },
-  arithmetic(...input) {
-    // TODO
-    return input[0]
-  },
+  arithmetic: math.subtract,
 }
 
 export const DIV = {
@@ -89,10 +86,7 @@ export const DIV = {
   output: 'Output',
   options: {
   },
-  arithmetic(...input) {
-    // TODO
-    return input[0]
-  },
+  arithmetic: math.dotDivide,
 }
 
 export const MULT = {
@@ -104,10 +98,7 @@ export const MULT = {
   output: 'Output',
   options: {
   },
-  arithmetic(...input) {
-    // TODO
-    return input[0]
-  },
+  arithmetic: math.dotMultiply,
 }
 
 export const AND = {
