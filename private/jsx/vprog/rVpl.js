@@ -301,14 +301,13 @@ class VPL extends React.Component{
 
         const nodeDOM = down.target.closest('g.node')
         const plugDOM = down.target.closest('g.plug')
+        const controlDOM = down.target.closest('g.control')
         const svgDOM = down.target.closest('svg')
 
-        if(plugDOM)
-          down.purpose = 'link'
-        else if(nodeDOM)
-          down.purpose = 'move'
-        else
-          down.purpose = 'none'
+        down.purpose = nodeDOM ? 'move' : 'none'
+        
+        down.purpose = plugDOM ? 'link' : down.purpose
+        down.purpose = controlDOM ? 'none' : down.purpose
         
         switch(down.purpose) {
           case ('move'): {
@@ -1337,11 +1336,11 @@ class VPL extends React.Component{
                 {nodeName}
               </text>
 
-              {/* TODO: modify slider width */}
-              {/*
-              <Slider position={p} index={layerName}/> 
-              <Panel color1={color1} color2={color2} position={p} index={layerName}/>
-              */}
+              <g className="control">
+                {/* TODO: modify slider width */}
+                <Slider index={nodeKey}/>
+                <Panel color={color} index={nodeKey}/>
+              </g>
 
           </g>
           );      

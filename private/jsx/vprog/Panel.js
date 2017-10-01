@@ -13,8 +13,7 @@ class Panel extends React.Component{
             visible: true,
             // color1: '#000000',
             // color2: '#000000',
-            color1: this.props.color1,
-            color2: this.props.color2,
+            color: this.props.color,
         }
 
         this.changeColor = this.changeColor.bind(this);
@@ -30,6 +29,14 @@ class Panel extends React.Component{
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
 
+        if(pixels){
+            this.setState({
+                visible: (pixels.material.uniforms.show.value == 1),
+                color: '#' + pixels.material.uniforms.startColor.value.getHexString(),
+            }) 
+        }
+
+        /*
         if (pixels.material) {
             this.setState({
                 visible: (pixels.material.uniforms.show.value == 1),
@@ -37,19 +44,37 @@ class Panel extends React.Component{
                 color2: '#' + pixels.material.uniforms.endColor.value.getHexString(),
             })
         }
+        */
 
+    }
+
+    componentDidMount() {
+
+        // TODO: color1 to color
+        act.sideUpdateLayer(this.props.index, 'color1', this.props.color)
+
+        // Get geometry
+        let pixels = this.props.geometries[this.props.index]
+
+        if(pixels){
+            pixels.material.uniforms.startColor.value.set(this.props.color)
+            pixels.material.uniforms.endColor.value.set(this.props.color)
+        }
     }
 
     changeColor(e){
         console.log('changeColor(e)', e.target.value)
 
-        act.sideUpdateLayer(this.props.index, e.target.name, e.target.value)
+        // TODO: color1 to color
+        act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
 
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
 
-        pixels.material.uniforms.startColor.value.set(e.target.value)
-        pixels.material.uniforms.endColor.value.set(e.target.value)
+        if(pixels){
+            pixels.material.uniforms.startColor.value.set(e.target.value)
+            pixels.material.uniforms.endColor.value.set(e.target.value)
+        }
 
         /* // using two color options for each layer
         if (e.target.name == 'color1'){
@@ -67,10 +92,13 @@ class Panel extends React.Component{
 
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
-        if (this.state.visible){
-            pixels.material.uniforms.show.value = 0.0
-        } else {
-            pixels.material.uniforms.show.value = 1.0
+
+        if(pixels){
+            if (this.state.visible){
+                pixels.material.uniforms.show.value = 0.0
+            } else {
+                pixels.material.uniforms.show.value = 1.0
+            }
         }
     }
 
@@ -107,9 +135,10 @@ class Panel extends React.Component{
             
         return(
             <g>
-                <foreignObject x={this.props.position.x + 20} y={this.props.position.y + 95} style={{cursor: 'pointer'}}>
+                {/*<foreignObject x={this.props.position.x + 20} y={this.props.position.y + 95} style={{cursor: 'pointer'}}>*/}
+                <foreignObject x={20} y={95} style={{cursor: 'pointer'}}>
                     <div style={{position: 'fixed', display: 'flex', width: '157px', justifyContent: 'space-around', alignItems: 'center'}}>
-                        <input type="color" name="color1" value={this.state.color1} onChange={this.changeColor} />
+                        <input type="color" name="color" value={this.state.color} onChange={this.changeColor} />
                         {/* <input type="color" name="color2" value={this.state.color2} onChange={this.changeColor} /> */}
                         <div onClick={this.toggleVisibility}>
                             {
