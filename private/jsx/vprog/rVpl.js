@@ -146,7 +146,9 @@ class VPL extends React.Component{
 
     this.nodeSVG = this.nodeSVG.bind(this);
 
+    /*
     this.getNotZero = this.getNotZero.bind(this);
+    */
 
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
@@ -671,8 +673,9 @@ class VPL extends React.Component{
 
 
     // TODO: save computed data to this state
-    // TODO: refactoring this function. some node have over than 3 inputs ,or it has different input order.
+    // TODO: refactoring this function. some node has different input order.
     const computeNodeThenAddVoxel = (node, inputNodes)=>{
+      /*
       const geometries = this.newProps.map.geometries
       console.log(`S compute ${node.type} ${node.nodeKey}`, geometries, inputNodes, node)
       let geometry1 = geometries[inputNodes[0]]
@@ -681,6 +684,15 @@ class VPL extends React.Component{
 
       if(geometry1 && geometry2)
         this.evalArithmeticNode(geometry1, geometry2, node, NodeType[node.type].arithmetic)
+      */
+
+      const mapGeometries = this.newProps.map.geometries
+      const mathFunction = NodeType[node.type].arithmetic
+      let inputGeometries = inputNodes.map(index => mapGeometries[index])
+      console.log(`computeNodeThenAddVoxel() ${node.type} ${node.nodeKey}`, {node, inputNodes, mapGeometries, inputGeometries})
+
+      if((inputGeometries.filter(f => f).length) == (inputNodes.length))
+        this.evalArithmeticNode(node, mathFunction, inputGeometries) 
     }
 
     Object.entries(nodes).map(([nodeKey, node]) => {
@@ -1019,7 +1031,6 @@ class VPL extends React.Component{
       return closeEnoughNodes;
       
   }
-  */
 
   getNotZero(number1, number2) {
       if (number1 != 0) {
@@ -1030,6 +1041,7 @@ class VPL extends React.Component{
           return 0;
       }
   }
+  */
 
   createNodeObject(node, key){
       // console.log(`createNodeObject(${node}, ${key})`, node)
@@ -1113,22 +1125,31 @@ class VPL extends React.Component{
   }
 
   
-  // TODO: refactoring this function. some node have over than 3 inputs ,or it has different input order.
-  evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
-    const arraySize = geometry1.geometry.attributes.size.count;
+  // TODO: refactoring this function. some node has different input order.
+  evalArithmeticNode(node, mathFunction, geometries) {
+  // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
+    console.log(`evalArithmeticNode()`, {node, mathFunction, geometries})
+    const arraySize = geometries[0].geometry.attributes.size.count;
     const hashedData = {};
     const allIndices = this.newProps.layers[0].allIndices;
 
+    const amplifier = 3
+
+
+    // let transArray1 = geometry1.geometry.attributes.translation.array;
+    // let transArray2 = geometry2.geometry.attributes.translation.array;
+    let transArray = geometries.map((geometry) => geometry.geometry.attributes.translation.array)
+
+    // let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
+    // let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
+    let geomArray = geometries.map((geometry) => Array.from(geometry.geometry.attributes.size.array))
+
+    // let sizeArray = mathFunction(geomArray1, geomArray2);
+    let sizeArray = mathFunction(geomArray)
+
+    /*
     const translationArray = new Float32Array(arraySize*3);
-
-    let transArray1 = geometry1.geometry.attributes.translation.array;
-    let transArray2 = geometry2.geometry.attributes.translation.array;
-
-    let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
-    let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
-    let sizeArray = mathFunction(geomArray1, geomArray2);
-
-    for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){
+    for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
         translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
         translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
         translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
@@ -1138,6 +1159,23 @@ class VPL extends React.Component{
             hashedData[j] = hashedArray;
         }
     }
+    */
+
+    const translationArray = new Float32Array(arraySize * amplifier);
+    for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++){
+      
+      for (let k = amplifier - 1; k >= 0; k--) {
+        // `.find(f=> f != 0) || 0` replace `getNotZero()`
+        translationArray[i + k] = transArray.map(ta => ta[i + k]).find(f=> f != 0) || 0
+      }
+
+      if (allIndices.includes(j)) {
+        let hashedArray = Array(8)
+        hashedArray[3] = sizeArray[j]
+        hashedData[j] = hashedArray
+      }
+    }
+
 
     let min = math.min(Array.from(sizeArray));
     let max;
@@ -1148,10 +1186,10 @@ class VPL extends React.Component{
         max = math.max(sizeArray);
     }    
     
-    const valDiff = geometry1.highBnd-geometry1.lowBnd;
+    const valDiff = geometries[0].highBnd-geometries[0].lowBnd;
     const remap = function(x) {
         if (x != 0) {
-            return (valDiff)*((x-min)/(max-min))+geometry1.lowBnd;
+            return (valDiff)*((x-min)/(max-min))+geometries[0].lowBnd;
         } else {
             return 0;
         }
@@ -1176,10 +1214,11 @@ class VPL extends React.Component{
         name: node.name,
         type: node.type,
         layerName: node.nodeKey,
-        length: Math.max(geometry1.numElements, geometry2.numElements),
+        // length: Math.max(geometry1.numElements, geometry2.numElements),
+        length: Math.max(...geometries.map(g => g.numElements)),
         hashedData: hashedData, 
         allIndices: allIndices,
-        propVals: names,
+        // propVals: names, // CHECK: is this necessary?
         color1: node.color,
         color2: node.color,
     }
