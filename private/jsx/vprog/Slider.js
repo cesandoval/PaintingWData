@@ -49,7 +49,8 @@ class Slider extends React.Component{
 
         console.log(remap(opacityValue))
         let geometry = this.props.geometries[this.props.index];
-        geometry.material.uniforms.transparency.value = parseFloat(remap(opacityValue)) / 100.0;
+        if(geometry)
+            geometry.material.uniforms.transparency.value = parseFloat(remap(opacityValue)) / 100.0
 
         event.stopPropagation();
         this.dp.held = false;

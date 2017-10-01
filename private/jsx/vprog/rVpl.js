@@ -245,7 +245,7 @@ class VPL extends React.Component{
         x: 50 + 200 * (nodesLength / 4),
         y: 50 + 100 * (nodesLength % 4),
       },
-      color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.4').toString(),
+      color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.6').toString(),
       opacity: 0.5,
       visibility: true,
     }

@@ -24,7 +24,7 @@ class Panel extends React.Component{
 
     componentWillReceiveProps(props){
         this.props = props
-        console.log('[Panel] componentWillReceiveProps()', props)
+        console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
 
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
@@ -75,6 +75,10 @@ class Panel extends React.Component{
             pixels.material.uniforms.startColor.value.set(e.target.value)
             pixels.material.uniforms.endColor.value.set(e.target.value)
         }
+
+        this.setState({
+            color: e.target.value,
+        }) 
 
         /* // using two color options for each layer
         if (e.target.name == 'color1'){
