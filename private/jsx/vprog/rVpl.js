@@ -52,12 +52,6 @@ function observer(label = '') {
   }
 }
 
-const body = document.body;
-const mouseDown$ = Rx.Observable.fromEvent(body, "mousedown");
-const mouseUp$ = Rx.Observable.fromEvent(body, 'mouseup');
-const mouseMove$ = Rx.Observable.fromEvent(body, 'mousemove');
-const empty$ = Rx.Observable.empty()
-
 
 class VPL extends React.Component{
   constructor(props){
@@ -294,6 +288,14 @@ class VPL extends React.Component{
     $('svg').on('mousedown', this.windowMouseDown);// TODO: revisit this, do you have to listen to the event 
     $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
     */
+
+    const bodyDOM = document.body
+    const vplDOM = document.querySelector('svg.vpl')
+    const mouseDown$ = Rx.Observable.fromEvent(vplDOM, "mousedown")
+    const mouseUp$ = Rx.Observable.fromEvent(vplDOM, 'mouseup')
+    const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove')
+    const empty$ = Rx.Observable.empty()
+    
 
     this.mouseTracker$ = mouseDown$
       .do((down)=>{console.log(down)})
