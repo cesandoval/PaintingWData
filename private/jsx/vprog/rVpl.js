@@ -452,6 +452,36 @@ class VPL extends React.Component{
     this.updateNodes()
   }
 
+  deleteNode = (nodeKey) => {
+    console.log(`deleteNode(${nodeKey})`)
+
+    const nodes = this.state.Nodes
+    delete nodes[nodeKey]
+
+    const links = this.state.Links
+
+    const toNode = nodeKey
+    const srcNodes = Object.values(links.inputs[toNode] || {})
+    srcNodes.map(srcNode => {
+      delete links.outputs[srcNode][toNode]
+    })
+    delete links.inputs[toNode]
+
+    const srcNode = nodeKey
+    const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
+    toNodesToPlugs.map(([toNode, toPlug]) => {
+        delete links.inputs[toNode][toPlug]
+    })
+
+    delete links.outputs[srcNode]
+
+    this.setState({
+      Nodes: nodes, 
+      Links: links, 
+    })
+    this.linkThenComputeNode()
+  }
+
   linkNode = ({srcNode, toNode, toInput}) => {
     console.log('linkNode()', srcNode, toNode, toInput)
 
@@ -1375,7 +1405,7 @@ class VPL extends React.Component{
               <g className="control">
                 {/* TODO: modify slider width */}
                 <Slider index={nodeKey}/>
-                <Panel color={color} index={nodeKey}/>
+                <Panel color={color} index={nodeKey} deleteNode={() => this.deleteNode(nodeKey)}/>
               </g>
 
           </g>
