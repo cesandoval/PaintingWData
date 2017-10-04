@@ -12,7 +12,10 @@ class OptionsMapStyle extends React.Component {
         super(props);
 
         // default mapbox.light
-        this.state = { mapboxStyle: this.props.mapStyle};
+        this.state = { 
+            mapboxStyle: this.props.mapStyle,
+            show: true,
+        }
 
         this.changeMapStyle = this.changeMapStyle.bind(this);
         this.updateMapStyle = this.updateMapStyle.bind(this);
@@ -22,17 +25,14 @@ class OptionsMapStyle extends React.Component {
     start() {
         if(this.updateMapStyle(this.state.mapboxStyle))
             console.log('started')
-        // else    
-            // setTimeout(()=> {this.start()}, 1000)
+        else    
+            setTimeout(()=> {this.start()}, 1500)
     }
     updateMapStyle(style) {
         window.mapboxStyle = style
 
         const started = window.refreshTiles && window.updateTiles && true
         // console.log(`updateMapStyle(${style})`, started)
-
-        // if(window.renderSec)
-            // window.renderSec(1, 'updateMapStyle')
 
         if(started) {
             try{
@@ -62,10 +62,16 @@ class OptionsMapStyle extends React.Component {
         // const mapStyle = this.state.mapboxStyle
         const mapStyle = this.state.mapboxStyle == 'empty' ? this.props.mapStyle : this.state.mapboxStyle
 
-        // if(show)
-        //     this.changeMapStyle(mapStyle)
-        // else
-        //     this.updateMapStyle('empty')
+        if(show != this.state.show) {
+            this.setState({ show: show })
+
+            if(show) {
+                this.changeMapStyle(mapStyle)
+            }
+            else {
+                this.updateMapStyle('empty')
+            }
+        }
 
     }
 
