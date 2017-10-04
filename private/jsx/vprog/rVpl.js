@@ -456,6 +456,11 @@ class VPL extends React.Component{
     console.log(`deleteNode(${nodeKey})`)
 
     const nodes = this.state.Nodes
+    
+    // prevent to delete dataset node.
+    if(nodes[nodeKey].type == 'DATASET')
+      return false;
+
     delete nodes[nodeKey]
 
     const links = this.state.Links
@@ -479,6 +484,9 @@ class VPL extends React.Component{
       Nodes: nodes, 
       Links: links, 
     })
+    
+    // force remove the node geometry on the map.
+    Action.mapRemoveGeometry(nodeKey)
     this.linkThenComputeNode()
   }
 
