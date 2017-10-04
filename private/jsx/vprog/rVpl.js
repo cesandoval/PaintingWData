@@ -294,8 +294,9 @@ class VPL extends React.Component{
     const mouseDown$ = Rx.Observable.fromEvent(vplDOM, "mousedown")
     const mouseUp$ = Rx.Observable.fromEvent(vplDOM, 'mouseup')
     const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove')
+    const mouseLeave$ = Rx.Observable.fromEvent(vplDOM, 'mouseleave')
     const empty$ = Rx.Observable.empty()
-    
+
 
     this.mouseTracker$ = mouseDown$
       .do((down)=>{console.log(down)})
@@ -327,10 +328,10 @@ class VPL extends React.Component{
         console.log('down purpose : ', down.purpose, down.info)
 
         return mouseMove$
-          .takeUntil(mouseUp$)
+          .takeUntil(mouseUp$.merge(mouseLeave$))
           .map(move => ({move, down}))
           .combineLatest( // get the lastest mouse up event
-            mouseUp$.mapTo(true).startWith(false).take(2),
+            mouseUp$.merge(mouseLeave$).mapTo(true).first().startWith(false),
             ({move, down}, up) => ({move, down, up})
           )
 
