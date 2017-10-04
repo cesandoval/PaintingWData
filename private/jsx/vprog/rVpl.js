@@ -516,11 +516,36 @@ class VPL extends React.Component{
     this.setState({tempLink: {from, to}})
   }
 
-  createLink = ({linkKey, from, to}) => {
+  createLink = ({linkKey, linkInfo, from, to}) => {
     const linkRef = 'link_' + linkKey
     return (
-        <path markerEnd="url(#Triangle)" ref={linkRef} key={linkKey} className={"link"} d={this.diagonal(from, to)}></path>
+        <path 
+          markerEnd="url(#Triangle)"
+          ref={linkRef}
+          key={linkKey}
+          className={"link"}
+          d={this.diagonal(from, to)}
+          data-src-node={linkInfo.srcNode}
+          data-to-node={linkInfo.toNode}
+          onClick={this.deleteLink}
+        ></path>
     );
+  }
+
+  deleteLink = (event) => {
+    const linkDOM = event.target
+    const srcNode = linkDOM.getAttribute('data-src-node')
+    const toNode = linkDOM.getAttribute('data-to-node')
+
+    const links = this.state.Links
+
+    const toPlug = links.outputs[srcNode][toNode]
+
+    delete links.outputs[srcNode][toNode]
+    delete links.inputs[toNode][toPlug]
+
+    this.setState({Links: links})
+    this.linkThenComputeNode()
   }
 
   createLinks = () => {
@@ -531,22 +556,23 @@ class VPL extends React.Component{
       return '';
 
     return Object.entries(outputs)
-      .map(([outputNode, input], index) => {
+      .map(([srcNode, input], index) => {
 
         const svgRect = svgDOM.getBoundingClientRect()
 
-        const outputNodeDOM = this.refs['node_' + outputNode]
-        const outputPlugDOM = this.refs[`${outputNode}_plug_output`]
+        const srcNodeDOM = this.refs['node_' + srcNode]
+        const outputPlugDOM = this.refs[`${srcNode}_plug_output`]
 
-        console.log('outputNodeDOM', outputNodeDOM)
+        // console.log('srcNodeDOM', srcNodeDOM)
 
         return Object.entries(input)
-          .map(([inputNode, inputKey], index) => {
+          .map(([toNode, inputKey], index) => {
             
-            const inputNodeDOM = this.refs['node_' + inputNode]
-            const inputPlugDOM = this.refs[`${inputNode}_plug_input_${inputKey}`]
+            const toNodeDOM = this.refs['node_' + toNode]
+            const inputPlugDOM = this.refs[`${toNode}_plug_input_${inputKey}`]
             
-            const linkKey = `${outputNode}_${inputNode}`
+            const linkKey = `${srcNode}_${toNode}`
+            const linkInfo = {srcNode, toNode}
 
             const outputPlugRect = outputPlugDOM.getBoundingClientRect()
             const inputPlugRect = inputPlugDOM.getBoundingClientRect()
@@ -561,7 +587,7 @@ class VPL extends React.Component{
             }
 
             console.log('createLink({linkKey, from, to})', linkKey, from, to)
-            return this.createLink({linkKey, from, to})
+            return this.createLink({linkKey, linkInfo, from, to})
           })
       })
   }
