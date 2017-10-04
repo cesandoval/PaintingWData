@@ -355,6 +355,13 @@ class VPL extends React.Component{
           y: Number(down.info.y) + (move.clientY - down.clientY),
         })
       )
+      .map(({nodeKey, x, y}) => ({
+          nodeKey,
+          // prevent the position be set to a negative number.
+          x: (x < 0) ? 0 : x,
+          y: (y < 0) ? 0 : y,
+        })
+      )
       .do(({nodeKey, x, y}) => {
         // console.log("nodeMove", {nodeKey, x, y})
         const newPosition = ({x, y})
