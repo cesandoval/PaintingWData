@@ -6,14 +6,17 @@ import * as Action from '../store/actions.js';
 import * as consts  from '../store/consts.js';
 
 import Slider from './Slider.js';
+import Panel from './Panel.js';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
+
+// TODO: typo fix (addSubractionNode -> addSubtractionNode)
 
 class VPL extends React.Component{
   constructor(props){
     super(props);
     this.width = 200;
-    this.height = 100;
+    this.height = 130;
     this.style = {
       rx: '2px',
       ry: '2px',
@@ -80,13 +83,12 @@ class VPL extends React.Component{
     this.OrNode     = this.OrNode.bind(this);
     this.NotNode     = this.NotNode.bind(this);
 
+    this.nodeSVG = this.nodeSVG.bind(this);
+
+
     this.getNotZero = this.getNotZero.bind(this);
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
-    this.divideNodes = this.divideNodes.bind(this);
-    this.multiplyNodes = this.multiplyNodes.bind(this);
-    this.addNodes = this.addNodes.bind(this);
-    this.subtractNodes = this.subtractNodes.bind(this);
     this.logNode = this.logNode.bind(this);
 
     // this is just for debugging ...
@@ -267,8 +269,9 @@ class VPL extends React.Component{
       }
     this.dp.nodeForConst = null;
 
-    if(window.renderSec)
-      window.renderSec(0.5, 'vpl mouseUp') 
+    // if(window.renderSec)
+      // window.renderSec(0.5, 'vpl mouseUp') // might be not necessary
+
   }
 
   handleMouseDown(event){
@@ -478,10 +481,13 @@ class VPL extends React.Component{
   }
 
   createNodeObject(node, key){
+      // console.log(`createNodeObject(${node}, ${key})`, node)
+
       let p = node.position;
       let property = node.property;
       let userLayerName = node.userLayerName;
       let name = node.name;
+      
       return(
         <g className = {"node"}
            id = {node.ref}
@@ -493,22 +499,22 @@ class VPL extends React.Component{
            transform = {`translate(${node.translate.x},${node.translate.y})`}
         >
         {
-           this.decideNodeType(node.type, p, property, userLayerName, name)
+           this.decideNodeType(node)
         }
         </g>
       );
   }
 
-  evaluateNodeType(type, geometry1, geometry2={}){
-    switch(type){
+  evaluateNodeType(node, geometry1, geometry2={}, names=[]){
+    switch(node.type){
         case consts.MULTIPLICATION_NODE:
-            return  this.evalArithmeticNode(geometry1, geometry2, this.multiplyNodes, type);
+            return  this.evalArithmeticNode(geometry1, geometry2, node, math.dotMultiply, names);
         case consts.DIVISION_NODE:
-                return this.evalArithmeticNode(geometry1, geometry2, this.divideNodes, type);
+            return this.evalArithmeticNode(geometry1, geometry2, node, math.dotDivide, names);
         case consts.SUBTRACTION_NODE:
-                return this.evalArithmeticNode(geometry1, geometry2, this.subtractNodes, type);
-        // case consts.LOG_NODE:
-        //         return this.evalArithmeticNode(geometry1, geometry2, this.logNode, type);
+            return this.evalArithmeticNode(geometry1, geometry2, node, math.subtract, names);
+        case consts.LOG_NODE:
+            return this.evalArithmeticNode(geometry1, geometry2, node, this.logNode, names);
         // case consts.AND_NODE:
         //     return  this.evalAndNode(p);
         // case consts.OR_NODE:
@@ -517,58 +523,70 @@ class VPL extends React.Component{
         //     return  this.evalNotNode(p);
         default:
             // This is for addition
-            return  this.evalArithmeticNode(geometry1, geometry2, this.addNodes, type);
+            return  this.evalArithmeticNode(geometry1, geometry2, node, math.add, names);
     }
   };
 
-  divideNodes(geomVal1, geomVal2) {
-      let result = geomVal1 / geomVal2;
-      if (Number.POSITIVE_INFINITY == result) {
-          return 0;
-      } else { 
-        return geomVal1 / geomVal2;
-      }
-  }
+  logNode(geomArray1, geomArray2) {
+    const valDiff = 10;
 
-  multiplyNodes(geomVal1, geomVal2) {
-      return geomVal1 * geomVal2;
-  }
+    let min = math.min(Array.from(geomArray1));
+    let max = math.max(Array.from(geomArray1));
 
-  addNodes(geomVal1, geomVal2) {
-      return geomVal1 + geomVal2;
-  }
+    const remap = function(x) {
+        if (x != 0) {
+            return (valDiff)*((x-min)/(max-min))+min;
+        } else {
+            return 0;
+        }
+    }
 
-  subtractNodes(geomVal1, geomVal2) {
-      return geomVal1 - geomVal2;
-  }
-
-  logNode(geomVal1, geomVal2) {
-      return Math.log(geomVal1)
+    let newSizeArray = math.log(geomArray1.map(remap));
+    let newMin = math.min(newSizeArray.filter(item => item !== Number.NEGATIVE_INFINITY));
+    const notInfinity = function(x) {
+        if (x == Number.NEGATIVE_INFINITY) {
+            return newMin;
+        } else {
+            return x;
+        }
+    }
+    return newSizeArray.map(notInfinity);
   }
 
   
-  evalArithmeticNode(geometry1, geometry2, nodeOperation, nodeName) {
-    console.log(geometry1)
-    console.log(geometry2)
-
+  evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
     const arraySize = geometry1.geometry.attributes.size.count;
-    // const sizeArray = new Float32Array(arraySize); 
-    const originalSizeArray = new Float32Array(arraySize); 
+    const hashedData = {};
+    const allIndices = this.newProps.layers[0].allIndices;
+
     const translationArray = new Float32Array(arraySize*3);
 
-    let max = Number.NEGATIVE_INFINITY;
-    let min = Number.POSITIVE_INFINITY;
     let transArray1 = geometry1.geometry.attributes.translation.array;
     let transArray2 = geometry2.geometry.attributes.translation.array;
+
+    let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
+    let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
+    let sizeArray = mathFunction(geomArray1, geomArray2);
+
     for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){
         translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
         translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
         translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-        let currVal = nodeOperation(geometry1.geometry.attributes.size.array[j], geometry2.geometry.attributes.size.array[j]);
-        if (currVal<min) {min = currVal;};
-        if (currVal>max) {max = currVal;};
-        originalSizeArray[j] = currVal;
+        if (allIndices.includes(j)) {
+            let hashedArray = Array(8);
+            hashedArray[3] = sizeArray[j];
+            hashedData[j] = hashedArray;
+        }
     }
+
+    let min = math.min(Array.from(sizeArray));
+    let max;
+
+    if (node.type == 'DIVISION_NODE') {
+        max = math.max(sizeArray.filter(item => item !== Number.POSITIVE_INFINITY));
+    } else {
+        max = math.max(sizeArray);
+    }    
     
     const valDiff = geometry1.highBnd-geometry1.lowBnd;
     const remap = function(x) {
@@ -579,7 +597,7 @@ class VPL extends React.Component{
         }
     }
 
-    let remapOriginalSize = originalSizeArray.map(remap);
+    let remapOriginalSize = sizeArray.map(remap);
     let remapSize = remapOriginalSize.slice(0);
     let props = {
         size: remapOriginalSize,
@@ -587,8 +605,6 @@ class VPL extends React.Component{
     }
 
     let geometry = {
-        startColor: this.newProps.layers[0].color1,
-        endColor: this.newProps.layers[0].color2,
         minMax: this.newProps.layers[0].geojson.minMax,
         addressArray: this.newProps.map.geometries[Object.keys(this.newProps.map.geometries)[0]].addresses,
         properties: props,
@@ -597,37 +613,87 @@ class VPL extends React.Component{
         bounds: this.newProps.layers[0].bounds,
         shaderText: this.newProps.layers[0].shaderText,
         n: this.newProps.layers.length + 1,
-        name: nodeName
+        name: node.name,
+        type: node.type,
+        layerName: node.layerName,
+        length: Math.max(geometry1.numElements, geometry2.numElements),
+        hashedData: hashedData, 
+        allIndices: allIndices,
+        propVals: names,
+        color1: node.color1,
+        color2: node.color2,
     }
     this.addVoxelGeometry(geometry)
   }
 
 
-  decideNodeType(type, p, property, userLayerName, name){
+  decideNodeType({ color1, color2, layerName, type, position, property, userLayerName, name }){
+    console.log(`decideNodeType(${type}, ${position}, ${property}, ${userLayerName}, ${name})`)
+    const p = position
+
     switch(type){
         case consts.LAYER_NODE:
             return  this.LayerNode(p, property, userLayerName, name);
         case consts.MULTIPLICATION_NODE:
-            return  this.MultiplicationNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            // return  this.MultiplicationNode(p);
         case consts.SUBTRACTION_NODE:
-            return this.SubtractionNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            // return this.SubtractionNode(p);
         case consts.DIVISION_NODE:
-                return this.DivisionNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            // return this.DivisionNode(p);
         case consts.LOG_NODE:
-                return this.LogarithmNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
+            // return this.LogarithmNode(p);
         case consts.AND_NODE:
-            return  this.AndNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            // return  this.AndNode(p);
         case consts.OR_NODE:
-            return  this.OrNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
+            // return  this.OrNode(p);
         case consts.NOT_NODE:
-            return  this.NotNode(p);
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
+            // return  this.NotNode(p);
+        case consts.ADDITION_NODE: 
+            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
         default:
-            return  this.AdditionNode(p);
+            // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
+            // return  this.AdditionNode(p);
     }
   };
 
 
+  nodeSVG({color1, color2, p, layerName, inputNum}){
+      console.log(`nodeSVG({${color1}, ${color2}, ${p}, ${layerName}, ${inputNum}})`, p)
+      return(
+          <g>
+              <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
+              x = {p.x} y = {p.y} ></rect>
+              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
+              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>I</text>
+              {
+                (inputNum > 1) &&
+                (<g>
+                    <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
+                    <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>I</text>
+                </g>)
+              }
+              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
+              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
+              <text className = {"nodeText"} x = {p.x + 102} y = {p.y + 25} fontSize={"16"} style={{textAnchor: 'middle'}}>
+                      {layerName}
+              </text>
+
+              <Panel color1={color1} color2={color2} position={p} index={layerName}/>
+              <Slider position={p} index={layerName}/>
+          </g>
+          );
+  }
+
+
   AdditionNode(p){
+      console.log(p)
       return(
        <g>
             <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
@@ -804,6 +870,7 @@ class VPL extends React.Component{
                     {property}
             </text>
             <Slider position={p} index={name}/>
+            <Panel position={p} index={name}/>
         </g>
     ); 
   }
@@ -861,12 +928,55 @@ class VPL extends React.Component{
       }
   }
 
-  addNode(nodeType){
-    // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType('SUBTRACTION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
+  addNode(type){
+    // TODO: WIP
 
-    Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, type: nodeType,  position: this.getRandomPosition(), translate: {x: 0, y: 0}});
+    const color10 = d3.scale.category10().range(); // d3.js v3
+    // shuffle the color10
+    for (let i = color10.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [color10[i - 1], color10[j]] = [color10[j], color10[i - 1]];
+    }
+
+    let color1 = color10[(this.newProps.layers.length + 1) % 10];
+    let color2 = color1
+    // let color2 = d3.rgb(color1).brighter().toString()
+
+    let currentLayers = [];
+    for (let i=0; i < this.props.layers.length; i++) {
+        currentLayers.push(this.props.layers[i].name);
+    }
+    let layerName
+    if (! currentLayers.includes(type)) {
+        layerName = type;
+    } else {
+        for (let layerNum in currentLayers) {
+            if (currentLayers[layerNum].startsWith(type + '_')){
+                let n = currentLayers[layerNum].lastIndexOf("_");
+                let layerIndex = currentLayers[layerNum].substring(n+1);
+
+                if (!isNaN(layerIndex)) {
+                    let newLayerIndex = parseInt(currentLayers[layerNum].slice(n+1))+1;
+                    layerName = currentLayers[layerNum].slice(0,n+1)+newLayerIndex;
+                }
+            } else {
+                layerName = type + '_1';
+            }
+        }
+    }
+
+    const node = {
+        type,
+        layerName,
+        color1,
+        color2,
+    }
+
+    // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
+    this.evaluateNodeType(node, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
+    // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
+    
+    Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }
 
   addAdditionNode(){
@@ -942,9 +1052,24 @@ class VPL extends React.Component{
     const circle = new THREE.CircleBufferGeometry(1, 20);
     const otherArray = [];
 
-    const P = new PaintGraph.Pixels(map, circle, otherArray, geometry.startColor, geometry.endColor, geometry.minMax, 
+    const color1 = geometry.color1
+    const color2 = geometry.color2
+
+    
+    // let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
+    // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
+
+    const P = new PaintGraph.Pixels(map, circle, otherArray, color1, color2, geometry.minMax, 
         geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
-    Action.mapAddGeometry(geometry.name, P);
+    Action.mapAddGeometry(geometry.layerName, P);
+
+    let geoJSON = {
+        minMax: geometry.minMax,
+        length: geometry.length,
+        hashedData: geometry.hashedData
+    };
+    Action.sideAddLayer(createLayer(geometry.layerName, geometry.propVals.toString(), true, 
+        color1, color2, geoJSON, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, geometry.allIndices, geometry.shaderText, geometry.layerName))
   }
 
   render(){
@@ -953,7 +1078,7 @@ class VPL extends React.Component{
             <div className = "row">
             <div className = "col-md-10"></div>
             <div className = "col-md-2">
-              <DropdownButton title={"Add Node"}  id={`dropdown-basic-1`}>
+              <DropdownButton title={"Add Node"}  id={`add-node-dropdown`}>
                 <MenuItem onClick = {this.addAdditionNode}>Addition Node</MenuItem>
                 <MenuItem onClick = {this.addSubractionNode}>Subtraction Node</MenuItem>
                 <MenuItem onClick = {this.addMultiplicationNode}>Multication Node</MenuItem>
@@ -981,6 +1106,10 @@ class VPL extends React.Component{
     );
   }
 }
+
+const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
+    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
+})
 
 const mapStateToProps = (state) =>{
     return {nodes: state.vpl.nodes, links: state.vpl.links, map: state.map, layers: state.sidebar.layers};
