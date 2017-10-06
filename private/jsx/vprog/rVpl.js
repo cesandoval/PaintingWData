@@ -558,6 +558,7 @@ class VPL extends React.Component{
     const linkRef = 'link_' + linkKey
     return (
         <path 
+          style={{cursor: 'pointer'}}
           markerEnd="url(#Triangle)"
           ref={linkRef}
           key={linkKey}
