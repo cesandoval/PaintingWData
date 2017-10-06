@@ -111,6 +111,20 @@ export const MULT = {
   },
 }
 
+export const ADD = {
+  fullName: 'Addition',
+  inputs: {
+    'Input1': 'I',
+    'Input2': 'I',
+  },
+  output: 'Output',
+  options: {
+  },
+  arithmetic: (inputs, options = {}) => {
+    return math.add(...inputs)
+  },
+}
+
 export const AND = {
   fullName: 'And',
   inputs: {
