@@ -544,6 +544,18 @@ class VPL extends React.Component{
 
   }
 
+  updateNodeOption = (nodeKey, attr, value) => {
+    const nodes = this.state.Nodes
+    const newValue = prompt(`Please input a value for ${attr}`, value);
+
+    if(!_.isEmpty(newValue)){
+      console.log(`updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`)
+
+      nodes[nodeKey].options[attr] = newValue
+      this.setState({Nodes: nodes})
+      this.linkThenComputeNode()
+    }
+  }
   createTempLink = () => {
     return (
         <path markerEnd="url(#Triangle)" ref="tempLink" key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
@@ -762,11 +774,14 @@ class VPL extends React.Component{
 
       const mapGeometries = this.newProps.map.geometries
       const mathFunction = NodeType[node.type].arithmetic
+      const options = Object.assign(NodeType[node.type].options, node.options)
+      
       let inputGeometries = inputNodes.map(index => mapGeometries[index])
-      console.log(`computeNodeThenAddVoxel() ${node.type} ${node.nodeKey}`, {node, inputNodes, mapGeometries, inputGeometries})
+
+      console.log(`computeNodeThenAddVoxel() ${node.type} ${node.nodeKey}`, {node, inputNodes, mapGeometries, inputGeometries, options})
 
       if((inputGeometries.filter(f => f).length) == (inputNodes.length))
-        this.evalArithmeticNode(node, mathFunction, inputGeometries) 
+        this.evalArithmeticNode(node, mathFunction, options, inputGeometries)
     }
 
     Object.entries(nodes).map(([nodeKey, node]) => {
@@ -1200,7 +1215,7 @@ class VPL extends React.Component{
 
   
   // TODO: refactoring this function. some node has different input order.
-  evalArithmeticNode(node, mathFunction, geometries) {
+  evalArithmeticNode(node, mathFunction, options, geometries) {
   // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
     console.log(`evalArithmeticNode()`, {node, mathFunction, geometries})
     const arraySize = geometries[0].geometry.attributes.size.count;
@@ -1219,7 +1234,7 @@ class VPL extends React.Component{
     let geomArray = geometries.map((geometry) => Array.from(geometry.geometry.attributes.size.array))
 
     // let sizeArray = mathFunction(geomArray1, geomArray2);
-    let sizeArray = mathFunction(geomArray)
+    let sizeArray = mathFunction(geomArray, options)
 
     /*
     const translationArray = new Float32Array(arraySize*3);
@@ -1350,13 +1365,15 @@ class VPL extends React.Component{
     // }
   };
 
-  nodeSVG({color, name, type, nodeKey}){
+  nodeSVG({color, name, type, nodeKey, options}){
       // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
 
       //const p = {x: 0, y: 0}
 
       const inputs = NodeType[type].inputs
       const output = NodeType[type].output
+      
+      const typeOptions = NodeType[type].options
 
       // const nodeName = layerName
       const nodeName = name || NodeType[type].fullName
@@ -1414,7 +1431,25 @@ class VPL extends React.Component{
               <g className="control">
                 {/* TODO: modify slider width */}
                 <Slider index={nodeKey}/>
-                <Panel color={color} index={nodeKey} deleteNode={() => this.deleteNode(nodeKey)}/>
+                <Panel color={color} index={nodeKey} deleteNode={() => {this.deleteNode(nodeKey)}}/>
+                
+                {/* NODE OPTIONS */
+                  Object.entries(typeOptions)
+                    .map(([attr, def], index) => { // 'attribute': 'default value' 
+                      const value = options[attr] || def
+                      return (
+                        <text 
+                          onClick={() => {this.updateNodeOption(nodeKey, attr, Number(value))}} 
+                          x={nodeWidth / 2} y={43 + index * 13} 
+                          fontSize={Style.fontSize.propertyName + 'px'} 
+                          style={{cursor: 'pointer', textAnchor: 'middle', fontFamily: 'Monospace', fill: '#b3b3b3',}}
+                        >
+                          {_.startCase(attr)} : {String(value).substring(0, 6)}
+                          <title>Click to edit it</title>
+                        </text>
+                      )
+                  })
+                }
               </g>
 
           </g>

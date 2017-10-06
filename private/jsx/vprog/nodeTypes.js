@@ -36,24 +36,27 @@ export const LOG = {
 	},
 	output: 'Output',
 	options: {
-		valDiff: 10,
+    maximumInterval: 10, // 'valDiff'
+    base: Math.E,
 	},
 	arithmetic: (inputs, options = {}) => {
-    const {valDiff = 10} = options
-    console.log('log inputs', inputs)
+    const {maximumInterval, base} = options
+    // console.log('log.arithmetic()', {inputs, options})
 
     let min = math.min(Array.from(inputs[0]))
     let max = math.max(Array.from(inputs[0]))
 
     const remap = (x) => {
         if (x != 0) {
-            return (valDiff)*((x-min)/(max-min))+min
+            return (Number(maximumInterval))*((x-min)/(max-min))+min
         } else {
             return 0
         }
     }
 
-    let newSizeArray = math.log(inputs[0].map(remap))
+    // let newSizeArray = math.log(inputs[0].map(remap))
+    let newSizeArray = inputs[0].map(remap).map((n) => math.log(n, base))
+
     let newMin = math.min(newSizeArray.filter(item => item !== Number.NEGATIVE_INFINITY))
     const notInfinity = (x) => {
         if (x == Number.NEGATIVE_INFINITY) {

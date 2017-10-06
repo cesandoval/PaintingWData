@@ -16,14 +16,14 @@ export const Nodes = {
 		color: String, // #RRGGBB
 		opacity: Number, // 0.0 ~ 1.0
 		visibility: Boolean,
-		// linked: [$linkKey], // TBD.
-		// output: [$linkKey], // TBD.
 	},
 	*/
 
 	'$nodeA': {
 		type: 'LOG',
-		options: {},
+		options: {
+			maximumInterval: 20,
+		},
 		position: {
 			x: 300,
 			y: 100,

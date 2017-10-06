@@ -73,7 +73,7 @@ class Slider extends React.Component{
                 onMouseUp = {this.containerMouseUp}
                 onMouseMove = {this.containerMouseMove}
                 className={"sliderContainer"}
-                transform={`translate(20, 70)`}
+                transform={`translate(20, 76)`}
             >
                 {/*
                 <rect width={160} height={"5px"} x = {this.props.position.x + 20} y ={this.props.position.y + 70}/>
