@@ -236,19 +236,33 @@ class VPL extends React.Component{
   newNodeObj = (type) => {
     const nodes = this.state.Nodes
 
+    // TODO: limit the nodes length
     const nodesLength = Object.keys(nodes).length - Object.values(nodes).filter(f => f.type == 'DATASET').length
-    
-    const init = {x: 300, y: 50 }
-    const step = {x: 250, y: 150 }
     const rows = 3
+    const cols = 3
+    
+    let init = {x: 300, y: 50 }
+    let step = {
+      x: 250 * Math.floor((nodesLength / rows)),
+      y: 150 * (nodesLength % rows),
+    }
+
+    // if the nodes length is over the limit
+    if(nodesLength >= cols * rows){
+      init = {x: 50, y: 50 + 150 * rows }
+      step = {
+        x: 100 * (nodesLength - cols * rows), 
+        y: 0,
+      }
+    }
 
     const newNode = {
       name: type,
       type: type,
       options: {},
       position: {
-        x: init.x + step.x * Math.floor((nodesLength / rows)),
-        y: init.y + step.y * (nodesLength % rows),
+        x: init.x + step.x,
+        y: init.y + step.y,
       },
       color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.6').toString(),
       opacity: 0.5,
