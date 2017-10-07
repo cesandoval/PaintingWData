@@ -49,7 +49,8 @@ class Slider extends React.Component{
 
         console.log(remap(opacityValue))
         let geometry = this.props.geometries[this.props.index];
-        geometry.material.uniforms.transparency.value = parseFloat(remap(opacityValue)) / 100.0;
+        if(geometry)
+            geometry.material.uniforms.transparency.value = parseFloat(remap(opacityValue)) / 100.0
 
         event.stopPropagation();
         this.dp.held = false;
@@ -71,9 +72,15 @@ class Slider extends React.Component{
             <g  onMouseDown = {this.containerMouseDown} 
                 onMouseUp = {this.containerMouseUp}
                 onMouseMove = {this.containerMouseMove}
-                className = {"sliderContainer"}>
+                className={"sliderContainer"}
+                transform={`translate(20, 76)`}
+            >
+                {/*
                 <rect width={160} height={"5px"} x = {this.props.position.x + 20} y ={this.props.position.y + 70}/>
                 <circle onMouseDown = {this.circleHandleMouseDown} className = {"sliderHandle"} cx = {this.props.position.x + 20} cy ={this.props.position.y + 73} r = {"8"} transform ={"translate(85, 0)"}/>
+                */}
+                <rect width={160} height={"5px"}/>
+                <circle onMouseDown={this.circleHandleMouseDown} className={"sliderHandle"} cx={0} cy ={3} r={"8"} transform={"translate(85, 0)"}/>
             </g>
         );
     }
