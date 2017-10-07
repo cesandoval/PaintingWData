@@ -19,6 +19,7 @@ export const Nodes = {
 	},
 	*/
 
+	/*
 	'$nodeA': {
 		type: 'LOG',
 		options: {
@@ -65,9 +66,11 @@ export const Nodes = {
 		opacity: 0.5,
 		visibility: true,
 	},
+	*/
 }
 
 export const Links = {
+	/*
 	inputs: { // for arithmetic iterate
 		// [$nodeKey]:{ // the node key of input 
 		// 	[inputKey]: [$nodeKey],
@@ -94,6 +97,7 @@ export const Links = {
 			'$nodeD': 'Numerator',
 		},
 	},
+	*/
 }
 
 /* links example
