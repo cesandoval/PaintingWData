@@ -15,7 +15,7 @@ module.exports = {
     /* To Be Decided */
     'no-console': 'off', // no console.log
     'no-unused-vars': 'off', // 'xxx' is defined but never used
-    'no-undef': 'off', // 'xxx' is not defined
+    // 'no-undef': 'off', // 'xxx' is not defined
     'no-case-declarations': 'off', // no declaration in case block
     'no-extra-semi': 'off', // no unnecessary semicolons
     // 'no-redeclare': 'off', // 'xxx' is already defined 
