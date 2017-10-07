@@ -189,7 +189,10 @@ class VPL extends React.Component{
 
     this.state = {
       Nodes,
-      Links,
+      Links: Object.assign({
+        inputs: {},
+        outputs: {},
+      }, Links),
       tempLink: {
         from: {x: 50, y: 50}, to: {x: 50, y: 50},
       }
@@ -203,14 +206,16 @@ class VPL extends React.Component{
 
   // create the dataset nodes if they're not exitst.
   initDatasetNode = () => {
+    // TODO: should get dataset layers from props.
     const datasets = this.props.layers
+    const nodes = this.state.Nodes
     console.log('initDatasetNode()', datasets)
 
     datasets.map( (dataset, index) => {
       console.log('dataset', dataset)
 
       // TODO: generate hash key for datasets. 
-      if(!Nodes[dataset.name]){
+      if(!nodes[dataset.name]){
         const datasetNode = this.newNodeObj('DATASET')
 
         datasetNode.position = {
@@ -219,25 +224,31 @@ class VPL extends React.Component{
         }
         datasetNode.name = dataset.name
 
-        Nodes[dataset.name] = datasetNode
+        nodes[dataset.name] = datasetNode
       }
     })
 
-    this.setState({Nodes})
+    this.setState({Nodes: nodes})
 
     return datasets.length > 0
   }
 
   newNodeObj = (type) => {
-    const nodesLength = Object.keys(Nodes).length
+    const nodes = this.state.Nodes
+
+    const nodesLength = Object.keys(nodes).length - Object.values(nodes).filter(f => f.type == 'DATASET').length
+    
+    const init = {x: 300, y: 50 }
+    const step = {x: 250, y: 150 }
+    const rows = 3
 
     const newNode = {
       name: type,
       type: type,
       options: {},
       position: {
-        x: 50 + 200 * (nodesLength / 4),
-        y: 50 + 100 * (nodesLength % 4),
+        x: init.x + step.x * Math.floor((nodesLength / rows)),
+        y: init.y + step.y * (nodesLength % rows),
       },
       color: d3.hsl(this.getRandomInt(0, 360), '0.6', '0.6').toString(),
       opacity: 0.5,
@@ -442,14 +453,12 @@ class VPL extends React.Component{
     */
   }
 
-  updateNodes = () => {
-    this.setState({Nodes})
-  }
-
   moveNode = ({nodeKey, newPosition}) => {
-    console.log('moveNode()', {nodeKey, newPosition})
-    Nodes[nodeKey].position = newPosition
-    this.updateNodes()
+    // console.log('moveNode()', {nodeKey, newPosition})
+    const nodes = this.state.Nodes
+    nodes[nodeKey].position = newPosition
+
+    this.setState({Nodes: nodes})
   }
 
   deleteNode = (nodeKey) => {
@@ -1751,10 +1760,11 @@ class VPL extends React.Component{
   addNode(type){
     // TODO: WIP
 
+    const nodes = this.state.Nodes
     const nodeHashKey = (+new Date).toString(32) + Math.floor(Math.random()* 36).toString(36)
-    Nodes[nodeHashKey] = this.newNodeObj(type)
+    nodes[nodeHashKey] = this.newNodeObj(type)
 
-    this.setState({Nodes})
+    this.setState({Nodes: nodes})
 
     /*
     const color10 = d3.scale.category10().range(); // d3.js v3
@@ -1914,6 +1924,8 @@ class VPL extends React.Component{
   }
 
   render(){
+    const nodes = this.state.Nodes
+
     return (
         <div className = "pull-right col-md-10 vplContainer">
             <div className = "row">
@@ -1942,10 +1954,9 @@ class VPL extends React.Component{
 
 
                   {
-                    Object.entries(Nodes)
+                    Object.entries(nodes)
                       .map(([key, node], index) => {
                         node.name = node.name ? node.name : node.type
-                        // index += 3
                         node.translate = node.position
                         node.nodeKey = key
 
