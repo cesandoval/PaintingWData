@@ -18,7 +18,7 @@ module.exports = {
     'no-undef': 'off', // 'xxx' is not defined
     'no-case-declarations': 'off', // no declaration in case block
     'no-extra-semi': 'off', // no unnecessary semicolons
-    'no-redeclare': 'off', // 'xxx' is already defined 
+    // 'no-redeclare': 'off', // 'xxx' is already defined 
     'react/no-string-refs': 'off',
     'react/display-name': 'off',
     'react/jsx-no-comment-textnodes': 'off',
