@@ -102,9 +102,6 @@ module.exports = {
         new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
         // new webpack.optimize.OccurenceOrderPlugin(), it is now enabled by default
     ],
-    resolve: {
-        alias: {}
-    },
     performance: {
         hints: false
     },
