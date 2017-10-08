@@ -5,13 +5,23 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    "prettier",
+    "prettier/react",
   ],
   plugins: [
     'react',
+    'prettier',
   ],
   rules: {
     'react/prop-types': 'off', // don't use propTypes.
     'no-console': 'off', // no console.log
+
+    'prettier/prettier': ['warn', {
+      'trailingComma': 'es5',
+      'singleQuote': true,
+      'semi': false,
+      'tabWidth': 4,
+    }],
 
     /* To Be Fixed */
     'no-unused-vars': 'off', // 'xxx' is defined but never used
