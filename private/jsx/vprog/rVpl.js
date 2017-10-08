@@ -1416,6 +1416,7 @@ class VPL extends React.Component{
                   .map(([input, abbr], index) =>
                     <g
                       ref={`${nodeKey}_plug_input_${input}`}
+                      key={`${nodeKey}_plug_input_${input}`}
                       className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="input" data-input={input} 
                       transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
                     >
@@ -1462,6 +1463,7 @@ class VPL extends React.Component{
                       const value = options[attr] || def
                       return (
                         <text 
+                          key={`${nodeKey}_option_${attr}`}
                           onClick={() => {this.updateNodeOption(nodeKey, attr, Number(value))}} 
                           x={nodeWidth / 2} y={43 + index * 13} 
                           fontSize={Style.fontSize.propertyName + 'px'} 
