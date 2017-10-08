@@ -7,8 +7,8 @@
     "build": "gulp build",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
-    "lint:fix": "yarn lint --fix --debug",
-    "lint:check": "yarn lint --quiet"
+    "lint:fix": "eslint . --color --fix --debug",
+    "lint:check": "eslint . --color --quiet"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
