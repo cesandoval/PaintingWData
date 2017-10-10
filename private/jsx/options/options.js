@@ -46,9 +46,9 @@ class Options extends React.Component {
 
         let geoms = newProps.map.geometries;
 
-        console.log(geoms)
-        let exportTest = PaintGraph.Exporter.exportSVG(geoms);
-        console.log(exportTest)
+        console.log(newProps)
+        let svgExport = PaintGraph.Exporter.exportSVG(geoms);
+        // console.log(exportTest)
 
         // var draw = SVG('drawing')
         // var circle = draw.circle(100)
