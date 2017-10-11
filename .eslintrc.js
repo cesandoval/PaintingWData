@@ -13,7 +13,13 @@ module.exports = {
     'react/prop-types': 'off', // don't use propTypes.
     'no-console': 'off', // no console.log
 
+    /* Future Work */
+    // 'indent': [ 'error', 2 ],
+    // 'quotes': [ 'error', 'single' ],
+
+
     /* To Be Fixed */
+    /*
     'no-unused-vars': 'off', // 'xxx' is defined but never used
     'no-undef': 'off', // 'xxx' is not defined
     'no-case-declarations': 'off', // no declaration in case block
@@ -22,6 +28,7 @@ module.exports = {
     'react/no-string-refs': 'off',
     'react/display-name': 'off',
     'react/jsx-no-comment-textnodes': 'off',
+    */
   },
   env: {
     browser: true,
