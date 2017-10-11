@@ -583,7 +583,7 @@ class VPL extends React.Component{
   }
   createTempLink = () => {
     return (
-        <path markerEnd="url(#Triangle)" ref="tempLink" key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
+        <path markerEnd="url(#Triangle)" ref={(ref) => this.tempLink = ref} key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
     );
   }
 
@@ -597,7 +597,7 @@ class VPL extends React.Component{
         <path 
           style={{cursor: 'pointer'}}
           markerEnd="url(#Triangle)"
-          ref={linkRef}
+          ref={(ref) => this.linkRef = ref}
           key={linkKey}
           className={"link"}
           d={this.diagonal(from, to)}
@@ -636,16 +636,16 @@ class VPL extends React.Component{
 
         const svgRect = svgDOM.getBoundingClientRect()
 
-        const srcNodeDOM = this.refs['node_' + srcNode]
-        const outputPlugDOM = this.refs[`${srcNode}_plug_output`]
+        // const srcNodeDOM = this['node_' + srcNode]
+        const outputPlugDOM = this[`${srcNode}_plug_output`]
 
         // console.log('srcNodeDOM', srcNodeDOM)
 
         return Object.entries(input)
           .map(([toNode, inputKey]) => {
             
-            const toNodeDOM = this.refs['node_' + toNode]
-            const inputPlugDOM = this.refs[`${toNode}_plug_input_${inputKey}`]
+            // const toNodeDOM = this['node_' + toNode]
+            const inputPlugDOM = this[`${toNode}_plug_input_${inputKey}`]
             
             const linkKey = `${srcNode}_${toNode}`
             const linkInfo = {srcNode, toNode}
@@ -1170,7 +1170,7 @@ class VPL extends React.Component{
       
       return(
         <g className="node"
-           ref={nodeRef}
+           ref={(ref) => this[nodeRef] = ref}
            data-key={key}
            // onMouseOver  = {this.handleMouseOver}
            // onMouseLeave = {this.handleMouseLeave}
@@ -1420,7 +1420,7 @@ class VPL extends React.Component{
                   .map(([input, abbr], index) =>
                     <g
                       key={`${nodeKey}_plug_input_${input}`}
-                      ref={`${nodeKey}_plug_input_${input}`}
+                      ref={(ref) => this[`${nodeKey}_plug_input_${input}`] = ref}
                       className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="input" data-input={input} 
                       transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
                     >
@@ -1438,7 +1438,7 @@ class VPL extends React.Component{
 
               {/* Output Plug */}
               <g
-                ref={`${nodeKey}_plug_output`}
+                ref={(ref) => this[`${nodeKey}_plug_output`] = ref}
                 className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="output" data-output={output} 
                 transform={`translate(${nodeWidth - Style.plug.width}, ${Style.plug.height / 2 + Style.topOffset})`}
               >
@@ -1972,7 +1972,9 @@ class VPL extends React.Component{
 
             </div>
             <div className = "row">
-              <svg className="vpl" ref={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+              <svg className="vpl" ref={(ref) => this.mainSvgElement = ref} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+                  
+
                   {this.linkMarker()}
 
 
