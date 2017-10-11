@@ -39,7 +39,6 @@ class Slider extends React.Component{
     }
 
     containerMouseUp(event){
-        var dx = (event.clientX - this.dp.sX);
         let target = $(event.currentTarget);
         let left = target.position().left;
         let opacityValue = event.clientX - 4 - parseInt(left);
@@ -60,7 +59,6 @@ class Slider extends React.Component{
     containerMouseMove(event){
         event.stopPropagation();
         if(this.dp.held){
-            var dx = (event.clientX - this.dp.sX);
             let target = $(event.currentTarget);
             let left = target.position().left;
             target.children('circle').attr('transform', 'translate('+(event.clientX - 4 - parseInt(left))+','+'0)')
