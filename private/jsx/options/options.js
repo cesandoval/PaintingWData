@@ -29,68 +29,49 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
-        // if (SVG.supported) {
-        //     // var draw = SVG('drawing')
-        //     // var circle = draw.circle(100)
-        //     // circle.attr({
-        //     //     fill: '#f06'
-        //     //     , 'fill-opacity': 0.5
-        //     //     , 'stroke-width': 0
-        //     //   });
-        //     // circle.center(10,10);
-        //     // console.log(rect)
-        //     // console.log(rect.svg())
-        // } else {
-        //     alert('SVG not supported')
-        // }
 
+        // // (optional) set names for feature types and zipped folder
+        // var options = {
+        //     folder: 'myshapes',
+        //     types: {
+        //         point: 'mypoints',
+        //         polygon: 'mypolygons',
+        //         line: 'mylines'
+        //     }
+        // }
+        // // a GeoJSON bridge for features
+        // shpwrite.download({
+        //     type: 'FeatureCollection',
+        //     features: [
+        //         {
+        //             type: 'Feature',
+        //             geometry: {
+        //                 type: 'Point',
+        //                 coordinates: [0, 0]
+        //             },
+        //             properties: {
+        //                 name: 'Foo'
+        //             }
+        //         },
+        //     ]
+        // }, options);
+
+        // THIS IS JUST A PLACE HOLDER FOR DOWNLOADING SVG FILES
         let geoms = newProps.map.geometries;
 
-        console.log(newProps)
-        let svgExport = PaintGraph.Exporter.exportSVG(geoms);
-        // console.log(exportTest)
+        var layer = newProps.layers[0]
+        if (layer) {
+            let centroid = newProps.map.instance.camera.position;
+            let bbox = layer.bbox[0];
+            let projectedMin = project([bbox[0][0],bbox[0][1]]);
+            let projectedMax = project([bbox[2][0],bbox[2][1]]);
 
-        // var draw = SVG('drawing')
-        // var circle = draw.circle(100)
-        // circle.attr({
-        //     fill: '#f06'
-        //     , 'fill-opacity': 0.5
-        //     , 'stroke-width': 0
-        // });
-        // // circle.center(10,10);
-        // circle.radius(45);
-        // circle.center(40,40);
+            let translation = [0-projectedMin.x, 0-projectedMax.z]
+            let bounds = [Math.abs(projectedMax.x+translation[0]), Math.abs(projectedMax.z+(0-projectedMin.z))];
 
-        // var circle = draw.circle(100)
-        // circle.attr({
-        //     fill: '#f06'
-        //     , 'fill-opacity': 0.5
-        //     , 'stroke-width': 0
-        // });
-        // circle.center(60,10);
-        // circle.radius(45);
-        // console.log(circle.svg())
-        
-        // const testTranslation = testGeom.translation;
-        // const testSize = testGeom.size;
-
-        // for (i = 0; i < 100; i++) { 
-        //     var circle = draw.circle(i)
-        //     // circle.attr({
-        //     //     fill: '#f06'
-        //     //     , 'fill-opacity': 0.5
-        //     //     , 'stroke-width': 0
-        //     // });
-        //     // circle.center(10,10);
-        // }
-        // // Get layers once they appear
-        // // Map them to Pixels objects
-        // // Add the pixel geometries to the map
-        // // TODO: check this function
-        // if (newProps.layers && newProps.layers.length > 0 && !this.state.layersAdded) {
-        //     // Sets the camera to the voxels' bbox 
-        //     console.log(7474747474, newProps)
-        // }
+            // let svgExport = PaintGraph.Exporter.exportSVG(geoms, translation, centroid, bounds);
+            let jsonExport = PaintGraph.Exporter.exportJSON(geoms);
+        }
     }
     toggleOptionsMapStyleShow(){
         console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)
@@ -131,4 +112,4 @@ class Options extends React.Component {
     }
 }
 
-export default connect(s=>({map: s.map}))(Options);
+export default connect(s=>({map: s.map, layers: s.sidebar.layers}))(Options);
