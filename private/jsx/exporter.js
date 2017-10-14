@@ -74,6 +74,6 @@ export default class Exporter {
         for (let i in layers) {
             allJSON.features = allJSON.features.concat(this.parseGeometries(geometries[layers[i]], layers[i]));
         }  
-        console.log(allJSON)
+        return JSON.stringify(allJSON)
     }
 }
