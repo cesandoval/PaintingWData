@@ -3,13 +3,14 @@ var Model = require('../models'),
     path = require('path'),
     request = require('request'),
     app = require('../../app'),
-    $ = require('jquery'),
+    gdal = require('gdal')
     Channel = require('../../worker/channel');
 processVoxels = require('../../worker/worker2').processVoxels;
 // const Op = Sequelize.Op;
 
 
-//// didn't make a pure controller, i could but maybe once this gets bigger?
+//// TODO REFACTOR to pure controller
+// TODO maake this a kickoff funciton and cache data somewhere (maybe even on client side? opening every time seems expensive)
 function getLastId(req, res) {
     Model.Datafile.findOne({
         where: {
@@ -19,19 +20,27 @@ function getLastId(req, res) {
         // limit: 1
     }).then(function (lastFile) {
         console.log("Break ----------------- \n \n ")
-        console.log(lastFile)
+        // console.log(lastFile)
         var queryName = lastFile.filename.split('.') // assumes files won' have multiple periods
+        var gfile = gdal.open(lastFile.location);
+
+        console.log(gfile.layers.length)
+        console.log(gfile.features.length)
+        console.log('count attemps')
+        var totalcount = gfile.features().count()
         Model.Datalayer.count({
             where: {
                 layername: queryName[0]
             }
         }).then(function (response) {
             console.log([response, queryName])
-            return [response, queryName]
+            return [[queryName[0], response]]
         })
 
     });
 }
+
+
 
 function getLastIds(req, res, numIds) {
     Model.Datafile.findAll({
@@ -52,7 +61,7 @@ function getLastIds(req, res, numIds) {
                 }
             }).then(function (numLayers) {
                 console.log(numLayers)
-                output.push([numLayers, queryName[0]])
+                output.push([queryName[0], numLayers])
             })
         })
 
@@ -92,22 +101,16 @@ module.exports.datafileProgress = function (req, res) {
             console.log(datalayer)
         }
     })
-
-
-
-
 }
+
 module.exports.endpoint = function (req, res) {
-    var numIds = req.body.numIds ? req.body.numIds : null
-    console.log(req.body)
-    
-    setTimeout(pollShapeUpdates(req, res, numIds), 2500) // poll every 2.5 seconds and wait for a response
+// poll every 2.5 seconds and wait for a response
     // we need to cleartimeout when we get a sucess from the waterfall command
 }
 
 module.exports.updateShape = function (req, res, numIds = null) {
-    console.log(req.user)
-    console.log("END USER ----------------- \n \n ")
+    // console.log(req.user)
+    // console.log("END USER ----------------- \n \n ")
 
     response = getLastId(req, res)
     console.log(response) // assuming the workflow is right and i can get the max number of layers
@@ -141,35 +144,3 @@ module.exports.updateShapes = function (req, res, numIds = null) {
     console.log(response) // assuming the workflow is right and i can get the max number of layers
 }
 
-module.exports.pollShapeUpdates = function(req, res, id = null) {
-
-    suffix = id ? "" : "/id:" + id
-
-    $.ajax({
-        url: "/update/shapes" + suffix,
-        type: 'GET',
-        cache: false, // should this be?
-        // processData: false, 
-        // contentType: false, 
-        success: function (data) {
-            if (data.progress.length > 1) {
-                output = []
-                console.log(data.progress)
-                for(item in data.progress) {
-                    output.append(handleProgess(item))
-                }
-                return output
-            }
-            else {
-                return handleProgess(data.progress)
-            }
-        },
-        failure: function (err) {
-            console.log(err);
-        }
-    })
-}
-
-function handleProgess(input) {
-    console.log(input);
-}

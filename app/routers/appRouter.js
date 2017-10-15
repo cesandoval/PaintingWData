@@ -49,7 +49,7 @@ var passport = require('passport'),
   router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
 
   router.get('/update/shapes/:id', isAuthenticated, updateController.updateShapes);
-  router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
-  router.get('/update/pollShapes', isAuthenticated, updateController.pollShapeUpdates)
+  router.get('/update/shapes', isAuthenticated, updateController.updateShape);
+  // router.get('/update/pollShapes', isAuthenticated, updateController.pollShapeUpdates)
 
 module.exports = router;
