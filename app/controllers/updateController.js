@@ -22,7 +22,9 @@ function getLastId(req, res) {
         console.log("Break ----------------- \n \n ")
         // console.log(lastFile)
         var queryName = lastFile.filename.split('.') // assumes files won' have multiple periods
-        var gfile = gdal.open(lastFile.location);
+
+        console.log(lastFile.location)
+        var gfile = gdal.open('/Users/yaatehr/PaintingWithData_Riyadh/lib/shape_files/Census_HomeValue_1507397956');
 
         console.log(gfile.layers.length)
         console.log(gfile.features.length)

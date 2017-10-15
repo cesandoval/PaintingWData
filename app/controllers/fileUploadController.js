@@ -45,6 +45,7 @@ module.exports.upload = function(req, res, next) {
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
           fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
+            console.log(targetPath);
             if(err){
               console.log("Error 1: ", err);
 
