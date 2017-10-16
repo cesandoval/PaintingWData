@@ -1,26 +1,4 @@
 import * as consts from '../consts';
-import * as Action from '../actions';
-
-let node1 = { ref: "node_1", type: consts.LAYER_NODE, position: {x:100, y:100}, translate: {x: 0, y: 0}};
-let node2 = { ref: "node_2", type: consts.MULTIPLICATION_NODE, position: {x:400, y:50}, translate: {x: 0, y: 0}};
-
-let node3 = { ref: "node_3", type: consts.OR_NODE, position: {x:400, y:200},translate: {x: 0, y: 0}};
-let node4 = { ref: "node_4", type: consts.NOT_NODE, position: {x:400, y:350}, translate: {x: 0, y: 0}};
-
-// get adjusted position
-const pos = (node) => (
-        { 
-            x : node.position.x  + node.translate.x,
-            y : node.position.y  + node.translate.y
-        }
-);
-
-
-
-
-let link1  = { ref: "link_1", sourceNode: node1, targetNode: node2, source: pos(node1), target: pos(node2), type: "TOP"}; 
-let link2  = { ref: "link_2", sourceNode: node1, targetNode: node3, source: pos(node1), target: pos(node3), type: "TOP"}; 
-let link3  = { ref: "link_3", sourceNode: node1, targetNode: node4, source: pos(node1), target: pos(node4), type: "TOP"}; 
 
 const initialState = {
     nodes: [],
@@ -64,9 +42,9 @@ export default (state=initialState, action) => {
                         ...state.links,
                     ]    
                 };
-        case consts.VLANG_REMOVE_NODE:
+        case consts.VLANG_REMOVE_NODE: {
             let newLinks = [] 
-            state.links.map((link, index) => {
+            state.links.map((link) => {
                 if(!(link.sourceNode.ref === state.nodes[action.index].ref || 
                    link.targetNode.ref === state.nodes[action.index].ref)){
                     newLinks.push(link);
@@ -80,7 +58,8 @@ export default (state=initialState, action) => {
                     ],
                     links: newLinks
                 };
-        case consts.VLANG_UPDATE_NODE_POSITION:
+            }
+        case consts.VLANG_UPDATE_NODE_POSITION: {
             let newNode = state.nodes[action.index];
 
             newNode.translate = action.position
@@ -98,7 +77,8 @@ export default (state=initialState, action) => {
                         ...state.links,
                     ]    
             };
-        case consts.VLANG_ADD_LAYERS:
+        }
+        case consts.VLANG_ADD_LAYERS: {
             let allNodes = []
             action.layers.map((layer, index) => {
                 let nodeIndex = "node_"+parseInt(parseInt(index)+1);
@@ -109,10 +89,11 @@ export default (state=initialState, action) => {
                 nodes: allNodes,
                 links: []
             }
+        }
 
-        default:
+        default: {
             return state;
-
+        }
     }
 }
 

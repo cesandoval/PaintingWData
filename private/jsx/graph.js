@@ -8,7 +8,7 @@ export default class Graph {
         this.scene = this.initScene();
         //this.scene.fog = new THREE.Fog( 0xffffff, 2000, 10000 );
         this.camera = this.initCamera( this.clientWidth, this.clientHeight );
-        this.renderer = this.initRenderer( this.clientWidth, this.clientHeight, window.devicePixelRatio );
+        this.renderer = this.initRenderer( this.clientWidth, this.clientHeight );
         this.controls = this.initControls(this.camera, this.canvas)
 
         // Optional
@@ -43,7 +43,7 @@ export default class Graph {
     }
 
     // Create a Renderer
-    initRenderer(width, height, pixelRatio) {
+    initRenderer(width, height) {
         var renderer = new THREE.WebGLRenderer({ precision: "mediump", antialias: true, preserveDrawingBuffer: true });
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( width, height )
