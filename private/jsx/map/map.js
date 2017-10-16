@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import PCoords from '../pcoords/pcoords';
 import VPL from '../vprog/rVpl';
+import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -47,6 +48,15 @@ class MapCanvas extends React.Component {
             });
         }
     }
+    exportMap(type) {
+        console.log(`exportMap(${type})`)
+        switch(type) {
+            case 'SVG':
+                break;
+            case 'GeoJSON':
+                break;
+        }
+    }
     render() {
         const mapOptionShow = this.props.mapOptionShow
         return(
@@ -56,6 +66,15 @@ class MapCanvas extends React.Component {
                 </div>
                 <div style={{display: (mapOptionShow == 'PCoords' ? '' : 'none')}}>
                     <PCoords />
+                </div>
+                <div style={{position: 'absolute', width: '80vw', right: '0px'}}>
+                    <div style={{ position: 'absolute', left: '40px', top: '20px' }} className="map-menu">
+                        <DropdownButton title={"Export"} id={`export-dropdown`}>
+                            <MenuItem onClick={()=>{this.exportMap('SVG')}}>SVG</MenuItem>
+                            <MenuItem onClick={()=>{this.exportMap('GeoJSON')}}>GeoJSON</MenuItem>
+                            <MenuItem onClick={()=>{this.exportMap('SHP')}}>SHP (coming soon)</MenuItem>
+                        </DropdownButton>
+                    </div>
                 </div>
                 <div className="map" id="mapCanvas"/>
                 <div id="pivot"/>
