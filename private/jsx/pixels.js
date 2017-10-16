@@ -82,10 +82,15 @@ export default class Pixels {
     }
 
     static buildMapbox(graph, canvas, bbox) {
-        var meshes = 0;
-        var parserRequests = 0;
-        var updaterRequests = 0;
-        var finished = 0;
+
+        // TODO: fix eslint error `no-unused-vars`
+        /* eslint-disable */
+        var meshes = 0
+        var parserRequests = 0
+        var updaterRequests = 0
+        var finished = 0
+        /* eslint-enable */
+
         //compass functionality
         var screenPosition;
 
