@@ -1,3 +1,5 @@
+/*global datavoxelId*/
+
 import React from 'react';
 import { connect } from 'react-redux';
 import * as act from '../store/actions';

@@ -1,3 +1,5 @@
+/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project */
+
 // import '../../public/javascripts/libs/utilities.js'
 export default class Pixels {
     // GeometryObject will be a Three.js geometry

@@ -1,15 +1,15 @@
 var express = require('express'),
-    path = require('path');
+    path = require('path'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     i18n = require("i18n");
 
-var passport = require('passport');
+var passport = require('passport'),
     flash = require('express-flash'),
-    session = require('cookie-session'),
-    jsonParser = bodyParser.json();
+    session = require('cookie-session');
+    // jsonParser = bodyParser.json();
 
 
  
