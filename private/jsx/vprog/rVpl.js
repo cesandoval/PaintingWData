@@ -592,12 +592,12 @@ class VPL extends React.Component{
   }
 
   createLink = ({linkKey, linkInfo, from, to}) => {
-    // const linkRef = 'link_' + linkKey
+    const linkRef = 'link_' + linkKey
     return (
         <path 
           style={{cursor: 'pointer'}}
           markerEnd="url(#Triangle)"
-          ref={(ref) => this.linkRef = ref}
+          ref={(ref) => this[linkRef] = ref}
           key={linkKey}
           className={"link"}
           d={this.diagonal(from, to)}
