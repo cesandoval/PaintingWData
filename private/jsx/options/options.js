@@ -26,8 +26,7 @@ class Options extends React.Component {
         else
             act.setOptionShow(option);
     }
-    componentWillReceiveProps(newProps){
-    }
+
     toggleOptionsMapStyleShow(){
         console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow });
