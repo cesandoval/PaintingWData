@@ -162,7 +162,7 @@ class VPL extends React.Component{
     $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
   } 
 
-  componentDidUpdate(nextProps){
+  componentDidUpdate(){
     console.log('props changed ...')
     this.linksMap = this.refToElement(this.props.links);
     this.nodesMap = this.refToElement(this.props.nodes);
@@ -318,7 +318,7 @@ class VPL extends React.Component{
     }
   }
 
-  handleMouseUp(event){
+  handleMouseUp(){
     if(this.dp.shiftPressed){
         if(this.dp.tempLink){
             Action.vlangRemoveLink(this.getLinkIndex(this.props.links, "tempLink"));        
@@ -353,7 +353,6 @@ class VPL extends React.Component{
             }
         
             else{
-                let node = this.nodesMap[this.dp.nodeUnderMouseRef];
                 
                 if(this.dp.nodeUnderMouse){  
                     let s  = {
@@ -463,7 +462,7 @@ class VPL extends React.Component{
       let p = position;
       let closeEnoughNodes = [];
       let nodes = Object.keys(this.nodesMap);
-      nodes.forEach((key, index) => {  
+      nodes.forEach((key) => {  
           
           let cNode = this.nodesMap[key];
           let cX = cNode.position.x + cNode.translate.x;
@@ -493,13 +492,6 @@ class VPL extends React.Component{
   }
 
   createNodeObject(node, key){
-      // console.log(`createNodeObject(${node}, ${key})`, node)
-
-      let p = node.position;
-      let property = node.property;
-      let userLayerName = node.userLayerName;
-      let name = node.name;
-      
       return(
         <g className = {"node"}
            id = {node.ref}
@@ -537,9 +529,9 @@ class VPL extends React.Component{
             // This is for addition
             return  this.evalArithmeticNode(geometry1, geometry2, node, math.add, names);
     }
-  };
+  }
 
-  logNode(geomArray1, geomArray2) {
+  logNode(geomArray1) {
     const valDiff = 10;
 
     let min = math.min(Array.from(geomArray1));
@@ -610,7 +602,6 @@ class VPL extends React.Component{
     }
 
     let remapOriginalSize = sizeArray.map(remap);
-    let remapSize = remapOriginalSize.slice(0);
     let props = {
         size: remapOriginalSize,
         translation: translationArray
@@ -673,7 +664,7 @@ class VPL extends React.Component{
             // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
             // return  this.AdditionNode(p);
     }
-  };
+  }
 
 
   nodeSVG({color1, color2, p, layerName, inputNum}){
@@ -977,16 +968,6 @@ class VPL extends React.Component{
         }
     }
 
-    const node = {
-        type,
-        layerName,
-        color1,
-        color2,
-    }
-
-    // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    // this.evaluateNodeType(node, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
-    // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
     
     Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
   }

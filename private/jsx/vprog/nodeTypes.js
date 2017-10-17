@@ -20,12 +20,13 @@ const NodeType = {
 
 export const DATASET = {
   fullName: 'Dataset',
-  inputs: {
+  inputs: { // no input
   },
   output: 'Output',
   options: {
   },
-  arithmetic(...input) {
+  arithmetic() {
+
   },
 }
 
@@ -78,7 +79,7 @@ export const SUB = {
   output: 'Output',
   options: {
   },
-  arithmetic: (inputs, options = {}) => {
+  arithmetic: (inputs) => {
     return math.subtract(...inputs)
   },
 }
@@ -92,7 +93,7 @@ export const DIV = {
   output: 'Output',
   options: {
   },
-  arithmetic: (inputs, options = {}) => {
+  arithmetic: (inputs) => {
     return math.dotDivide(...inputs)
   },
 }
@@ -106,7 +107,7 @@ export const MULT = {
   output: 'Output',
   options: {
   },
-  arithmetic: (inputs, options = {}) => {
+  arithmetic: (inputs) => {
     return math.dotMultiply(...inputs)
   },
 }
@@ -120,7 +121,7 @@ export const ADD = {
   output: 'Output',
   options: {
   },
-  arithmetic: (inputs, options = {}) => {
+  arithmetic: (inputs) => {
     return math.add(...inputs)
   },
 }

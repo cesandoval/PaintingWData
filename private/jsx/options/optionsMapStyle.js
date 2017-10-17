@@ -36,8 +36,8 @@ class OptionsMapStyle extends React.Component {
 
         if(started) {
             try{
-                refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
-                updateTiles() // call window.updateTiles() to update the tiles.
+                window.refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
+                window.updateTiles() // call window.updateTiles() to update the tiles.
                 return true
             } catch(e){
                 // console.error(e)

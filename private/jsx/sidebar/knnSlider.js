@@ -1,5 +1,4 @@
 import React from 'react';
-import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 class KnnSlider extends React.Component {
@@ -56,7 +55,6 @@ class KnnSlider extends React.Component {
             let col = addresses[i+1];
 
             let n = 0;
-            let k = 0;
             for (let di = 0; di < indices.length; di++) {
                 for (let dj = 0; dj < indices.length; dj++) {
                     let wBoolean = arrayM.indexOf(col+indices[di]) >= 0;
@@ -91,9 +89,7 @@ class KnnSlider extends React.Component {
         const currSizes = layer.geometry.attributes.originalsize.array;
 
         const newSizes =  new Float32Array(layer.pxWidth * layer.pxHeight);
-        const indices = [-1, 0, 1];
-        const arrayM = Array.apply(null, Array(layer.pxWidth)).map(function (_, i) {return i;});
-        const arrayN = Array.apply(null, Array(layer.pxHeight)).map(function (_, i) {return i;});
+
 
         for (let i = 0, j = 0; i < addresses.length; i = i + 3, j++) {  
             let currIndex = addresses[i+2];          
@@ -104,7 +100,7 @@ class KnnSlider extends React.Component {
                 if (numberOfNeighbors < 5) {
                     var currNeighbors = new Float32Array(5);
                 } else {
-                    var currNeighbors = new Float32Array(9);
+                    currNeighbors = new Float32Array(9);
                 }
 
                 let allNeighbors = neighbors[currIndex];
@@ -125,7 +121,7 @@ class KnnSlider extends React.Component {
                 if (numberOfNeighbors != 4 && numberOfNeighbors != 8) { 
                     var randomNeighbors = this.randomPick(currNeighbors, numberOfNeighbors);
                 } else {
-                    var randomNeighbors = currNeighbors; 
+                    randomNeighbors = currNeighbors; 
                 }
 
                 let totalSize = 0;
