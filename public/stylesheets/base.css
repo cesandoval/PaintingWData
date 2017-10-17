@@ -123,13 +123,13 @@
 }
 
 #add-node-dropdown{
-    top: 10px;
-    padding: 6px 12px;
+    /* top: 10px; */
+    /* padding: 6px 12px; */
 }
 
-#add-node-dropdown + ul{
+.map-menu ul{
     background-color: white;
-    top: 45px;
+    /* top: 45px; */
 }
 
 #somShow {
@@ -308,7 +308,7 @@ label[for="file-selector"] {
 
 .btn {
     border-radius: 0;
-    padding: 6px 0;
+    /* padding: 6px 0; */
 }
 
 .btn:active, .btn.active {

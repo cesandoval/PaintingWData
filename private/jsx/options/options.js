@@ -27,53 +27,6 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
-        let geoms = newProps.map.geometries;
-
-        console.log(geoms)
-        let exportTest = PaintGraph.Exporter.exportSVG(geoms);
-        console.log(exportTest)
-
-        // var draw = SVG('drawing')
-        // var circle = draw.circle(100)
-        // circle.attr({
-        //     fill: '#f06'
-        //     , 'fill-opacity': 0.5
-        //     , 'stroke-width': 0
-        // });
-        // // circle.center(10,10);
-        // circle.radius(45);
-        // circle.center(40,40);
-
-        // var circle = draw.circle(100)
-        // circle.attr({
-        //     fill: '#f06'
-        //     , 'fill-opacity': 0.5
-        //     , 'stroke-width': 0
-        // });
-        // circle.center(60,10);
-        // circle.radius(45);
-        // console.log(circle.svg())
-        
-        // const testTranslation = testGeom.translation;
-        // const testSize = testGeom.size;
-
-        // for (i = 0; i < 100; i++) { 
-        //     var circle = draw.circle(i)
-        //     // circle.attr({
-        //     //     fill: '#f06'
-        //     //     , 'fill-opacity': 0.5
-        //     //     , 'stroke-width': 0
-        //     // });
-        //     // circle.center(10,10);
-        // }
-        // // Get layers once they appear
-        // // Map them to Pixels objects
-        // // Add the pixel geometries to the map
-        // // TODO: check this function
-        // if (newProps.layers && newProps.layers.length > 0 && !this.state.layersAdded) {
-        //     // Sets the camera to the voxels' bbox 
-        //     console.log(7474747474, newProps)
-        // }
     }
     toggleOptionsMapStyleShow(){
         console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)
@@ -114,4 +67,4 @@ class Options extends React.Component {
     }
 }
 
-export default connect(s=>({map: s.map}))(Options);
+export default connect(s=>({map: s.map, layers: s.sidebar.layers}))(Options);
