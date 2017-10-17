@@ -29,49 +29,6 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
-
-        // // (optional) set names for feature types and zipped folder
-        // var options = {
-        //     folder: 'myshapes',
-        //     types: {
-        //         point: 'mypoints',
-        //         polygon: 'mypolygons',
-        //         line: 'mylines'
-        //     }
-        // }
-        // // a GeoJSON bridge for features
-        // shpwrite.download({
-        //     type: 'FeatureCollection',
-        //     features: [
-        //         {
-        //             type: 'Feature',
-        //             geometry: {
-        //                 type: 'Point',
-        //                 coordinates: [0, 0]
-        //             },
-        //             properties: {
-        //                 name: 'Foo'
-        //             }
-        //         },
-        //     ]
-        // }, options);
-
-        // THIS IS JUST A PLACE HOLDER FOR DOWNLOADING SVG FILES
-        let geoms = newProps.map.geometries;
-
-        var layer = newProps.layers[0]
-        if (layer) {
-            let centroid = newProps.map.instance.camera.position;
-            let bbox = layer.bbox[0];
-            let projectedMin = project([bbox[0][0],bbox[0][1]]);
-            let projectedMax = project([bbox[2][0],bbox[2][1]]);
-
-            let translation = [0-projectedMin.x, 0-projectedMax.z]
-            let bounds = [Math.abs(projectedMax.x+translation[0]), Math.abs(projectedMax.z+(0-projectedMin.z))];
-
-            // let svgExport = PaintGraph.Exporter.exportSVG(geoms, translation, centroid, bounds);
-            let jsonExport = PaintGraph.Exporter.exportJSON(geoms);
-        }
     }
     toggleOptionsMapStyleShow(){
         console.log('toggleOptionsMapStyleShow', !this.state.optionsMapStyleShow)

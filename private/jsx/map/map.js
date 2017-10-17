@@ -48,13 +48,58 @@ class MapCanvas extends React.Component {
             });
         }
     }
+
+    exportSVG(geoms) {
+        let layer = this.props.layers[0]
+        let centroid = this.props.map.camera.position;
+        let bbox = layer.bbox[0];
+        let projectedMin = project([bbox[0][0],bbox[0][1]]);
+        let projectedMax = project([bbox[2][0],bbox[2][1]]);
+
+        let translation = [0-projectedMin.x, 0-projectedMax.z]
+        let bounds = [Math.abs(projectedMax.x+translation[0]), Math.abs(projectedMax.z+(0-projectedMin.z))];
+
+        return PaintGraph.Exporter.exportSVG(geoms, translation, centroid, bounds);
+    }
+    
+    triggerDownload(exportFile, exportType) {
+        var data = new Blob([exportFile], {type: 'text/plain'});
+
+        if (textFile !== null) {
+            window.URL.revokeObjectURL(textFile);
+        }
+      
+        let textFile = window.URL.createObjectURL(data);
+
+        let link = document.createElement('a');
+        link.setAttribute('download', 'voxelExport.'.concat(exportType));
+        link.href = textFile;
+        document.body.appendChild(link);
+        link.click()
+    }
+
+    exportJSON(geoms) {
+        return PaintGraph.Exporter.exportJSON(geoms);
+    }
+    
     exportMap(type) {
         console.log(`exportMap(${type})`)
+        
+        let geoms = this.props.geometries;
+        var textFile = null;
         switch(type) {
-            case 'SVG':
+            case 'SVG': {
+                let svgExport = this.exportSVG(geoms);
+                this.triggerDownload(svgExport, 'svg');
+
                 break;
-            case 'GeoJSON':
+            } 
+            case 'GeoJSON': {
+                let jsonExport = this.exportJSON(geoms); 
+                this.triggerDownload(jsonExport, 'json');
+
                 break;
+            }
         }
     }
     render() {
@@ -84,4 +129,4 @@ class MapCanvas extends React.Component {
     }
 }
 
-export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance, mapOptionShow: s.map.optionShow}))(MapCanvas);
+export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance, mapOptionShow: s.map.optionShow, geometries: s.map.geometries}))(MapCanvas);
