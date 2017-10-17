@@ -5,11 +5,11 @@ import Options from './options/options';
 import Map from './map/map';
 
 
-export default class extends React.Component {
+export default class App extends React.Component {
     render() {
         return(
             <div className="mapMain">
-                // <Options />
+                <Options />
                 <Sidebar />
                 <Map />
 

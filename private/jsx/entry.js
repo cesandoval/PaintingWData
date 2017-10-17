@@ -6,7 +6,6 @@ import App from './app';
 
 import Pixels from './pixels';
 import Graph from './graph';
-import PCoords from './pcoords/pcoords';
 import Exporter from './exporter';
 
 if (window.PaintGraph !== undefined) {
