@@ -1,7 +1,6 @@
 import React from 'react';
 import * as act from '../store/actions';
 import { connect } from 'react-redux';
-import $ from 'jquery';
 
 class Panel extends React.Component{
 
@@ -89,7 +88,7 @@ class Panel extends React.Component{
         */
     }
 
-    toggleVisibility(e) {
+    toggleVisibility() {
         console.log('toggleVisibility', !this.state.visible)
 
         act.sideUpdateLayer(this.props.index, 'visible', !this.state.visible)

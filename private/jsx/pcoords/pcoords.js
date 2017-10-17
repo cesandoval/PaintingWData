@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as act from '../store/actions';
 
 class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
@@ -55,7 +54,6 @@ class PCoords extends React.Component {
                 pcContainer.removeChild(pcContainer.firstChild);
             }
             // and recalculate parcoords
-            const totalElements = nprops.layers[0].rowsCols['cols']*nprops.layers[0].rowsCols['rows']
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
 
@@ -68,7 +66,6 @@ class PCoords extends React.Component {
             }
 
             let dictBuild = Array(maxVoxels);
-            let dictBrush = [];
             // var brushedLayers;
             // if (typeof this.minObjs != 'undefined') {
             //     brushedLayers = Object.keys(this.minObjs);
@@ -89,12 +86,12 @@ class PCoords extends React.Component {
                 }
             }
 
-            this.build(dictBuild, dictBrush)
+            this.build(dictBuild)
             this.layerIndeces = layerIndeces 
         }
     }
 
-    build(data, dictBrush) {
+    build(data) {
         let minVal = this.minVal[0];
         let maxVal = this.maxVal[0];
 
@@ -125,7 +122,7 @@ class PCoords extends React.Component {
         this.setState({pc: pc});
     }
 
-    calcRanges(data){
+    calcRanges(){
         this.pc.randoms = true;
 
         const brushSelection = this.pc.brushExtents();
@@ -175,8 +172,9 @@ class PCoords extends React.Component {
         }
     }
     render() {
+        let pcoordsRef = (parcoords) => this.pcoordsRef = parcoords;
         return(
-            <div id="parcoords" className="parcoords" ref='parcoords' style={this.style()}></div>
+            <div id="parcoords" className="parcoords" ref={pcoordsRef} style={this.style()}></div>
         );
     }
 }

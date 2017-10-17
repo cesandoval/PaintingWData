@@ -1,15 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 
-
-// Webpack uses `publicPath` to determine where the app is being served from.
-// In development, we always serve from the root. This makes config easier.
-const publicPath = '/';
-// `publicUrl` is just like `publicPath`, but we will provide it to our app
-// as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-// Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
-const publicUrl = '';
-
 module.exports = {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.

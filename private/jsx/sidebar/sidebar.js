@@ -1,9 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Layers from './layers';
-import NodeTypes from './nodetypes'
-import * as act from '../store/actions';
 import OpacitySlider from './opacitySlider';
 import KnnSlider from './knnSlider';
 

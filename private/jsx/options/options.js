@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import * as act from '../store/actions';
 
-import OptionsButton from './optionsButton';
 import OptionsForm  from './optionsForm';
 import OptionsMapStyle  from './optionsMapStyle';
 import Button from 'react-bootstrap/lib/Button';
@@ -18,7 +17,6 @@ class Options extends React.Component {
 
     }
     componentDidMount() {
-        const gElement = document.getElementById('parcoords')
         // console.log(gElement);
     }
     toggleOptionShow(option) {
@@ -29,21 +27,6 @@ class Options extends React.Component {
             act.setOptionShow(option);
     }
     componentWillReceiveProps(newProps){
-        // if (SVG.supported) {
-        //     // var draw = SVG('drawing')
-        //     // var circle = draw.circle(100)
-        //     // circle.attr({
-        //     //     fill: '#f06'
-        //     //     , 'fill-opacity': 0.5
-        //     //     , 'stroke-width': 0
-        //     //   });
-        //     // circle.center(10,10);
-        //     // console.log(rect)
-        //     // console.log(rect.svg())
-        // } else {
-        //     alert('SVG not supported')
-        // }
-
         let geoms = newProps.map.geometries;
 
         console.log(geoms)

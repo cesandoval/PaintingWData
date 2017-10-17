@@ -1,7 +1,3 @@
-import * as c from '../consts';
-import * as act from '../actions';
-
-
 const initialOptionsState = {
 }
 
