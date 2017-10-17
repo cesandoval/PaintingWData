@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import PCoords from '../pcoords/pcoords';
 import VPL from '../vprog/rVpl';
-import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
+import { DropdownButton, MenuItem } from 'react-bootstrap'
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -88,7 +88,6 @@ class MapCanvas extends React.Component {
         console.log(`exportMap(${type})`)
         
         let geoms = this.props.geometries;
-        var textFile = null;
         switch(type) {
             case 'SVG': {
                 let svgExport = this.exportSVG(geoms);
