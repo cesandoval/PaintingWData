@@ -1,5 +1,4 @@
 import React from 'react';
-import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 class OpacitySlider extends React.Component {

@@ -1,15 +1,15 @@
 var express = require('express'),
-    path = require('path');
+    path = require('path'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     i18n = require("i18n");
 
-var passport = require('passport');
+var passport = require('passport'),
     flash = require('express-flash'),
-    session = require('cookie-session'),
-    jsonParser = bodyParser.json();
+    session = require('cookie-session');
+    // jsonParser = bodyParser.json();
 
 
  
@@ -104,7 +104,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 var appRouter = require('./app/routers/appRouter');
 var users = require('./app/routers/users');
-var datajson = require('./app/routers/datajson');
 app.use('/users', users);
 app.use('/', appRouter);
 // app.use('/datajson', datajson);
@@ -134,7 +133,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     res.status(err.status || 500);
     console.log(err)
     res.json({
@@ -147,7 +146,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 if (app.get('env') === 'production') {
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.json({
       message: err.message,

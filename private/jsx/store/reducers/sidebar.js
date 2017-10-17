@@ -1,5 +1,4 @@
 import * as c from '../consts';
-import * as act from '../actions';
 
 
 const initialSidebarState = {
@@ -10,23 +9,23 @@ const initialSidebarState = {
 export default (state=initialSidebarState, action) => {
     switch (action.type) {
 
-        case c.SIDE_ADD_LAYER:
+        case c.SIDE_ADD_LAYER: {
             // Push new layer
-            var newLayers = state.layers.slice();
+            let newLayers = state.layers.slice();
             newLayers.push(action.layer);
             return Object.assign({}, state, {layers: newLayers});
-
+        }
         case c.SIDE_ADD_LAYERS:
             // Push new layer
             //var newLayers = state.layers.slice();
             //newLayers = newLayers.concat(action.layers);
             return Object.assign({}, state, {layers: action.layers});
 
-        case c.SIDE_UPDATE_LAYER:
+        case c.SIDE_UPDATE_LAYER: {
             if(window.renderSec)
                 window.renderSec(1, 'reducer SIDE_UPDATE_LAYER')
-
-            var newLayers = state.layers.slice();
+            
+            let newLayers = state.layers.slice();
             newLayers = newLayers.map(layer => {
                 if (layer.name == action.name) {
                     const newLayer = Object.assign({}, layer);
@@ -38,7 +37,7 @@ export default (state=initialSidebarState, action) => {
             });
             // console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
             return Object.assign({}, state, {layers: newLayers});
-
+        }
         case c.SIDE_REMOVE_LAYER: // just fall through for now.
             // var newLayers = state.layers.map(layer => (
             //     // Remove layers with the same name

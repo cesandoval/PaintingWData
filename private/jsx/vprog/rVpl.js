@@ -7,7 +7,7 @@ import _ from 'lodash'
 
 
 import * as Action from '../store/actions.js';
-import * as consts  from '../store/consts.js';
+// import * as consts  from '../store/consts.js';
 
 import Slider from './Slider.js';
 import Panel from './Panel.js';
@@ -48,7 +48,7 @@ function observer(label = '') {
   return {
     // next: (n) => console.log(label, 'Next: ', n),
     error: (e) => console.log(label, 'Error: ', e),
-    complete: (c) => console.log(label, 'Completed'),
+    complete: (c) => console.log(label, c, 'Completed'),
   }
 }
 
@@ -146,7 +146,9 @@ class VPL extends React.Component{
 
     this.evalArithmeticNode = this.evalArithmeticNode.bind(this);
 
+    /* unused function
     this.logNode = this.logNode.bind(this);
+    */
 
     // Ask: which is for debugging ???
     // this is just for debugging ...
@@ -314,13 +316,13 @@ class VPL extends React.Component{
     $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
     */
 
-    const bodyDOM = document.body
+    // const bodyDOM = document.body
     const vplDOM = document.querySelector('svg.vpl')
     const mouseDown$ = Rx.Observable.fromEvent(vplDOM, "mousedown")
     const mouseUp$ = Rx.Observable.fromEvent(vplDOM, 'mouseup')
     const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove')
     const mouseLeave$ = Rx.Observable.fromEvent(vplDOM, 'mouseleave')
-    const empty$ = Rx.Observable.empty()
+    // const empty$ = Rx.Observable.empty()
 
 
     this.mouseTracker$ = mouseDown$
@@ -344,7 +346,6 @@ class VPL extends React.Component{
             break;
           }
           case ('link'): {
-            const nodeKey = nodeDOM.getAttribute('data-key')
             down.info = {nodeDOM, plugDOM, svgDOM}
             break;
           }
@@ -421,7 +422,7 @@ class VPL extends React.Component{
         }
       )
       .filter(({up}) => up)
-      .do(({down, move, up}) => {
+      .do(({down, move}) => {
         // clear temp link
         this.moveTempLink({from: {x: 0, y: 0}, to: {x: 0, y: 0}})
 
@@ -456,8 +457,9 @@ class VPL extends React.Component{
     this.linkNode$.unsubscribe()
   }
 
-  componentDidUpdate(nextProps){
-    console.log('props changed ...')
+  componentDidUpdate(){
+  // componentDidUpdate(nextProps){
+    // console.log('props changed ...', nextProps)
     /*
     this.linksMap = this.refToElement(this.props.links);
     this.nodesMap = this.refToElement(this.props.nodes);
@@ -581,7 +583,7 @@ class VPL extends React.Component{
   }
   createTempLink = () => {
     return (
-        <path markerEnd="url(#Triangle)" ref="tempLink" key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
+        <path markerEnd="url(#Triangle)" ref={(ref) => this.tempLink = ref} key="tempLink" className={"link"} d={this.diagonal(this.state.tempLink.from, this.state.tempLink.to)}></path>
     );
   }
 
@@ -595,7 +597,7 @@ class VPL extends React.Component{
         <path 
           style={{cursor: 'pointer'}}
           markerEnd="url(#Triangle)"
-          ref={linkRef}
+          ref={(ref) => this[linkRef] = ref}
           key={linkKey}
           className={"link"}
           d={this.diagonal(from, to)}
@@ -630,20 +632,20 @@ class VPL extends React.Component{
       return '';
 
     return Object.entries(outputs)
-      .map(([srcNode, input], index) => {
+      .map(([srcNode, input]) => {
 
         const svgRect = svgDOM.getBoundingClientRect()
 
-        const srcNodeDOM = this.refs['node_' + srcNode]
-        const outputPlugDOM = this.refs[`${srcNode}_plug_output`]
+        // const srcNodeDOM = this['node_' + srcNode]
+        const outputPlugDOM = this[`${srcNode}_plug_output`]
 
         // console.log('srcNodeDOM', srcNodeDOM)
 
         return Object.entries(input)
-          .map(([toNode, inputKey], index) => {
+          .map(([toNode, inputKey]) => {
             
-            const toNodeDOM = this.refs['node_' + toNode]
-            const inputPlugDOM = this.refs[`${toNode}_plug_input_${inputKey}`]
+            // const toNodeDOM = this['node_' + toNode]
+            const inputPlugDOM = this[`${toNode}_plug_input_${inputKey}`]
             
             const linkKey = `${srcNode}_${toNode}`
             const linkInfo = {srcNode, toNode}
@@ -700,8 +702,8 @@ class VPL extends React.Component{
     window.nodes = nodes
 
     const datasetNodes = Object.entries(nodes)
-      .filter(([key, value]) => value.type == 'DATASET')
-      .map(([key, value]) => key)
+      .filter(([, value]) => value.type == 'DATASET')
+      .map(([key, ]) => key)
 
     const outputs = _.cloneDeep(this.state.Links.outputs)
     const inputs = _.cloneDeep(this.state.Links.inputs)
@@ -711,7 +713,7 @@ class VPL extends React.Component{
     const nodeInputsFromNode = {}
 
     Object.entries(inputs)
-      .map(([toNodeKey, inputsSrcNode], index) => {
+      .map(([toNodeKey, inputsSrcNode]) => {
         const toNode = nodes[toNodeKey]
         const toNodeTypeInputs = Object.keys(NodeType[toNode.type].inputs)
 
@@ -1168,7 +1170,7 @@ class VPL extends React.Component{
       
       return(
         <g className="node"
-           ref={nodeRef}
+           ref={(ref) => this[nodeRef] = ref}
            data-key={key}
            // onMouseOver  = {this.handleMouseOver}
            // onMouseLeave = {this.handleMouseLeave}
@@ -1208,8 +1210,9 @@ class VPL extends React.Component{
             return  this.evalArithmeticNode(geometry1, geometry2, node, math.add, names);
     }
     */
-  };
+  }
 
+  /* unused function
   logNode(geomArray1, geomArray2) {
     const valDiff = 10;
 
@@ -1235,6 +1238,7 @@ class VPL extends React.Component{
     }
     return newSizeArray.map(notInfinity);
   }
+  */
 
   
   // TODO: refactoring this function. some node has different input order.
@@ -1308,7 +1312,7 @@ class VPL extends React.Component{
     }
 
     let remapOriginalSize = sizeArray.map(remap);
-    let remapSize = remapOriginalSize.slice(0);
+    // let remapSize = remapOriginalSize.slice(0); // 'remapSize is assigned a value but never used'
     let props = {
         size: remapOriginalSize,
         translation: translationArray
@@ -1386,7 +1390,7 @@ class VPL extends React.Component{
             // return  this.AdditionNode(p);
         */
     // }
-  };
+  }
 
   nodeSVG({color, name, type, nodeKey, options}){
       // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
@@ -1415,7 +1419,8 @@ class VPL extends React.Component{
               { Object.entries(inputs)
                   .map(([input, abbr], index) =>
                     <g
-                      ref={`${nodeKey}_plug_input_${input}`}
+                      key={`${nodeKey}_plug_input_${input}`}
+                      ref={(ref) => this[`${nodeKey}_plug_input_${input}`] = ref}
                       className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="input" data-input={input} 
                       transform={`translate(0, ${Style.plug.height / 2 + Style.topOffset + Style.plug.marginTop * index})`}
                     >
@@ -1433,7 +1438,7 @@ class VPL extends React.Component{
 
               {/* Output Plug */}
               <g
-                ref={`${nodeKey}_plug_output`}
+                ref={(ref) => this[`${nodeKey}_plug_output`] = ref}
                 className="plug" data-node-key={nodeKey} data-plug="true" data-plug-type="output" data-output={output} 
                 transform={`translate(${nodeWidth - Style.plug.width}, ${Style.plug.height / 2 + Style.topOffset})`}
               >
@@ -1461,7 +1466,8 @@ class VPL extends React.Component{
                     .map(([attr, def], index) => { // 'attribute': 'default value' 
                       const value = options[attr] || def
                       return (
-                        <text 
+                        <text
+                          key={`${nodeKey}_option_${attr}`}
                           onClick={() => {this.updateNodeOption(nodeKey, attr, Number(value))}} 
                           x={nodeWidth / 2} y={43 + index * 13} 
                           fontSize={Style.fontSize.propertyName + 'px'} 
@@ -1716,7 +1722,7 @@ class VPL extends React.Component{
   }
   */
   
-
+  /* unused function
   createLinkObject(link, key){
     if(link.type === 'BOTTOM'){
         return (
@@ -1729,6 +1735,7 @@ class VPL extends React.Component{
         );
     }
   }
+  */
 
   getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -1925,11 +1932,13 @@ class VPL extends React.Component{
         geometry.addressArray, geometry.cols, geometry.rows, geometry.n, geometry.bounds, geometry.shaderText, true, geometry.properties);
     Action.mapAddGeometry(geometry.layerName, P);
 
+    /*
     let geoJSON = {
         minMax: geometry.minMax,
         length: geometry.length,
         hashedData: geometry.hashedData
     };
+    */
 
     /* don't add node layer to sidebar
     Action.sideAddLayer(createLayer(geometry.layerName, geometry.propVals.toString(), true, 
@@ -1963,13 +1972,15 @@ class VPL extends React.Component{
 
             </div>
             <div className = "row">
-              <svg className="vpl" ref={"mainSvgElement"} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+              <svg className="vpl" ref={(ref) => this.mainSvgElement = ref} width="100%" height={'800px'} xmlns="http://www.w3.org/2000/svg">
+                  
+
                   {this.linkMarker()}
 
 
                   {
                     Object.entries(nodes)
-                      .map(([key, node], index) => {
+                      .map(([key, node]) => {
                         node.name = node.name ? node.name : node.type
                         node.translate = node.position
                         node.nodeKey = key
