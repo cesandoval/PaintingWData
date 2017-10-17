@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as act from '../store/actions';
 
 // TODO List
 
@@ -30,8 +29,9 @@ class PCoords extends React.Component {
     }
     componentWillReceiveProps(nprops){
         console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
-
-        if(true && nprops.layers.length > 0){
+        // if(true && nprops.layers.length > 0){ 
+        if(!this.state.started && nprops.layers.length > 0){ 
+            // console.log(nprops, 8484848484)
             this.setState({started: true});
 
             const bounds = nprops.layers[0].bounds;
@@ -68,7 +68,6 @@ class PCoords extends React.Component {
             }
 
             // and recalculate parcoords
-            const totalElements = nprops.layers[0].rowsCols['cols']*nprops.layers[0].rowsCols['rows']
             let visibleLayers = nprops.layers.filter(l => l.visible);
             let numLayers = visibleLayers.length;
             // TODO: should be reuse, so rename numLayer to visibleLayersLength
@@ -83,11 +82,12 @@ class PCoords extends React.Component {
             }
 
             let dictBuild = Array(maxVoxels);
-            let dictBrush = []; // review: no use ?
             // var brushedLayers;
             // if (typeof this.minObjs != 'undefined') {
             //     brushedLayers = Object.keys(this.minObjs);
             // }
+            // console.log(visibleLayers)
+            // console.log(nprops.layers)
 
             for(let j = 0; j < numLayers; j++ ){
                 for (let i = 0; i < maxVoxels; i++){
@@ -102,12 +102,13 @@ class PCoords extends React.Component {
                     }
                 }
             }
-            this.build(dictBuild, dictBrush)
+
+            this.build(dictBuild)
             this.layerIndeces = layerIndeces 
         }
     }
 
-    build(data, dictBrush) {
+    build(data) {
         // console.log('build(data, dictBrush)', data, dictBrush)
 
         let minVal = this.minVal[0];
@@ -141,9 +142,8 @@ class PCoords extends React.Component {
         this.setState({pc: pc});
     }
 
-    calcRanges(data){
+    calcRanges(){
         // console.log('calcRanges(data)', data)
-        
         // review: what is the mean of radoms 'true'?
         this.pc.randoms = true;
 
@@ -182,6 +182,9 @@ class PCoords extends React.Component {
             pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
         }
+
+        if(window.renderSec)
+            window.renderSec(1, 'pcoords.js')
     }
     style() {
         return {
@@ -197,8 +200,9 @@ class PCoords extends React.Component {
         }
     }
     render() {
+        let pcoordsRef = (parcoords) => this.pcoordsRef = parcoords;
         return(
-            <div id="parcoords" className="parcoords" ref='parcoords' style={this.style()}></div>
+            <div id="parcoords" className="parcoords" ref={pcoordsRef} style={this.style()}></div>
         );
     }
 }

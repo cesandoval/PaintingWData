@@ -288,7 +288,8 @@
 						scope.needsUpdate = window.setInterval(function(time){
 							if (Date.now()-scope.lastMove < 150) return
 							else {
-								updateTiles()
+								if(window.updateTiles)
+									updateTiles()
 								window.clearInterval(scope.needsUpdate)
 								scope.needsUpdate = false
 							}
@@ -430,6 +431,9 @@
 		}
 		//pan(100,100000)
 		this.update = function () {
+			if(window.renderSec)
+				window.renderSec(2, 'MapControls') // maybe 1 sec
+
 
 			if ( this.autoRotate && state === STATE.NONE ) {
 

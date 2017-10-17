@@ -55,6 +55,21 @@ export const mapAddGeometry = (name, geometry) => (
     })
 )
 
+export const mapRemoveGeometry = (name, geometry) => (
+    store.dispatch({
+        type: c.MAP_REMOVE_GEOMETRY,
+        name,
+        geometry
+    })
+)
+
+export const setOptionShow = (option) => (
+    store.dispatch({
+        type: c.MAP_SET_OPTION_SHOW,
+        option
+    })
+)
+
 export const vlangAddLink = link => (
     store.dispatch({
         type: c.VLANG_ADD_LINK,

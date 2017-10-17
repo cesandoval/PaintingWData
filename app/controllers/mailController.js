@@ -36,7 +36,7 @@ module.exports.sendVoxelEmail = function(email, userId) {
 		to: email, 
     	subject: 'Done Processing Voxels', 
     	text: 'Done Processing Voxels', 
-    	html: 'Done processing voxels access them here: http://paintingwithdata.mit.edu/voxels/' + userId
+    	html: 'Done processing voxels access them here: http://paintingwithdata.com/voxels/' + userId
    	};
 
    	transporter.sendMail(mailOptions, function(error, info) {
@@ -53,7 +53,7 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
     to: email, 
       subject: 'Reset Password', 
       text: 'Reset Password', 
-      html: 'Click this link to reset your password: http://paintingwithdata.mit.edu/users/reset-password/' + passwordLink
+      html: 'Click this link to reset your password: http://paintingwithdata.com/users/reset-password/' + passwordLink
     };
 
     transporter.sendMail(mailOptions, function(error, info) {
@@ -72,7 +72,7 @@ module.exports.sendLayerEmail = function(email, userId) {
     to: email, 
       subject: 'Done Uploading Layer', 
       text: 'Done Uploading Layer', 
-      html: 'Done uploading layer access it here: http://paintingwithdata.mit.edu/layers/' + userId
+      html: 'Done uploading layer access it here: http://paintingwithdata.com/layers/' + userId
     };
 
     transporter.sendMail(mailOptions, function(error, info) {

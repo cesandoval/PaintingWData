@@ -6,17 +6,21 @@ import App from './app';
 
 import Pixels from './pixels';
 import Graph from './graph';
-import PCoords from './pcoords/pcoords';
+import Exporter from './exporter';
 
 if (window.PaintGraph !== undefined) {
     console.error("window.PaintGraph object already exists");
 } else {
     window.PaintGraph = {
         Pixels: Pixels,
-        Graph: Graph
+        Graph: Graph,
+        Exporter: Exporter
     };
 }
 
+if (module.hot) {
+	module.hot.accept();
+}
 
 
 render(

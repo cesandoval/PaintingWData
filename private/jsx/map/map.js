@@ -3,7 +3,7 @@ import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 import PCoords from '../pcoords/pcoords';
-import VPL from '../vprog/Vpl';
+import VPL from '../vprog/rVpl';
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -27,9 +27,11 @@ class MapCanvas extends React.Component {
             // Sets the camera to the voxels' bbox 
             const bbox = newProps.layers[0].bbox;
             const canvas = newProps.map;
-            const setCamera = PaintGraph.Pixels.zoomExtent(canvas, bbox);
 
-            const addMap = PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox);
+            // Set the camera
+            PaintGraph.Pixels.zoomExtent(canvas, bbox);
+            // Add the map to the canvas
+            PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox);
 
             this.setState({layersAdded: true});
 
@@ -48,10 +50,15 @@ class MapCanvas extends React.Component {
         }
     }
     render() {
+        const mapOptionShow = this.props.mapOptionShow
         return(
             <div>
-                <VPL />
-                <PCoords />
+                <div style={{display: (mapOptionShow == 'VPL' ? '' : 'none')}}>
+                    <VPL />
+                </div>
+                <div style={{display: (mapOptionShow == 'PCoords' ? '' : 'none')}}>
+                    <PCoords />
+                </div>
                 <div className="map" id="mapCanvas"/>
                 <div id="pivot"/>
                 <div id="grid"/>
@@ -60,4 +67,4 @@ class MapCanvas extends React.Component {
     }
 }
 
-export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance}))(MapCanvas);
+export default connect(s=> ({layers: s.sidebar.layers, map: s.map.instance, mapOptionShow: s.map.optionShow}))(MapCanvas);

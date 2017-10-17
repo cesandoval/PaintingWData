@@ -1,15 +1,16 @@
 var express = require('express'),
-    path = require('path');
+    path = require('path'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     i18n = require("i18n");
 
-var passport = require('passport');
+var passport = require('passport'),
     flash = require('express-flash'),
-    session = require('cookie-session'),
-    jsonParser = bodyParser.json();
+    session = require('cookie-session');
+    // jsonParser = bodyParser.json();
+
 
  
 var RedisServer = require('redis-server');
@@ -27,6 +28,39 @@ server.open((err) => {
 
 
 var app = express();
+
+if ('production' == app.get('env')) {
+  // just for production code
+}
+
+if ('development' == app.get('env')) {
+  // just for development code
+  console.info('setting dev server...')
+  var webpack = require('webpack'),
+    webpackDevMiddleware = require('webpack-dev-middleware'),
+    webpackHotMiddleware = require('webpack-hot-middleware'),
+    webpackConfig = require('./webpack.config');
+
+  var compiler = webpack(webpackConfig);
+
+  app.use(webpackDevMiddleware(compiler, {
+    hot: true,
+    filename: 'bundle.js',
+    publicPath: webpackConfig.output.publicPath,
+    noInfo: true,
+    stats: {
+      colors: true,
+    },
+    historyApiFallback: true,
+  }));
+
+  app.use(webpackHotMiddleware(compiler, {
+    log: console.log,
+    path: '/__webpack_hmr',
+    heartbeat: 10 * 1000,
+  }))
+
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -70,7 +104,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 var appRouter = require('./app/routers/appRouter');
 var users = require('./app/routers/users');
-var datajson = require('./app/routers/datajson');
 app.use('/users', users);
 app.use('/', appRouter);
 // app.use('/datajson', datajson);
@@ -100,7 +133,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
     res.status(err.status || 500);
     console.log(err)
     res.json({
@@ -110,15 +143,17 @@ if (app.get('env') === 'development') {
   });
 }
 
- // production error handler
- // no stacktraces leaked to user
- app.use(function(err, req, res, next) {
-   res.status(err.status || 500);
-   res.json({
-     message: err.message,
-     error: {}
-   });
- });
+// production error handler
+// no stacktraces leaked to user
+if (app.get('env') === 'production') {
+  app.use(function(err, req, res) {
+    res.status(err.status || 500);
+    res.json({
+      message: err.message,
+      error: {}
+    });
+  });
+}
 
 
 module.exports = app;

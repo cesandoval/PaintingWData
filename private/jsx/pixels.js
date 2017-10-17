@@ -1,3 +1,5 @@
+/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project */
+
 // import '../../public/javascripts/libs/utilities.js'
 export default class Pixels {
     // GeometryObject will be a Three.js geometry
@@ -80,33 +82,21 @@ export default class Pixels {
     }
 
     static buildMapbox(graph, canvas, bbox) {
-        var meshes = 0;
-        var parserRequests = 0;
-        var updaterRequests = 0;
-        var finished = 0;
+
+        // TODO: fix eslint error `no-unused-vars`
+        /* eslint-disable */
+        var meshes = 0
+        var parserRequests = 0
+        var updaterRequests = 0
+        var finished = 0
+        /* eslint-enable */
+
         //compass functionality
-        var pivot = document.querySelector('#grid')
-        var compass = document.querySelector('#compass img')
         var screenPosition;
 
         this.zoomExtent(canvas, bbox)
         
-        function updateCompass(reset){
-            var styling;
-            if (reset) {
-                canvas.controls.straighten();
-                canvas.controls.autoRotate=false;
-                styling = '';
-            }
-            else {
-                var angle = canvas.controls.getAzimuthalAngle()*180/Math.PI;
-                var pitch = canvas.controls.getPolarAngle()*180/Math.PI;
-                styling = 'rotateX('+pitch+'deg) rotateZ('+angle+'deg)'
-            }
-            // compass.style['-webkit-transform'] = styling
-            // pivot.style['-webkit-transform'] = styling
-            // pivot.style['display'] = 'block'
-        }
+
 
         var raycaster = new THREE.Raycaster();
 
@@ -121,12 +111,16 @@ export default class Pixels {
         }
 
         var tilesToGet = 0;
-        var inspectElevation = false;
 
         function assembleUrl(img, coords){
             
             const mapboxStyle = window.mapboxStyle || 'mapbox.light'
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb';//
+            
+            if (mapboxStyle === 'empty') {
+                // return a 1px white color png image
+                return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
+            }
 
             var res = img ? '@2x.png' :'@2x.pngraw';
 
@@ -169,7 +163,6 @@ export default class Pixels {
 
             // whenever parser returns a mesh, make mesh
             parser.addEventListener('message', function(e) {
-                var time = Date.now();
                 var cb = e.data;
                 parserRequests++
                 // console.log(e)
@@ -182,7 +175,6 @@ export default class Pixels {
 
         //initial tile load
         window.setTimeout(function(){
-            updateCompass()
         }, 500);
 
         function updateTiles(){
@@ -257,7 +249,7 @@ export default class Pixels {
                 assembleUrl(true, [z,x,y]),
 
                 //callback function
-                function(err, resp){
+                function(){
                     tilesToGet--
                         finished++
 
@@ -285,23 +277,11 @@ export default class Pixels {
             plane.zoom = z;
             graph.scene.add(plane)
             plane.visible=false
-        };
+        }
 
 
 
         var zoom = getZoom();
-
-        function setCenter(lnglat){
-            var pxCoords = project(lnglat)
-            canvas.camera.position.x = pxCoords.x;
-            canvas.camera.position.z = pxCoords.z;
-            canvas.controls.moveTo(pxCoords, canvas.camera.position.y);
-
-            markerx.setLatLng(lnglat.reverse());
-
-            window.setTimeout(function(){updateTiles()},100);
-            updateCompass(true);
-        }
 
         window.addEventListener( 'resize', onWindowResize, false );
 
@@ -407,7 +387,6 @@ export default class Pixels {
 
     initTransValsAttrs(geometry, dataArray, addresses, lowBnd, highBnd) {
         const allElements = this.pxWidth * this.pxHeight;
-        const numElements = dataArray.length / this.ELEMENTS_PER_ITEM;
 
         const translations = this.initAttribute(allElements * 3, 3, true);
         const values = this.initAttribute(allElements, 1, true);

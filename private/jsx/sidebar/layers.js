@@ -1,9 +1,21 @@
+/*global datavoxelId*/
+
 import React from 'react';
 import { connect } from 'react-redux';
 import * as act from '../store/actions';
 import axios from 'axios';
 
 import Layer from './layer';
+
+// const color10 = d3.scaleOrdinal(d3.schemeCategory10).range() // d3.js v4 (backup)
+const color10 = d3.scale.category10().range() // d3.js v3
+
+// shuffle the color10
+for (let i = color10.length; i; i--) {
+    let j = Math.floor(Math.random() * i);
+    [color10[i - 1], color10[j]] = [color10[j], color10[i - 1]];
+}
+
 
 const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
     name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
@@ -26,7 +38,7 @@ class Layers extends React.Component {
                     let property = l.geojson.geojson.features[0].properties.property;
                     return {userLayerName: l.Datafile.Datalayers[0].userLayerName, name: l.geojson.layername, property:property};
                 }))
-                act.sideAddLayers(data.map(l => {
+                act.sideAddLayers(data.map((l, index) => {
                     const length = l.geojson.geojson.features.length;
                     const propertyName = l.geojson.geojson.features[0].properties.property;
                     
@@ -44,9 +56,6 @@ class Layers extends React.Component {
                     // geojson -> Float32Array([x, y, z, w, id])
                     // Map Geojson data to matrix index
 
-                    let xDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[0])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[0]));
-                    let yDiff = Math.abs(parseFloat(l.geojson.geojson.features[0].geometry.coordinates[1])-parseFloat(l.geojson.geojson.features[1].geometry.coordinates[1]));
-
                     const projOffset = 111.111; 
                     const ptDistance = l.Datavoxel.ptDistance * projOffset;
                     const lowBnd = ptDistance/10;
@@ -61,7 +70,7 @@ class Layers extends React.Component {
                         // Shouldn't need to parse
                         //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
                         const coords = g.geometry.coordinates;
-                        const id = parseFloat(g.id);
+                        // const id = parseFloat(g.id);
                         const weight = parseFloat(g.properties[l.layername]);
                         const row = g.properties.neighborhood.row;
                         const column = g.properties.neighborhood.column; 
@@ -78,11 +87,16 @@ class Layers extends React.Component {
                     let maxVal = Number.NEGATIVE_INFINITY;
 
                     for (let i = 0, j=0; i < length; i++, j=j+3){
-                        if (mappedGeojson[i][3]<minVal) { minVal=mappedGeojson[i][3] };
-                        if (mappedGeojson[i][3]>maxVal) { maxVal=mappedGeojson[i][3]};
+                        if (mappedGeojson[i][3]<minVal) { minVal=mappedGeojson[i][3] }
+                        if (mappedGeojson[i][3]>maxVal) { maxVal=mappedGeojson[i][3]}
                         transGeojson.otherdata[i] = mappedGeojson[i];
                         transGeojson.hashedData[mappedGeojson[i][7]] = mappedGeojson[i];
                     }
+
+                    // TODO: more than 10 color
+                    l.color1 = color10[index % 10]
+                    l.color2 = l.color1
+                    // l.color2 = d3.rgb(l.color1).brighter().toString()
 
                     transGeojson.minMax= [minVal, maxVal]
                     return createLayer(l.layername, propertyName, true, 

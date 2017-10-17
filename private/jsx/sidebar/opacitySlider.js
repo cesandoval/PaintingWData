@@ -1,5 +1,4 @@
 import React from 'react';
-import * as act from '../store/actions';
 import { connect } from 'react-redux';
 
 class OpacitySlider extends React.Component {
@@ -16,6 +15,10 @@ class OpacitySlider extends React.Component {
             let geometry = this.props.geometries[geo];
             geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
         }
+
+        if(window.renderSec)
+            window.renderSec(0.5, 'OpacitySlider') 
+
     }
     
     render() {

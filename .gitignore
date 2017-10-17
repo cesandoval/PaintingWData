@@ -1,3 +1,9 @@
+# Ignore Mac DS_Store files
+.DS_Store
+**/.DS_Store
+*.DS_Store
+
+
 # we dont want to add node modules to github
 /node_modules
 # we dont want to add the shape_files directory either
@@ -14,3 +20,8 @@ ngrok
 /worker/dump.rdb
 /public/.DS_Store
 /public/javascripts/.DS_Store
+public/javascripts/.DS_Store
+.DS_Store
+/lib/.DS_Store
+deploy.txt
+

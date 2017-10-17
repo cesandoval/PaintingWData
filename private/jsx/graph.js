@@ -8,7 +8,7 @@ export default class Graph {
         this.scene = this.initScene();
         //this.scene.fog = new THREE.Fog( 0xffffff, 2000, 10000 );
         this.camera = this.initCamera( this.clientWidth, this.clientHeight );
-        this.renderer = this.initRenderer( this.clientWidth, this.clientHeight, window.devicePixelRatio );
+        this.renderer = this.initRenderer( this.clientWidth, this.clientHeight );
         this.controls = this.initControls(this.camera, this.canvas)
 
         // Optional
@@ -16,6 +16,13 @@ export default class Graph {
 
         // Put canvas onto the page
         this.insertCanvas(this.canvas, this.renderer.domElement);
+
+        this.frameTime = new Date().getTime()
+        this.startTime = new Date().getTime()
+
+        this.renderUntil = Date.now()
+        this.untilTime = this.renderUntil - Date.now()
+        this.rendering = false
 
 
     }
@@ -36,11 +43,20 @@ export default class Graph {
     }
 
     // Create a Renderer
-    initRenderer(width, height, pixelRatio) {
-        var renderer = new THREE.WebGLRenderer({ precision: "mediump", antialias: true });
+    initRenderer(width, height) {
+        var renderer = new THREE.WebGLRenderer({ precision: "mediump", antialias: true, preserveDrawingBuffer: true });
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( width, height )
         renderer.setClearColor(new THREE.Color('white'));
+
+        window.render = () => renderer.render(this.scene, this.camera)
+        
+        window.getScreenShot = () => {
+            const img = renderer.domElement.toDataURL( 'image/jpeg' )
+            const w = window.open('about:blank','PaintingWithData Screenshot')
+            w.document.write("<img src='"+img+"' alt='PaintingWithData Screenshot'/>")
+        }
+
         return renderer;
     }
 
@@ -57,8 +73,24 @@ export default class Graph {
     }
 
     start() {
+        // (function() {
+        //     window.requestAnimationFrame = 
+        //         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+        //         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+        // })();
+
         window.addEventListener( 'resize', this.onResize.bind(this), false );
-        this.render();
+        this.renderSec(7);
+
+        window.renderSec = this.renderSec.bind(this)
+
+        window.setInterval(()=>{
+            if(!this.rendering){
+                window.requestAnimationFrame(()=>{
+                    window.render()
+                })
+            }
+        }, 2000)
     }
 
     addMesh(mesh) {
@@ -100,8 +132,42 @@ export default class Graph {
         this.renderer.setSize( Math.floor(window.innerWidth * 0.799) , window.innerHeight );
     }
 
+    renderSec(sec = 1, label = '') {
+
+        const untilTime = Date.now() + sec * 1000
+
+        if(untilTime > this.renderUntil)
+            this.renderUntil = untilTime
+
+        // if(until > 0){
+        if(this.rendering == false){
+            this.render()
+        }
+
+        console.log(`renderSec(${sec}) until ${this.renderUntil}. ${label}`)
+    }
+
     render() {
+        
         this.renderer.render(this.scene, this.camera);
-        window.requestAnimationFrame( this.render.bind(this) );
+
+        const until = Math.ceil((this.renderUntil - Date.now())/1000)
+
+        if(this.untilTime != until) {
+            this.untilTime = until
+            console.log(`render ${until} secs`)
+        }
+        
+        if(until > 0) {
+            this.rendering = true
+            window.requestAnimationFrame(()=>{
+                this.render()
+            })
+        } else {
+            this.rendering = false
+        }
+        
+        // window.requestAnimationFrame( this.render.bind(this) );
+        // setTimeout(this.render.bind(this), 1000); // do not under 1000
     }
 }

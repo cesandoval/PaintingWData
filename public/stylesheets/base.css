@@ -110,8 +110,26 @@
     margin: 4px 0px;
     text-align: center;
     z-index: 4;
-    left: 160px;
+    left: 190px;
     bottom: 0px;
+}
+
+#mapStyleOptions button{
+    width: inherit;
+}
+
+#mapStyleOptions .dropdown-menu{
+    background-color: white;
+}
+
+#add-node-dropdown{
+    top: 10px;
+    padding: 6px 12px;
+}
+
+#add-node-dropdown + ul{
+    background-color: white;
+    top: 45px;
 }
 
 #somShow {
