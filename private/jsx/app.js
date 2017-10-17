@@ -1,19 +1,17 @@
-import React from 'react';
+import React from 'react'
 
-import Sidebar from './sidebar/sidebar';
-import Options from './options/options';
-import Map from './map/map';
-
+import Sidebar from './sidebar/sidebar'
+import Options from './options/options'
+import Map from './map/map'
 
 export default class App extends React.Component {
     render() {
-        return(
+        return (
             <div className="mapMain">
                 <Options />
                 <Sidebar />
                 <Map />
-
             </div>
-        );
+        )
     }
 }
