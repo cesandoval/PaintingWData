@@ -1,11 +1,8 @@
-const initialOptionsState = {
-}
+const initialOptionsState = {}
 
-export default (state=initialOptionsState, action) => {
+export default (state = initialOptionsState, action) => {
     switch (action.type) {
-
         default:
-            return state;
-
+            return state
     }
 }

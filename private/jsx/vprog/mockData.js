@@ -1,8 +1,5 @@
-
-
-
 export const Nodes = {
-	/*
+    /*
 	[$nodeKey]: {
 		type: [nodeType], // e.g. 'layer', 'add', 'sub', 'log'
 		// source: [datasetKey], // TBD. optional, if type of node is 'layer'
@@ -18,8 +15,7 @@ export const Nodes = {
 		visibility: Boolean,
 	},
 	*/
-
-	/*
+    /*
 	'$nodeA': {
 		type: 'LOG',
 		options: {
@@ -70,7 +66,7 @@ export const Nodes = {
 }
 
 export const Links = {
-	/*
+    /*
 	inputs: { // for arithmetic iterate
 		// [$nodeKey]:{ // the node key of input 
 		// 	[inputKey]: [$nodeKey],
@@ -116,6 +112,3 @@ export const Links = {
                ┗━━━━━┛
 
 */
-
-
-
