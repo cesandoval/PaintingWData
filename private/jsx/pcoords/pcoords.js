@@ -15,7 +15,6 @@ import * as act from '../store/actions';
 class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
-    // this mean display at where?
 
     // TODO EVERYTIME THE COLOR GETS UPDATED, THE PCOORDS GET RESTARTED, BUT THE MIN/MAX VALS DONT
     constructor(props){
@@ -31,9 +30,6 @@ class PCoords extends React.Component {
     }
     componentWillReceiveProps(nprops){
         console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
-        // const XXX = nprops.layers.length, or this.props.layers ?
-
-        // will the layers properties change by other operation?
 
         if(true && nprops.layers.length > 0){
             this.setState({started: true});
@@ -44,13 +40,11 @@ class PCoords extends React.Component {
             this.highBnd = bounds[1];
 
             // Sets the mins and maxs values of every layer
-            // if 'userLayerName' are the same in different layer? would it cause error?
             const mins = Array(nprops.layers.length);
             const maxs = Array(nprops.layers.length);
             const layerIndeces = {};
             const layersNameProperty = {}
 
-            // might have some better methods to manage indeces and nameProperty of layers
             for (let i = 0; i<nprops.layers.length; i++) {
                 layerIndeces[nprops.layers[i].userLayerName+'_'+nprops.layers[i].propertyName] = i
                 layersNameProperty[nprops.layers[i].userLayerName+'_'+nprops.layers[i].propertyName] = nprops.layers[i].name;
@@ -76,7 +70,8 @@ class PCoords extends React.Component {
             // and recalculate parcoords
             const totalElements = nprops.layers[0].rowsCols['cols']*nprops.layers[0].rowsCols['rows']
             let visibleLayers = nprops.layers.filter(l => l.visible);
-            let numLayers = visibleLayers.length; // need reuse, rename to visibleLayersLength
+            let numLayers = visibleLayers.length;
+            // TODO: should be reuse, so rename numLayer to visibleLayersLength
 
             // get the max length of Voxels of layers(?)
             let maxVoxels = 0;
@@ -88,20 +83,20 @@ class PCoords extends React.Component {
             }
 
             let dictBuild = Array(maxVoxels);
-            let dictBrush = []; // no use ?
+            let dictBrush = []; // review: no use ?
             // var brushedLayers;
             // if (typeof this.minObjs != 'undefined') {
             //     brushedLayers = Object.keys(this.minObjs);
             // }
 
-            // ??
             for(let j = 0; j < numLayers; j++ ){
                 for (let i = 0; i < maxVoxels; i++){
                     if (dictBuild[i] == undefined){
                         dictBuild[i] = {};
                     }
                     if (indicesArray[i] in visibleLayers[j].geojson.hashedData) {
-                        dictBuild[i][visibleLayers[j].userLayerName+'_'+visibleLayers[j].propertyName] = visibleLayers[j].geojson.hashedData[indicesArray[i]][3]; // [3]?
+                        dictBuild[i][visibleLayers[j].userLayerName+'_'+visibleLayers[j].propertyName] = visibleLayers[j].geojson.hashedData[indicesArray[i]][3]; 
+                        // review: [3] ?
                     } else {
                         dictBuild[i][visibleLayers[j].userLayerName+'_'+visibleLayers[j].propertyName] = 0;
                     }
@@ -113,7 +108,7 @@ class PCoords extends React.Component {
     }
 
     build(data, dictBrush) {
-        console.log('build(data, dictBrush)', data, dictBrush)
+        // console.log('build(data, dictBrush)', data, dictBrush)
 
         let minVal = this.minVal[0];
         let maxVal = this.maxVal[0];
@@ -142,25 +137,26 @@ class PCoords extends React.Component {
         // }
         
         pc.on("brushend", this.calcRanges.bind(this));
-        this.pc = pc; // what is different with the next line
+        this.pc = pc;
         this.setState({pc: pc});
     }
 
     calcRanges(data){
-        console.log('calcRanges(data)', data)
+        // console.log('calcRanges(data)', data)
         
-        // what is the mean of radoms 'true'?
+        // review: what is the mean of radoms 'true'?
         this.pc.randoms = true;
 
         const brushSelection = this.pc.brushExtents();
         const layerNames = Object.keys(brushSelection);
-        console.log('brushSelection', brushSelection)
-        console.log('layerNames', layerNames)
+        // console.log('brushSelection', brushSelection)
+        // console.log('layerNames', layerNames)
 
         // Calculate range of data
         let maxObjs = {}
         let minObjs = {}
-        if (layerNames.length > 0) { // layerNames less then 0 at what time? 
+        if (layerNames.length > 0) { 
+        // review: when is the layerNames.length less then 0? 
             for (let i = 0; i < layerNames.length; i++){
                 let selection = brushSelection[layerNames[i]];
                 minObjs[layerNames[i]] = selection[0];
@@ -176,11 +172,12 @@ class PCoords extends React.Component {
 
         // const remap = function(selection, layerIndex, mins, maxs) {
         const remap = function(x, i, mins, maxs) {
-            return (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) + lowBnd; // have more simple way?
+            return (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) + lowBnd;
         }
 
         // the range(min and max) of uniforms is 0 - 1
-        for (let name in minObjs) { // change to layerNames.length
+        for (let name in minObjs) {
+            // review: replace minObjs to layerNames.length
             let pixels = this.props.geometries[this.layersNameProperty[name]];
             pixels.material.uniforms.min.value = remap(minObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
             pixels.material.uniforms.max.value = remap(maxObjs[name], this.layerIndeces[name], this.minVal, this.maxVal);
