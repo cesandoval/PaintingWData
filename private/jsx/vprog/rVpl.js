@@ -659,16 +659,6 @@ class VPL extends React.Component {
         // TODO: save computed data to this state
         // TODO: refactoring this function. some node has different input order.
         const computeNodeThenAddVoxel = (node, inputNodes) => {
-            /*
-      const geometries = this.newProps.map.geometries
-      console.log(`S compute ${node.type} ${node.nodeKey}`, geometries, inputNodes, node)
-      let geometry1 = geometries[inputNodes[0]]
-      let geometry2 = geometries[inputNodes[1]]
-      console.log(`E compute ${node.type} ${node.nodeKey}`, {node, inputNodes, geometry1, geometry2})
-
-      if(geometry1 && geometry2)
-        this.evalArithmeticNode(geometry1, geometry2, node, NodeType[node.type].arithmetic)
-      */
 
             const mapGeometries = this.newProps.map.geometries
             const mathFunction = NodeType[node.type].arithmetic
@@ -735,12 +725,6 @@ class VPL extends React.Component {
     createNodeObject(node, key) {
         // console.log(`createNodeObject(${node}, ${key})`, node)
 
-        /* unused
-      let p = node.position;
-      let property = node.property;
-      let userLayerName = node.userLayerName;
-      let name = node.name;
-      */
         const nodeRef = 'node_' + key
 
         return (
@@ -748,10 +732,6 @@ class VPL extends React.Component {
                 className="node"
                 ref={ref => (this[nodeRef] = ref)}
                 data-key={key}
-                // onMouseOver  = {this.handleMouseOver}
-                // onMouseLeave = {this.handleMouseLeave}
-                // onMouseUp    = {this.handleMouseUp}
-                // onMouseDown  = {this.handleMouseDown}
                 transform={`translate(${node.translate.x},${node.translate.y})`}
             >
                 {this.decideNodeType(node)}
@@ -768,27 +748,6 @@ class VPL extends React.Component {
             names
         )
 
-        /*
-    switch(node.type){
-        case consts.MULTIPLICATION_NODE:
-            return  this.evalArithmeticNode(geometry1, geometry2, node, math.dotMultiply, names);
-        case consts.DIVISION_NODE:
-            return this.evalArithmeticNode(geometry1, geometry2, node, math.dotDivide, names);
-        case consts.SUBTRACTION_NODE:
-            return this.evalArithmeticNode(geometry1, geometry2, node, math.subtract, names);
-        case consts.LOG_NODE:
-            return this.evalArithmeticNode(geometry1, geometry2, node, this.logNode, names);
-        // case consts.AND_NODE:
-        //     return  this.evalAndNode(p);
-        // case consts.OR_NODE:
-        //     return  this.evalOrNode(p);
-        // case consts.NOT_NODE:
-        //     return  this.evalNotNode(p);
-        default:
-            // This is for addition
-            return  this.evalArithmeticNode(geometry1, geometry2, node, math.add, names);
-    }
-    */
     }
 
 
@@ -869,7 +828,6 @@ class VPL extends React.Component {
         }
 
         let remapOriginalSize = sizeArray.map(remap)
-        // let remapSize = remapOriginalSize.slice(0); // 'remapSize is assigned a value but never used'
         let props = {
             size: remapOriginalSize,
             translation: translationArray,
@@ -905,48 +863,6 @@ class VPL extends React.Component {
 
         return this.nodeSVG(node)
 
-        /*
-    const p = position
-
-    switch(type){
-        case consts.LAYER_NODE:
-          return  this.LayerNode(p, property, userLayerName, name);
-        default:
-          const inputs = NodeType[type].inputs
-          const inputNum = Object.keys(inputs).length ? Object.keys(inputs).length : 0
-
-          return this.nodeSVG({ color, name, inputs, type })
-    */
-
-        /*
-        case consts.MULTIPLICATION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-            // return  this.MultiplicationNode(p);
-        case consts.SUBTRACTION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-            // return this.SubtractionNode(p);
-        case consts.DIVISION_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-            // return this.DivisionNode(p);
-        case consts.LOG_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
-            // return this.LogarithmNode(p);
-        case consts.AND_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-            // return  this.AndNode(p);
-        case consts.OR_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-            // return  this.OrNode(p);
-        case consts.NOT_NODE:
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 1})
-            // return  this.NotNode(p);
-        case consts.ADDITION_NODE: 
-            return this.nodeSVG({ color1, color2, p, layerName, inputNum: 2})
-        default:
-            // return  this.nodeSVG({ color1, color2, p, 'default', inputNum: 1); // TODO: what is default?
-            // return  this.AdditionNode(p);
-        */
-        // }
     }
 
     nodeSVG({ color, name, type, nodeKey, options }) {
@@ -1109,31 +1025,6 @@ class VPL extends React.Component {
             </g>
         )
 
-        /*
-      return(
-          <g>
-              <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-              x = {p.x} y = {p.y} ></rect>
-              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>I</text>
-              {
-                (inputNum > 1) &&
-                (<g>
-                    <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-                    <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>I</text>
-                </g>)
-              }
-              <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-              <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-              <text className = {"nodeText"} x = {p.x + 102} y = {p.y + 25} fontSize={"16"} style={{textAnchor: 'middle'}}>
-                      {layerName}
-              </text>
-
-              <Panel color1={color1} color2={color2} position={p} index={layerName}/>
-              <Slider position={p} index={layerName}/>
-          </g>
-          );
-      */
     }
 
 
@@ -1146,7 +1037,6 @@ class VPL extends React.Component {
   
 
     addNode(type) {
-        // TODO: WIP
 
         const nodes = this.state.Nodes
         const nodeHashKey =
@@ -1156,54 +1046,6 @@ class VPL extends React.Component {
 
         this.setState({ Nodes: nodes })
 
-        /*
-    const color10 = d3.scale.category10().range(); // d3.js v3
-    // shuffle the color10
-    for (let i = color10.length; i; i--) {
-        let j = Math.floor(Math.random() * i);
-        [color10[i - 1], color10[j]] = [color10[j], color10[i - 1]];
-    }
-
-    let color1 = color10[(this.newProps.layers.length + 1) % 10];
-    let color2 = color1
-    // let color2 = d3.rgb(color1).brighter().toString()
-
-    let currentLayers = [];
-    for (let i=0; i < this.props.layers.length; i++) {
-        currentLayers.push(this.props.layers[i].name);
-    }
-    let layerName
-    if (! currentLayers.includes(type)) {
-        layerName = type;
-    } else {
-        for (let layerNum in currentLayers) {
-            if (currentLayers[layerNum].startsWith(type + '_')){
-                let n = currentLayers[layerNum].lastIndexOf("_");
-                let layerIndex = currentLayers[layerNum].substring(n+1);
-
-                if (!isNaN(layerIndex)) {
-                    let newLayerIndex = parseInt(currentLayers[layerNum].slice(n+1))+1;
-                    layerName = currentLayers[layerNum].slice(0,n+1)+newLayerIndex;
-                }
-            } else {
-                layerName = type + '_1';
-            }
-        }
-    }
-
-    const node = {
-        type,
-        layerName,
-        color1,
-        color2,
-    }
-
-    // this.evaluateNodeType('MULTIPLICATION_NODE', this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'])
-    this.evaluateNodeType(node, this.newProps.map.geometries['Asthma_ED_Visit'], this.newProps.map.geometries['Census_HomeValue'], ['Asthma_ED_Visit', 'Census_HomeValue'])
-    // this.evaluateNodeType('LOG_NODE', this.newProps.map.geometries['Asthma_ED_Visit'])
-    
-    Action.vlangAddNode({ ref: "node_" + this.props.nodes.length + 1, layerName, type, color1, color2, position: this.getRandomPosition(), translate: {x: 0, y: 0}});
-    */
     }
 
 
@@ -1256,18 +1098,7 @@ class VPL extends React.Component {
         )
         Action.mapAddGeometry(geometry.layerName, P)
 
-        /*
-    let geoJSON = {
-        minMax: geometry.minMax,
-        length: geometry.length,
-        hashedData: geometry.hashedData
-    };
-    */
 
-        /* don't add node layer to sidebar
-    Action.sideAddLayer(createLayer(geometry.layerName, geometry.propVals.toString(), true, 
-        color1, color2, geoJSON, [], {rows : geometry.rows, columns : geometry.columns}, geometry.bounds, geometry.allIndices, geometry.shaderText, geometry.layerName))
-    */
     }
 
     render() {
@@ -1321,13 +1152,6 @@ class VPL extends React.Component {
                             return this.createNodeObject(node, key)
                         })
 
-                        /*
-                    this.props.nodes.map((node, index) => {
-                    console.log('props.nodes', node)
-                    // if(node.type == 'LAYER_NODE')
-                      return this.createNodeObject(node, index);  
-                    })
-                    */
                         }
 
                         {// do not display temp link when its `from` and `to` is the same
@@ -1338,11 +1162,7 @@ class VPL extends React.Component {
                             : ''}
                         {this.createLinks()
 
-                        /*
-                    this.props.links.map((link, index) => {
-                      return this.createLinkObject(link, index);
-                    })
-                    */
+              
                         }
                     </svg>
                 </div>
@@ -1351,11 +1171,7 @@ class VPL extends React.Component {
     }
 }
 
-/* don't add node layer to sidebar
-const createLayer = (name, propertyName, visible, color1='#00ff00', color2='#0000ff', geojson=[], bbox, rowsCols, bounds, allIndices, shaderText, userLayerName) => ({
-    name, propertyName, visible, color1, color2, geojson, bbox, rowsCols, bounds, allIndices, shaderText, userLayerName
-})
-*/
+
 
 const mapStateToProps = state => {
     return {
