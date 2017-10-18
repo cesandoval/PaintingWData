@@ -59,29 +59,18 @@ class VPL extends React.Component {
 
         this.newProps = {}
 
-
-
-
-
         this.createNodeObject = this.createNodeObject.bind(this)
-
 
         this.nodeSVG = this.nodeSVG.bind(this)
 
-
         this.evalArithmeticNode = this.evalArithmeticNode.bind(this)
 
-
-
         this.addNode = this.addNode.bind(this)
-
 
         this.addVoxelGeometry = this.addVoxelGeometry.bind(this)
 
         $(window).on('keydown', this.handleKeyDown)
         $(window).on('keyup', this.handleKeyUp)
-
-    
 
         this.state = {
             Nodes,
@@ -183,10 +172,7 @@ class VPL extends React.Component {
         }
     }
 
-
     componentDidMount() {
-
-
         // const bodyDOM = document.body
         const vplDOM = document.querySelector('svg.vpl')
         const mouseDown$ = Rx.Observable.fromEvent(vplDOM, 'mousedown')
@@ -333,7 +319,6 @@ class VPL extends React.Component {
     componentDidUpdate() {
         // componentDidUpdate(nextProps){
         // console.log('props changed ...', nextProps)
-
     }
 
     moveNode = ({ nodeKey, newPosition }) => {
@@ -546,32 +531,32 @@ class VPL extends React.Component {
 
     linkThenComputeNode = () => {
         /*
-    inputs: { // for arithmetic iterate
-      // [toNode]: {
-      //   [toInput]: srcNode,
-      // },
-      '$nodeC':{
-        'Minuend': '$nodeA',
-        'Subtrahend': '$nodeB',
-      },
-      '$nodeD':{
-        'Numerator': '$nodeB',
-        'Denominator': '',
-      },
-    },
-    outputs: { // for checking the limitation of links
-      // [srcNode]: {
-      //   [toNode]: toInput,
-      // },
-      '$nodeA':{
-        '$nodeC': 'Minuend',
-      },
-      '$nodeB':{
-        '$nodeC': 'Subtrahend',
-        '$nodeD': 'Numerator',
-      },
-    },
-    */
+        inputs: { // for arithmetic iterate
+          // [toNode]: {
+          //   [toInput]: srcNode,
+          // },
+          '$nodeC':{
+            'Minuend': '$nodeA',
+            'Subtrahend': '$nodeB',
+          },
+          '$nodeD':{
+            'Numerator': '$nodeB',
+            'Denominator': '',
+          },
+        },
+        outputs: { // for checking the limitation of links
+          // [srcNode]: {
+          //   [toNode]: toInput,
+          // },
+          '$nodeA':{
+            '$nodeC': 'Minuend',
+          },
+          '$nodeB':{
+            '$nodeC': 'Subtrahend',
+            '$nodeD': 'Numerator',
+          },
+        },
+        */
 
         const nodes = this.state.Nodes
         window.nodes = nodes
@@ -659,7 +644,6 @@ class VPL extends React.Component {
         // TODO: save computed data to this state
         // TODO: refactoring this function. some node has different input order.
         const computeNodeThenAddVoxel = (node, inputNodes) => {
-
             const mapGeometries = this.newProps.map.geometries
             const mathFunction = NodeType[node.type].arithmetic
             const options = Object.assign(
@@ -719,9 +703,6 @@ class VPL extends React.Component {
         )
     }
 
-
-
-
     createNodeObject(node, key) {
         // console.log(`createNodeObject(${node}, ${key})`, node)
 
@@ -747,9 +728,7 @@ class VPL extends React.Component {
             NodeType[node.type].arithmetic,
             names
         )
-
     }
-
 
     // TODO: refactoring this function. some node has different input order.
     evalArithmeticNode(node, mathFunction, options, geometries) {
@@ -777,18 +756,18 @@ class VPL extends React.Component {
         let sizeArray = mathFunction(geomArray, options)
 
         /*
-    const translationArray = new Float32Array(arraySize*3);
-    for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
-        translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
-        translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
-        translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-        if (allIndices.includes(j)) {
-            let hashedArray = Array(8);
-            hashedArray[3] = sizeArray[j];
-            hashedData[j] = hashedArray;
+        const translationArray = new Float32Array(arraySize*3);
+        for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
+            translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
+            translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
+            translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
+            if (allIndices.includes(j)) {
+                let hashedArray = Array(8);
+                hashedArray[3] = sizeArray[j];
+                hashedData[j] = hashedArray;
+            }
         }
-    }
-    */
+        */
 
         const translationArray = new Float32Array(arraySize * amplifier)
         for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
@@ -862,7 +841,6 @@ class VPL extends React.Component {
         // console.log(`decideNodeType()`, node)
 
         return this.nodeSVG(node)
-
     }
 
     nodeSVG({ color, name, type, nodeKey, options }) {
@@ -1024,9 +1002,7 @@ class VPL extends React.Component {
                 </g>
             </g>
         )
-
     }
-
 
     getRandomInt(min, max) {
         min = Math.ceil(min)
@@ -1034,10 +1010,7 @@ class VPL extends React.Component {
         return Math.floor(Math.random() * (max - min)) + min //The maximum is exclusive and the minimum is inclusive
     }
 
-  
-
     addNode(type) {
-
         const nodes = this.state.Nodes
         const nodeHashKey =
             (+new Date()).toString(32) +
@@ -1045,9 +1018,7 @@ class VPL extends React.Component {
         nodes[nodeHashKey] = this.newNodeObj(type)
 
         this.setState({ Nodes: nodes })
-
     }
-
 
     linkMarker() {
         return (
@@ -1066,8 +1037,6 @@ class VPL extends React.Component {
             </defs>
         )
     }
-
- 
 
     addVoxelGeometry(geometry) {
         const map = this.newProps.map.instance
@@ -1097,8 +1066,6 @@ class VPL extends React.Component {
             geometry.properties
         )
         Action.mapAddGeometry(geometry.layerName, P)
-
-
     }
 
     render() {
@@ -1150,9 +1117,7 @@ class VPL extends React.Component {
                             node.nodeKey = key
 
                             return this.createNodeObject(node, key)
-                        })
-
-                        }
+                        })}
 
                         {// do not display temp link when its `from` and `to` is the same
                         // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
@@ -1160,18 +1125,13 @@ class VPL extends React.Component {
                         JSON.stringify(this.state.tempLink.to)
                             ? this.createTempLink()
                             : ''}
-                        {this.createLinks()
-
-              
-                        }
+                        {this.createLinks()}
                     </svg>
                 </div>
             </div>
         )
     }
 }
-
-
 
 const mapStateToProps = state => {
     return {
