@@ -1,28 +1,27 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
 class OpacitySlider extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {opacity: 50};
+    constructor(props) {
+        super(props)
+        this.state = { opacity: 50 }
 
-        this.changeOpacity = this.changeOpacity.bind(this);
+        this.changeOpacity = this.changeOpacity.bind(this)
     }
 
-    changeOpacity(e){
-        this.setState({opacity: e.target.value});
+    changeOpacity(e) {
+        this.setState({ opacity: e.target.value })
         for (var geo in this.props.geometries) {
-            let geometry = this.props.geometries[geo];
-            geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
+            let geometry = this.props.geometries[geo]
+            geometry.material.uniforms.transparency.value =
+                parseFloat(e.target.value) / 100.0
         }
 
-        if(window.renderSec)
-            window.renderSec(0.5, 'OpacitySlider') 
-
+        if (window.renderSec) window.renderSec(0.5, 'OpacitySlider')
     }
-    
+
     render() {
-        return(
+        return (
             <div className="opacity-slider">
                 <div className="row text-center">
                     <p className="slider-name"> Opacity </p>
@@ -32,15 +31,25 @@ class OpacitySlider extends React.Component {
                         <p className="slider-label"> 0 </p>
                     </div>
                     <div className="col-md-9">
-                        <input type="range" name="points" id="points" onChange={this.changeOpacity} value={this.state.opacity} min="0" max="100" /> 
+                        <input
+                            type="range"
+                            name="points"
+                            id="points"
+                            onChange={this.changeOpacity}
+                            value={this.state.opacity}
+                            min="0"
+                            max="100"
+                        />
                     </div>
                     <div className="col-md-1">
                         <p className="slider-label"> 100 </p>
                     </div>
                 </div>
             </div>
-        );
+        )
     }
 }
 
-export default connect(s=>({map: s.map, geometries: s.map.geometries}))(OpacitySlider);
+export default connect(s => ({ map: s.map, geometries: s.map.geometries }))(
+    OpacitySlider
+)
