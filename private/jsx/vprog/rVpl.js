@@ -57,130 +57,31 @@ class VPL extends React.Component {
         this.width = 200
         this.height = 130
 
-        /*
-    this.style = {
-      rx: '2px',
-      ry: '2px',
-      niw: 20, // node input width
-      nih: 20, // node input height
-      nito: 5, // node input top offset
-      nibo: 30, // node input top offset
-      tltlo:  5, // top left text left offset
-      tltto:  20, // top left text top offset
-      niClassName: "nodeInput",
-    }
-    */
-
         this.newProps = {}
 
-        /*
-    this.linksMap = this.refToElement(this.props.links);
-    this.nodesMap = this.refToElement(this.props.nodes);
-    this.nodeToLink = this.populateNodeToLink(this.props);
-    this.linkToNode = this.populateLinkToNode(this.props);
-    this.linksList = this.populateLinksList(this.props);
-    */
 
-        /*
-    this.dp = {
-      mouseInNode: false,
-      nodeUnderMouse: null,
-      nodeUnderMouseRef: null,
-      mouseHeld: false,
-      offsetX : 0,
-      offsetY : 0,
-      currentX: 0,
-      currentY: 0,
-      dx : 0,
-      dy : 0,
-      shiftPressed : false,
-      tempLink: false,
-      nodeForConst : null,
-    }
-    */
 
-        /* this function is defined but never used
-    this.logicalNode     = this.props.node;
-    */
 
-        /*
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseUp   = this.handleMouseUp.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseOver = this.handleMouseOver.bind(this);
-    this.handleMouseLeave= this.handleMouseLeave.bind(this);
-    this.handleKeyDown   = this.handleKeyDown.bind(this);
-    this.handleKeyUp     = this.handleKeyUp.bind(this);
-    
-    this.moveLinkStartTo = this.moveLinkStartTo.bind(this);
-    this.moveLinkEndTo   = this.moveLinkEndTo.bind(this);
-    this.getLinkIndex    = this.getLinkIndex.bind(this);
-    this.windowMouseDown = this.windowMouseDown.bind(this);
-    this.windowMouseUp   = this.windowMouseUp.bind(this);
-    this.getCloseNode    = this.getCloseNode.bind(this);
-    this.isValidLink      = this.isValidLink.bind(this);
-    */
 
         this.createNodeObject = this.createNodeObject.bind(this)
 
-        /*
-    this.SubtractionNode = this.SubtractionNode.bind(this);
-    this.AdditionNode     = this.AdditionNode.bind(this);
-    this.MultiplicationNode     = this.MultiplicationNode.bind(this);
-    this.DivisionNode = this.DivisionNode.bind(this);
-    this.LogarithmNode = this.LogarithmNode.bind(this);
-    this.AndNode     = this.AndNode.bind(this);
-    this.OrNode     = this.OrNode.bind(this);
-    this.NotNode     = this.NotNode.bind(this);
-    */
 
         this.nodeSVG = this.nodeSVG.bind(this)
 
-        /*
-    this.getNotZero = this.getNotZero.bind(this);
-    */
 
         this.evalArithmeticNode = this.evalArithmeticNode.bind(this)
 
-        /* unused function
-    this.logNode = this.logNode.bind(this);
-    */
 
-        // Ask: which is for debugging ???
-        // this is just for debugging ...
 
         this.addNode = this.addNode.bind(this)
 
-        /* unused function
-    this.removeLink      = this.removeLink.bind(this);
-    */
-
-        /* unused function
-    this.printMaps       = this.printMaps.bind(this);
-    this.displayMouseInfo= this.displayMouseInfo.bind(this);
-    */
-
-        // addNodeType
-        /*
-    this.addAdditionNode = this.addAdditionNode.bind(this);
-    this.addSubractionNode = this.addSubractionNode.bind(this);
-    this.addMultiplicationNode = this.addMultiplicationNode.bind(this);
-    this.addDivisionNode = this.addDivisionNode.bind(this);
-    this.addLogarithmNode = this.addLogarithmNode.bind(this);
-    this.addNotNode      = this.addNotNode.bind(this);
-    this.addOrNode       = this.addOrNode.bind(this);
-    this.addAndNode      = this.addAndNode.bind(this);
-    this.addLayerNode    = this.addLayerNode.bind(this);
-    */
 
         this.addVoxelGeometry = this.addVoxelGeometry.bind(this)
 
         $(window).on('keydown', this.handleKeyDown)
         $(window).on('keyup', this.handleKeyUp)
 
-        /*
-    $(window).on('mousemove', this.displayMouseInfo);
-    */
+    
 
         this.state = {
             Nodes,
@@ -282,36 +183,9 @@ class VPL extends React.Component {
         }
     }
 
-    /* unused functions
-  displayMouseInfo(event){
-      $("#clientX").html(event.clientX);
-      $("#clientY").html(event.clientY);
-      $("#pageX").html(event.pageX);
-      $("#pageY").html(event.pageY);
-      $("#screenX").html(event.screenX);
-      $("#screenY").html(event.screenY);
-      let mouse = this.currentMousePosition(event);
-      $("#currentX").html(mouse.x);
-      $("#currentY").html(mouse.y);
-      
-  }
-
-   printMaps(){
-    console.log("=====================================");
-    console.log("Nodes Map: ", this.nodesMap);
-    console.log("Links Map: ", this.linksMap);
-    console.log("Node To Link: ", this.nodeToLink);
-    console.log("Link To Node: ", this.linkToNode);
-    console.log("Links List: ", this.linksList);
-  }
-  */
 
     componentDidMount() {
-        /*
-    $('svg').on('mousemove', this.handleMouseMove);
-    $('svg').on('mousedown', this.windowMouseDown);// TODO: revisit this, do you have to listen to the event 
-    $('svg').on('mouseup', this.windowMouseUp);//       on the entire window or just the svg
-    */
+
 
         // const bodyDOM = document.body
         const vplDOM = document.querySelector('svg.vpl')
@@ -459,13 +333,7 @@ class VPL extends React.Component {
     componentDidUpdate() {
         // componentDidUpdate(nextProps){
         // console.log('props changed ...', nextProps)
-        /*
-    this.linksMap = this.refToElement(this.props.links);
-    this.nodesMap = this.refToElement(this.props.nodes);
-    this.nodeToLink = this.populateNodeToLink(this.props);
-    this.linkToNode = this.populateLinkToNode(this.props);
-    this.linksList  = this.populateLinksList(this.props);
-    */
+
     }
 
     moveNode = ({ nodeKey, newPosition }) => {
@@ -840,244 +708,6 @@ class VPL extends React.Component {
         return { nodeInputsFromNode, nodeOutputTree, outputOrder }
     }
 
-    /*
-  refToElement(elements){
-      let nodesMap = {};
-      elements.map((node) =>{
-          nodesMap[node.ref] = node; 
-      })
-      return nodesMap;
-  }
-
-  populateLinkToNode(props){
-    let linkToNode = {};
-    props.links.map((link) => {
-        linkToNode[link.ref] = {
-            source: (link.sourceNode)? link.sourceNode.ref: null,
-            target: (link.targetNode)? link.targetNode.ref : null ,
-        }
-    });
-    return linkToNode
-  }
-
-  populateNodeToLink(props){
-    let nodeToLink = {};
-    props.nodes.map((node) => {
-        nodeToLink[node.ref] = {
-            incoming: [],
-            outgoing: []
-        }
-    });
-    props.links.map((link) => {
-        if(link.sourceNode) nodeToLink[link.sourceNode.ref].outgoing.push(link.ref);
-        if(link.targetNode) nodeToLink[link.targetNode.ref].incoming.push(link.ref);
-    });
-    
-    return nodeToLink;
-  }
-
-  populateLinksList(props){
-    let links = {};
-    props.links.map((link) => {
-        if(link.ref !== "tempLink")
-            links[link.sourceNode.ref +"_"+ link.targetNode.ref +"_"+link.type] = true;
-    });
-    return links;
-  }
-
-  isValidLink(link){
-      let source = link.sourceNode;
-      let target = link.targetNode;
-      let type   = link.type; 
-      let linksListRep = source.ref + "_" + target.ref + "_" + type;
-      if(target.type === consts.LAYER_NODE){
-          return false;
-      }
-      if(this.linksList[linksListRep]){
-          return false;
-      }
-      if(type === "BOTTOM" && (target.type === consts.NOT_NODE)){
-          return false;
-      }
-      return true;
-  }
-  windowMouseDown(event){
-      this.dp.mouseHeld = true;
-      let mouse = this.currentMousePosition(event);
-      this.dp.currentX = mouse.x;
-      this.dp.currentY = mouse.y;
-  }
-
-  windowMouseUp(event){
-      let pos = (node) => (
-            { 
-                x : node.position.x  + node.translate.x,
-                y : node.position.y  + node.translate.y
-            }
-      );
-      this.dp.mouseHeld = false;
-      this.dp.currentX = 0;
-      this.dp.currentY = 0;
-      if(this.dp.shiftPressed){
-        if(this.dp.tempLink){
-            let mouse = this.currentMousePosition(event);
-            let closeEnoughNode = this.getCloseNode(mouse)[0];
-            
-            if(!(closeEnoughNode == null)){
-                    let newLink = {
-                        ref : "link_" + this.props.links.length,
-                        sourceNode: this.nodesMap[this.dp.nodeForConst],
-                        targetNode: closeEnoughNode.node,
-                        source : pos(this.nodesMap[this.dp.nodeForConst]),
-                        target : pos(closeEnoughNode.node),
-                        type : closeEnoughNode.type,
-
-                    }
-                if(this.isValidLink(newLink)){
-                    console.log("created new Link");
-                    Action.vlangAddLink(newLink);
-                }
-                else{
-                    console.log("link found ... didnt create");
-                }
-            }
-            
-
-            Action.vlangRemoveLink(this.getLinkIndex(this.props.links, "tempLink"));
-            this.dp.tempLink = false;
-        }
-      }
-    this.dp.nodeForConst = null;
-
-    // if(window.renderSec)
-      // window.renderSec(0.5, 'vpl mouseUp') // might be not necessary
-
-  }
-
-  handleMouseDown(event){
-    let mouse = this.currentMousePosition(event);    
-    let node = event.currentTarget;
-    if(this.dp.shiftPressed){
-        this.dp.nodeForConst = $(node).attr('id');
-        let sourceNode = this.nodesMap[$(node).attr('id')];
-        let newLinkSource = {
-            x : sourceNode.position.x + sourceNode.translate.x,
-            y : sourceNode.position.y + sourceNode.translate.y,
-         };      
-        
-        let newLink = {ref: "tempLink", sourceNode: sourceNode,  source: newLinkSource, target: mouse};  // needs sourceNode
-        Action.vlangAddLink(newLink);
-        this.dp.tempLink = true;
-        
-    }
-    else{
-        this.mouseInNode = true;
-        this.dp.nodeUnderMouse = node;
-        this.dp.nodeUnderMouseRef = $(node).attr('id');
-        this.dp.nodeForConst = $(node).attr('id');
-        let nodeR = this.nodesMap[this.dp.nodeUnderMouseRef];
-
-        this.dp.dx = mouse.x - ( nodeR.position.x + nodeR.translate.x);
-        this.dp.dy = mouse.y - ( nodeR.position.y + nodeR.translate.y);
-
-        this.dp.offsetX =  mouse.x ;
-        this.dp.offsetY =  mouse.y ;//- $(event.target).attr('y');
-        
-    }
-  }
-
-  handleMouseUp(event){
-    if(this.dp.shiftPressed){
-        if(this.dp.tempLink){
-            Action.vlangRemoveLink(this.getLinkIndex(this.props.links, "tempLink"));        
-        }
-    }
-    else{
-        let translation = this.dp.nodeUnderMouse.getAttributeNS(null, "transform").slice(10,-1).split(',');
-        let sx = parseInt(translation[0].replace(/ /g,''));
-        let sy = parseInt(translation[1].replace(/ /g,''));
-        Action.vlangMoveNode(this.getLinkIndex(this.props.nodes, this.dp.nodeUnderMouseRef), {x: sx, y: sy}, this.props.nodes);
-      
-    }
-     
-    this.dp.nodeUnderMouseRef = null;
-    this.dp.mouseHeld = false;
-    this.dp.nodeUnderMouse = null; 
-  }
-
-  handleMouseMove(event){
-        if(this.dp.mouseHeld){
-            let mouse = this.currentMousePosition(event);
-            
-            let dx = - this.dp.currentX + mouse.x;
-            let dy = - this.dp.currentY + mouse.y;
-
-            if(this.dp.shiftPressed && this.dp.tempLink){
-                let e = {
-                    x: mouse.x,
-                    y: mouse.y - 15
-                } 
-                this.moveLinkEndTo("tempLink", e);
-            }
-        
-            else{
-                let node = this.nodesMap[this.dp.nodeUnderMouseRef];
-                
-                if(this.dp.nodeUnderMouse){  
-                    let s  = {
-                                x: (mouse.x - this.dp.dx) ,
-                                y: (mouse.y - this.dp.dy) 
-                            };
-                    let t = this.nodesMap[this.dp.nodeUnderMouseRef].translate;
-                    $(this.dp.nodeUnderMouse).attr('transform', 'translate('+(t.x + dx)+','+ (t.y + dy)+')');
-                    
-                    this.nodeToLink[this.dp.nodeUnderMouseRef].outgoing.map((link) => {
-                        
-                        this.moveLinkStartTo(link, s);
-                    });
-                    this.nodeToLink[this.dp.nodeUnderMouseRef].incoming.map((link) => {
-                        
-                        this.moveLinkEndTo(link, s);
-                        
-                    }); 
-                    
-                }
-                
-            }
-            
-        }
-    }
-
-  handleMouseOver(event){
-    this.dp.mouseInNode = true;
-    if(this.dp.shiftPressed){
-         $(event.target).addClass('activeNode');
-    }  
-  }
-
-  handleMouseLeave(event){
-    $(event.target).removeClass('activeNode');
-  }
-
-  handleKeyDown(event){
-    if(event.keyCode === 16)//shift key pressed
-    {
-        this.dp.shiftPressed = true;
-    }
-  }
-
-  handleKeyUp(event){
-    if(event.keyCode === 16){
-        if(this.dp.shiftPressed){
-         if(this.dp.tempLink){
-            this.dp.tempLink = false;
-         }
-        this.dp.shiftPressed = false;
-        }
-    }
-  }
-  */
-
     diagonal(source, target) {
         return (
             'M' +
@@ -1099,90 +729,8 @@ class VPL extends React.Component {
         )
     }
 
-    /* this function is defined but never used
-  createTempLink(startPosition, endPosition){
-      return (
-          <path className={"tempLink"} d={this.diagonal(startPosition, endPosition)} />
-      );
-  }
-  */
 
-    /*
-  currentMousePosition(event){
-    return {
-        x : event.pageX - $('svg').offset().left,
-        y : event.pageY - $('svg').offset().top
-    }
-  }
 
-  getLinkIndex(links, linkRef){
-        let wantedIndex = null;
-        links.map((link, index) => {
-            if(link.ref === linkRef){
-                wantedIndex = index;
-            }
-        });
-        if(wantedIndex == null)
-            throw this.NoLinkFoundException();
-        return wantedIndex
-           
-  }
-  */
-
-    /* this function is defined but never used
-  createRangeSlider(){
-      return(
-        <g id="rangeSlider">
-            <rect id="rangeSliderInner" />
-
-            <g id="rangeSliderTrack">
-                <rect id="rangeSliderTrackInner" />
-                <rect id="track-fill" />
-            </g>
-
-            <g id="rangeSliderHandle">
-                <circle id="rangeSliderHandleInner" />        
-            
-            </g>      
-        </g>    
-      );
-  }
-  */
-
-    /*
-  getCloseNode(position){
-      let p = position;
-      let closeEnoughNodes = [];
-      let nodes = Object.keys(this.nodesMap);
-      nodes.forEach((key, index) => {  
-          
-          let cNode = this.nodesMap[key];
-          let cX = cNode.position.x + cNode.translate.x;
-          let cY = cNode.position.y + cNode.translate.y;
-          if(Math.abs(p.x - cX) < 50 && Math.abs(p.y - (cY + 15) < 20)){
-              closeEnoughNodes.push({type: 'TOP', node: cNode});
-             
-          }
-          else if(Math.abs(p.x - cX) < 50 && Math.abs(p.y - (cY + 40) < 20)){
-              closeEnoughNodes.push({type: 'BOTTOM', node: cNode});
-             
-          }
-          
-      })
-      return closeEnoughNodes;
-      
-  }
-
-  getNotZero(number1, number2) {
-      if (number1 != 0) {
-          return number1;
-      } else if (number2 != 0) {
-          return number2;
-      } else {
-          return 0;
-      }
-  }
-  */
 
     createNodeObject(node, key) {
         // console.log(`createNodeObject(${node}, ${key})`, node)
@@ -1243,33 +791,6 @@ class VPL extends React.Component {
     */
     }
 
-    /* unused function
-  logNode(geomArray1, geomArray2) {
-    const valDiff = 10;
-
-    let min = math.min(Array.from(geomArray1));
-    let max = math.max(Array.from(geomArray1));
-
-    const remap = function(x) {
-        if (x != 0) {
-            return (valDiff)*((x-min)/(max-min))+min;
-        } else {
-            return 0;
-        }
-    }
-
-    let newSizeArray = math.log(geomArray1.map(remap));
-    let newMin = math.min(newSizeArray.filter(item => item !== Number.NEGATIVE_INFINITY));
-    const notInfinity = function(x) {
-        if (x == Number.NEGATIVE_INFINITY) {
-            return newMin;
-        } else {
-            return x;
-        }
-    }
-    return newSizeArray.map(notInfinity);
-  }
-  */
 
     // TODO: refactoring this function. some node has different input order.
     evalArithmeticNode(node, mathFunction, options, geometries) {
@@ -1615,229 +1136,6 @@ class VPL extends React.Component {
       */
     }
 
-    /*
-  AdditionNode(p){
-      console.log(p)
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 80} y = {p.y + 25} fontSize={"20"}>              
-                    ADD
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  SubtractionNode(p){
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 55} y = {p.y + 25} fontSize={"20"}>              
-                    SUBTRACT
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  MultiplicationNode(p){
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 50} y = {p.y + 25} fontSize={"20"}>              
-                    MULTIPLY
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  DivisionNode(p){
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 65} y = {p.y + 25} fontSize={"20"}>              
-                    DIVIDE 
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  LogarithmNode(p){
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 45} y = {p.y + 25} fontSize={"20"}>              
-                    LOGARITHM
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  AndNode(p){
-      return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 85} y = {p.y + 25} fontSize={"20"}>              
-                    AND
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-        );
-  }
-
-  OrNode(p){
-     return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nibo}></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>A</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto + 25} fontSize={"15"}>B</text>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 85} y = {p.y + 25} fontSize={"20"}>              
-                    OR
-            </text>
-        </g>
-    ); 
-  }
-
-  NotNode(p){
-     return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x ={p.x} y ={p.y + this.style.nito}></rect>
-            
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo} y = {p.y + this.style.tltto} fontSize={"15"}>i</text>
-           
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 80} y = {p.y + 25} fontSize={"20"}>              
-                    NOT
-            </text>
-             <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 30} fontSize={"10"}>                
-                    
-            </text>
-        </g>
-    ); 
-  }
-  */
-
-    /* 
- LayerNode(p,  property, userLayerName, name){
-
-    const Style = style.node  
-
-    return(
-      <g>
-        <rect className={"nodeMain"} width={Style.minWidth} height ={Style.minHeight} 
-        x={p.x} y={p.y} ></rect>        
-        <rect className={"nodeInput"} width={Style.plug.width} height={Style.plug.height} x={p.x + Style.minWidth - 20} y ={p.y + Style.topOffset}></rect>         
-        <text className={"nodeInputLabel"} x={p.x + 5 + Style.minWidth - 20} y={p.y + 20} fontSize={"15"}>O</text>
-        <text className={"nodeText"} x={p.x + 30} y={p.y + 25} fontSize={"20"}>              
-                {userLayerName}
-        </text>
-        <text className={"nodeText"} x={p.x + 30} y={p.y + 45 } fontSize={"10"}>                
-                {property}
-        </text>
-        <Slider position={p} index={name}/>
-        <Panel position={p} index={name}/>
-      </g>
-
-
-     return(
-       <g>
-            <rect className = {"nodeMain"} width= {this.width} height ={this.height} 
-            x = {p.x} y = {p.y} ></rect>        
-            <rect className = {this.style.niClassName} width= {this.style.niw} height = {this.style.nih} x = {p.x + this.width - 20} y ={p.y + this.style.nito}></rect>         
-            <text className = {"nodeInputLabel"} x = {p.x + this.style.tltlo + this.width - 20} y = {p.y + this.style.tltto} fontSize={"15"}>O</text>
-            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 25} fontSize={"20"}>              
-                    {userLayerName}
-            </text>
-            <text className = {"nodeText"} x = {p.x + 30} y = {p.y + 45 } fontSize={"10"}>                
-                    {property}
-            </text>
-            <Slider position={p} index={name}/>
-            <Panel position={p} index={name}/>
-        </g>
-
-
-    );
-  }
-  */
-
-    /* unused function
-  createLinkObject(link, key){
-    if(link.type === 'BOTTOM'){
-        return (
-            <path markerEnd="url(#Triangle)" ref={link.ref} key = {key} className={"link"} d={this.diagonal(this.getOutgoingLinkPosition(link.source), this.bottomIncomingLinkPosition(link.target))}></path>
-        );
-    }
-    else{
-         return (
-            <path markerEnd="url(#Triangle)" ref={link.ref} key = {key} className={"link"} d={this.diagonal(this.getOutgoingLinkPosition(link.source), this.topIncomingLinkPosition(link.target))}></path>
-        );
-    }
-  }
-  */
 
     getRandomInt(min, max) {
         min = Math.ceil(min)
@@ -1845,40 +1143,7 @@ class VPL extends React.Component {
         return Math.floor(Math.random() * (max - min)) + min //The maximum is exclusive and the minimum is inclusive
     }
 
-    /*
-  NoLinkFoundException()
-  { 
-      return "No link found";
-  }
-
-  getRandomPosition(){
-      return {
-          x: this.getRandomInt(0, 700),
-          y: this.getRandomInt(0, 500)
-        
-      }
-  }
-  topIncomingLinkPosition(position){
-      return {
-          x: position.x, 
-          y: position.y + 15,
-      }
-  }
-
-  bottomIncomingLinkPosition(position){
-      return {
-          x: position.x, 
-          y: position.y + 40,
-      }
-  }
-
-  getOutgoingLinkPosition(position){
-      return {
-          x: position.x + this.width,
-          y: position.y + 15
-      }
-  }
-  */
+  
 
     addNode(type) {
         // TODO: WIP
@@ -1941,50 +1206,6 @@ class VPL extends React.Component {
     */
     }
 
-    /*
-  addAdditionNode(){
-    this.addNode(consts.ADDITION_NODE);
-  }
-  addSubractionNode(){
-    this.addNode(consts.SUBTRACTION_NODE);
-  }
-  addMultiplicationNode(){
-    this.addNode(consts.MULTIPLICATION_NODE);
-  }
-  addDivisionNode(){
-    this.addNode(consts.DIVISION_NODE);
-  }
-  addLogarithmNode(){
-    this.addNode(consts.LOG_NODE);
-  }
-  addOrNode(){
-    this.addNode(consts.OR_NODE);
-  }
-  addAndNode(){
-    this.addNode(consts.AND_NODE);
-  }
-  addNotNode(){
-    this.addNode(consts.NOT_NODE);
-  }
-  addLayerNode(){
-    this.addNode(consts.LAYER_NODE);
-  }
-  */
-
-    /* this function is defined but never used
-  removeNode(){
-      let x = parseInt($('#moveX').val());
-      let y = parseInt($('#moveY').val());
-      let position = {x: x, y: y};
-      Action.vlangMoveNode(0, position);
-  }
-  */
-
-    /* unused function
-  removeLink(){
-      Action.vlangRemoveLink(this.getLinkIndex(this.props.links, 'link_1'));
-  }
-  */
 
     linkMarker() {
         return (
@@ -2004,25 +1225,7 @@ class VPL extends React.Component {
         )
     }
 
-    /*
-  moveLinkStartTo(link, position){
-     let l = this.linksMap[link];
-     var ogl = this.getOutgoingLinkPosition(position);
-     var icl = l.type === 'BOTTOM'? this.bottomIncomingLinkPosition(l.target) : this.topIncomingLinkPosition(l.target);
-     this.linksMap[link].source = position;
-     $(this.refs[link]).attr('d', this.diagonal(ogl, icl));
-
-  }
-
-  moveLinkEndTo(link, position){
-     let l = this.linksMap[link];
-     let ogl = this.getOutgoingLinkPosition(l.source);
-     let icl = l.type === 'BOTTOM' ? this.bottomIncomingLinkPosition(position) : this.topIncomingLinkPosition(position);
-     this.linksMap[link].target = position;
-     $(this.refs[link]).attr('d', this.diagonal(ogl, icl));
-
-  }
-  */
+ 
 
     addVoxelGeometry(geometry) {
         const map = this.newProps.map.instance
