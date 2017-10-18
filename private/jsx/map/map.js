@@ -1,9 +1,12 @@
+/* global project */
+
 import React from 'react'
 import * as act from '../store/actions'
 import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
+import { DropdownButton, MenuItem } from 'react-bootstrap'
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -61,6 +64,67 @@ class MapCanvas extends React.Component {
             })
         }
     }
+
+    exportSVG(geoms) {
+        let layer = this.props.layers[0]
+        let centroid = this.props.map.camera.position
+        let bbox = layer.bbox[0]
+        let projectedMin = project([bbox[0][0], bbox[0][1]])
+        let projectedMax = project([bbox[2][0], bbox[2][1]])
+
+        let translation = [0 - projectedMin.x, 0 - projectedMax.z]
+        let bounds = [
+            Math.abs(projectedMax.x + translation[0]),
+            Math.abs(projectedMax.z + (0 - projectedMin.z)),
+        ]
+
+        return PaintGraph.Exporter.exportSVG(
+            geoms,
+            translation,
+            centroid,
+            bounds
+        )
+    }
+
+    triggerDownload(exportFile, exportType) {
+        var data = new Blob([exportFile], { type: 'text/plain' })
+
+        if (textFile !== null) {
+            window.URL.revokeObjectURL(textFile)
+        }
+
+        let textFile = window.URL.createObjectURL(data)
+
+        let link = document.createElement('a')
+        link.setAttribute('download', 'voxelExport.'.concat(exportType))
+        link.href = textFile
+        document.body.appendChild(link)
+        link.click()
+    }
+
+    exportJSON(geoms) {
+        return PaintGraph.Exporter.exportJSON(geoms)
+    }
+
+    exportMap(type) {
+        console.log(`exportMap(${type})`)
+
+        let geoms = this.props.geometries
+        switch (type) {
+            case 'SVG': {
+                let svgExport = this.exportSVG(geoms)
+                this.triggerDownload(svgExport, 'svg')
+
+                break
+            }
+            case 'GeoJSON': {
+                let jsonExport = this.exportJSON(geoms)
+                this.triggerDownload(jsonExport, 'json')
+
+                break
+            }
+        }
+    }
     render() {
         const mapOptionShow = this.props.mapOptionShow
         return (
@@ -75,6 +139,46 @@ class MapCanvas extends React.Component {
                 >
                     <PCoords />
                 </div>
+                <div
+                    style={{
+                        position: 'absolute',
+                        width: '80vw',
+                        right: '0px',
+                    }}
+                >
+                    <div
+                        style={{
+                            position: 'absolute',
+                            left: '40px',
+                            top: '20px',
+                        }}
+                        className="map-menu"
+                    >
+                        <DropdownButton title={'Export'} id={`export-dropdown`}>
+                            <MenuItem
+                                onClick={() => {
+                                    this.exportMap('SVG')
+                                }}
+                            >
+                                SVG
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    this.exportMap('GeoJSON')
+                                }}
+                            >
+                                GeoJSON
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    this.exportMap('SHP')
+                                }}
+                            >
+                                SHP (coming soon)
+                            </MenuItem>
+                        </DropdownButton>
+                    </div>
+                </div>
                 <div className="map" id="mapCanvas" />
                 <div id="pivot" />
                 <div id="grid" />
@@ -87,4 +191,5 @@ export default connect(s => ({
     layers: s.sidebar.layers,
     map: s.map.instance,
     mapOptionShow: s.map.optionShow,
+    geometries: s.map.geometries,
 }))(MapCanvas)

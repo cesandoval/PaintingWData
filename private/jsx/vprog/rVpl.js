@@ -9,7 +9,7 @@ import * as Action from '../store/actions.js'
 
 import Slider from './Slider.js'
 import Panel from './Panel.js'
-import { DropdownButton, MenuItem } from 'react-bootstrap'
+import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 
 import * as NodeType from './nodeTypes'
 // console.log('NodeType', Object.keys(NodeType))
@@ -2072,9 +2072,11 @@ class VPL extends React.Component {
 
         return (
             <div className="pull-right col-md-10 vplContainer">
-                <div className="row">
-                    <div className="col-md-10" />
-                    <div className="col-md-2">
+                <div
+                    style={{ position: 'absolute', right: '80px', top: '20px' }}
+                    className="map-menu"
+                >
+                    <ButtonGroup>
                         <DropdownButton
                             title={'Add Node'}
                             id={`add-node-dropdown`}
@@ -2095,8 +2097,9 @@ class VPL extends React.Component {
                                     )
                             )}
                         </DropdownButton>
-                    </div>
+                    </ButtonGroup>
                 </div>
+
                 <div className="row">
                     <svg
                         className="vpl"
