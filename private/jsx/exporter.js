@@ -80,6 +80,7 @@ export default class Exporter {
     }
 
     // Zoom Extent based on geo's bbox
+        console.log(test)
     static exportSVG(geometries, translation, centroid, bounds) {
         const remap = x => 255 * ((x - 0) / (1 - 0)) + 0
 
