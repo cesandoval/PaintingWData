@@ -17,9 +17,11 @@ import * as NodeType from './nodeTypes'
 import { Nodes, Links } from './mockData'
 // console.log('mockData', {nodes, links})
 
-// TODO: typo fix (addSubractionNode -> addSubtractionNode)
-// TODO: remove color2
-// TODO: nodeSVG() for dataset layer. need property?
+/* TODO
+    - remove color2
+    - nodeSVG() for dataset layer. need property?
+
+*/
 
 const style = {
     node: {
@@ -100,7 +102,7 @@ class VPL extends React.Component {
         console.log('initDatasetNode()', datasets)
 
         datasets.map((dataset, index) => {
-            console.log('dataset', dataset)
+            // console.log('dataset', dataset)
 
             // TODO: generate hash key for datasets.
             if (!nodes[dataset.name]) {
@@ -164,7 +166,6 @@ class VPL extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
-        // console.log(newProps, 8888888)
         // console.log(this.newProps)
 
         if (!this.checked.datasetNode) {
@@ -182,10 +183,9 @@ class VPL extends React.Component {
         // const empty$ = Rx.Observable.empty()
 
         this.mouseTracker$ = mouseDown$
-            .do(down => {
-                console.log(down)
-            })
             .map(down => {
+                // console.log(down)
+
                 const nodeDOM = down.target.closest('g.node')
                 const plugDOM = down.target.closest('g.plug')
                 const controlDOM = down.target.closest('g.control')
@@ -275,7 +275,7 @@ class VPL extends React.Component {
                     y: move.clientY - svgRect.top - 2,
                 }
 
-                console.log('this.moveTempLink(from, to)', from, to)
+                // console.log('this.moveTempLink(from, to)', from, to)
                 this.moveTempLink({ from, to })
             })
             .filter(({ up }) => up)
@@ -383,10 +383,10 @@ class VPL extends React.Component {
         const links = this.state.Links
 
         // limitation of link
-        if (srcNode == toNode) return console.log('linkNode(): link same node')
+        if (srcNode == toNode) return console.warn('linkNode(): link same node')
 
         if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
-            console.log('linkNode(): one input only allow one link')
+            console.warn('linkNode(): one input only allow one link')
             delete links.outputs[links.inputs[toNode][toInput]][toNode]
         }
 
@@ -518,12 +518,6 @@ class VPL extends React.Component {
                         svgRect.top,
                 }
 
-                console.log(
-                    'createLink({linkKey, from, to})',
-                    linkKey,
-                    from,
-                    to
-                )
                 return this.createLink({ linkKey, linkInfo, from, to })
             })
         })
@@ -579,10 +573,10 @@ class VPL extends React.Component {
                 input => inputsSrcNode[input]
             )
             if (toNodeInputs.filter(f => f).length == toNodeTypeInputs.length) {
-                console.log(toNodeKey, 'enough input')
+                // console.log(toNodeKey, 'enough input')
                 nodeInputsFromNode[toNodeKey] = inputsSrcNode
             } else {
-                console.log(toNodeKey, 'less input')
+                // console.log(toNodeKey, 'less input')
             }
         })
 
@@ -607,7 +601,7 @@ class VPL extends React.Component {
             }
         })
 
-        console.log({ nodeOutputTree })
+        // console.log({ nodeOutputTree })
 
         let outputOrder = [[]]
 
@@ -635,7 +629,7 @@ class VPL extends React.Component {
         })
 
         outputOrder = _.uniq(_.flatten(outputOrder))
-        console.log({ outputOrder })
+        // console.log({ outputOrder })
 
         window.nodeOutputTree = nodeOutputTree
         window.nodeInputsFromNode = nodeInputsFromNode
@@ -653,10 +647,12 @@ class VPL extends React.Component {
 
             let inputGeometries = inputNodes.map(index => mapGeometries[index])
 
+            /*
             console.log(
                 `computeNodeThenAddVoxel() ${node.type} ${node.nodeKey}`,
                 { node, inputNodes, mapGeometries, inputGeometries, options }
             )
+            */
 
             if (inputGeometries.filter(f => f).length == inputNodes.length)
                 this.evalArithmeticNode(
@@ -733,7 +729,7 @@ class VPL extends React.Component {
     // TODO: refactoring this function. some node has different input order.
     evalArithmeticNode(node, mathFunction, options, geometries) {
         // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
-        console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
+        // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.layers[0].allIndices
@@ -862,9 +858,9 @@ class VPL extends React.Component {
         const nodeHeight = Style.minHeight
 
         return (
-            // TODO: add key attr for g
             <g data-node-name={nodeName}>
                 <rect
+                    key={nodeKey}
                     className="background"
                     width={nodeWidth}
                     height={nodeHeight}
@@ -873,7 +869,7 @@ class VPL extends React.Component {
                     style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
                 />
 
-                {/* Output Plugs */}
+                {/* input Plugs */}
                 {Object.entries(inputs).map(([input, abbr], index) => (
                     <g
                         key={`${nodeKey}_plug_input_${input}`}
