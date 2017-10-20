@@ -318,7 +318,10 @@ class VPL extends React.Component {
         const nodes = this.state.Nodes
 
         // prevent to delete dataset node.
-        if (nodes[nodeKey].type == 'DATASET') return false
+        if (nodes[nodeKey].type == 'DATASET') {
+            console.warn('deleteNode(): can not delete dataset node.')
+            return false
+        }
 
         delete nodes[nodeKey]
 
