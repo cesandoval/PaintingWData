@@ -692,6 +692,7 @@ class VPL extends React.Component {
 
         return (
             <g
+                key={key}
                 className="node"
                 ref={ref => (this[nodeRef] = ref)}
                 data-key={key}
