@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import $ from 'jquery'
 import Rx from 'rxjs/Rx'
 import _ from 'lodash'
 
@@ -56,23 +55,7 @@ class VPL extends React.Component {
     constructor(props) {
         super(props)
 
-        this.width = 200
-        this.height = 130
-
         this.newProps = {}
-
-        this.createNodeObject = this.createNodeObject.bind(this)
-
-        this.nodeSVG = this.nodeSVG.bind(this)
-
-        this.evalArithmeticNode = this.evalArithmeticNode.bind(this)
-
-        this.addNode = this.addNode.bind(this)
-
-        this.addVoxelGeometry = this.addVoxelGeometry.bind(this)
-
-        $(window).on('keydown', this.handleKeyDown)
-        $(window).on('keyup', this.handleKeyUp)
 
         this.state = {
             Nodes,
@@ -699,7 +682,7 @@ class VPL extends React.Component {
         )
     }
 
-    createNodeObject(node, key) {
+    createNodeObject = (node, key) => {
         // console.log(`createNodeObject(${node}, ${key})`, node)
 
         const nodeRef = 'node_' + key
@@ -716,7 +699,7 @@ class VPL extends React.Component {
         )
     }
 
-    evaluateNodeType(node, geometry1, geometry2 = {}, names = []) {
+    evaluateNodeType = (node, geometry1, geometry2 = {}, names = []) => {
         return this.evalArithmeticNode(
             geometry1,
             geometry2,
@@ -727,7 +710,7 @@ class VPL extends React.Component {
     }
 
     // TODO: refactoring this function. some node has different input order.
-    evalArithmeticNode(node, mathFunction, options, geometries) {
+    evalArithmeticNode = (node, mathFunction, options, geometries) => {
         // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
         // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
@@ -839,7 +822,7 @@ class VPL extends React.Component {
         return this.nodeSVG(node)
     }
 
-    nodeSVG({ color, name, type, nodeKey, options }) {
+    nodeSVG = ({ color, name, type, nodeKey, options }) => {
         // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
 
         //const p = {x: 0, y: 0}
@@ -1006,7 +989,7 @@ class VPL extends React.Component {
         return Math.floor(Math.random() * (max - min)) + min //The maximum is exclusive and the minimum is inclusive
     }
 
-    addNode(type) {
+    addNode = type => {
         const nodes = this.state.Nodes
         const nodeHashKey =
             (+new Date()).toString(32) +
@@ -1034,7 +1017,7 @@ class VPL extends React.Component {
         )
     }
 
-    addVoxelGeometry(geometry) {
+    addVoxelGeometry = geometry => {
         const map = this.newProps.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
         const otherArray = []
