@@ -376,6 +376,23 @@ class VPL extends React.Component {
             delete links.outputs[links.inputs[toNode][toInput]][toNode]
         }
 
+        for (
+            let checkNodes = new Set(Object.keys(links.outputs[toNode] || []));
+            checkNodes.size != 0;
+
+        ) {
+            if ([...checkNodes].find(f => f === srcNode)) {
+                return console.warn('linkNode(): checking link loop error.')
+            }
+
+            ;[...checkNodes].map(node => {
+                Object.keys(links.outputs[node] || {}).map(toNode => {
+                    checkNodes.add(toNode)
+                })
+                checkNodes.delete(node)
+            })
+        }
+
         // inputs
         if (links.inputs[toNode]) {
             // delete the others same srcNode
@@ -617,12 +634,7 @@ class VPL extends React.Component {
         outputOrder = _.uniq(_.flatten(outputOrder))
         // console.log({ outputOrder })
 
-        window.nodeOutputTree = nodeOutputTree
-        window.nodeInputsFromNode = nodeInputsFromNode
-        window.outputOrder = outputOrder
-
         // TODO: save computed data to this state
-        // TODO: refactoring this function. some node has different input order.
         const computeNodeThenAddVoxel = (node, inputNodes) => {
             const mapGeometries = this.newProps.map.geometries
             const mathFunction = NodeType[node.type].arithmetic
@@ -632,13 +644,6 @@ class VPL extends React.Component {
             )
 
             let inputGeometries = inputNodes.map(index => mapGeometries[index])
-
-            /*
-            console.log(
-                `computeNodeThenAddVoxel() ${node.type} ${node.nodeKey}`,
-                { node, inputNodes, mapGeometries, inputGeometries, options }
-            )
-            */
 
             if (inputGeometries.filter(f => f).length == inputNodes.length)
                 this.evalArithmeticNode(
@@ -700,16 +705,6 @@ class VPL extends React.Component {
             >
                 {this.decideNodeType(node)}
             </g>
-        )
-    }
-
-    evaluateNodeType = (node, geometry1, geometry2 = {}, names = []) => {
-        return this.evalArithmeticNode(
-            geometry1,
-            geometry2,
-            node,
-            NodeType[node.type].arithmetic,
-            names
         )
     }
 
