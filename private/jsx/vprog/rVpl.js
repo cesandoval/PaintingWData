@@ -93,7 +93,7 @@ class VPL extends React.Component {
 
                 datasetNode.position = {
                     x: 50,
-                    y: 50 + 150 * index,
+                    y: 100 + 150 * index,
                 }
                 datasetNode.name = dataset.name
 
@@ -1089,7 +1089,7 @@ class VPL extends React.Component {
                         className="vpl"
                         ref={ref => (this.mainSvgElement = ref)}
                         width="100%"
-                        height={'800px'}
+                        height="100vh"
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
