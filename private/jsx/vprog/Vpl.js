@@ -1,3 +1,5 @@
+/* using ./rVpl.js to replace this file(./Vpl.js) for refactoring*/
+
 import React from 'react';
 import { connect } from 'react-redux';
 import $ from 'jquery';
