@@ -17,7 +17,7 @@ class OpacitySlider extends React.Component {
                 parseFloat(e.target.value) / 100.0
         }
 
-        if (window.renderSec) window.renderSec(0.5, 'OpacitySlider')
+        if (window.renderSec) window.renderSec(0.2, 'OpacitySlider')
     }
 
     render() {

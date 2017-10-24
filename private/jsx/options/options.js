@@ -39,8 +39,6 @@ class Options extends React.Component {
     }
 
     render() {
-        if (window.renderSec) window.renderSec(1, 'options.js')
-
         return (
             <div className="options--react">
                 <OptionsForm />

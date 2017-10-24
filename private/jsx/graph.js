@@ -95,6 +95,16 @@ export default class Graph {
                 })
             }
         }, 2000)
+
+        // default mouseUp to renderSec(1)
+        document.body.addEventListener('mouseup', () => {
+            this.renderSec(1, 'mouseUp')
+        })
+
+        // default mouseDown to renderSec(0.5)
+        document.body.addEventListener('mousedown', () => {
+            this.renderSec(0.5, 'mouseDown')
+        })
     }
 
     addMesh(mesh) {

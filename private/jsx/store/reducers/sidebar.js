@@ -20,9 +20,6 @@ export default (state = initialSidebarState, action) => {
             return Object.assign({}, state, { layers: action.layers })
 
         case c.SIDE_UPDATE_LAYER: {
-            if (window.renderSec)
-                window.renderSec(1, 'reducer SIDE_UPDATE_LAYER')
-
             let newLayers = state.layers.slice()
             newLayers = newLayers.map(layer => {
                 if (layer.name == action.name) {

@@ -27,7 +27,7 @@ class PCoords extends React.Component {
         this.calcRanges = this.calcRanges.bind(this)
     }
     componentWillReceiveProps(nprops) {
-        console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
+        // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
         if (!this.state.started && nprops.layers.length > 0) {
             // console.log(nprops, 8484848484)
@@ -218,7 +218,6 @@ class PCoords extends React.Component {
             )
         }
 
-        if (window.renderSec) window.renderSec(1, 'pcoords.js')
     }
     style() {
         return {
