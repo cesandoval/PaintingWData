@@ -169,7 +169,7 @@ export default class Graph {
 
         if (this.untilTime != until) {
             this.untilTime = until
-            console.log(`render ${until} secs`)
+            // console.log(`render ${until} secs`)
         }
 
         if (until > 0) {
