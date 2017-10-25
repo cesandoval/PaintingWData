@@ -35,7 +35,9 @@ svg path.link {
 }
 
 svg path.tempLink {
-  stroke : #8c8c8c;
+  stroke : #8f8f8f;
+  stroke-dasharray: 4, 8;
+  stroke-linecap: round; 
 }
 
 g rect.nodeMain{
