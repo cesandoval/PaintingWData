@@ -178,6 +178,7 @@ class VPL extends React.Component {
 
                 down.purpose = plugDOM ? 'link' : down.purpose
                 down.purpose = controlDOM ? 'none' : down.purpose
+                down.purpose = down.shiftKey ? 'pan' : down.purpose
 
                 switch (down.purpose) {
                     case 'move': {
@@ -189,6 +190,19 @@ class VPL extends React.Component {
                     }
                     case 'link': {
                         down.info = { nodeDOM, plugDOM, svgDOM }
+                        break
+                    }
+                    case 'pan': {
+                        const svgStyle = svgDOM.style
+                        const svgMargin = {
+                            left: svgStyle.marginLeft.match(/\d+/g),
+                            top: svgStyle.marginTop.match(/\d+/g),
+                        }
+                        down.info = {
+                            svgStyle,
+                            x: Number(svgMargin.left ? svgMargin.left[0] : 0),
+                            y: Number(svgMargin.top ? svgMargin.top[0] : 0),
+                        }
                         break
                     }
                 }
@@ -227,7 +241,7 @@ class VPL extends React.Component {
             }))
             .map(({ nodeKey, x, y }) => ({
                 nodeKey,
-                // prevent the position be set to a negative number.
+                // prevent the position to be set to a negative number.
                 x: x < 0 ? 0 : x,
                 y: y < 0 ? 0 : y,
             }))
@@ -290,6 +304,38 @@ class VPL extends React.Component {
                 this.linkThenComputeNode()
             })
             .subscribe(observer('linkNode$'))
+
+        this.panVpl$ = this.mouseTracker$
+            .filter(({ down }) => down.purpose == 'pan')
+            .do(({ down, move }) => {
+                console.log('panVpl$', { move, down })
+            })
+            // .throttleTime(30) // limit execution time for opt performance
+            .map(({ down, move }) => ({
+                svgStyle: down.info.svgStyle,
+                x: Number(down.info.x) + (move.clientX - down.clientX),
+                y: Number(down.info.y) + (move.clientY - down.clientY),
+            }))
+            /*
+            // TODO: limit the position.
+            .map(({ nodeKey, x, y }) => ({
+                nodeKey,
+                x: x < 0 ? 0 : x,
+                y: y < 0 ? 0 : y,
+            }))
+            */
+            .map(({ svgStyle, x, y }) => ({
+                svgStyle,
+                x: x + 'px',
+                y: y + 'px',
+            }))
+            .do(({ svgStyle, x, y }) => {
+                // console.log('panVpl', { x, y })
+
+                svgStyle.marginLeft = x
+                svgStyle.marginTop = y
+            })
+            .subscribe(observer('panVpl$'))
     }
 
     componentWillUnmount() {
@@ -556,7 +602,6 @@ class VPL extends React.Component {
         */
 
         const nodes = this.state.Nodes
-        window.nodes = nodes
 
         const datasetNodes = Object.entries(nodes)
             .filter(([, value]) => value.type == 'DATASET')
