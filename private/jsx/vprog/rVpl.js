@@ -70,6 +70,10 @@ class VPL extends React.Component {
                 from: { x: 50, y: 50 },
                 to: { x: 50, y: 50 },
             },
+            panning: {
+                x: 0,
+                y: 0,
+            },
         }
 
         this.checked = {
@@ -184,7 +188,7 @@ class VPL extends React.Component {
                     case 'move': {
                         const [x, y] = nodeDOM
                             .getAttribute('transform')
-                            .match(/\d+/g)
+                            .match(/-?\d+/g)
                         down.info = { x, y, nodeDOM }
                         break
                     }
@@ -311,30 +315,22 @@ class VPL extends React.Component {
             })
             // .throttleTime(30) // limit execution time for opt performance
             .map(({ down, move }) => ({
-                svgDOM: down.info.svgDOM,
                 x: Number(down.info.x) - (move.clientX - down.clientX),
                 y: Number(down.info.y) - (move.clientY - down.clientY),
             }))
             /*
-            // TODO: limit the position.
+            // limit the position.
             .map(({ nodeKey, x, y }) => ({
                 nodeKey,
                 x: x < 0 ? 0 : x,
                 y: y < 0 ? 0 : y,
             }))
             */
-            .do(({ svgDOM, x, y }) => {
+            .do(({ x, y }) => {
                 // console.log('panVpl', { x, y })
 
-                let svgViewBox = svgDOM
-                    .getAttribute('viewBox')
-                    .split(' ')
-                    .map(n => parseFloat(n))
-
-                svgViewBox[0] = x
-                svgViewBox[1] = y
-
-                svgDOM.setAttribute('viewBox', svgViewBox.join(' '))
+                const newPosition = { x, y }
+                this.panning(newPosition)
             })
             .subscribe(observer('panVpl$'))
     }
@@ -349,6 +345,13 @@ class VPL extends React.Component {
     componentDidUpdate() {
         // componentDidUpdate(nextProps){
         // console.log('props changed ...', nextProps)
+    }
+
+    panning = ({ x, y }) => {
+        // console.log('panning()', { x, y })
+        const panning = { x, y }
+
+        this.setState({ panning })
     }
 
     moveNode = ({ nodeKey, newPosition }) => {
@@ -483,7 +486,7 @@ class VPL extends React.Component {
                 markerEnd="url(#Triangle)"
                 ref={ref => (this.tempLink = ref)}
                 key="tempLink"
-                className={'link'}
+                className={'link tempLink'}
                 d={this.diagonal(
                     this.state.tempLink.from,
                     this.state.tempLink.to
@@ -1131,7 +1134,8 @@ class VPL extends React.Component {
                         ref={ref => (this.mainSvgElement = ref)}
                         width="3000"
                         height="3000"
-                        viewBox="0 0 3000 3000"
+                        viewBox={`${this.state.panning.x} ${this.state.panning
+                            .y} 3000 3000`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
@@ -1144,13 +1148,18 @@ class VPL extends React.Component {
                             return this.createNodeObject(node, key)
                         })}
 
-                        {// do not display temp link when its `from` and `to` is the same
-                        // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
-                        JSON.stringify(this.state.tempLink.from) !=
-                        JSON.stringify(this.state.tempLink.to)
-                            ? this.createTempLink()
-                            : ''}
-                        {this.createLinks()}
+                        <g
+                            transform={`translate(${this.state.panning.x},${this
+                                .state.panning.y})`}
+                        >
+                            {// do not display temp link when its `from` and `to` is the same
+                            // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
+                            JSON.stringify(this.state.tempLink.from) !=
+                            JSON.stringify(this.state.tempLink.to)
+                                ? this.createTempLink()
+                                : ''}
+                            {this.createLinks()}
+                        </g>
                     </svg>
                 </div>
             </div>
