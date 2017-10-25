@@ -204,6 +204,7 @@ class VPL extends React.Component {
 
                         down.info = { x, y, svgDOM }
 
+                        svgDOM.style.cursor = 'all-scroll'
                         break
                     }
                 }
@@ -219,6 +220,9 @@ class VPL extends React.Component {
                             .merge(mouseLeave$)
                             .mapTo(true)
                             .first()
+                            .do(() => {
+                                svgDOM.style.cursor = ''
+                            })
                             .startWith(false),
                         ({ move, down }, up) => ({ move, down, up })
                     )
