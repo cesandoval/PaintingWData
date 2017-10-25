@@ -193,16 +193,13 @@ class VPL extends React.Component {
                         break
                     }
                     case 'pan': {
-                        const svgStyle = svgDOM.style
-                        const svgMargin = {
-                            left: svgStyle.marginLeft.match(/\d+/g),
-                            top: svgStyle.marginTop.match(/\d+/g),
-                        }
-                        down.info = {
-                            svgStyle,
-                            x: Number(svgMargin.left ? svgMargin.left[0] : 0),
-                            y: Number(svgMargin.top ? svgMargin.top[0] : 0),
-                        }
+                        const [x, y] = svgDOM
+                            .getAttribute('viewBox')
+                            .split(' ')
+                            .map(n => parseFloat(n))
+
+                        down.info = { x, y, svgDOM }
+
                         break
                     }
                 }
@@ -239,12 +236,14 @@ class VPL extends React.Component {
                 x: Number(down.info.x) + (move.clientX - down.clientX),
                 y: Number(down.info.y) + (move.clientY - down.clientY),
             }))
+            /* no used when panning
             .map(({ nodeKey, x, y }) => ({
                 nodeKey,
                 // prevent the position to be set to a negative number.
                 x: x < 0 ? 0 : x,
                 y: y < 0 ? 0 : y,
             }))
+            */
             .do(({ nodeKey, x, y }) => {
                 // console.log("nodeMove", {nodeKey, x, y})
                 const newPosition = { x, y }
@@ -312,9 +311,9 @@ class VPL extends React.Component {
             })
             // .throttleTime(30) // limit execution time for opt performance
             .map(({ down, move }) => ({
-                svgStyle: down.info.svgStyle,
-                x: Number(down.info.x) + (move.clientX - down.clientX),
-                y: Number(down.info.y) + (move.clientY - down.clientY),
+                svgDOM: down.info.svgDOM,
+                x: Number(down.info.x) - (move.clientX - down.clientX),
+                y: Number(down.info.y) - (move.clientY - down.clientY),
             }))
             /*
             // TODO: limit the position.
@@ -324,16 +323,18 @@ class VPL extends React.Component {
                 y: y < 0 ? 0 : y,
             }))
             */
-            .map(({ svgStyle, x, y }) => ({
-                svgStyle,
-                x: x + 'px',
-                y: y + 'px',
-            }))
-            .do(({ svgStyle, x, y }) => {
+            .do(({ svgDOM, x, y }) => {
                 // console.log('panVpl', { x, y })
 
-                svgStyle.marginLeft = x
-                svgStyle.marginTop = y
+                let svgViewBox = svgDOM
+                    .getAttribute('viewBox')
+                    .split(' ')
+                    .map(n => parseFloat(n))
+
+                svgViewBox[0] = x
+                svgViewBox[1] = y
+
+                svgDOM.setAttribute('viewBox', svgViewBox.join(' '))
             })
             .subscribe(observer('panVpl$'))
     }
@@ -1128,8 +1129,9 @@ class VPL extends React.Component {
                     <svg
                         className="vpl"
                         ref={ref => (this.mainSvgElement = ref)}
-                        width="100%"
-                        height="100vh"
+                        width="3000"
+                        height="3000"
+                        viewBox="0 0 3000 3000"
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
