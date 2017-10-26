@@ -204,7 +204,6 @@ class VPL extends React.Component {
 
                         down.info = { x, y, svgDOM }
 
-                        svgDOM.style.cursor = 'all-scroll'
                         break
                     }
                 }
@@ -220,9 +219,6 @@ class VPL extends React.Component {
                             .merge(mouseLeave$)
                             .mapTo(true)
                             .first()
-                            .do(() => {
-                                svgDOM.style.cursor = ''
-                            })
                             .startWith(false),
                         ({ move, down }, up) => ({ move, down, up })
                     )
@@ -337,6 +333,18 @@ class VPL extends React.Component {
                 this.panning(newPosition)
             })
             .subscribe(observer('panVpl$'))
+
+        this.shiftKeyEvent$ = Rx.Observable
+            .merge(
+                Rx.Observable.fromEvent(window, 'keydown'),
+                Rx.Observable.fromEvent(window, 'keyup')
+            )
+            .filter(f => f.key == 'Shift')
+            .map(m => m.type == 'keydown')
+            .do(d => {
+                vplDOM.style.cursor = d ? 'all-scroll' : ''
+            })
+            .subscribe(observer('shiftKeyEvent$'))
     }
 
     componentWillUnmount() {
