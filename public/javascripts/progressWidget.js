@@ -1,17 +1,17 @@
-
-
 var $progressTab = $('.progressWidget')
 
 var isPolling = false;
 var pollType = 'shapes' // poll shapes by default, we can switch to voxels and use the same helper
-var currentJobs = []
+var currentJobs = [[11,'Risk_cancerresp', 100, 1000000]]
+var selectedIDs = 0
 
 
-
-function toggleProgressWidget(e){
-    $('progress-widget').toggle();
+function toggleProgressWidget(){
+    console.log('toggleFired')
+    // e.preventDefault();
+    // $('progress-widget').toggle();
     var pollFunction; 
-    var numIds = req.body.numIds ? req.body.numIds : null
+    var numIds = selectedIDs == 0 ? null : selectedIDs
     
     switch(pollType){
         case 'shapes':
@@ -31,7 +31,9 @@ function toggleProgressWidget(e){
 }
 
 function pollShapeUpdates(id = null) { // move to public side (client) otherwise jquery won't work
-suffix = id ? "" : "/id:" + id
+console.log('polling fired: ' + id)
+suffix = id ? "/id:" + id: ""
+console.log(suffix)
 $.ajax({
     url: "/update/shapes" + suffix,
     type: 'GET',
@@ -40,7 +42,7 @@ $.ajax({
     // contentType: false,
     contentType: 'application/json; charset=utf-8', 
     success: function (data) {
-        console.log(data); // assumes data is just an arr of the outputs
+        console.log('success')
         updateJobs(data.progress); // resp needs to be formatted as an obj?
 
 
@@ -64,10 +66,11 @@ $.ajax({
 
 function updateJobs(arr) {
     jobsCompleted = []
-    // newJobs = []
+    newJobs = []
     if(!arr)
         return false // don't update arr
-    for(input in arr) { // can be length 1 if it is length 0 return
+    for(var j = 0; i < arr.length; j++) { // can be length 1 if it is length 0 return
+        var input = arr[j];
         if(input.length == 0)
             continue; //continue when no vals
         

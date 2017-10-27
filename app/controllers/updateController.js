@@ -25,13 +25,17 @@ function getLastId(req, res) {
     }).then(function (lastDataFile) {
         console.log("Break ----------------- \n \n ");
 
-
-        var queryName = [lastDataFile.filename.substring(0, lastDataFile.filename.lastIndexOf("."))]
-        queryName += [lastDataFile.filename.substring(lastDataFile.filename.lastIndexOf(".") + 1)]
+        var queryName = []
+        queryName.push(lastDataFile.filename.substring(0, lastDataFile.filename.lastIndexOf(".")))
+        console.log("queryname: " + queryName)
+        queryName.push(lastDataFile.filename.substring(lastDataFile.filename.lastIndexOf(".") + 1))
+        console.log("queryname: " + queryName)
+        
         // name, ext
 
-        console.log(lastDataFile.location);
-        console.log('file id?' + lastDataFile.id)
+        // console.log(lastDataFile);
+        // console.log('file id?  ' + lastDataFile.id)
+        id = lastDataFile.id
         try {
             gfile = gdal.open(lastDataFile.location);
         }
@@ -43,12 +47,16 @@ function getLastId(req, res) {
             return lastDataFile.id + "$$" + lastDataFile.location + "$$" + e.toString();
         }
 
-        dataset = gfile.layers.get(0);
+        dataset = gfile.layers.get(0); // i treid to distibniguish these with ids but there is no id val
+        // will there ever be more than one of these onbjects in the layers object? if so then we will have to map
+        //their names to a unique has or somthing. I don't think that anything prevents these layters from having the same name
+
+
         // for(layer in gfile.layers) {
         //     console.log(layer.features.count())
         //     // console.log(layer.layername)
         // }
-        console.log('set' + dataset.id)
+        // console.log('set' + dataset.id)
         totalcount = dataset.features.count();
         console.log('totalcount = ' + totalcount)
         Model.Datalayer.count({
@@ -56,56 +64,62 @@ function getLastId(req, res) {
                 layername: queryName[0]
             }
         }).then(function (response) {
+            output = []
             // console.log([response, queryName])
             if(response == totalcount) {
-                output = [[id, queryName[0], true]]
+                output.push([id, queryName[0], true])
                 var success  = true;
 
                 //try deleting obj
-                try{
-                    fs_extra.remove(gfile.location, err => {
-                        if (err) {
-                            console.log("Error cleaning local directory: ", gfile.location);
-                            // return gfile.location + "$$" + e.toString();                            
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                        }
-                    })
-                }
-                catch(e) {
-                    console.log('File Location Error: ' + e);
-                    console.log('RETRYING')
-                    fs_extra.remove(lastDataFile.location, err => {
-                        success = true;
-                        if (err) {
-                            console.log("Error cleaning local directory: ", lastDataFile.location);
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                            //return error object here to make srue this is removed
-                        }
-                    })
-                }
+                // try{
+                //     fs_extra.remove(gfile.location, err => {
+                //         if (err) {
+                //             console.log("Error cleaning local directory: ", gfile.location);
+                //             // return gfile.location + "$$" + e.toString();                            
+                //             console.log(err, err.stack);
+                //             success = false;
+                //             // callback(err);
+                //         }
+                //     })
+                // }
+                // catch(e) {
+                //     console.log('File Location Error: ' + e);
+                //     console.log('RETRYING')
+                //     fs_extra.remove(lastDataFile.location, err => {
+                //         success = true;
+                //         if (err) {
+                //             console.log("Error cleaning local directory: ", lastDataFile.location);
+                //             console.log(err, err.stack);
+                //             success = false;
+                //             // callback(err);
+                //             //return error object here to make srue this is removed
+                //         }
+                //     })
+                // }
                 if(!success)
-                req.flash("Error cleaning local directory: ", gfile.location);
-                
-                return output
+                    req.flash("Error cleaning local directory: ", gfile.location);
+               
+                // console.log(output)
+                // res.send(output)   
+                // return output
                 
             }
             //add obj to response if its valid
             else {
-                var outLayer = [[id, queryName[0], response, totalcount]]                
-            
+                var outLayer = [id, queryName[0], response, totalcount]               
+                // console.log("outlayer: " + outLayer)
                 var index = 0;
-                if (!outLayer[1] || !outLayer[1] <= outLayer[2]) { // check if the output is valid
+                if (!outLayer[1] || !(outLayer[1] <= outLayer[2])) { // check if the output is valid
                         //put in an aerror flag
-                        output.append([id, queryName[0],false])
+                        output.push([id, queryName[0],false])
                     }
                 else {
-                    output.append(outLayer)
+                    
+                    output.push(outLayer)
                 }   
             }
+            // console.log(output)
+            res.send({progress: output})
             return output
             });
         });
@@ -185,7 +199,8 @@ module.exports.updateShape = function (req, res, numIds = null) {
     // console.log("END USER ----------------- \n \n ")
 
     response = getLastId(req, res)
-    console.log(response) // assuming the workflow is right and i can get the max number of layers
+    console.log(response) // this is useless because the async calls finishe after this so there is no acutal return
+    // see if you can find an await
 }
 
 module.exports.updateShapes = function (req, res, numIds = null) {
