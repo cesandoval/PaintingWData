@@ -2,7 +2,7 @@ var $progressTab = $('.progressWidget')
 
 var isPolling = false;
 var pollType = 'shapes' // poll shapes by default, we can switch to voxels and use the same helper
-var currentJobs = [[11,'Risk_cancerresp', 100, 1000000]]
+var currentJobs = [[11,'Risk_cancerresp', 750, 1000]]
 var selectedIDs = 0
 
 
