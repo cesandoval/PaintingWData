@@ -1,15 +1,33 @@
-extends layout
+//- extends layout
 
-
-.container.spacing-large #{progress-widget}
-    h1 progress widget
+.container.spacing-large(id='progress-widget')
+    h1 progress widget, click to start polling
     .row-spacer
+        div.text-center
+                button.btn.btn-block.btn-gray.btn-jumbotron(id='PollingToggle') Start Polling
+
     h2 jobs in progress
     .row-spacer
-    div #{jobList}
-        ul
+    div(id='jobList')
+        if(currentJobs && currentJobs.length > 0)
+            ul
+            - i = 0
+            while i < currentJobs.length
+                +progressBar(...currentJobs[i])
+                -i++
+
+
+mixin progressBar(id, title, numerator, denominator)
+    percentage = (((numerator/denominator)*100).floor()).toString() + "%";
+    width = "width: " + percentage
+    li.job-container
+        span = "id: " id + " title: " + title
+        .progress-container
+            .progress-bar.progress-bar-success(role='progressbar',aria-valuenow="40",
+            aria-valuemin="0", aria-valuemax="100", style="#{width}")
+                = numerator + "/" + denominator
 
     
+script(src="/javascripts/progressWidget.js")
 
-
-  script(src="/javascripts/progressWidget.js")
+  

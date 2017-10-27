@@ -50,6 +50,9 @@ var passport = require('passport'),
 
   router.get('/update/shapes/:id', isAuthenticated, updateController.updateShapes);
   router.get('/update/shapes', isAuthenticated, updateController.updateShape);
-  // router.get('/update/pollShapes', isAuthenticated, updateController.pollShapeUpdates)
+  router.get('/progressWidget', isAuthenticated, function(req, res) {
+    res.render('progressWidget')// { user: req.user})
+    // res.render('progressWidget', { userSignedIn: req.isAuthenticated(), user: req.user}) // what params do you need to pass in to the view?
+  })
 
 module.exports = router;
