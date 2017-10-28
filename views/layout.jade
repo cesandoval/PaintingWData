@@ -103,6 +103,11 @@ script.
     d3.select(this).style("opacity", 0);
   });
 
+  $("#explore").click(() => {
+    $('html, body').animate({
+        scrollTop: $(".application-title").offset().top
+    }, 2000);
+  });
 
   $(".pop_team").click(function () {
       //console.log($(this).attr("bio1"));
