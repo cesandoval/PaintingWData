@@ -5,6 +5,9 @@
 /*@import url('https://fonts.googleapis.com/css?family=Overpass:100,100i,300,300i,400,400i,700,700i,900,900i&subset=latin-ext');*/
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i');
 @import url('https://fonts.googleapis.com/css?family=Overpass:100,100i,200,200i,300,300i,400,400i,600,600i');
+@import url('https://fonts.googleapis.com/css?family=Scope+One');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
 /*(255, 93, 68) #f16752 */
 /* background: #D34031; */
 
@@ -14,9 +17,9 @@ body {
 }
 
 p {
-    font-family: 'EB Garamond', serif;
-    color: #1A1A1A;
-    font-size: calc(10px + 1.5vh);
+    font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+    color: rgba(0,0,0,0.6);
+    font-size: calc(7px + 1.5vh);
 }
 
 p.sans {
@@ -68,6 +71,9 @@ h4 {
 
 .center {
     text-align: center;
+    font-family: 'Scope One', serif;
+    color: #f16752;
+    font-weight: 700;
 }
 
 /**************************/
@@ -79,18 +85,20 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 
 .nav {
     height: 100%;
+    padding-top: 0.7vh;
 }
 
 .nav-container {
-    width: 90vw;
+    width: 100%;    
     height: 100%;
+    margin: 0px !important;
 }
 
 .navbar-inverse { 
     background: #f16752;
     border-color: transparent;
     height: 80px;
-    padding-top:2vh;
+    padding-top:1vh;
 
     -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
     -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
@@ -115,7 +123,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 /* link */
 .navbar-inverse .navbar-nav > li > a,
 .navbar-nav > li > ul > a {
-    color: black;
+    color: white;
     font-family: 'Overpass', sans-serif;
     font-size: 12pt;
     text-shadow: none;
@@ -124,7 +132,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 
 .navbar-nav > li.dropdown > a {
-    color: black;
+    color: white;
 }
 
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
@@ -198,10 +206,12 @@ ul.dropdown-menu {
     background-attachment: fixed;
     /*background-size: 100vw auto;*/
     background-position: 0vw 0vh;
-    stroke: 8px;
 
-    -webkit-background-size: 100vw auto;
-    background-size: ;
+    stroke: 8px;
+  background-size: 145vw auto;
+  background-position: -10vw -10vh;
+  
+    height: 100vh;
 
     transition:all 5s ;
     -webkit-transition:all 5s ;
@@ -221,8 +231,8 @@ ul.dropdown-menu {
 }
 
 .brand-title:hover {
-  background-size: 150vw auto;
-  background-position: -10vw -10vh;
+    background-size: 160vw auto;
+    background-position: -10vw -10vh;
 }
 
 .options--react{
@@ -291,8 +301,34 @@ ul.dropdown-menu {
 }
 
 .spacing-small {
-    padding-top: 3vh;
-    padding-bottom: 3vh;
+    font-family: 'Scope One', serif;
+    color: #f16752;
+    font-weight: 700;
+    padding: 0px;
+}
+
+.application-title {
+    color: #f16752;
+    font-weight: 700;
+    border-bottom: 2px solid;
+    padding-left: 0px;
+}
+
+.application-lc {
+    font-size: 2vh;
+    padding: 1ch;
+    padding-top: 1.1ch;
+    text-align: center;
+    background-color: #f16752;
+    color: white;
+    border: 3px solid white;
+}
+
+.application-lc:hover {
+    border: 3px solid #f16752;    
+    cursor: pointer;
+    background-color: white;
+    color: #f16752;
 }
 
 .spacing-large {
@@ -301,13 +337,62 @@ ul.dropdown-menu {
 }
 
 .site-title {
-    padding-top:20vh;
-    padding-bottom: 5vh;
     font-weight: 700;
 }
 
 h1.site-title {
-    font-size: 8vh;
+    font-size: 11.5vh;
+    font-family: 'Scope One', serif;
+    margin-bottom: 0px;
+}
+
+h1.site-title2 {
+    font-size: 10vh;
+    font-family: 'Scope One', serif;
+    border-bottom: 3px solid black;
+    font-weight: 700;
+    margin-top: 0px;
+}
+
+p.title-txt {
+
+}
+
+.application-txt {
+    padding-left: 0px;
+    padding-top: 20px;
+}
+
+.row.explore {
+    bottom: 80px;
+    position: absolute;
+    width: 100%;
+}
+
+.explore-btn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: 0.3s ease;
+    width: 55px;
+}
+
+.explore-btn:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+div.title-frame {
+
+    position: absolute;
+    background-color: rgba(255,255,255,0.5);
+    top: 23vh;
+    padding: 40px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 53vh;
+    left: 15vh;
+
 }
 
 /*body*/
@@ -496,9 +581,11 @@ textarea:focus, .form-control:focus, input:focus, input:active{
     font-size: 2vmin;
     position: relative;
     bottom: 0;
-    padding-left: 3vw;
     width: 100%;
-    height: 60px;
+    padding: 10px;
+    padding-top: 2px;
+    padding-left: 30px;
+    text-align: center;
 }
 
 .margin-small {

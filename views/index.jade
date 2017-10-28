@@ -2,28 +2,31 @@ extends layout
 
 block pageTitle
 
-  div(class='jumbotron').brand-title
+  div(class='').brand-title
     .row
-      .col-md-5.col-md-offset-1
-        h1.site-title Painting with Data
-        p Painting with Data is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction.
-      .col-md-2.col-md-offset-4
+      div.title-frame
+        h1.site-title Painting
+        h1.site-title2 with Data
+
+        p.title-txt Painting with Data is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction.
+      .col-md-2.col-md-offset-10
         p.spacing-large(style="font-family: 'Karla'; font-size: 10pt;") Background showing cancer (red) and income (blue) data from NYC.      
-    .row
-      .col-md-5.col-md-offset-1.text-right
-        p.spacing
-          a(class="btn btn-md btn-jumbotron btn-gray", href="/upload", role="button") Explore
+    .row.explore
+        img(class = "explore-btn" src="/images/scroll_down_btn.svg" id="explore")
+        //a(class="btn btn-md btn-jumbotron btn-gray", href="/upload", role="button") Explore
       
 
 block content
   div.container.transparent.no-margin
     .row.spacing
-      .col-md-6.col-md-offset-1
-        h2.spacing-small Application
-        p Painting with Data was created to promote accessibility and transparency in urban research and decision-making for planning and policy officials, as well as city residents. With the tool, users can create an interactive map and explore relationships between georeferenced datasets. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map.
+      .col-md-10.col-md-offset-2
+        div.col-md-12.application-title
+          h2.spacing-small.col-md-9 Application
+          a(href="/upload", role="button")
+            h2.col-md-3.application-lc -> Launch App
+
+        p.col-md-7.application-txt Painting with Data was created to promote accessibility and transparency in urban research and decision-making for planning and policy officials, as well as city residents. With the tool, users can create an interactive map and explore relationships between georeferenced datasets. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map.
         br
-      .col-md-6.col-lg-offset-1.text-right.spacing
-          a(class="btn btn-gray btn-small", href="/about", role="button") More &raquo;
     //- .row.red-circle-bg
     //-   .col-md-5.col-lg-offset-6
     //-     h2.spacing-small Urban Tribes
