@@ -70,6 +70,10 @@ class VPL extends React.Component {
                 from: { x: 50, y: 50 },
                 to: { x: 50, y: 50 },
             },
+            panning: {
+                x: 0,
+                y: 0,
+            },
         }
 
         this.checked = {
@@ -178,17 +182,28 @@ class VPL extends React.Component {
 
                 down.purpose = plugDOM ? 'link' : down.purpose
                 down.purpose = controlDOM ? 'none' : down.purpose
+                down.purpose = down.shiftKey ? 'pan' : down.purpose
 
                 switch (down.purpose) {
                     case 'move': {
                         const [x, y] = nodeDOM
                             .getAttribute('transform')
-                            .match(/\d+/g)
+                            .match(/-?\d+/g)
                         down.info = { x, y, nodeDOM }
                         break
                     }
                     case 'link': {
                         down.info = { nodeDOM, plugDOM, svgDOM }
+                        break
+                    }
+                    case 'pan': {
+                        const [x, y] = svgDOM
+                            .getAttribute('viewBox')
+                            .split(' ')
+                            .map(n => parseFloat(n))
+
+                        down.info = { x, y, svgDOM }
+
                         break
                     }
                 }
@@ -225,12 +240,14 @@ class VPL extends React.Component {
                 x: Number(down.info.x) + (move.clientX - down.clientX),
                 y: Number(down.info.y) + (move.clientY - down.clientY),
             }))
+            /* no used when panning
             .map(({ nodeKey, x, y }) => ({
                 nodeKey,
-                // prevent the position be set to a negative number.
+                // prevent the position to be set to a negative number.
                 x: x < 0 ? 0 : x,
                 y: y < 0 ? 0 : y,
             }))
+            */
             .do(({ nodeKey, x, y }) => {
                 // console.log("nodeMove", {nodeKey, x, y})
                 const newPosition = { x, y }
@@ -290,6 +307,44 @@ class VPL extends React.Component {
                 this.linkThenComputeNode()
             })
             .subscribe(observer('linkNode$'))
+
+        this.panVpl$ = this.mouseTracker$
+            .filter(({ down }) => down.purpose == 'pan')
+            .do(({ down, move }) => {
+                console.log('panVpl$', { move, down })
+            })
+            // .throttleTime(30) // limit execution time for opt performance
+            .map(({ down, move }) => ({
+                x: Number(down.info.x) - (move.clientX - down.clientX),
+                y: Number(down.info.y) - (move.clientY - down.clientY),
+            }))
+            /*
+            // limit the position.
+            .map(({ nodeKey, x, y }) => ({
+                nodeKey,
+                x: x < 0 ? 0 : x,
+                y: y < 0 ? 0 : y,
+            }))
+            */
+            .do(({ x, y }) => {
+                // console.log('panVpl', { x, y })
+
+                const newPosition = { x, y }
+                this.panning(newPosition)
+            })
+            .subscribe(observer('panVpl$'))
+
+        this.shiftKeyEvent$ = Rx.Observable
+            .merge(
+                Rx.Observable.fromEvent(window, 'keydown'),
+                Rx.Observable.fromEvent(window, 'keyup')
+            )
+            .filter(f => f.key == 'Shift')
+            .map(m => m.type == 'keydown')
+            .do(d => {
+                vplDOM.style.cursor = d ? 'all-scroll' : ''
+            })
+            .subscribe(observer('shiftKeyEvent$'))
     }
 
     componentWillUnmount() {
@@ -302,6 +357,13 @@ class VPL extends React.Component {
     componentDidUpdate() {
         // componentDidUpdate(nextProps){
         // console.log('props changed ...', nextProps)
+    }
+
+    panning = ({ x, y }) => {
+        // console.log('panning()', { x, y })
+        const panning = { x, y }
+
+        this.setState({ panning })
     }
 
     moveNode = ({ nodeKey, newPosition }) => {
@@ -436,7 +498,7 @@ class VPL extends React.Component {
                 markerEnd="url(#Triangle)"
                 ref={ref => (this.tempLink = ref)}
                 key="tempLink"
-                className={'link'}
+                className={'link tempLink'}
                 d={this.diagonal(
                     this.state.tempLink.from,
                     this.state.tempLink.to
@@ -556,7 +618,6 @@ class VPL extends React.Component {
         */
 
         const nodes = this.state.Nodes
-        window.nodes = nodes
 
         const datasetNodes = Object.entries(nodes)
             .filter(([, value]) => value.type == 'DATASET')
@@ -1083,8 +1144,10 @@ class VPL extends React.Component {
                     <svg
                         className="vpl"
                         ref={ref => (this.mainSvgElement = ref)}
-                        width="100%"
-                        height="100vh"
+                        width="3000"
+                        height="3000"
+                        viewBox={`${this.state.panning.x} ${this.state.panning
+                            .y} 3000 3000`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
@@ -1097,13 +1160,18 @@ class VPL extends React.Component {
                             return this.createNodeObject(node, key)
                         })}
 
-                        {// do not display temp link when its `from` and `to` is the same
-                        // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
-                        JSON.stringify(this.state.tempLink.from) !=
-                        JSON.stringify(this.state.tempLink.to)
-                            ? this.createTempLink()
-                            : ''}
-                        {this.createLinks()}
+                        <g
+                            transform={`translate(${this.state.panning.x},${this
+                                .state.panning.y})`}
+                        >
+                            {// do not display temp link when its `from` and `to` is the same
+                            // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
+                            JSON.stringify(this.state.tempLink.from) !=
+                            JSON.stringify(this.state.tempLink.to)
+                                ? this.createTempLink()
+                                : ''}
+                            {this.createLinks()}
+                        </g>
                     </svg>
                 </div>
             </div>

@@ -27,26 +27,18 @@ svg > rect.activeNode {
   fill: greenyellow;
 }
 
-svg > path.tempLink {
-  stroke : 'black';
-  stroke-width: 2px;
-  fill : transparent;
-}
-
-svg > path.link {
+svg path.link {
   stroke : #717171;
   stroke-width: 2px;
   fill : transparent;
 
 }
 
-svg > path.tempLink {
-  stroke : #27ae60;
-  stroke-width: 2px;
-
-
+svg path.tempLink {
+  stroke : #8f8f8f;
+  stroke-dasharray: 4, 8;
+  stroke-linecap: round; 
 }
-
 
 g rect.nodeMain{
   fill: #ecf0f1;
