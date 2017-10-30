@@ -10,6 +10,9 @@ function toggleProgressWidget(){
     console.log('toggleFired')
     // e.preventDefault();
     // $('progress-widget').toggle();
+
+
+
     var pollFunction; 
     var numIds = selectedIDs == 0 ? null : selectedIDs
     
@@ -21,19 +24,24 @@ function toggleProgressWidget(){
     }
 
     if(!isPolling) {
-        setTimeout(pollFunction(numIds), 1000);
+        isPolling = !isPolling;            
+        window.setTimeout(pollFunction, 500);
     }
     else {
-        clearTimeout(pollFunction);
+        isPolling = !isPolling;            
+        window.clearTimeout(pollFunction);
     }
-
-
+    
 }
 
-function pollShapeUpdates(id = null) { // move to public side (client) otherwise jquery won't work
-console.log('polling fired: ' + id)
-suffix = id ? "/id:" + id: ""
-console.log(suffix)
+
+function pollShapeUpdates() { // move to public side (client) otherwise jquery won't work
+console.log('polling fired')
+suffix = "";//d ? "/id:" + id: ""
+if(!isPolling) {
+    return window.clearTimeout(pollShapeUpdates);
+}
+console.log(suffix);
 $.ajax({
     url: "/update/shapes" + suffix,
     type: 'GET',
@@ -42,22 +50,11 @@ $.ajax({
     // contentType: false,
     contentType: 'application/json; charset=utf-8', 
     success: function (data) {
-        console.log('success')
+        console.log('success');
         updateJobs(data.progress); // resp needs to be formatted as an obj?
-
-
-        // if (data.progress.length > 1) {
-        //     output = []
-        //     console.log(data.progress)
-        //     for(item in data.progress) {
-        //         output.append(handleProgess(item))
-        //     }
-        //     return output
-        // }
-        // else {
-        //     return handleProgess(data.progress)
-        // }
+        updateHtml(currentJobs);
     },
+    complete: pollShapeUpdates,
     failure: function (err) {
         console.log(err);
     }
@@ -136,16 +133,25 @@ var flashHandler = $('#flashes');
         $(this).append(flash);
     });
 
-// function updateHtml(newJobs) {
-//     var progressList = "";
-    
-//     currentJobs = newJobs; // update jobs in progress
-//     for(job in currentJobs) {
-//         console.log('adding html: ' + job);
-//         progressList += "<li>" + createProgressBar(...job.slice(0,job.length-2)) + "</li>";
-//     }
-//     document.getElementById("jobList").children[0].innerHTML = progressList;
-// }
+function updateHtml(jobs) {
+    var progressList = document.getElementById('progressList');     
+    if(progressList.hasChildNodes()){
+        progressList.innerHTML = '';
+      }
+      var count = 0;
+    // var progressList = "";
+    jobs.forEach(job => {
+        console.log('adding html: ' + job);
+        jobNode = document.createElement('li');   
+        jobNode.innerHTML;
+        // progressList += "<li>" + createProgressBar(...job.slice(0,job.length-2)) + "</li>";
+        jobNode.innerHTML += createProgressBar(...job.slice(1,job.length));
+        progressList.appendChild(jobNode);    
+        console.log(createProgressBar(...job.slice(1,job.length)));
+        count++;
+    });
+    // document.getElementById("jobList").find('progressList').innerHTML = progressList;
+}
 
 // finishedJobsAlert = function(arr) {
 //     if(!arr)
@@ -158,10 +164,13 @@ var flashHandler = $('#flashes');
 // }
 
 createProgressBar = function(jobName, numerator, denominator) { // refactor tojade ( pass the entire array)
-var percentage = (((numerator/denominator)*100).floor()).toString();
-var html = `<div class="progress">
+    console.log(jobName, numerator, denominator)
+var percentage = ((numerator/denominator)*100).toFixed(2).toString();
+console.log(percentage)
+var html = `<div class="progress" style="margin: 5px; border-width: 1px">
 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
 aria-valuemin="0" aria-valuemax="100" style="width:`;
 html +=  percentage+ "%\">" + jobName + ": " + numerator + "/" + denominator + "</div></div>";
 return html
 }
+

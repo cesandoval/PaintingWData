@@ -25,11 +25,11 @@ function getLastId(req, res) {
     }).then(function (lastDataFile) {
         console.log("Break ----------------- \n \n ");
 
-        var queryName = []
-        queryName.push(lastDataFile.filename.substring(0, lastDataFile.filename.lastIndexOf(".")))
-        console.log("queryname: " + queryName)
-        queryName.push(lastDataFile.filename.substring(lastDataFile.filename.lastIndexOf(".") + 1))
-        console.log("queryname: " + queryName)
+        var queryName = [];
+        queryName.push(lastDataFile.filename.substring(0, lastDataFile.filename.lastIndexOf(".")));
+        console.log("queryname: " + queryName);
+        queryName.push(lastDataFile.filename.substring(lastDataFile.filename.lastIndexOf(".") + 1));
+        console.log("queryname: " + queryName);
         
         // name, ext
 
@@ -58,7 +58,7 @@ function getLastId(req, res) {
         // }
         // console.log('set' + dataset.id)
         totalcount = dataset.features.count();
-        console.log('totalcount = ' + totalcount)
+        console.log('totalcount = ' + totalcount);
         Model.Datalayer.count({
             where: {
                 layername: queryName[0]

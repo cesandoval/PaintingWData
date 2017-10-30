@@ -14,22 +14,22 @@ block pageTitle
         h2 jobs in progress
         .row-spacer
         div(id='jobList')
-            if(currentJobs && currentJobs.length > 0)
-                span this is some text
-                ul
-                    each job in currentJobs
-                        +progressBar(...job)
+        span Job Progress Section
+        ul#progressList(style='list-style-type: none; width: 300px;')
+                    //- -for( var i = 0; i < j; i++)
+                    //-     -var job = currentJobs[i]
+                    //-     +progressBar(...job)
 
 
-    mixin progressBar(id, title, numerator, denominator)
-        -var percentage = (((numerator/denominator)*100).floor()).toString() + "%";
-        -var width = "width: " + percentage;
-        li.job-container
-            span = "id: " id + " title: " + title
-            .progress-container
-                .progress-bar.progress-bar-success(role='progressbar',aria-valuenow="40",
-                aria-valuemin="0", aria-valuemax="100", style="#{width}")
-                    = numerator + "/" + denominator
+    //- mixin progressBar(id, title, numerator, denominator)
+    //-     -var percentage = Math.floor(((numerator/denominator)*100)).toString() + "%";
+    //-     -var width = "width: " + percentage;
+    //-     li.job-container
+    //-         span id: #{id}      title: #{title}
+    //-         .progress-container
+    //-             .progress-bar.progress-bar-success(role='progressbar',aria-valuenow="40",
+    //-             aria-valuemin="0", aria-valuemax="100", style="#{width}")
+    //-                 = numerator + "/" + denominator
 
         
 
