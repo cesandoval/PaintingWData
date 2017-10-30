@@ -53,7 +53,7 @@ class OptionsMapStyle extends React.Component {
     }
 
     componentWillReceiveProps({ show }) {
-        console.log(`componentWillReceiveProps(${show})`)
+        // console.log(`componentWillReceiveProps(${show})`)
 
         // const mapStyle = this.state.mapboxStyle
         const mapStyle =

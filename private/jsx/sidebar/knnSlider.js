@@ -39,7 +39,7 @@ class KnnSlider extends React.Component {
             }
         }
 
-        if (window.renderSec) window.renderSec(1, 'KnnSlider')
+        if (window.renderSec) window.renderSec(0.2, 'KnnSlider')
     }
 
     neighborsOf(layer) {

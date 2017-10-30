@@ -85,6 +85,8 @@ class Panel extends React.Component {
             pixels.material.uniforms.endColor.value.set(e.target.value)
         }
         */
+
+        if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
     }
 
     toggleVisibility() {
