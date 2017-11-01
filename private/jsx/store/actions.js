@@ -1,111 +1,99 @@
-import store from './store';
-import * as c from './consts';
+import store from './store'
+import * as c from './consts'
 
-export const sideAddLayer = layer => (
+export const sideAddLayer = layer =>
     store.dispatch({
         type: c.SIDE_ADD_LAYER,
-        layer
+        layer,
     })
-)
 
-export const sideAddLayers = layers => (
+export const sideAddLayers = layers =>
     store.dispatch({
         type: c.SIDE_ADD_LAYERS,
-        layers
+        layers,
     })
-)
 
-export const sideUpdateLayer = ( name, field, value ) => (
+export const sideUpdateLayer = (name, field, value) =>
     store.dispatch({
         type: c.SIDE_UPDATE_LAYER,
         name,
         field,
-        value
+        value,
     })
-)
 
-export const sideRemoveLayer = layerName => (
+export const sideRemoveLayer = layerName =>
     store.dispatch({
         type: c.SIDE_REMOVE_LAYER,
-        layerName
+        layerName,
     })
-)
 
-export const sideChangeOpacity = (name, opacity) => (
+export const sideChangeOpacity = (name, opacity) =>
     store.dispatch({
         type: c.SIDE_CHANGE_OPACITY,
         name,
-        opacity
+        opacity,
     })
-)
 
-
-export const mapAddInstance = (map) => (
+export const mapAddInstance = map =>
     store.dispatch({
         type: c.MAP_ADD_INSTANCE,
-        instance: map
+        instance: map,
     })
-)
 
-export const mapAddGeometry = (name, geometry) => (
+export const mapAddGeometry = (name, geometry) =>
     store.dispatch({
         type: c.MAP_ADD_GEOMETRY,
         name,
-        geometry
+        geometry,
     })
-)
 
-export const setOptionShow = (option) => (
+export const mapRemoveGeometry = (name, geometry) =>
+    store.dispatch({
+        type: c.MAP_REMOVE_GEOMETRY,
+        name,
+        geometry,
+    })
+
+export const setOptionShow = option =>
     store.dispatch({
         type: c.MAP_SET_OPTION_SHOW,
-        option
+        option,
     })
-)
 
-export const vlangAddLink = link => (
+export const vlangAddLink = link =>
     store.dispatch({
         type: c.VLANG_ADD_LINK,
-        link
+        link,
     })
-) 
 
-export const vlangRemoveLink = index => (
+export const vlangRemoveLink = index =>
     store.dispatch({
         type: c.VLANG_REMOVE_LINK,
-        index
+        index,
     })
-)
 
-export const vlangAddNode = node => (
+export const vlangAddNode = node =>
     store.dispatch({
         type: c.VLANG_ADD_NODE,
-        node
+        node,
     })
-)
 
-export const vlangRemoveNode = index => (
+export const vlangRemoveNode = index =>
     store.dispatch({
         type: c.VLANG_REMOVE_NODE,
-        index
+        index,
     })
-)
 
-
-export const vlangMoveNode = (index, newPosition, props)  => (
+export const vlangMoveNode = (index, newPosition, props) =>
     store.dispatch({
         type: c.VLANG_UPDATE_NODE_POSITION,
         index: index,
         position: newPosition,
-        props: props
-
+        props: props,
     })
-)
 
-export const vlangAddLayers = layers  => (
+export const vlangAddLayers = layers =>
     store.dispatch({
         type: c.VLANG_ADD_LAYERS,
-        layers
+        layers,
     })
-)
-
-

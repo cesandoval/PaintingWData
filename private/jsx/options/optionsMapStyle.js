@@ -1,49 +1,46 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { 
-    ButtonToolbar,
-    DropdownButton,
-    MenuItem,
-} from 'react-bootstrap';
+import { ButtonToolbar, DropdownButton, MenuItem } from 'react-bootstrap'
 
 class OptionsMapStyle extends React.Component {
     constructor(props) {
-        super(props);
+        super(props)
 
         // default mapbox.light
-        this.state = { mapboxStyle: this.props.mapStyle};
+        this.state = {
+            mapboxStyle: this.props.mapStyle,
+            show: true,
+        }
 
-        this.changeMapStyle = this.changeMapStyle.bind(this);
-        this.updateMapStyle = this.updateMapStyle.bind(this);
+        this.changeMapStyle = this.changeMapStyle.bind(this)
+        this.updateMapStyle = this.updateMapStyle.bind(this)
 
         this.start()
     }
     start() {
-        if(this.updateMapStyle(this.state.mapboxStyle))
-            console.log('started')
-        else    
-            setTimeout(()=> {this.start()}, 1000)
+        if (this.updateMapStyle(this.state.mapboxStyle)) console.log('started')
+        else
+            setTimeout(() => {
+                this.start()
+            }, 1500)
     }
     updateMapStyle(style) {
         window.mapboxStyle = style
 
         const started = window.refreshTiles && window.updateTiles && true
-        console.log(`updateMapStyle(${style})`, started)
+        // console.log(`updateMapStyle(${style})`, started)
 
-        if(window.renderSec)
-            window.renderSec(1, 'updateMapStyle')
-
-        if(started) {
-            try{
-                refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
-                updateTiles() // call window.updateTiles() to update the tiles.
+        if (started) {
+            try {
+                window.refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
+                window.updateTiles() // call window.updateTiles() to update the tiles.
                 return true
-            } catch(e){
+            } catch (e) {
                 // console.error(e)
                 return false
             }
-        } 
+        }
     }
 
     changeMapStyle(style) {
@@ -52,29 +49,37 @@ class OptionsMapStyle extends React.Component {
 
         this.updateMapStyle(style)
 
-        if(style == 'empty')
-            this.props.onHide()
+        if (style == 'empty') this.props.onHide()
     }
 
-    componentWillReceiveProps({show}){
-        console.log(`componentWillReceiveProps(${show})`)
+    componentWillReceiveProps({ show }) {
+        // console.log(`componentWillReceiveProps(${show})`)
 
         // const mapStyle = this.state.mapboxStyle
-        const mapStyle = this.state.mapboxStyle == 'empty' ? this.props.mapStyle : this.state.mapboxStyle
+        const mapStyle =
+            this.state.mapboxStyle == 'empty'
+                ? this.props.mapStyle
+                : this.state.mapboxStyle
 
-        if(show)
-            this.changeMapStyle(mapStyle)
-        else
-            this.updateMapStyle('empty')
+        if (show != this.state.show) {
+            this.setState({ show: show })
 
+            if (show) {
+                this.changeMapStyle(mapStyle)
+            } else {
+                this.updateMapStyle('empty')
+            }
+        }
     }
 
     render() {
-        return(
+        return (
             <ButtonToolbar>
-                <DropdownButton 
+                <DropdownButton
                     id="mapStyleSelect"
-                    title={this.state.mapboxStyle.replace(/mapbox\./g, '').toUpperCase() }
+                    title={this.state.mapboxStyle
+                        .replace(/mapbox\./g, '')
+                        .toUpperCase()}
                     bsSize="xsmall"
                     dropup
                     onSelect={this.changeMapStyle}
@@ -83,16 +88,31 @@ class OptionsMapStyle extends React.Component {
                     <MenuItem eventKey="mapbox.light"> Light </MenuItem>
                     <MenuItem eventKey="mapbox.dark"> Dark </MenuItem>
                     <MenuItem eventKey="mapbox.satellite"> Satellite </MenuItem>
-                    <MenuItem eventKey="mapbox.streets-satellite"> Streets-Satellite </MenuItem>
-                    <MenuItem eventKey="mapbox.wheatpaste"> Wheatpaste </MenuItem>
-                    <MenuItem eventKey="mapbox.streets-basic"> Streets-Basic </MenuItem>
+                    <MenuItem eventKey="mapbox.streets-satellite">
+                        {' '}
+                        Streets-Satellite{' '}
+                    </MenuItem>
+                    <MenuItem eventKey="mapbox.wheatpaste">
+                        {' '}
+                        Wheatpaste{' '}
+                    </MenuItem>
+                    <MenuItem eventKey="mapbox.streets-basic">
+                        {' '}
+                        Streets-Basic{' '}
+                    </MenuItem>
                     <MenuItem eventKey="mapbox.comic"> Comic </MenuItem>
                     <MenuItem eventKey="mapbox.outdoors"> Outdoors </MenuItem>
-                    <MenuItem eventKey="mapbox.run-bike-hike"> Run-Bike-Hike </MenuItem>
+                    <MenuItem eventKey="mapbox.run-bike-hike">
+                        {' '}
+                        Run-Bike-Hike{' '}
+                    </MenuItem>
                     <MenuItem eventKey="mapbox.pencil"> Pencil </MenuItem>
                     <MenuItem eventKey="mapbox.pirates"> Pirates </MenuItem>
                     <MenuItem eventKey="mapbox.emerald"> Emerald </MenuItem>
-                    <MenuItem eventKey="mapbox.high-contrast"> High-Contrast </MenuItem>
+                    <MenuItem eventKey="mapbox.high-contrast">
+                        {' '}
+                        High-Contrast{' '}
+                    </MenuItem>
                     <MenuItem divider />
                     <MenuItem eventKey="empty">Empty</MenuItem>
                 </DropdownButton>
@@ -117,11 +137,10 @@ class OptionsMapStyle extends React.Component {
                 <option value="mapbox.high-contrast"> High-Contrast </option>
             </select>
             */
-        );
+        )
     }
 }
 
-export default connect(s=>({map: s.map, geometries: s.map.geometries}))(OptionsMapStyle);
-
-
-
+export default connect(s => ({ map: s.map, geometries: s.map.geometries }))(
+    OptionsMapStyle
+)

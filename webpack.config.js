@@ -1,15 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 
-
-// Webpack uses `publicPath` to determine where the app is being served from.
-// In development, we always serve from the root. This makes config easier.
-const publicPath = '/';
-// `publicUrl` is just like `publicPath`, but we will provide it to our app
-// as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
-// Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
-const publicUrl = '';
-
 module.exports = {
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
@@ -24,7 +15,7 @@ module.exports = {
         // This does not produce a real file. It's just the virtual path that is
         // serve in development. This is the JS bundle
         // containing code from all our entry points, and the Webpack runtime.
-        filename: 'bundle.js' 
+        filename: 'bundle.js',
     },
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
@@ -35,26 +26,29 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: [{
-                    loader: 'react-hot-loader'
-                }, {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['es2015', 'react'],
-                        plugins: [
-                            'transform-runtime',
-                            'transform-class-properties',
-                        ],
-                        // This is a feature of `babel-loader` for webpack (not Babel itself).
-                        // It enables caching results in ./node_modules/.cache/babel-loader/
-                        // directory for faster rebuilds.
-                        cacheDirectory: true,
-                  },
-                }]
+                use: [
+                    {
+                        loader: 'react-hot-loader',
+                    },
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['es2015', 'react'],
+                            plugins: [
+                                'transform-runtime',
+                                'transform-class-properties',
+                            ],
+                            // This is a feature of `babel-loader` for webpack (not Babel itself).
+                            // It enables caching results in ./node_modules/.cache/babel-loader/
+                            // directory for faster rebuilds.
+                            cacheDirectory: true,
+                        },
+                    },
+                ],
             },
             {
                 test: /\.css$/,
-                loader: 'style-loader!css-loader'
+                loader: 'style-loader!css-loader',
             },
             // ** ADDING/UPDATING LOADERS **
             // The "file" loader handles all assets unless explicitly excluded.
@@ -92,7 +86,6 @@ module.exports = {
                     name: 'static/media/[name].[hash:8].[ext]',
                 },
             },
-
         ],
     },
     plugins: [
@@ -102,14 +95,11 @@ module.exports = {
         new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
         // new webpack.optimize.OccurenceOrderPlugin(), it is now enabled by default
     ],
-    resolve: {
-        alias: {}
-    },
     performance: {
-        hints: false
+        hints: false,
     },
     // Turn off performance hints during development because we don't do any
     // splitting or minification in interest of speed. These warnings become
     // cumbersome.
     devtool: '#eval-source-map',
-};
+}
