@@ -1031,6 +1031,7 @@ class VPL extends React.Component {
                     <Panel
                         color={color}
                         index={nodeKey}
+                        type={type}
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
