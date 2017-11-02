@@ -655,7 +655,7 @@ class VPL extends React.Component {
             }
         })
 
-        console.log({ nodeInputsFromNode })
+        // console.log({ nodeInputsFromNode })
 
         // getting a output Tree Structure to check the order of output.
         const nodeOutputTree = {}
@@ -780,7 +780,7 @@ class VPL extends React.Component {
         )
     }
 
-    // TODO: refactoring this function. some node has different input order.
+    // TODO: refactoring this function.
     evalArithmeticNode = (node, mathFunction, options, geometries) => {
         // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
         // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
