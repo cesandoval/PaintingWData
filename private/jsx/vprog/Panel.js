@@ -2,6 +2,8 @@ import React from 'react'
 import * as act from '../store/actions'
 import { connect } from 'react-redux'
 
+import { Popover, Slider } from 'antd'
+
 class Panel extends React.Component {
     constructor(props) {
         super(props)
@@ -131,8 +133,23 @@ class Panel extends React.Component {
         this.props.deleteNode()
     }
 
+    changeFilter = ([min, max]) => {
+        console.log(`changeFilter(${min}, ${max})`)
+        this.props.changeFilter(min, max)
+    }
+
     render() {
         const margin0px = { margin: '0px' }
+        const filter = (
+            <Slider
+                range
+                defaultValue={[0, 1]}
+                min={0}
+                max={1}
+                step={0.01}
+                onAfterChange={this.changeFilter}
+            />
+        )
 
         return (
             <g>
@@ -175,6 +192,19 @@ class Panel extends React.Component {
                             style={margin0px}
                             src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTAgNDkwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0OTAgNDkwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTI2Mi43LDc2LjZWMThjMC4xLTkuOS03LjktMTgtMTcuOS0xOGMtOS45LDAtMTgsOC4xLTE4LDE4djQzLjRjLTQ4LjQsNC43LTkzLDI4LjMtMTI0LjMsNjYuMmMtNi4zLDcuNy01LjIsMTksMi40LDI1LjMgICAgYzMuNCwyLjgsNy40LDQuMSwxMS40LDQuMWM1LjIsMCwxMC4zLTIuMiwxMy45LTYuNWMyNC41LTI5LjcsNTguOS00OC40LDk2LjUtNTN2NDEuNGMwLDkuOSw4LjEsMTgsMTgsMThzMTgtOC4xLDE4LTE4VjgwLjIgICAgYzAuMS0wLjYsMC4xLTEuMiwwLjEtMS44QzI2Mi44LDc3LjgsMjYyLjgsNzcuMiwyNjIuNyw3Ni42eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTM4NC45LDMzNy4xYy03LjctNi4zLTE5LTUuMi0yNS4zLDIuNGMtMjQuNSwyOS43LTU5LDQ4LjQtOTYuNiw1M3YtNDEuN2MwLTkuOS04LjEtMTgtMTgtMThjLTkuOSwwLTE4LDguMS0xOCwxOFY0NzIgICAgYy0wLjEsOS45LDgsMTgsMTcuOSwxOGM5LjksMCwxOC04LjEsMTgtMTh2LTQzLjNjNDguNC00LjcsOTMtMjguMywxMjQuNC02Ni4zQzM5My42LDM1NC43LDM5Mi41LDM0My40LDM4NC45LDMzNy4xeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE1MC41LDM1OS43Yy0yOS43LTI0LjUtNDguNS01OS4xLTUzLTk2LjhoNDEuNGM5LjksMCwxOC04LjEsMTgtMThjMC05LjktOC4xLTE4LTE4LTE4SDE4LjFjLTkuOSwwLTE4LDguMS0xOCwxOCAgICBjMCw5LjksOCwxOCwxOCwxOGg0My4yYzQuNyw0OC41LDI4LjMsOTMuMiw2Ni4zLDEyNC42YzMuNCwyLjgsNy40LDQuMSwxMS40LDQuMWM1LjIsMCwxMC4zLTIuMiwxMy45LTYuNiAgICBDMTU5LjIsMzc3LjMsMTU4LjEsMzY2LDE1MC41LDM1OS43eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTQ3MS45LDIyNi45aC00My40Yy00LjctNDguNS0yOC40LTkzLjItNjYuNS0xMjQuNWMtNy43LTYuMy0xOS01LjItMjUuMywyLjVjLTYuMyw3LjctNS4yLDE5LDIuNSwyNS4zICAgIGMyOS44LDI0LjUsNDguNiw1OSw1My4yLDk2LjdoLTQxLjVjLTkuOSwwLTE4LDguMS0xOCwxOGMwLDkuOSw4LjEsMTgsMTgsMThoNTguN2MwLjYsMC4xLDEuMiwwLjEsMS44LDAuMWMwLjYsMCwxLjMsMCwxLjktMC4xICAgIGg1OC42YzkuOSwwLDE4LTguMSwxOC0xOEM0ODkuOSwyMzUsNDgxLjgsMjI2LjksNDcxLjksMjI2Ljl6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8Y2lyY2xlIGN4PSIyNDUiIGN5PSIyNDUiIHI9IjE5LjkiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
                         />
+                        <Popover
+                            placement="bottom"
+                            title="Filter"
+                            content={filter}
+                            trigger="click"
+                        >
+                            <img
+                                title="filter"
+                                style={margin0px}
+                                src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0ODguOCA0ODguOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDg4LjggNDg4Ljg7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMzk2LjYsMGMtMzYuMywwLTY2LjksMjUuMy03NSw1OS4xSDMzYy05LjksMC0xOCw4LjEtMTgsMThjMCw5LjksOC4xLDE4LDE4LDE4aDI4OC42YzguMSwzMy45LDM4LjcsNTkuMSw3NSw1OS4xICAgIGM5LjksMCwxOC04LjEsMTgtMThjMC05LjktOC4xLTE4LTE4LTE4Yy0yMi43LDAtNDEuMS0xOC41LTQxLjEtNDEuMWMwLTIyLjcsMTguNS00MS4xLDQxLjEtNDEuMWMyMi42LDAsNDEuMSwxOC41LDQxLjEsNDEuMSAgICBjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOEM0NzMuNywzNC42LDQzOS4xLDAsMzk2LjYsMHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik00NTUuOCwyMjUuOEgxNjcuMmMtOC4xLTMzLjktMzguNy01OS4xLTc1LTU5LjFjLTQyLjUsMC03Ny4xLDM0LjYtNzcuMSw3Ny4xYy0wLjEsNDIuNSwzNC41LDc3LjEsNzcuMSw3Ny4xICAgIGM5LjksMCwxOC04LjEsMTgtMThjMC05LjktOC4xLTE4LTE4LTE4Yy0yMi43LDAtNDEuMS0xOC41LTQxLjEtNDEuMWMwLTIyLjcsMTguNS00MS4xLDQxLjEtNDEuMWMyMi43LDAsNDEuMSwxOC41LDQxLjEsNDEuMSAgICBjMCw5LjksOC4xLDE4LDE4LDE4aDMwNC41YzkuOSwwLDE4LTguMSwxOC0xOEM0NzMuOCwyMzMuOSw0NjUuNywyMjUuOCw0NTUuOCwyMjUuOHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0zOTYuNiwzMzQuNmMtMzYuMywwLTY2LjksMjUuMy03NSw1OS4xSDMzYy05LjksMC0xOCw4LjEtMTgsMThjMCw5LjksOC4xLDE4LDE4LDE4aDI4OC42YzguMSwzMy45LDM4LjcsNTkuMSw3NSw1OS4xICAgIGM5LjksMCwxOC04LjEsMTgtMThjMC05LjktOC4xLTE4LTE4LTE4Yy0yMi43LDAtNDEuMS0xOC41LTQxLjEtNDEuMWMwLTIyLjcsMTguNS00MS4xLDQxLjEtNDEuMWMyMi42LDAsNDEuMSwxOC41LDQxLjEsNDEuMSAgICBjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOEM0NzMuNywzNjkuMiw0MzkuMSwzMzQuNiwzOTYuNiwzMzQuNnoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
+                            />
+                        </Popover>
+
                         <img
                             onClick={this.deleteNode}
                             title="delete"

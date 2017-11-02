@@ -492,6 +492,17 @@ class VPL extends React.Component {
             this.linkThenComputeNode()
         }
     }
+
+    changeNodeFilter = (nodeKey, min, max) => {
+        console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
+
+        const nodes = this.state.Nodes
+        nodes[nodeKey].options.filter = { min, max }
+
+        this.setState({ Nodes: nodes })
+        this.linkThenComputeNode()
+    }
+
     createTempLink = () => {
         return (
             <path
@@ -794,6 +805,20 @@ class VPL extends React.Component {
         // let sizeArray = mathFunction(geomArray1, geomArray2);
         let sizeArray = mathFunction(geomArray, options)
 
+        // new: filter feature (2017 Nov. )
+        if (node.options.filter) {
+            let { min, max } = node.options.filter
+            const dataMax = math.max(sizeArray)
+            const dataMin = math.min(sizeArray)
+            const range = dataMax - dataMin
+
+            console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+            min = dataMin + min * range
+            max = dataMin + max * range
+            sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
+            console.log('[filter] After', { min, max }, sizeArray)
+        }
+
         /*
         const translationArray = new Float32Array(arraySize*3);
         for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
@@ -1006,12 +1031,18 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
+                        changeFilter={(min, max) => {
+                            this.changeNodeFilter(nodeKey, min, max)
+                        }}
                     />
 
                     {/* NODE OPTIONS */
                     Object.entries(typeOptions).map(([attr, def], index) => {
+                        if (attr == 'filter') return
+
                         // 'attribute': 'default value'
                         const value = options[attr] || def
+
                         return (
                             <text
                                 key={`${nodeKey}_option_${attr}`}
