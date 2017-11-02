@@ -228,6 +228,8 @@ class VPL extends React.Component {
                 // prevent text/element selection with cursor drag
                 down.preventDefault()
                 move.preventDefault()
+                down.stopPropagation()
+                move.stopPropagation()
             })
             .share()
 
