@@ -351,9 +351,10 @@ class VPL extends React.Component {
 
     componentWillUnmount() {
         console.log('componentWillUnmount', 'unsubscribe observer')
-        this.mouseTracker$.unsubscribe()
         this.moveNode$.unsubscribe()
         this.linkNode$.unsubscribe()
+        this.panVpl$.unsubscribe()
+        this.shiftKeyEvent$.unsubscribe()
     }
 
     componentDidUpdate() {
