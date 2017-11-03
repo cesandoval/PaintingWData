@@ -61,6 +61,7 @@ function getLastId(req, res) {
         console.log('totalcount = ' + totalcount);
         Model.Datalayer.count({
             where: {
+                userId: req.user.id,                
                 layername: queryName[0]
             }
         }).then(function (response) {
@@ -109,7 +110,8 @@ function getLastId(req, res) {
                 var outLayer = [id, queryName[0], response, totalcount]               
                 // console.log("outlayer: " + outLayer)
                 var index = 0;
-                if (!outLayer[1] || !(outLayer[1] <= outLayer[2])) { // check if the output is valid
+                console.log(outLayer)
+                if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
                         //put in an aerror flag
                         output.push([id, queryName[0],false])
                     }
