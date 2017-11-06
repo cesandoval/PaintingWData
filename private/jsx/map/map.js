@@ -46,6 +46,7 @@ class MapCanvas extends React.Component {
 
                 // Creates the Pixels object
                 const P = new PaintGraph.Pixels(
+                    layer.name,
                     this.props.map,
                     circle,
                     out.otherArray,
