@@ -1124,6 +1124,7 @@ class VPL extends React.Component {
         // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
 
         const P = new PaintGraph.Pixels(
+            geometry.layerName,
             map,
             circle,
             otherArray,

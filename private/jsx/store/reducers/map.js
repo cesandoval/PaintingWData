@@ -25,8 +25,40 @@ export default (state = initialMapState, action) => {
         case c.MAP_REMOVE_GEOMETRY: {
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
+
             if (geo) {
-                geo.material.uniforms.show.value = 0.0
+                let bufferGeo = state.instance.scene.getObjectByName(action.name)
+                state.instance.scene.remove(bufferGeo)
+                if (bufferGeo instanceof THREE.Mesh) {
+                    if (bufferGeo.geometry) {
+                        bufferGeo.geometry.dispose()
+                        bufferGeo.geometry = undefined
+                    }
+                    if (bufferGeo.material){
+                        if (bufferGeo.material.map) {
+                            bufferGeo.material.map.dispose()
+                        }
+                        if (bufferGeo.material.lightMap) {
+                            bufferGeo.material.lightMap.dispose()
+                        }
+                        if (bufferGeo.material.bumpMap) {
+                            bufferGeo.material.bumpMap.dispose()
+                        }
+                        if (bufferGeo.material.normalMap) {
+                            bufferGeo.material.normalMap.dispose()
+                        }
+                        if (bufferGeo.material.specularMap) {
+                            bufferGeo.material.specularMap.dispose()
+                        }
+                        if (bufferGeo.material.envMap) {
+                            bufferGeo.material.envMap.dispose()
+                        }
+                        bufferGeo.material.dispose()
+                        bufferGeo.material = undefined
+                    }
+                }
+                bufferGeo = null;
+                // geo.material.uniforms.show.value = 0.7
                 delete geos[action.name]
             }
             return Object.assign({}, state, { geometries: geos })
