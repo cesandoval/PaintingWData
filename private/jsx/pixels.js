@@ -6,6 +6,7 @@ export default class Pixels {
     // dataArray will be an array which holds the x, y, and value for each object
     // Example: Float32Array([x1, y1, v1, x2, y2, v2, ...])
     constructor(
+        name,
         graph,
         geometryObject,
         dataArray = [],
@@ -21,6 +22,7 @@ export default class Pixels {
         vLang = false,
         properties = {}
     ) {
+        this.layerName = name
         this.lowBnd = bounds[0]
         this.highBnd = bounds[1]
 
@@ -530,6 +532,7 @@ export default class Pixels {
     get mesh() {
         if (this._mesh == undefined) {
             this._mesh = new THREE.Mesh(this.geometry, this.material)
+            this._mesh.name = this.layerName
             this._mesh.frustumCulled = false
             return this._mesh
         } else {
