@@ -243,8 +243,8 @@ function getLastIds(req, res, numIds = 20) {
         where: {
             userId: req.user.id,
         },
-        order: [['createdAt', 'DESC']],
-        limit: numIds
+        order: [['createdAt', 'DESC']]
+        // limit: numIds
 
     }).then(function (files) {
         // console.log("Break ----------------- \n \n ");
@@ -271,7 +271,6 @@ function getLastIds(req, res, numIds = 20) {
 
                 denominators.push(null);
                 locations.push(["no glocation found", dfile.location]);
-                continue;
             }
         })
 
