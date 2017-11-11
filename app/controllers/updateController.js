@@ -7,69 +7,69 @@ var Model = require('../models'),
 Channel = require('../../worker/channel');
 processVoxels = require('../../worker/worker2').processVoxels;
 // const Op = Sequelize.Op;
+// automatically render the layers page after a job is completed
+// have a job completed show a full progresss bar until it is X'ed out by the user
+// load a class for the widhget and serialize every time
+// check if the values are correct??
+// JSON PARSE this job and see if that works
+// res.send the id of the uploaded job to this controller>? or to this 
+//
 
 
-//// TODO REFACTOR to pure controller
+//// TODO
+// maybe add a field to the user on recently uploaded 
+// ids so we can keep track of what to send to each user
 function getLastId(req, res) {
-    var output = null;
+    var output = [];
     var dataset = null;
-    var gfile = null;
+    var gfile = null; // gdal file
+    var jobName = []; // name, ext
+    var totalLayers = 0; // progress denominator
+    var id = null; // datafile and query id
 
-    var totalcount = 0;
     Model.Datafile.findOne({
         where: {
             userId: req.user.id,
         },
         order: [['createdAt', 'DESC']]
-        // limit: 1
-    }).then(function (lastDataFile) {
-        console.log("Break ----------------- \n \n ");
+    }).then(function (dfile) {
+        // console.log("Break ----------------- \n \n ");
 
-        var queryName = [];
-        queryName.push(lastDataFile.filename.substring(0, lastDataFile.filename.lastIndexOf(".")));
-        console.log("queryname: " + queryName);
-        queryName.push(lastDataFile.filename.substring(lastDataFile.filename.lastIndexOf(".") + 1));
-        console.log("queryname: " + queryName);
-        
-        // name, ext
+        jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+        jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+        id = dfile.id
 
-        // console.log(lastDataFile);
-        // console.log('file id?  ' + lastDataFile.id)
-        id = lastDataFile.id
         try {
-            gfile = gdal.open(lastDataFile.location);
+            gfile = gdal.open(dfile.location);
         }
         catch (e) {
-            console.log('error opening file. Current location: ' + lastDataFile.location);
-            req.flash('error opening file. Current location: ' + lastDataFile.location);
-            
+            console.log('error opening file. Current location: ' + dfile.location);
+            req.flash('error opening file. Current location: ' + dfile.location);
+
             console.log(e);
-            return lastDataFile.id + "$$" + lastDataFile.location + "$$" + e.toString();
+            res.send(dfile.id + "$$" + dfile.location + "$$" + e.toString());
+            return false
         }
 
-        dataset = gfile.layers.get(0); // i treid to distibniguish these with ids but there is no id val
-        // will there ever be more than one of these onbjects in the layers object? if so then we will have to map
-        //their names to a unique has or somthing. I don't think that anything prevents these layters from having the same name
+        dataset = gfile.layers.get(0);
 
+        //#TODO
+        // datafilenames are not necessarily unique, so theri layers aren't going to be distinguashable
+        // query bu the datafile id
 
-        // for(layer in gfile.layers) {
-        //     console.log(layer.features.count())
-        //     // console.log(layer.layername)
-        // }
-        // console.log('set' + dataset.id)
-        totalcount = dataset.features.count();
-        console.log('totalcount = ' + totalcount);
-        Model.Datalayer.count({
+        totalLayers = dataset.features.count();
+        console.log('totalLayers = ' + totalLayers);
+
+        //progress
+        Model.Datalayer.count({// count geometries loaded
             where: {
-                userId: req.user.id,                
-                layername: queryName[0]
+                userId: req.user.id,
+                datafileId: id
             }
         }).then(function (response) {
-            output = []
-            // console.log([response, queryName])
-            if(response == totalcount) {
-                output.push([id, queryName[0], true])
-                var success  = true;
+            if (response == totalLayers) {
+                output.push([id, jobName[0], true])
+                var success = true;
 
                 //try deleting obj
                 // try{
@@ -86,10 +86,10 @@ function getLastId(req, res) {
                 // catch(e) {
                 //     console.log('File Location Error: ' + e);
                 //     console.log('RETRYING')
-                //     fs_extra.remove(lastDataFile.location, err => {
+                //     fs_extra.remove(dfile.location, err => {
                 //         success = true;
                 //         if (err) {
-                //             console.log("Error cleaning local directory: ", lastDataFile.location);
+                //             console.log("Error cleaning local directory: ", dfile.location);
                 //             console.log(err, err.stack);
                 //             success = false;
                 //             // callback(err);
@@ -97,139 +97,273 @@ function getLastId(req, res) {
                 //         }
                 //     })
                 // }
-                if(!success)
+                if (!success)
                     req.flash("Error cleaning local directory: ", gfile.location);
-               
-                // console.log(output)
-                // res.send(output)   
-                // return output
-                
             }
             //add obj to response if its valid
             else {
-                var outLayer = [id, queryName[0], response, totalcount]               
+                var outLayer = [id, jobName[0], response, totalLayers]
                 // console.log("outlayer: " + outLayer)
-                var index = 0;
                 console.log(outLayer)
                 if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
-                        //put in an aerror flag
-                        output.push([id, queryName[0],false])
-                    }
+                    //put in an aerror flag
+                    output.push([id, jobName[0], false])
+                }
                 else {
-                    
+
                     output.push(outLayer)
-                }   
+                }
             }
             // console.log(output)
-            res.send({progress: output})
+            res.send({ progress: output })
             return output
-            });
         });
-    }
+    });
+}
+
+function getById(req, res, id) {
+    var output = [];
+    var dataset = null;
+    var gfile = null; // gdal file
+    var jobName = []; // name, ext
+    var totalLayers = 0; // progress denominator
+
+    Model.Datafile.findOne({
+        where: {
+            userId: req.user.id,
+            id: id
+        },
+    }).then(function (dfile) {
+        // console.log("Break ----------------- \n \n ");
+
+        jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+        jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+        if (id != dfile.id) {
+            res.flash('ID Lookup error! Dfile id: ' + dfile.id + ", query id: " + id)
+            res.send(false);
+            return false
+            //@carlos I'm just goign to return nothign here but let me know if i should handle it differentyly
+        }
 
 
+        try {
+            gfile = gdal.open(dfile.location);
+        }
+        catch (e) {
+            console.log('error opening file. Current location: ' + dfile.location);
+            req.flash('error opening file. Current location: ' + dfile.location);
+
+            console.log(e);
+            res.send(dfile.id + "$$" + dfile.location + "$$" + e.toString());
+            return false
+        }
+
+        dataset = gfile.layers.get(0);
+
+        //#TODO
+        // datafilenames are not necessarily unique, so theri layers aren't going to be distinguashable
+        // query bu the datafile id
+
+        totalLayers = dataset.features.count();
+        console.log('totalLayers = ' + totalLayers);
+
+        //progress
+        Model.Datalayer.count({// count geometries loaded
+            where: {
+                userId: req.user.id,
+                datafileId: id
+            }
+        }).then(function (response) {
+            if (response == totalLayers) {
+                output.push([id, jobName[0], true])
+                var success = true;
+
+                //try deleting obj
+                // try{
+                //     fs_extra.remove(gfile.location, err => {
+                //         if (err) {
+                //             console.log("Error cleaning local directory: ", gfile.location);
+                //             // return gfile.location + "$$" + e.toString();                            
+                //             console.log(err, err.stack);
+                //             success = false;
+                //             // callback(err);
+                //         }
+                //     })
+                // }
+                // catch(e) {
+                //     console.log('File Location Error: ' + e);
+                //     console.log('RETRYING')
+                //     fs_extra.remove(dfile.location, err => {
+                //         success = true;
+                //         if (err) {
+                //             console.log("Error cleaning local directory: ", dfile.location);
+                //             console.log(err, err.stack);
+                //             success = false;
+                //             // callback(err);
+                //             //return error object here to make srue this is removed
+                //         }
+                //     })
+                // }
+                if (!success)
+                    req.flash("Error cleaning local directory: ", gfile.location);
+            }
+            //add obj to response if its valid
+            else {
+                var outLayer = [id, jobName[0], response, totalLayers]
+                // console.log("outlayer: " + outLayer)
+                console.log(outLayer)
+                if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
+                    //put in an aerror flag
+                    output.push([id, jobName[0], false])
+                }
+                else {
+
+                    output.push(outLayer)
+                }
+            }
+            // console.log(output)
+            res.send({ progress: output })
+            return output
+        });
+    });
+}
+
+function getLastIds(req, res, numIds = 20) {
+    var output = [];
+    var dataset = null;
+    var gfile = null; // gdal file
+    var locations = [];
+    var jobNames = []; // [[name, ext]]
+    var totalLayers = 0; // progress denominator
+    var ids = []; // datafile and query id
+    var denominators = [];
 
 
-function getLastIds(req, res, numIds) {
     Model.Datafile.findAll({
         where: {
             userId: req.user.id,
         },
         order: [['createdAt', 'DESC']],
         limit: numIds
-    }).then(function (datafiles) {
-        console.log("Break ----------------- \n \n ")
-        // console.log(datafiles)
-        output = []
-        datafiles.forEach(function (json, i) {
-            var queryName = json.filename.split('.')
-            Model.Datalayer.count({
-                where: {
-                    layername: queryName[0]
-                }
-            }).then(function (numLayers) {
-                console.log(numLayers)
-                output.push([queryName[0], numLayers])
-            })
+
+    }).then(function (files) {
+        // console.log("Break ----------------- \n \n ");
+        files.forEach((dfile, i) => {
+            var jobName = []
+            jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+            jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+            ids.push(dfile.id);
+            jobNames.push(jobName);
+
+            try {
+                gfile = gdal.open(dfile.location);
+                dataset = gfile.layers.get(0);
+                totalLayers = dataset.features.count();
+                denominators.push(totalLayers);
+                locations.push([gfile.location, dfile.location]);
+            }
+            catch (e) {
+                console.log('error opening file. Current location: ' + dfile.location)
+                console.log(e);
+
+                req.flash('error opening file. Current location: ' + dfile.location);
+                output.push(dfile.id + "$$" + dfile.location + "$$" + e.toString());
+
+                denominators.push(null);
+                locations.push(["no glocation found", dfile.location]);
+                continue;
+            }
         })
 
-        // for (entry in datafiles) {
-        //     datafile = datafiles
-        //     console.log(datafile)
-        //     var queryName = datafile.filename.split('.') // assumes files won' have multiple periods
-        //     Model.Datalayer.count({
-        //         where: {
-        //             layername: queryName[0]
-        //         }
-        //     }).then(function (numLayers) {d
-        //         console.log(numLayers)
-        //         output.push([numLayers, queryName[0]])
-        //     })
-        // }
-        return output;
+        //progress
+        for (var i = 0; i < ids.length; ids++) {
+            jobName = jobNames[i]
+            totalLayers = denominators[i]
+            var id = ids[i]
+            var gLocation = locations[i][0]
+            var dLocation = locations[i][1]
+            Model.Datalayer.count({// count geometries loaded
+                where: {
+                    userId: req.user.id,
+                    datafileId: id
+                }
+            }).then(function (response) {
+                if (response == totalLayers) {
+                    output.push([id, jobName[0], true])
+                    var success = true;
+
+                    //try deleting obj
+                    // try{
+                    //     fs_extra.remove(gLocation, err => {
+                    //         if (err) {
+                    //             console.log("Error cleaning local directory: ", gLocation);
+                    //             // return gLocation + "$$" + e.toString();                            
+                    //             console.log(err, err.stack);
+                    //             success = false;
+                    //             // callback(err);
+                    //         }
+                    //     })
+                    // }
+                    // catch(e) {
+                    //     console.log('File Location Error: ' + e);
+                    //     console.log('RETRYING')
+                    //     fs_extra.remove(dLocation, err => {
+                    //         success = true;
+                    //         if (err) {
+                    //             console.log("Error cleaning local directory: ", dLocation);
+                    //             console.log(err, err.stack);
+                    //             success = false;
+                    //             // callback(err);
+                    //             //return error object here to make srue this is removed
+                    //         }
+                    //     })
+                    // }
+                    if (!success)
+                        req.flash("Error cleaning local directory: ", gLocation);
+                }
+                //add obj to response if its valid
+                else {
+                    var outLayer = [id, jobName[0], response, totalLayers]
+                    // console.log("outlayer: " + outLayer)
+                    console.log(outLayer);
+                    if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
+                        //put in an aerror flag
+                        output.push([ids[i], jobName[0], false]);
+                    }
+                    else {
+                        output.push(outLayer);
+                    }
+                }
+                // console.log(output)
+
+            });
+        }
+        res.send({ progress: output });
+        console.log(output);
+        return output
     });
 }
 
-module.exports.datafileProgress = function (req, res) {
-    lastId
-    Model.Datafile.findAll({
-        // attributes:
-        where: {
-            userId: req.user.id,
-            order: ['createdAt', 'DESC']
-            // createdAt: { // within the last two days
-            //     [Op.lt]: new Date(),
-            //     [Op.gt]: new Date(new Date() - 48 * 60 * 60 * 1000)            
-            // }
-        }
-    }).then(function (datalayers) {
-        console.log(datalayers)
-        console.log("\n \n")
-        for (datalayer in datalayers) {
-            console.log(datalayer)
-        }
-    })
+module.exports.updateShape = function (req, res, id = null) {
+    console.log('update shape')
+    console.log(req.user)
+    console.log("END USER ----------------- \n \n ")
+    if (id) {
+        response = getLastId(req, res, id);
+    }
+    else {
+        response = getLastId(req, res);
+    }
+    console.log(response);
 }
 
-module.exports.endpoint = function (req, res) {
-    // poll every 2.5 seconds and wait for a response
-    // we need to cleartimeout when we get a sucess from the waterfall command
+module.exports.updateShapes = function (req, res, numIds = 20) {
+    console.log('update shapes')
+    console.log(req.user)
+    console.log("END USER ----------------- \n \n ")
+
+    response = getLastIds(req, res, numIds);
+    console.log(response);
 }
 
-module.exports.updateShape = function (req, res, numIds = null) {
-    // console.log(req.user)
-    // console.log("END USER ----------------- \n \n ")
-
-    response = getLastId(req, res)
-    console.log(response) // this is useless because the async calls finishe after this so there is no acutal return
-    // see if you can find an await
-}
-
-module.exports.updateShapes = function (req, res, numIds = null) {
-    // console.log(req.user)
-    // console.log("END USER ----------------- \n \n ")
-
-
-    // Model.Datafile.findAll({
-    //     // attributes:
-    //     // where: {
-    //     //     // order: ['createdAt', 'DESC']
-    //     //     // createdAt: { // within the last two days
-    //     //     //     [Op.lt]: new Date(),
-    //     //     //     [Op.gt]: new Date(new Date() - 48 * 60 * 60 * 1000)            
-    //     //     // }
-    //     // },
-    //     limit: 2
-    //   }).then(function(datalayers) {
-    //       console.log(datalayers)
-    //       console.log("END Datalayer ----------------- \n \n ")
-    //       for( datalayer in datalayers.rows) {
-    //         console.log(datalayer)
-    //       }
-    //   })
-    // response = getLastId(req, res);
-
-    response = getLastIds(req, res, 2)
-    console.log(response) // assuming the workflow is right and i can get the max number of layers
-}
 

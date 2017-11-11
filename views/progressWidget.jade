@@ -20,6 +20,7 @@ block pageTitle
                     //-     +progressBar(...job)
 
 
+    //- TODO, refactor this to a widgitized state. We 
     //- mixin progressBar(id, title, numerator, denominator)
     //-     -var percentage = Math.floor(((numerator/denominator)*100)).toString() + "%";
     //-     -var width = "width: " + percentage;
@@ -29,6 +30,7 @@ block pageTitle
     //-             .progress-bar.progress-bar-success(role='progressbar',aria-valuenow="40",
     //-             aria-valuemin="0", aria-valuemax="100", style="#{width}")
     //-                 = numerator + "/" + denominator
+    
 
         
     script(src="/javascripts/progressWidget.js", type="text/javascript")

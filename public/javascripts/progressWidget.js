@@ -77,7 +77,8 @@ $.ajax({
         console.log(err);
     }
 });
-}
+}// make sure to fix the polling
+
 
 function updateJobs(arr) {
     jobsCompleted = []
