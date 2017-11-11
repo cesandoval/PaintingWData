@@ -1,3 +1,69 @@
+var json = localStorage.getItem('progressWidget');
+var progressWidget;
+
+
+
+class progressWidget {
+    isPolling;
+    pollType;
+    currentJobs;
+    selectedIDs;
+    $progressTab;
+
+    constructor() {
+        this.$progressTab = $('.progressWidget')
+        this.isPolling = false;
+        this.currentJobs = [];
+        this.selectedIDs = 0;
+        this.pollType = "shapes";
+    }
+
+    async xhrLoopRequest() {
+
+        return Promise
+    }
+
+    toggleProgressWidget(){
+        console.log('toggleFired');
+        // e.preventDefault();
+        // $('progress-widget').toggle();
+        var pollFunction; 
+        var numIds = this.selectedIDs == 0 ? null : this.selectedIDs
+        
+        switch(this.pollType){// link in voxels here
+            case 'shapes':
+                pollFunction = pollShapeUpdates;
+            default:
+                pollFunction = pollShapeUpdates;      
+        }
+    
+        if(!this.isPolling) {
+            this.isPolling = !this.isPolling;            
+            window.setTimeout(pollFunction, 5500);
+        }
+        else {
+            this.isPolling = !this.isPolling;            
+            window.clearTimeout(pollFunction);
+        }  
+    }
+
+}
+
+
+
+function initialize() {
+    var savedState = localStorage.getItem('progressWidget');
+    if(savedState) {
+        progressWidget = JSON.parse(json);
+        progressWidget.$progressTab = $('.progressWidget'); // reinitialize the jquery tab
+    } else{
+        progressWidget = new progressWidget();
+    }
+}
+
+function saveState() {
+    localStorage.setItem('progressWidget', progressWidget);
+}
 
 
 var $progressTab = $('.progressWidget')

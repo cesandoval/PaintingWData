@@ -94,7 +94,6 @@ module.exports.showVoxels= function(req, res) {
             }]
         }).then(function(datavoxels){
             console.log("------------------------------------------------");
-
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });
 }
