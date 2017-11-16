@@ -67,14 +67,14 @@ class Panel extends React.Component {
 
         // TODO: color1 to color
         act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
+        act.updateGeometry(this.props.index, 'Color', e.target.value)
 
         // Get geometry
-        let pixels = this.props.geometries[this.props.index]
-
-        if (pixels) {
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
+        // let pixels = this.props.geometries[this.props.index]
+        // if (pixels) {
+        //     pixels.material.uniforms.startColor.value.set(e.target.value)
+        //     pixels.material.uniforms.endColor.value.set(e.target.value)
+        // }
 
         this.setState({
             color: e.target.value,
@@ -88,7 +88,7 @@ class Panel extends React.Component {
         }
         */
 
-        if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
+        // if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
     }
 
     toggleVisibility() {

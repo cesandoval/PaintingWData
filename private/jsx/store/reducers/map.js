@@ -5,11 +5,18 @@ const initialMapState = {
     instance: null,
     started: false,
     geometries: {},
+    layers: [],
     optionShow: 'PCoords',
 }
 
 export default (state = initialMapState, action) => {
     switch (action.type) {
+        case c.SIDE_ADD_LAYERS:
+            // Push new layer
+            //var newLayers = state.layers.slice();
+            //newLayers = newLayers.concat(action.layers);
+            return Object.assign({}, state, { layers: action.layers })
+
         case c.MAP_ADD_INSTANCE: {
             const add = { instance: action.instance, started: true }
             return Object.assign({}, state, add)
@@ -25,7 +32,6 @@ export default (state = initialMapState, action) => {
         case c.MAP_REMOVE_GEOMETRY: {
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
-
             if (geo) {
                 let bufferGeo = state.instance.scene.getObjectByName(action.name)
                 state.instance.scene.remove(bufferGeo)
@@ -62,6 +68,39 @@ export default (state = initialMapState, action) => {
                 delete geos[action.name]
             }
             return Object.assign({}, state, { geometries: geos })
+        }
+        case c.MAP_UPDATE_GEOMETRY: {
+            const geos = Object.assign({}, state.geometries)
+            const geo = geos[action.name]
+            switch (action.options) {
+                case 'Color': {
+                    if (geo) {
+                        geo.material.uniforms.startColor.value.set(action.value)
+                        geo.material.uniforms.endColor.value.set(action.value)
+                        if (window.renderSec) window.renderSec(0.5, 'layer color')
+                        const newGeos = {
+                            geometries: Object.assign({}, state.geometries, {
+                                [action.name]: geo,
+                            }),
+                        }
+                        return Object.assign({}, state, newGeos)
+                    } else {
+                        return Object.assign({}, state, {geometries: state.geometries})
+                    }
+                }
+                case 'Opacity': {
+                    if (geo)
+                        geo.material.uniforms.transparency.value = action.value
+                        if (window.renderSec) window.renderSec(0.5, 'layer color')
+                        const newGeos = {
+                            geometries: Object.assign({}, state.geometries, {
+                                [action.name]: geo,
+                            }),
+                        }
+                        return Object.assign({}, state, newGeos)
+                }
+            }
+            return Object.assign({}, state, { geometries: state.geometries })
         }
         case c.MAP_SET_OPTION_SHOW: {
             const optionShow = { optionShow: action.option }
