@@ -67,7 +67,7 @@ class Panel extends React.Component {
 
         // TODO: color1 to color
         act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
-        act.updateGeometry(this.props.index, 'Color', e.target.value)
+        act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
 
         // Get geometry
         // let pixels = this.props.geometries[this.props.index]

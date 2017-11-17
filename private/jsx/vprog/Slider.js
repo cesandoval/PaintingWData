@@ -51,7 +51,7 @@ class Slider extends React.Component {
         const valDiff = 100 - 0
         const remap = x => valDiff * ((x - 0) / (160 - 0)) + 0
 
-        act.updateGeometry(this.props.index, 'Opacity', parseFloat(remap(opacityValue)) / 100.0)
+        act.updateGeometry(this.props.index, 'Opacity', parseFloat(remap(opacityValue)) / 100.0, 'opacity')
 
         event.stopPropagation()
         this.dp.held = false
