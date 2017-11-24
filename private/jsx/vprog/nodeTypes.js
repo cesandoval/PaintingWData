@@ -17,6 +17,8 @@ const NodeType = {
 }
 */
 
+import _ from 'lodash'
+
 export const DATASET = {
     fullName: 'Dataset',
     inputs: {
@@ -126,13 +128,14 @@ export const AND = {
     inputs: {
         Input1: 'I',
         Input2: 'I',
-        Input3: 'I',
-        Input4: 'I',
     },
     output: 'Output',
     options: {},
-    arithmetic(...input) {
-        // TODO
-        return input[0]
+
+    arithmetic(inputs) {
+        const AND = _.zipWith(...inputs, (...voxel) => _.max(voxel))
+        console.log({ inputs, AND })
+
+        return AND
     },
 }
