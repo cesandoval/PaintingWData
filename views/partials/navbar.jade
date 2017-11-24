@@ -15,8 +15,10 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
     ul.nav.navbar-nav.navbar-left
       li
         a(href='/about') About
-      //- li
-      //-   a(href='/documentation') Documentation
+      li
+        a(href='/documentation') Documentation
+      li
+        a(href='/blog') Blog
       if userSignedIn
         li
           a(href='/voxels/#{user.id}') Application
