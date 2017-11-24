@@ -124,7 +124,7 @@ export const ADD = {
 }
 
 export const AND = {
-    fullName: 'And',
+    fullName: 'AND',
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -133,9 +133,24 @@ export const AND = {
     options: {},
 
     arithmetic(inputs) {
-        const AND = _.zipWith(...inputs, (...voxel) => _.max(voxel))
-        console.log({ inputs, AND })
+        // return math.and(...inputs).map(m => (m ? 1 : 0))
 
-        return AND
+        return _.zipWith(...inputs, (...voxel) => _.min(voxel))
+    },
+}
+
+export const OR = {
+    fullName: 'OR',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+
+    arithmetic(inputs) {
+        // return math.or(...inputs).map(m => (m ? 1 : 0))
+
+        return _.zipWith(...inputs, (...voxel) => _.max(voxel))
     },
 }
