@@ -17,9 +17,9 @@ block pageTitle
       
 
 block content
-  div.container.transparent.no-margin
+  div.transparent.no-margin(id="app")
     .row.spacing
-      .col-md-10.col-md-offset-2
+      .container
         div.col-md-12.application-title
           h2.spacing-small.col-md-9 Application
           a(href="/upload", role="button")
@@ -58,3 +58,186 @@ block content
     //-   .col-md-6.col-lg-offset-1.text-right.spacing
     //-       a(class="btn btn-gray btn-small", href="#", role="button") More &raquo;
  
+
+    div.container(id="about_section")
+      .row.spacing-large
+        h2.center About Painting with Data
+      .row
+        div(class='about_images row')
+          .col-sm-4
+            img(src="../images/(1).jpg", style="width:100%; display: inline-block;")
+          .col-sm-4
+            img(src="../images/(2).jpg", style="width:100%; display: inline-block;")
+          .col-sm-4
+            img(src="../images/(3).jpg", style="width:100%; display: inline-block;")
+
+    div.container
+      .row.spacing-large
+        p.spacing-medium.text-left Increasingly, geospatial data are becoming a standard aspect of decision-making in both private and public sectors due to recent strides in spatial data capture.  While the data may be plentiful, the technical skills required to understand and analyze it may not always be present.  <strong>Painting with Data</strong> facilitates the analysis and visualization of spatial data by dramatically reducing the steep learning curve required for most geographic information system (GIS) software.  
+        p.spacing-medium.text-left <strong>Painting with Data</strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction. 
+        p.spacing-medium.text-left <strong>Painting with Data</strong> provides users with a more intuitive and visually-based method of understanding spatial data in order to tell a compelling story, iteratively exploring spatial correlations, without the upfront cost of spending long time learning software.  
+        p.spacing-medium.text-left Contrary to traditional mapping software that operates as a database paired with a map or a graphical representation, <strong>Painting with Data</strong> allows users to directly manipulate the map itself instead of through abstract numbers and symbols. This creates a more intuitive way of understanding spatial data and creating spatial models, and redefines the way in which users explore and gain intuitions from spatial data. 
+        p.spacing-medium.text-left Additionally, <strong>Painting with Data</strong> introduces a visual coding interface through drag-and-drop building blocks which allows for ‘real-time’ geospatial computing, extending its mapping and analytical capacities. Through user-generated building-blocks, the visual coding language allows the extension of the software according to the needs of the user, and generates a broader user-community. Through its open-source, web-based availability the software allows multi-disciplinary collaborations, facilitating the display and shareability of spatial data modeling. Through its features, our software allows non-experts to access spatial models providing contextual knowledge.
+        p.spacing-medium.text-left With an account, users are able to upload spatial data and create projects that are accessible anytime they log in. You simply need a valid email address and shapefiles to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles. Future functionality will include point and line data.
+    
+    div.container(id="team_section")
+      #team.section
+        h2.center Team
+        .section_content.row.magin_bottom
+          .col-sm-12.centered_text
+            p Painting with Data was initiated by Carlos Sandoval Olascoaga as a research project. The continued development of the application has been made possible through a talented group of multidisciplinary researchers at MIT.
+        .section_content.row
+          .tm_wrapper
+            .team_icon
+              img(src='images/members/carlos.jpg')
+            .icon_over
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Carlos Sandoval Olascoaga', bio1='Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts.', bio2='Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended.', bio3='Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico.', img_url='images/members/carlos.jpg', home_url='', twitter_url='', github_url='https://github.com/cesandoval', linkedin_url='https://www.linkedin.com/in/carlos-sandoval-olascoaga', email='csandova@mit.edu')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  a(href='', target='_blank')
+                    img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Carlos Sandoval Olascoaga
+            //- p.member_role Project Founder / PhD Student, MIT
+        //- .section_title_sm
+        //-   h3.center Team
+        .section_content.row.member_cont
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/Abel.jpg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Abel Tadesse', bio1='Abel Tadesse is a Software Engineer at Google', img_url='images/members/Abel.jpg', home_url='', twitter_url='', github_url='https://github.com/abelbezu', linkedin_url='', email='abelbezu@mit.edu')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='https://github.com/abelbezu', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Abel Tadesse
+            //- p.member_role Software Engineeer
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/wenfei.png')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Wenfei Xu', bio1='Wenfei Xu is map-maker, designer, and urban data scientist at Carto.  She has led the creation of numerous spatial information tools for academia and industry partners.', bio2='', img_url='images/members/wenfei.png', home_url='www.wenfeixu.com/', twitter_url='', github_url='', linkedin_url='https://www.linkedin.com/in/wenfeixu', email='wenfeixu@gmail.com')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  a(href='www.wenfeixu.com/', target='_blank')
+                    img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='www.wenfeixu.com/', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Wenfei Xu
+            //- p.member_role Data Scientist
+        
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/kai.jpg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Ting-Kai Chang', bio1='Ting-Kai is a computer scientist and a Masters student in Civil Engineering at NTU (Taiwan).', img_url='images/members/kai.jpg', home_url='', twitter_url='', github_url='https://github.com/ooookai', linkedin_url='', email='ooookai@gmail.com')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='=', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='https://github.com/ooookai', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Ting-Kai Chang
+            //- p.member_role Software Engineer
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/peng.jpg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Wenzhe Peng', bio1='Wenzhe Peng is SM student at the MIT Computation Group. His interest lies in the intersection of architectural design, artificial intelligence and data visualization. Wenzhe has participated in developing diverse applications and algorithms applied to architectural and urban design at UC Berkeley and MIT.', img_url='images/members/peng.jpg', home_url='', twitter_url='', github_url='https://github.com/panthersuper', linkedin_url='', email='pwz@mit.edu')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='=', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='https://github.com/panthersuper', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Wenzhe Peng
+            //- p.member_role Software Engineer
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/yoeal.jpeg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Yoeal Efrem', bio1='Yoeal is a senior in Computer Science at MIT', img_url='images/members/yoeal.jpeg', home_url='', twitter_url='', github_url='https://github.com/yefrem96', linkedin_url='', email='yaatehr@mit.edu')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='=', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='https://github.com/yefrem96', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Yoeal Efrem
+          //-   p.member_role UROP
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/yaateh.jpg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Yaateh Richardson', bio1="Yaateh Richardson is a member of the MIT Class of 2020 enrolled in course 6-3. He joined the team as a developer in Fall 2017 through MIT’s UROP program. His other pursuits involve Music (mainly Jazz Saxophone), working his independent project - a mobile event planning app, and running the MIT Undergraduate Administration's Technology Committee as Vice-Chairman.", img_url='images/members/yaateh.jpg', home_url='', twitter_url='', github_url='https://github.com/yaatehr', linkedin_url='https://www.linkedin.com/in/yaateh-richardson-05bb51127', email='yaatehr@mit.edu')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='=', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='https://github.com/yaatehr', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Yaateh Richardson
+          //-   p.member_role UROP
+
+          .col-sm-3.tm_wrapper
+            .team_icon
+              img(src='images/members/brena.jpg')
+            .icon_over(style='opacity: 0;')
+              img.icon_plus.mybtn.pop_team(src='images/plus.png', name='Brena Sena', bio1="Brena Sena, is a program manager at the Center for Advancing Health Policy and Practice CAHPP at Boston University’s School of Public Health. She obtained her Masters in Public Health from Columbia University’s Mailman School of Public Health in NYC. She has also worked for start-ups such as Foursquare, Medko Health, and Teamscope. Brena hopes to continue learning where she can be most useful in bridging gaps in global public health, public policy, and research.", img_url='images/members/brena.jpg', home_url='', twitter_url='', github_url='', linkedin_url='', email='brena.sena@gmail.com')
+              .icon_links
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/homepage.png')
+                .icon_25(style='padding:0px;')
+                  img.icon_link_img.mybtn(src='images/twitter.png')
+                .icon_25(style='padding:0px;')
+                  a(href='=', target='_blank')
+                    img.icon_link_img.mybtn(src='images/linkedin.png')
+                .icon_25(style='padding:0px;')
+                  a(href='', target='_blank')
+                    img.icon_link_img.mybtn(src='images/github.png')
+            p.member_name Brena Sena
+          //-   p.member_role UROP
