@@ -238,10 +238,13 @@ function getLastIds(req, res, numIds = 20) {
     var ids = []; // datafile and query id
     var denominators = [];
 
+    console.log(req.params)
+    ids = req.params.split("$$")
 
     Model.Datafile.findAll({
         where: {
             userId: req.user.id,
+            id: ids
         },
         order: [['createdAt', 'DESC']]
         // limit: numIds

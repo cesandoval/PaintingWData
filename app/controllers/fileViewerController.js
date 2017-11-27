@@ -31,6 +31,7 @@ module.exports.saveShapes = function(req, res) {
         function(err){}
         );   
     });
+    res.send()
     res.redirect('/layers/' + req.user.id);
 }
 

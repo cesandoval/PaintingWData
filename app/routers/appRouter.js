@@ -26,7 +26,7 @@ var passport = require('passport'),
   });
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
-  router.post('/upload', fileUploadController.upload);
+  router.post('', fileUploadController.upload);
   
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     res.render('uploadViewer', {id: req.params.id, userSignedIn: req.isAuthenticated(), user: req.user});
