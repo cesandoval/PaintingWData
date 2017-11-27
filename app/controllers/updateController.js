@@ -239,7 +239,9 @@ function getLastIds(req, res, numIds = 20) {
     var denominators = [];
 
     console.log(req.params)
-    ids = req.params.split("$$")
+    ids = req.params.shapes.split("$$")
+    if(!ids.length);
+        return false; // don't query if there is no query object
 
     Model.Datafile.findAll({
         where: {

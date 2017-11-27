@@ -24,6 +24,8 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
       if userSignedIn
         li
           a(href='/voxels/#{user.id}') Application
+        li
+          a(href='#').upload-tracker Upload Tracker
       
     ul.nav.navbar-nav.navbar-right
       if userSignedIn

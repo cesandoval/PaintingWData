@@ -1,4 +1,5 @@
 var json = localStorage.getItem('progressWidget');
+window = document.window;
 var widget;
 
 //todo
@@ -13,6 +14,9 @@ var widget;
 
 //
 
+console.log(document.widget)
+
+
 function ProgressWidget(uploadID = null) {
     // isPolling
     // pollType
@@ -21,12 +25,13 @@ function ProgressWidget(uploadID = null) {
     // $progressTab
 
     // flashHandler
-    $.widget("progressWidget", {
+    $.widget("custom.progressWidget", {
         options: {
             value: uploadID
         },
 
         _create: function () {
+            console.log('this is a test')
             // load saved state 
             var savedState = localStorage.getItem('progressWidget'),
                 state = null;
@@ -42,16 +47,18 @@ function ProgressWidget(uploadID = null) {
                 }
             }
             else {
-                state = this._defaultState();
+                this.state = this._defaultState();
             }
-            widget.flashHandler = $('#flashes');
+            this.$flashhandler = $('#flashes');
             this._bindUIActions();
 
             // get the widget stub
             // initialize widget hidden
-            var $progressTab = $('');
 
-            $progressTab.after(this.$widgetMenu);
+            this.$progressTab.after(this.$widgetMenu);
+            // $("upload-tracker").after(this.$progressTab);
+            document.window.widget = this;
+            
 
         },
 
@@ -69,6 +76,7 @@ function ProgressWidget(uploadID = null) {
         _createWidgetMenu: function () {
             var $progressWidget = this.element,
                 opts = this.options,
+                widgetCaption = "this is a caption",
                 widgetMenu = '';
 
             widgetMenu += `<div class="widgetmenu"">
@@ -301,10 +309,9 @@ function initialize() {//
     }
 }
 
-$(function(){
-    ProgressWidget();
-    $("joblist").progressWidget( {value: 10000});
-})
+    var p = ProgressWidget();
+    console.log(p);
+    // $.custom.progressWidget( {value: 10000}, $("upload-tracker").after(p));
 
 
 
