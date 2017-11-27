@@ -28,50 +28,16 @@ block content
         p.col-md-7.application-txt Painting with Data was created to promote accessibility and transparency in urban research and decision-making for planning and policy officials, as well as city residents. With the tool, users can create an interactive map and explore relationships between georeferenced datasets. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map.
         p.col-md-7.application-txt Through the easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
         br
-    //- .row.red-circle-bg
-    //-   .col-md-5.col-lg-offset-6
-    //-     h2.spacing-small Urban Tribes
-    //-     p For the urban tribes project, the platform visualizes the sentiment classification of the tweets and provides the users with an interface to contextually and intuitively improve the classification of the sentiments of the city. <br><br> For the project, the platform will display multiple demographic voxel layers of information, and will be combined with a voxel layer that will display an interpolated field of values based on a sentiment analysis of tweets that have been continuously collected since October 2015. The voxel layer based on the tweets will be queried through the same tools that have been implemented in Painting with Data. Additionally, the users of the platform will be capable of displaying the individual tweets to review the accuracy of the classification algorithm. A newly created feature of the application will allow modifying the values and representations individual voxels through the user interface –this will enable the users to compare the actual tweet with the classification given, and the rest of the voxel layers to finally modify the voxel values based on their interpretation of the actual sentiment. The different personal opinions of the users will be recorded on the database and utilized to improve the sentiment layer of the tweet and the classification algorithm itself. 
-    //-   .col-md-4.col-lg-offset-6.text-right.spacing
-    //-       a(class="btn btn-gray btn-small", href="#", role="button") More &raquo;
-    //- .row.spacing
-    //-   .col-md-6.col-md-offset-1
-    //-     h2 Examples
-    //- .row.spacing.margin.full-width
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //- .row.spacing.margin.full-width
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //-   .col-lg-4
-    //-     img(src="/images/fpo_300x200.png")
-    //- .row
-    //-   .col-md-6.col-md-offset-1
-    //-     h2.spacing-small Urban Networks
-    //-     p For the urban networks project, the goal is to use the platform to visualize the contextual conditions of the city, such as what type of inhabitants are in different areas, compute their accessibility to current and future transportation infrastructure and provide the users with an interface to display their different transportation opportunities and their reach. For the project, the platform will display multiple demographic voxel layers of information, and a layer with the values to the closest transportation infrastructure per voxel. More importantly, the user will be able to generate a voxel layer computing their travel times to the rest of the voxel locations. Such a computation will create a heat map of travel times depending on transportation modes and time of the day. The users will be able to compute visually based on the different layers of information and their contextual knowledge of the city, validating or making their own assumptions about the results of the model. 
-    //-   .col-md-6.col-lg-offset-1.text-right.spacing
-    //-       a(class="btn btn-gray btn-small", href="#", role="button") More &raquo;
  
 
     div.container(id="about_section")
-      .row.spacing-large
-        h2.center About Painting with Data
-      .row
-        div(class='about_images row')
-          .col-sm-4
-            img(src="../images/(1).jpg", style="width:100%; display: inline-block;")
-          .col-sm-4
-            img(src="../images/(2).jpg", style="width:100%; display: inline-block;")
-          .col-sm-4
-            img(src="../images/(3).jpg", style="width:100%; display: inline-block;")
+      div.col-md-12.application-title
+        h2.spacing-small.col-md-9 About Painting with Data
 
-    div.container
+
+      //- .row.spacing
+      //-   h2.center About Painting with Data
+
       .row.spacing-large
         p.spacing-medium.text-left Increasingly, geospatial data are becoming a standard aspect of decision-making in both private and public sectors due to recent strides in spatial data capture.  While the data may be plentiful, the technical skills required to understand and analyze it may not always be present.  <strong>Painting with Data</strong> facilitates the analysis and visualization of spatial data by dramatically reducing the steep learning curve required for most geographic information system (GIS) software.  
         p.spacing-medium.text-left <strong>Painting with Data</strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction. 
@@ -81,11 +47,11 @@ block content
         p.spacing-medium.text-left With an account, users are able to upload spatial data and create projects that are accessible anytime they log in. You simply need a valid email address and shapefiles to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles. Future functionality will include point and line data.
     
     div.container(id="team_section")
-      #team.section
-        h2.center Team
-        .section_content.row.magin_bottom
-          .col-sm-12.centered_text
-            p Painting with Data was initiated by Carlos Sandoval Olascoaga as a research project. The continued development of the application has been made possible through a talented group of multidisciplinary researchers at MIT.
+      div.col-md-12.application-title
+        h2.spacing-small.col-md-9 About Painting with Data
+
+      .row.spacing-large
+        p.spacing-medium.text-left Painting with Data was initiated by Carlos Sandoval Olascoaga as a research project. The continued development of the application has been made possible through a talented group of multidisciplinary researchers at MIT.
         .section_content.row
           .tm_wrapper
             .team_icon
