@@ -54,6 +54,15 @@ export const mapRemoveGeometry = (name, geometry) =>
         geometry,
     })
 
+export const updateGeometry = (name, options, value, field) =>
+    store.dispatch({
+        type: c.MAP_UPDATE_GEOMETRY,
+        name,
+        options,
+        value,
+        field,
+    })
+
 export const setOptionShow = option =>
     store.dispatch({
         type: c.MAP_SET_OPTION_SHOW,

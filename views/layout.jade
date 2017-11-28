@@ -74,7 +74,7 @@ html
     hr
 
     div.footer
-      p &copy; Carlos Sandoval Olascoaga 2017.
+      p &copy; Painting with Data 2017.
 
 script.
   $('.dropdown').on('show.bs.dropdown', function() {
@@ -105,9 +105,21 @@ script.
 
   $("#explore").click(() => {
     $('html, body').animate({
-        scrollTop: $(".application-title").offset().top
+        scrollTop: $("#app").offset().top-80
     }, 2000);
   });
+  $("#about").click(() => {
+    $('html, body').animate({
+        scrollTop: $("#about_section").offset().top-80
+    }, 2000);
+  });
+  $("#team").click(() => {
+    $('html, body').animate({
+        scrollTop: $("#team_section").offset().top-80
+    }, 2000);
+  });
+
+
 
   $(".pop_team").click(function () {
       //console.log($(this).attr("bio1"));

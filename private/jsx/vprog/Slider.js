@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import $ from 'jquery'
+import * as act from '../store/actions'
 
 class Slider extends React.Component {
     constructor(props) {
@@ -50,11 +51,7 @@ class Slider extends React.Component {
         const valDiff = 100 - 0
         const remap = x => valDiff * ((x - 0) / (160 - 0)) + 0
 
-        console.log(remap(opacityValue))
-        let geometry = this.props.geometries[this.props.index]
-        if (geometry)
-            geometry.material.uniforms.transparency.value =
-                parseFloat(remap(opacityValue)) / 100.0
+        act.updateGeometry(this.props.index, 'Opacity', parseFloat(remap(opacityValue)) / 100.0, 'opacity')
 
         event.stopPropagation()
         this.dp.held = false
