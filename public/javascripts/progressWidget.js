@@ -1,14 +1,11 @@
 
 
 //todo
-// build state object for widget class
-//finish widget constructor
-///flesh out widge t on display
-//augment upload controller to send a resposne id to the widget
+///refactor widget elements to cached eles
+// build Widget CSS
+// augment upload controller to send a resposne id to the widget
 // construct widget in script that runs in layout
 // figure out how to pass the res to the layout code
-// refactor ping protocol ping -> async updat, ping  handle errors, maybe build a failure counter or something.
-// we have to remove complete ids from the user side, probably hande within the menu class (add button tag with event)
 
 //
 
@@ -264,8 +261,8 @@ function ProgressWidget(uploadID = null) {
             return {
                 currentJobs: [],
                 isPolling: false,
-                pollType: "shapes",
-                selectedIDs: [1, 2, 3, 4, 5, 6],//TODO Change back to []
+                pollType: "shape",//TODO Change back to shape
+                selectedIDs: [],
                 timeouts: 3
             }
         }
