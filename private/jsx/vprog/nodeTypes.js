@@ -123,6 +123,32 @@ export const ADD = {
     },
 }
 
+export const MIN = {
+    fullName: 'MIN',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.min(voxel))
+    },
+}
+
+export const MAX = {
+    fullName: 'MAX',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.max(voxel))
+    },
+}
+
 export const AND = {
     fullName: 'AND',
     inputs: {
@@ -131,11 +157,8 @@ export const AND = {
     },
     output: 'Output',
     options: {},
-
-    arithmetic(inputs) {
-        // return math.and(...inputs).map(m => (m ? 1 : 0))
-
-        return _.zipWith(...inputs, (...voxel) => _.min(voxel))
+    arithmetic: inputs => {
+        return math.and(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
@@ -147,10 +170,7 @@ export const OR = {
     },
     output: 'Output',
     options: {},
-
-    arithmetic(inputs) {
-        // return math.or(...inputs).map(m => (m ? 1 : 0))
-
-        return _.zipWith(...inputs, (...voxel) => _.max(voxel))
+    arithmetic: inputs => {
+        return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
