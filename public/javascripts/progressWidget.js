@@ -1,6 +1,4 @@
-var json = localStorage.getItem('progressWidget');
-window = document.window;
-var widget;
+
 
 //todo
 // build state object for widget class
@@ -14,65 +12,50 @@ var widget;
 
 //
 
-console.log(document.widget)
 
-
+//this fucntion is supposed to take int he upload id, may refactor to a res param.
 function ProgressWidget(uploadID = null) {
     // isPolling
     // pollType
     // currentJobs
     // selectedIDs
-    // $progressTab
-
+    // $el
     // flashHandler
+
     $.widget("custom.progressWidget", {
+
         options: {
             value: uploadID
         },
 
+        //constructor
         _create: function () {
             console.log('this is a test')
             // load saved state 
-            var savedState = localStorage.getItem('progressWidget'),
-                state = null;
+            var savedState = localStorage.getItem('progressWidget');
 
-            // var progressTab = this.element;
-            this.$progressTab = this.element;
-            this._createWidgetMenu();
-
+            this.$el = this.element;
+            //if localstorage, initialize the widget with old state, else make new widget
             if (savedState) {
                 this.state = JSON.parse(savedState);
-                if(this.options.value && this.state.selectedIDs.indexOf(this.optiona.value) == -1){
+                if(this.options.value && this.state.selectedIDs.indexOf(this.options.value) == -1){
                     this.state.selectedIDs.shift(this.options.value);
                 }
             }
             else {
                 this.state = this._defaultState();
             }
+
+
             this.$flashhandler = $('#flashes');
+            this._createWidgetMenu();//initialize child views            
             this._bindUIActions();
 
-            // get the widget stub
-            // initialize widget hidden
-
-            this.$progressTab.after(this.$widgetMenu);
-            // $("upload-tracker").after(this.$progressTab);
-            document.window.widget = this;
-            
-
+            //connect componenents
+            document.window.widget = this;// may not be neccessary as plugins are initialized on a component
         },
 
-        _defaultState: function () {
-            return {
-                currentJobs: [],
-                isPolling: false,
-                pollType: "shapes",
-                selectedIDs: [1, 2, 3, 4, 5, 6],
-                maxTimeouts: 3, // param for the default num of timeouts.
-                timeouts: maxTimeouts
-            }
-        },
-
+        //created childviews, called on change event
         _createWidgetMenu: function () {
             var $progressWidget = this.element,
                 opts = this.options,
@@ -93,15 +76,17 @@ function ProgressWidget(uploadID = null) {
             widgetMenu += '\t</div>\n';
             widgetMenu += '</div">';
             this.$widgetMenu =  $(widgetMenu);
-
+            this.$el.after(this.$widgetMenu);
         },
+
+
         _bindUIActions: function () {
-            this._on(this.$progressTab, {
+            this._on(this.$el, {
                 click: '_toggleDisplay'
             })
             this._on(this.$widgetMenu.children('close-btn'), 
             {
-                click: '_destroyChild(this.id)'
+                click: '_removeChild(this.id)'
             });
             this._on(this.$flashhandler, {
                 'flash': function(event, message){
@@ -113,28 +98,37 @@ function ProgressWidget(uploadID = null) {
                 $(this).append(flash);
             }
         });
-
-
         },
-        _destroyChild: function(id){
+
+        //removes a child from the selectedId list and the currentJob List
+        _removeChild: function(id){
             if(id === null){
                 console.log('UPLOAD WIDGET Error: False destroychild id' + id)
                 return false;
 
             }
             this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
-            this.trigger('change');
+            _.pluck()
+            var delJob = this.state.currentJobs.filter((item) => {
+                if(item[0] == id) {
+                    return item;
+                }
+            });
+            //may neeed deljob[0]
+            this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1)
+            this._trigger('change');
         },
         
-
+        //unload widget: save state and remove all components.
         _onDestroy: function () {
             localStorage.setItem('progressWidget', this.state);
             this.$widgetMenu.hide();
             this.$widgetMenu.remove();
-            this.$progressTab.remove();//????
+            this.$el.remove();//????
             // this.$
         },
 
+        //toggles display and polling controls
         _toggleDisplay: function () {
             this.$widgetMenu.slideToggle();
             if (!this.$widgetMenu.is(":hidden")) { // if visible
@@ -148,8 +142,13 @@ function ProgressWidget(uploadID = null) {
             }
         },
 
+        //refresh state
+        _refresh: function() {
+            this._createWidgetMenu();
+            this.this._trigger("change");
+        },
 
-        // Create a public method.
+        // update state.currentJobs
         _updateJobs: function (arr) {
             jobsCompleted = [];
             newJobs = [];
@@ -219,6 +218,7 @@ function ProgressWidget(uploadID = null) {
             console.log('updated jobs: ' + newJobs)
         },
 
+        //XhrRequest Entry point. This is called upon completion of the last poll (async)
         _xhrLoop: function () {// this should be private. ping protocol 2
             var pollquery = this.state.pollType + "?shapes=" + this.state.selectedIDs.join("$$");
             if (this.state.isPolling) {
@@ -231,8 +231,8 @@ function ProgressWidget(uploadID = null) {
             }
         },
 
-
-        _createXhrRequest: function (pollquery) {// ping protocol 3
+        //xhrpolling body method, created the request and handlers
+        _createXhrRequest: function (pollquery) {
             var xhr = XMLHttpRequest();
             xhr.open('GET', '/' + pollquery, true);// rework poll functino to be a parameter with ids for both voxels and shapes
             xhr.onreadystatechange = function () {
@@ -258,63 +258,67 @@ function ProgressWidget(uploadID = null) {
                     console.log('too many timeout errors, polling stopped')
                 }
             }.bind(this);
+        },
+
+        _defaultState: function () {
+            return {
+                currentJobs: [],
+                isPolling: false,
+                pollType: "shapes",
+                selectedIDs: [1, 2, 3, 4, 5, 6],//TODO Change back to []
+                timeouts: 3
+            }
         }
 
-
-
+        // _cacheElements: function() {
+        //     var $flashhandler = this.$flashhandler,
+        //         $widgetMenu = this.$widgetMenu,
+        //         $delJobBtn = this.$widgetMenu.find('close-btn'),
+        //         $lis = this.$el.children,
+        //         $pollingBtn = this.$el.find('fa-pulse upload-tracker')
+                
+        //         this.cached = {
+        //             //add all cached Jquery eles here
+        //         }
+                
+        // }
     });
-
-
-
 }
-
-
-
-
-
-    // updateHtml(jobs) {
-    //     var progressList = clearHTML();
-    //     var count = 0;
-    //     // var progressList = "";
-    //     jobs.forEach(job => {
-    //         console.log('adding html: ' + job);
-    //         jobNode = document.createElement('li');
-    //         jobNode.innerHTML;
-    //         // progressList += "<li>" + createProgressBar(...job.slice(0,job.length-2)) + "</li>";
-    //         jobNode.innerHTML += createProgressBar(...job);
-    //         progressList.appendChild(jobNode);
-    //         // console.log(createProgressBar(...job.slice(1, job.length)));
-    //         count++;
-    //     });
-    //     // document.getElementById("jobList").find('progressList').innerHTML = progressList;
-    // }
 
 
     
 
 
+//deprecated, nay need to rework this so that it can launch from the upload controller but I don't think iw will be necessary
+// function initialize() {//
+//     var savedState = localStorage.getItem('progressWidget');
+//     if (savedState) {
+//         widget = JSON.parse(json);
+//         widget.$el = $('.progressWidget'); // reinitialize the jquery tab
+//         widget.flashHandler = $('#flashes');
 
-function initialize() {//
-    var savedState = localStorage.getItem('progressWidget');
-    if (savedState) {
-        widget = JSON.parse(json);
-        widget.$progressTab = $('.progressWidget'); // reinitialize the jquery tab
-        widget.flashHandler = $('#flashes');
+//         window.progressWidget = widget;
 
-        window.progressWidget = widget;
+//     } else {
+//         widget = new progressWidget();
+//         window.progressWidget = widget;
+//     }
+// }
 
-    } else {
-        widget = new progressWidget();
-        window.progressWidget = widget;
-    }
-}
 
+
+
+//for testing
     var p = ProgressWidget();
     console.log(p);
     // $.custom.progressWidget( {value: 10000}, $("upload-tracker").after(p));
 
 
 
+
+
+
+// not sure if theese funcitons need to be within the widget or if ti matters that they are/ aren't. what do you reccomnet @carlos?    
 function clearHTML() { // helper method that returns cleared inner html section
     var progressList = document.getElementById('progressList');
     if (progressList && progressList.hasChildNodes()) {
@@ -356,28 +360,3 @@ function escapeHTML(unsafe_str) { // make sure strings are XXS Safe
         .replace(/\//g, '&#x2F;')
 }
 
-// initialize();
-
-
-
-// function loadCurrentJobs() {
-//     try {
-//         currentJobs = JSON.parse(localStorage.getItem('currentJobs'));
-//         currentJobs = currentJobs == null ? [] : currentJobs;//if there exists no currentJob array, make one 
-//         console.log(currentJobs);
-//     }// load in current jobs from cache
-//     catch(e){
-//         console.log('ERROR: ' + e)
-//     }
-//     updateHtml(currentJobs);
-// }
-
-// finishedJobsAlert = function(arr) {
-//     if(!arr)
-//         return;
-//     var contents = "The following jobs have completed: \n"
-//     for(item in arr) {
-//         contents += "Job: " + item[0] + "\n"
-//     }
-//     return alert(contents)
-// }

@@ -228,7 +228,15 @@ function getById(req, res, id) {
     });
 }
 
-function getLastIds(req, res, numIds = 20) {
+
+//this is the funcitno that htprogresswidget will be using
+// queries teh database by  Job id's and returns an array of items in the form....
+//[id, jobname, progress, denominator] if the job is in progress or waiting
+//[id, jobname, bool] bool == true if the job is done, false if the output is invalid
+// jobname$$Errormessage
+//takes query string of enpoint?shapes=id1$$id2$$id3
+//hope to add the param &voxels=ids 
+function getLastIds(req, res) {
     var output = [];
     var dataset = null;
     var gfile = null; // gdal file
@@ -249,7 +257,6 @@ function getLastIds(req, res, numIds = 20) {
             id: ids
         },
         order: [['createdAt', 'DESC']]
-        // limit: numIds
 
     }).then(function (files) {
         // console.log("Break ----------------- \n \n ");
@@ -348,11 +355,12 @@ function getLastIds(req, res, numIds = 20) {
     });
 }
 
-module.exports.updateShape = function (req, res, id = null) {
+module.exports.updateShape = function (req, res) {
     console.log('update shape')
     console.log(req.user)
     console.log("END USER ----------------- \n \n ")
-    if (id) {
+
+    if (req.params.id) {
         response = getLastId(req, res, id);
     }
     else {
@@ -361,12 +369,12 @@ module.exports.updateShape = function (req, res, id = null) {
     console.log(response);
 }
 
-module.exports.updateShapes = function (req, res, numIds = 20) {
+module.exports.updateShapes = function (req, res) {
     console.log('update shapes')
     console.log(req.user)
     console.log("END USER ----------------- \n \n ")
 
-    response = getLastIds(req, res, numIds);
+    response = getLastIds(req, res);
     console.log(response);
 }
 

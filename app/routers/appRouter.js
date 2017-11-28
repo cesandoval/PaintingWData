@@ -50,6 +50,7 @@ var passport = require('passport'),
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
   router.get('/update/shape', isAuthenticated, updateController.updateShape);
+  //de[recated for now, will have to reroute to Upload endpoint
   router.get('/progressWidget', isAuthenticated, function(req, res) {
     res.render('progressWidget', { userSignedIn: req.isAuthenticated(), user: req.user})// { user: req.user})
     // res.render('progressWidget', { userSignedIn: req.isAuthenticated(), user: req.user}) // what params do you need to pass in to the view?
