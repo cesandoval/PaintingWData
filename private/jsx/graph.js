@@ -28,8 +28,8 @@ export default class Graph {
     // Create a Scene
     initScene() {
         const scene = new THREE.Scene()
-        window.scene = scene
-        console.log(scene)
+        // window.scene = scene
+        // console.log(scene)
         return scene
     }
 
