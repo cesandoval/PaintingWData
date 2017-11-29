@@ -66,8 +66,10 @@ class Panel extends React.Component {
         console.log('changeColor(e)', e.target.value)
 
         // TODO: color1 to color
-        act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
+        // act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
         act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
+
+        console.log(5353535353, this.state)
 
         // Get geometry
         // let pixels = this.props.geometries[this.props.index]
@@ -79,7 +81,7 @@ class Panel extends React.Component {
         this.setState({
             color: e.target.value,
         })
-
+        console.log(66666666, this.state)
         /* // using two color options for each layer
         if (e.target.name == 'color1'){
             pixels.material.uniforms.startColor.value.set(e.target.value)

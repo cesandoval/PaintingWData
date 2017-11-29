@@ -32,6 +32,7 @@ export default (state = initialSidebarState, action) => {
                     return layer
                 }
             })
+            console.log(newLayers, 8383838338, action.value)
             // console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
             return Object.assign({}, state, { layers: newLayers })
         }

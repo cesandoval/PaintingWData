@@ -97,6 +97,7 @@ export default (state = initialMapState, action) => {
                             }),
                         }
                         // console.log(Object.assign({}, state, newGeos, {layers: state.layers}))
+                        console.log(newLayers, action.value)
                         return Object.assign({}, state, newGeos, { layers: newLayers, })
                     } else {
                         return Object.assign({}, state, { geometries: state.geometries })

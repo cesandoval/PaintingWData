@@ -46,6 +46,7 @@ class Layer extends React.Component {
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
     render() {
+        console.log(111111111)
         return (
             <div className="layers__single">
                 <div className="row">
@@ -83,6 +84,7 @@ class Layer extends React.Component {
 }
 
 const mapStateToProps = state => {
+    console.log(333333333, state)
     return {
         layers: state.sidebar.layers,
         geometries: state.map.geometries,
