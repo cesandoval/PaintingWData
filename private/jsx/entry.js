@@ -28,3 +28,5 @@ render(
     </Provider>,
     document.getElementById('react')
 )
+
+import './loadJSON'

@@ -27,7 +27,10 @@ export default class Graph {
 
     // Create a Scene
     initScene() {
-        return new THREE.Scene()
+        const scene = new THREE.Scene()
+        window.scene = scene
+        console.log(scene)
+        return scene
     }
 
     // Create a Camera
