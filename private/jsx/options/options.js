@@ -63,7 +63,7 @@ class Options extends React.Component {
                         position: 'absolute',
                         width: '100%',
                         textAlign: 'center',
-                        marginTop: '-27px',
+                        marginTop: '-20px',
                     }}
                 >
                     {
