@@ -44,7 +44,7 @@ class MapCanvas extends React.Component {
                 // Parses the layer
                 const out = PaintGraph.Pixels.parseDataJSON(layer)
 
-                const nodeHashKey = 
+                const nodeHashKey =
                     (+new Date()).toString(32) +
                     Math.floor(Math.random() * 36).toString(36)
 
