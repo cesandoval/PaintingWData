@@ -174,3 +174,15 @@ export const OR = {
         return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
+
+export const NOT = {
+    fullName: 'NOT',
+    inputs: {
+        Input: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return inputs[0].map(m => !m)
+    },
+}
