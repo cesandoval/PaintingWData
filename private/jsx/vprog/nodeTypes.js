@@ -175,6 +175,19 @@ export const OR = {
     },
 }
 
+export const XOR = {
+    fullName: 'XOR',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.xor(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
 export const NOT = {
     fullName: 'NOT',
     inputs: {
