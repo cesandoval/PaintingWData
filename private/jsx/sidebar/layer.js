@@ -66,6 +66,12 @@ class Layer extends React.Component {
                                 checked={this.props.visible}
                                 onChange={this.handleCheckedEvent}
                                 name={this.props.name}
+                                style={{
+                                    '-webkit-appearance': 'checkbox',
+                                    height: '17px',
+                                    width: '16px',
+                                    margin: '0px 5px',
+                                }}
                             />
                             <input
                                 type="color"
