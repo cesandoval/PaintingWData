@@ -217,7 +217,6 @@ class PCoords extends React.Component {
                 this.maxVal
             )
         }
-
     }
     style() {
         return {

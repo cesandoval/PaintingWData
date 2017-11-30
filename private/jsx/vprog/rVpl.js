@@ -228,6 +228,8 @@ class VPL extends React.Component {
                 // prevent text/element selection with cursor drag
                 down.preventDefault()
                 move.preventDefault()
+                down.stopPropagation()
+                move.stopPropagation()
             })
             .share()
 
@@ -349,9 +351,10 @@ class VPL extends React.Component {
 
     componentWillUnmount() {
         console.log('componentWillUnmount', 'unsubscribe observer')
-        this.mouseTracker$.unsubscribe()
         this.moveNode$.unsubscribe()
         this.linkNode$.unsubscribe()
+        this.panVpl$.unsubscribe()
+        this.shiftKeyEvent$.unsubscribe()
     }
 
     componentDidUpdate() {
@@ -492,6 +495,17 @@ class VPL extends React.Component {
             this.linkThenComputeNode()
         }
     }
+
+    changeNodeFilter = (nodeKey, min, max) => {
+        console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
+
+        const nodes = this.state.Nodes
+        nodes[nodeKey].options.filter = { min, max }
+
+        this.setState({ Nodes: nodes })
+        this.linkThenComputeNode()
+    }
+
     createTempLink = () => {
         return (
             <path
@@ -644,7 +658,7 @@ class VPL extends React.Component {
             }
         })
 
-        console.log({ nodeInputsFromNode })
+        // console.log({ nodeInputsFromNode })
 
         // getting a output Tree Structure to check the order of output.
         const nodeOutputTree = {}
@@ -769,7 +783,7 @@ class VPL extends React.Component {
         )
     }
 
-    // TODO: refactoring this function. some node has different input order.
+    // TODO: refactoring this function.
     evalArithmeticNode = (node, mathFunction, options, geometries) => {
         // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
         // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
@@ -793,6 +807,20 @@ class VPL extends React.Component {
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
         let sizeArray = mathFunction(geomArray, options)
+
+        // new: filter feature (2017 Nov. )
+        if (node.options.filter) {
+            let { min, max } = node.options.filter
+            const dataMax = math.max(sizeArray)
+            const dataMin = math.min(sizeArray)
+            const range = dataMax - dataMin
+
+            console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+            min = dataMin + min * range
+            max = dataMin + max * range
+            sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
+            console.log('[filter] After', { min, max }, sizeArray)
+        }
 
         /*
         const translationArray = new Float32Array(arraySize*3);
@@ -1003,15 +1031,22 @@ class VPL extends React.Component {
                     <Panel
                         color={color}
                         index={nodeKey}
+                        type={type}
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
+                        }}
+                        changeFilter={(min, max) => {
+                            this.changeNodeFilter(nodeKey, min, max)
                         }}
                     />
 
                     {/* NODE OPTIONS */
                     Object.entries(typeOptions).map(([attr, def], index) => {
+                        if (attr == 'filter') return
+
                         // 'attribute': 'default value'
                         const value = options[attr] || def
+
                         return (
                             <text
                                 key={`${nodeKey}_option_${attr}`}
@@ -1089,6 +1124,7 @@ class VPL extends React.Component {
         // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
 
         const P = new PaintGraph.Pixels(
+            geometry.layerName,
             map,
             circle,
             otherArray,
