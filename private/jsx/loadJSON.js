@@ -21,19 +21,17 @@ Rx.Observable
             const [lng, lat] = d
             // console.log({ lng, lat })
 
-            const coords = project([lat, lng])
-            // const coords = project([lng, lat])
+            const coords = project([lng, lat])
 
-            // // x, y coordinates
+            // // x, z coordinates
             const x = coords.x
-            const y = coords.z
+            const z = coords.z
 
-            geometry.vertices.push(new THREE.Vector3(x, y, 0))
+            geometry.vertices.push(new THREE.Vector3(x, 0, z))
         })
 
         return geometry
     })
-    .take(1000)
     .map(geometry => {
         const line = new THREE.Line(geometry, material)
         const scene = store.getState().map.instance.scene
