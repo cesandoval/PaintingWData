@@ -3,13 +3,15 @@
 import Rx from 'rxjs/Rx'
 import store from './store/store'
 
-import json from '../static/nyc-small-er.json'
+// import json from '../static/nyc-small-er.json'
+import json from '../static/bikeLane.json'
+console.log({ json })
 
 const features = json.features
 const lineFeatures = features.filter(f => f.geometry.type == 'LineString')
 console.log({ json, features, lineFeatures })
 
-const material = new THREE.LineBasicMaterial({ color: 0x0000ff })
+const material = new THREE.LineBasicMaterial({ color: 0x9a9a9a })
 
 Rx.Observable
     .from(lineFeatures)
