@@ -9,7 +9,6 @@
 
 //
 
-
 //this fucntion is supposed to take int he upload id, may refactor to a res param.
 function ProgressWidget(uploadID = null) {
     // isPolling
@@ -20,11 +19,11 @@ function ProgressWidget(uploadID = null) {
     // flashHandler
 
     $.widget("custom.progressWidget", {
+        
 
         options: {
             value: uploadID
         },
-
         //constructor
         _create: function () {
             console.log('this is a test')
@@ -47,9 +46,9 @@ function ProgressWidget(uploadID = null) {
             this.$flashhandler = $('#flashes');
             this._createWidgetMenu();//initialize child views            
             this._bindUIActions();
-
+            
             //connect componenents
-            document.window.widget = this;// may not be neccessary as plugins are initialized on a component
+            // document.window.widget = this;// may not be neccessary as plugins are initialized on a component
         },
 
         //created childviews, called on change event
@@ -257,6 +256,10 @@ function ProgressWidget(uploadID = null) {
             }.bind(this);
         },
 
+        publicMethod: function(id){
+            console.log('This is a Public Method')
+        },
+
         _defaultState: function () {
             return {
                 currentJobs: [],
@@ -307,7 +310,17 @@ function ProgressWidget(uploadID = null) {
 
 //for testing
     var p = ProgressWidget();
-    console.log(p);
+    console.log(ProgressWidget(1));
+    console.log($("upload-tracker").after(p))
+
+    // This is how instantiate a widget. 
+    var progress = $( "<div></div>" )
+        .appendTo( "body" )
+        .progressWidget({ value: 10000 });
+
+    var id = 0;
+    progress.progressWidget('publicMethod', id);
+
     // $.custom.progressWidget( {value: 10000}, $("upload-tracker").after(p));
 
 
