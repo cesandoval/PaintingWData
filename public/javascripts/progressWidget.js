@@ -1,5 +1,4 @@
 
-
 //todo
 ///refactor widget elements to cached eles
 // build Widget CSS
@@ -7,7 +6,10 @@
 // construct widget in script that runs in layout
 // figure out how to pass the res to the layout code
 
-//
+//stopping point, trying to figure out removing wigets
+//you added an event handler for the close button thing
+//also make sure that tool tips are working or ask carlose about it
+
 
 //this fucntion is supposed to take int he upload id, may refactor to a res param.
 function ProgressWidget(uploadID = null) {
@@ -44,34 +46,53 @@ function ProgressWidget(uploadID = null) {
 
 
             this.$flashhandler = $('#flashes');
-            this._createWidgetMenu();//initialize child views            
-            this._bindUIActions();
-            
+
             //connect componenents
             // document.window.widget = this;// may not be neccessary as plugins are initialized on a component
         },
+
+        _init: function() {
+            // called whene there are no options
+            // call the constructor with id in value to add a val if post re renders
+            this._createWidgetMenu();//initialize child views            
+            this._bindUIActions();
+            
+
+        },
+
 
         //created childviews, called on change event
         _createWidgetMenu: function () {
             var $progressWidget = this.element,
                 opts = this.options,
                 widgetCaption = "this is a caption",
-                widgetMenu = '';
+                htmlBuilder = '';
 
-            widgetMenu += `<div class="widgetmenu"">
+            htmlBuilder += `<div class="widgetmenu"">
                 <span id="widgetcaption">${widgetCaption}</span>
-                    <ul id="jobList">   
+                    <ul id="jobList"></ul>
+                    </div>   
             `
+            widgetMenu = $.parseHTML(htmlBuilder);
             for (job in this.state.currentJobs) {
-                widgetMenu += '\t';
-                widgetMenu += createProgressBar(...job);
-                widgetMenu += '\n';
+                htmlBuilder = createProgressBar(...job);
+                var temp = $.parseHTML(htmlBuilder);
+                // temp.find('[data-toggle="tooltip"]').tooltip();
+                widgetMenu.find('#jobList').append(temp);
+                // widgetMenu += '\t';
+                // widgetMenu += createProgressBar(...job);
+                // widgetMenu += '\n';
             }
-
+            $(function() {
+                $('.js-tooltip').toolTip();
+            });
             // '\n';
-            widgetMenu += '\t</div>\n';
-            widgetMenu += '</div">';
-            this.$widgetMenu =  $(widgetMenu);
+            // widgetMenu += '\t</div>\n';
+            // widgetMenu += '</div">';
+
+
+
+            this.$widgetMenu =  $(widgetMenu)
             this.$el.after(this.$widgetMenu);
         },
 
@@ -80,10 +101,35 @@ function ProgressWidget(uploadID = null) {
             this._on(this.$el, {
                 click: '_toggleDisplay'
             })
-            this._on(this.$widgetMenu.children('close-btn'), 
-            {
-                click: '_removeChild(this.id)'
-            });
+
+            this._on(this.$widgetMenu.children('.close-btn'), 
+                'click', (e) => {
+                var id = $(this).attr('id');
+                    
+                if(id === null){
+                    console.log('UPLOAD WIDGET Error: False destroychild id' + id)
+                    return false;
+    
+                }
+                this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
+                _.pluck()
+                var delJob = this.state.currentJobs.filter((item) => {
+                    if(item[0] == id) {
+                        return item;
+                    }
+                });
+                //may neeed deljob[0]
+                this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1)
+                this._trigger('change');
+
+                e.preventDefault();
+                $(this).parent().remove();
+            })
+
+            // this._on(this.$widgetMenu.children('close-btn'), 
+            // {
+            //     click: '_removeChild(this.id)'
+            // });
             this._on(this.$flashhandler, {
                 'flash': function(event, message){
                 var flash = $('<div class="flash">');
@@ -138,7 +184,7 @@ function ProgressWidget(uploadID = null) {
             }
         },
 
-        //refresh state
+        //refresh state, should be triggered on init, user input (deletion), update jobs,=
         _refresh: function() {
             this._createWidgetMenu();
             this.this._trigger("change");
@@ -272,7 +318,7 @@ function ProgressWidget(uploadID = null) {
 
         // _cacheElements: function() {
         //     var $flashhandler = this.$flashhandler,
-        //         $widgetMenu = this.$widgetMenu,
+        //         $widgetMenu = cdthis.$widgetMenu,
         //         $delJobBtn = this.$widgetMenu.find('close-btn'),
         //         $lis = this.$el.children,
         //         $pollingBtn = this.$el.find('fa-pulse upload-tracker')
@@ -285,6 +331,42 @@ function ProgressWidget(uploadID = null) {
     });
 }
 
+(function($) {
+    var toolTip = {
+        init: function() {
+            this.each(function() {
+                var $that = $(this);
+                // our boolean object to check if it already exists on the page
+                var $toolSpan = $('<div class="tooltip"><span class="tooltip_arrow"></span></div>');
+                var preloadImages = function() {
+                    var tempImage = new Image();
+                    tempImage.src = 'http://i.imgur.com/K5ynr.png';
+                    tempImage = null;
+                };
+                preloadImages();
+                $that.mouseover(function() {
+                    var $altText = $that.attr('alt');
+                    var $parentWidth = $that.outerWidth(true);
+                    var $pos = $that.offset();
+                    var $tip = $toolSpan.clone(true);
+
+                    $that.parent().after($tip);
+                    $tip.prepend($altText);
+                    $that.parent().next($tip).css({
+                        top: $pos.top - 30,
+                        left: $pos.left + ($that.width() /2) - ($tip.outerWidth(true)/2)
+                    }).fadeIn(100);
+                    $(".tooltip_arrow", $that.parent().next()).css({
+                        left: ($tip.outerWidth(true) / 2)
+                    }).fadeIn(100);
+                }).mouseout(function() {
+                    $that.parent().next().fadeOut(100).remove();
+                });
+            });
+        } /* end init */
+    };
+    $.fn.toolTip = toolTip.init;
+})(jQuery);
 
     
 
@@ -346,16 +428,15 @@ function createProgressBar(id, jobName, numerator, denominator) { //cleare a sin
     var innerString = jobName + ": " + numerator + "/" + denominator;
     console.log(percentage)
     var html = `
-    <div class="progress-widget" style="">
-        <div class="tooltip progress-label"> ${innerString}
-            <span class="tooltiptext"> ${innerString} </span> </div>
-        <span class="progress-label" style=""> ${innerString} </span>
+    <div id="${id}" class="menu-item" style="">
+        <div class="js-tooltip" alt="${innerString}"> ${jobName}</div>
+        <span class="progress-label" style=""> ${percentage}% </span>
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
             aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;
     html += percentage + `%\"></div>
-    <button id=${id} type="button" class="close-btn" aria-label="Close">
+    <button id="${id}" type="button" class="close-btn" aria-label="Close">
     <span aria-hidden="true">&times;</span>
-    </button></div>
+    </button></div>"
     `;
     return html
 }
@@ -370,3 +451,17 @@ function escapeHTML(unsafe_str) { // make sure strings are XXS Safe
         .replace(/\//g, '&#x2F;')
 }
 
+// var html = `
+// <div id="menu-itemid${id}" class="menu-item" style="">
+//     <div class="tooltip progress-label"> ${innerString}
+//         <span class="tooltiptext"> ${innerString} </span> </div>
+//     <span class="progress-label" style=""> ${innerString} </span>
+//     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
+//         aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;
+// html += percentage + `%\"></div>
+// <button id=close-btn${id} type="button" class="close-btn" aria-label="Close">
+// <span aria-hidden="true">&times;</span>
+// </button></div>
+// `;
+// return html
+// }

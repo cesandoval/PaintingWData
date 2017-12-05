@@ -737,7 +737,7 @@ label {
 }
 /* yaateh's css classses */
 
-.progress-widget {
+.menu-item {
     max-width: 400px;
     flex: 1;
     justify-content: left;
@@ -746,14 +746,14 @@ label {
     border-width: 1px
 }
 
-.progress-widget .progress-label {
+.menu-item .progress-label {
     position: relative;
     margin-left: 5px;
     max-width: auto;
     text-overflow: ellipsis;
 }
 
-.progress-widget .tooltip {
+.menu-item .tooltip {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -765,7 +765,7 @@ label {
     width: 5vw;
 }
 
-.progress-widget .tooltip .tooltiptext {
+.menu-item .tooltip .tooltiptext {
     visibility: hidden;
     min-width: 120px;
     background-color: black;
@@ -778,7 +778,7 @@ label {
     z-index: 1;
 }
 
-.progress-widget .tooltip:hover .tooltiptext {
+.menu-item .tooltip:hover .tooltiptext {
     visibility: visible;
     min-width: 120px;
     bottom: 100%;

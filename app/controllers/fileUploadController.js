@@ -86,6 +86,7 @@ module.exports.upload = function(req, res, next) {
                         dataFile.bbox = bbox;
                         dataFile.save().then(function(d){
                           res.send({id : d.id});
+                          console.log('sending id to frontend')
                         });
                       })  
                     }
