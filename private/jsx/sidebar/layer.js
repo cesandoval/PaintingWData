@@ -27,21 +27,8 @@ class Layer extends React.Component {
         // act.sideRemoveLayer(layerName);
     }
     changeColor(e) {
-        act.sideUpdateLayer(this.props.name, e.target.name, e.target.value)
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.name]
-
-        pixels.material.uniforms.startColor.value.set(e.target.value)
-        pixels.material.uniforms.endColor.value.set(e.target.value)
-
-        /* // using two color options for each layer
-        if (e.target.name == 'color1'){
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-        } else {
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
-        */
+        // act.sideUpdateLayer(this.props.name, e.target.name, e.target.value)
+        act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
 
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
@@ -90,7 +77,7 @@ class Layer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layers: state.sidebar.layers,
+        layers: state.map.layers,
         geometries: state.map.geometries,
     }
 }

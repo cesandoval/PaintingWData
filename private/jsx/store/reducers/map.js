@@ -73,6 +73,7 @@ export default (state = initialMapState, action) => {
             return Object.assign({}, state, { geometries: geos })
         }
         case c.MAP_UPDATE_GEOMETRY: {
+            console.log('changing....')
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
             switch (action.options) {
@@ -99,7 +100,6 @@ export default (state = initialMapState, action) => {
                                 [action.name]: geo,
                             }),
                         }
-                        // console.log(Object.assign({}, state, newGeos, {layers: state.layers}))
                         return Object.assign({}, state, newGeos, {
                             layers: newLayers,
                         })
