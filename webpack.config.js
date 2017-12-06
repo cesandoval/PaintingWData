@@ -10,8 +10,9 @@ module.exports = {
         './private/jsx/entry.js',
     ],
     output: {
-        path: path.resolve(__dirname, './public/'),
-        publicPath: '/javascripts/',
+        path: path.resolve(__dirname, './public/javascripts/'),
+        // publicPath: 'CDN.../javascripts/',
+        // In development Environment:
         // This does not produce a real file. It's just the virtual path that is
         // serve in development. This is the JS bundle
         // containing code from all our entry points, and the Webpack runtime.
@@ -115,4 +116,24 @@ module.exports = {
     // splitting or minification in interest of speed. These warnings become
     // cumbersome.
     devtool: '#eval-source-map',
+}
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports.devtool = '#source-map'
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"',
+      },
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false,
+      },
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+    }),
+  ])
 }
