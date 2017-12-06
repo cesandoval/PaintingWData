@@ -193,4 +193,4 @@ class Layers extends React.Component {
     }
 }
 
-export default connect(s => ({ layers: s.sidebar.layers }))(Layers)
+export default connect(s => ({ layers: s.map.layers }))(Layers)
