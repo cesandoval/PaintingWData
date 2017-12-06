@@ -27,13 +27,20 @@ class Layer extends React.Component {
         // act.sideRemoveLayer(layerName);
     }
     changeColor(e) {
-        act.sideUpdateLayer(this.props.name, e.target.name, e.target.value)
+        console.log(
+            this.props,
+            this.props.index,
+            this.props.name,
+            e.target.value
+        )
+        // act.sideUpdateLayer(this.props.name, e.target.name, e.target.value)
+        act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
 
         // Get geometry
-        let pixels = this.props.geometries[this.props.name]
+        // let pixels = this.props.geometries[this.props.name]
 
-        pixels.material.uniforms.startColor.value.set(e.target.value)
-        pixels.material.uniforms.endColor.value.set(e.target.value)
+        // pixels.material.uniforms.startColor.value.set(e.target.value)
+        // pixels.material.uniforms.endColor.value.set(e.target.value)
 
         /* // using two color options for each layer
         if (e.target.name == 'color1'){
@@ -46,7 +53,7 @@ class Layer extends React.Component {
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
     render() {
-        console.log(111111111)
+        console.log(111111111, this.props.color1)
         return (
             <div className="layers__single">
                 <div className="row">
@@ -86,7 +93,7 @@ class Layer extends React.Component {
 const mapStateToProps = state => {
     console.log(333333333, state)
     return {
-        layers: state.sidebar.layers,
+        layers: state.map.layers,
         geometries: state.map.geometries,
     }
 }

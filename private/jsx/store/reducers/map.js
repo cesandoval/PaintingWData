@@ -7,7 +7,7 @@ const initialMapState = {
     geometries: {},
     layers: [],
     optionShow: 'PCoords',
-    opacity: 0.5
+    opacity: 0.5,
 }
 
 export default (state = initialMapState, action) => {
@@ -34,14 +34,16 @@ export default (state = initialMapState, action) => {
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
             if (geo) {
-                let bufferGeo = state.instance.scene.getObjectByName(action.name)
+                let bufferGeo = state.instance.scene.getObjectByName(
+                    action.name
+                )
                 state.instance.scene.remove(bufferGeo)
                 if (bufferGeo instanceof THREE.Mesh) {
                     if (bufferGeo.geometry) {
                         bufferGeo.geometry.dispose()
                         bufferGeo.geometry = undefined
                     }
-                    if (bufferGeo.material){
+                    if (bufferGeo.material) {
                         if (bufferGeo.material.map) {
                             bufferGeo.material.map.dispose()
                         }
@@ -64,13 +66,14 @@ export default (state = initialMapState, action) => {
                         bufferGeo.material = undefined
                     }
                 }
-                bufferGeo = null;
+                bufferGeo = null
                 // geo.material.uniforms.show.value = 0.7
                 delete geos[action.name]
             }
             return Object.assign({}, state, { geometries: geos })
         }
         case c.MAP_UPDATE_GEOMETRY: {
+            console.log('changing....')
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
             switch (action.options) {
@@ -90,7 +93,8 @@ export default (state = initialMapState, action) => {
                         })
                         geo.material.uniforms.startColor.value.set(action.value)
                         geo.material.uniforms.endColor.value.set(action.value)
-                        if (window.renderSec) window.renderSec(0.5, 'layer color')
+                        if (window.renderSec)
+                            window.renderSec(0.5, 'layer color')
                         const newGeos = {
                             geometries: Object.assign({}, state.geometries, {
                                 [action.name]: geo,
@@ -98,21 +102,27 @@ export default (state = initialMapState, action) => {
                         }
                         // console.log(Object.assign({}, state, newGeos, {layers: state.layers}))
                         console.log(newLayers, action.value)
-                        return Object.assign({}, state, newGeos, { layers: newLayers, })
+                        return Object.assign({}, state, newGeos, {
+                            layers: newLayers,
+                        })
                     } else {
-                        return Object.assign({}, state, { geometries: state.geometries })
+                        return Object.assign({}, state, {
+                            geometries: state.geometries,
+                        })
                     }
                 }
                 case 'Opacity': {
                     if (geo)
                         geo.material.uniforms.transparency.value = action.value
-                        if (window.renderSec) window.renderSec(0.5, 'layer color')
-                        const newGeos = {
-                            geometries: Object.assign({}, state.geometries, {
-                                [action.name]: geo,
-                            }),
-                        }
-                        return Object.assign({}, state, newGeos, {opacity:action.value})
+                    if (window.renderSec) window.renderSec(0.5, 'layer color')
+                    const newGeos = {
+                        geometries: Object.assign({}, state.geometries, {
+                            [action.name]: geo,
+                        }),
+                    }
+                    return Object.assign({}, state, newGeos, {
+                        opacity: action.value,
+                    })
                 }
             }
             return Object.assign({}, state, { geometries: state.geometries })
