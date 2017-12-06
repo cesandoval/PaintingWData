@@ -11,10 +11,8 @@ import Panel from './Panel.js'
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 
 import * as NodeType from './nodeTypes'
-// console.log('NodeType', Object.keys(NodeType))
 
 import { Nodes, Links } from './mockData'
-// console.log('mockData', {nodes, links})
 
 /* TODO
     - remove color2
@@ -86,7 +84,7 @@ class VPL extends React.Component {
         // TODO: should get dataset layers from props.
         const datasets = this.props.layers
         const nodes = this.state.Nodes
-        console.log('initDatasetNode()', datasets)
+        console.log('initDatasetNode()', datasets, nodes)
 
         datasets.map((dataset, index) => {
             // console.log('dataset', dataset)
@@ -100,11 +98,11 @@ class VPL extends React.Component {
                     y: 100 + 150 * index,
                 }
                 datasetNode.name = dataset.name
+                datasetNode.color = dataset.color1
 
                 nodes[dataset.name] = datasetNode
             }
         })
-
         this.setState({ Nodes: nodes })
 
         return datasets.length > 0
@@ -147,13 +145,11 @@ class VPL extends React.Component {
             opacity: 0.5,
             visibility: true,
         }
-
         return newNode
     }
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
-        // console.log(this.newProps)
 
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
@@ -171,8 +167,6 @@ class VPL extends React.Component {
 
         this.mouseTracker$ = mouseDown$
             .map(down => {
-                // console.log(down)
-
                 const nodeDOM = down.target.closest('g.node')
                 const plugDOM = down.target.closest('g.plug')
                 const controlDOM = down.target.closest('g.control')
@@ -767,7 +761,6 @@ class VPL extends React.Component {
 
     createNodeObject = (node, key) => {
         // console.log(`createNodeObject(${node}, ${key})`, node)
-
         const nodeRef = 'node_' + key
 
         return (
@@ -906,13 +899,11 @@ class VPL extends React.Component {
 
     decideNodeType(node) {
         // console.log(`decideNodeType()`, node)
-
         return this.nodeSVG(node)
     }
 
     nodeSVG = ({ color, name, type, nodeKey, options }) => {
         // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
-
         //const p = {x: 0, y: 0}
 
         const inputs = NodeType[type].inputs

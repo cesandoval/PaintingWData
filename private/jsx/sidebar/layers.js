@@ -174,7 +174,6 @@ class Layers extends React.Component {
             })
     }
     render() {
-        console.log(this.props.layers, 5555555)
         return (
             <div className="layers">
                 {this.props.layers.map((layer, i) => (
