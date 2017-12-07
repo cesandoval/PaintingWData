@@ -76,21 +76,36 @@ export default (state = initialMapState, action) => {
             console.log('changing....')
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
+
+            let newLayers = state.layers.slice()
+            newLayers = newLayers.map(layer => {
+                if (layer.name == action.name) {
+                    const newLayer = Object.assign({}, layer)
+                    // console.log(newLayer)
+                    // console.log(action.field, action.value)
+                    newLayer[action.field] = action.value
+                    return newLayer
+                } else {
+                    return layer
+                }
+            })
+
             switch (action.options) {
                 case 'Color': {
                     if (geo) {
-                        let newLayers = state.layers.slice()
-                        newLayers = newLayers.map(layer => {
-                            if (layer.name == action.name) {
-                                const newLayer = Object.assign({}, layer)
-                                // console.log(newLayer)
-                                // console.log(action.field, action.value)
-                                newLayer[action.field] = action.value
-                                return newLayer
-                            } else {
-                                return layer
-                            }
-                        })
+                        // console.log(2323232, state)
+                        // let newLayers = state.layers.slice()
+                        // newLayers = newLayers.map(layer => {
+                        //     if (layer.name == action.name) {
+                        //         const newLayer = Object.assign({}, layer)
+                        //         // console.log(newLayer)
+                        //         // console.log(action.field, action.value)
+                        //         newLayer[action.field] = action.value
+                        //         return newLayer
+                        //     } else {
+                        //         return layer
+                        //     }
+                        // })
                         geo.material.uniforms.startColor.value.set(action.value)
                         geo.material.uniforms.endColor.value.set(action.value)
                         if (window.renderSec)
@@ -122,6 +137,29 @@ export default (state = initialMapState, action) => {
                         opacity: action.value,
                     })
                 }
+                case 'Visibility': {
+                    console.log('visibleeeeee', action.value)
+                    // if (geo)
+                    //     geo.material.uniforms.transparency.value = action.value
+                    // if (window.renderSec) window.renderSec(0.5, 'layer color')
+                    // const newGeos = {
+                    //     geometries: Object.assign({}, state.geometries, {
+                    //         [action.name]: geo,
+                    //     }),
+                    // }
+                    // return Object.assign({}, state, newGeos, {
+                    //     opacity: action.value,
+                    // })
+                }
+                // // Get geometry
+                // let pixels = this.props.geometries[this.props.index]
+                // if (pixels) {
+                //     if (this.state.visible) {
+                //         pixels.material.uniforms.show.value = 0.0
+                //     } else {
+                //         pixels.material.uniforms.show.value = 1.0
+                //     }
+                // }
             }
             return Object.assign({}, state, { geometries: state.geometries })
         }

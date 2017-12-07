@@ -94,6 +94,7 @@ class Panel extends React.Component {
         console.log('toggleVisibility', !this.state.visible)
 
         act.sideUpdateLayer(this.props.index, 'visible', !this.state.visible)
+        act.updateGeometry(this.props.index, 'Visibility', !this.state.visible, 'visible')
 
         // Get geometry
         let pixels = this.props.geometries[this.props.index]
