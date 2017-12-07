@@ -10,6 +10,8 @@ const initialMapState = {
     opacity: 0.5,
 }
 
+// TODO: layers: don't use array, use key-value object
+
 export default (state = initialMapState, action) => {
     switch (action.type) {
         case c.SIDE_ADD_LAYERS:
@@ -118,9 +120,27 @@ export default (state = initialMapState, action) => {
                             [action.name]: geo,
                         }),
                     }
-                    return Object.assign({}, state, newGeos, {
-                        opacity: action.value,
+
+                    let newLayers = state.layers.slice()
+                    newLayers = newLayers.map(layer => {
+                        if (layer.name == action.name) {
+                            const newLayer = Object.assign({}, layer)
+                            // console.log(newLayer)
+                            // console.log(action.field, action.value)
+                            newLayer.visible = action.value
+                            return newLayer
+                        } else {
+                            return layer
+                        }
                     })
+
+                    return Object.assign(
+                        {},
+                        state,
+                        newGeos,
+                        { layers: newLayers },
+                        { opacity: action.value } // CHECK: set state.opacity ?
+                    )
                 }
             }
             return Object.assign({}, state, { geometries: state.geometries })
