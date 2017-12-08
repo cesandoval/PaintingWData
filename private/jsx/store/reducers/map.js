@@ -156,7 +156,10 @@ export default (state = initialMapState, action) => {
                             }
                         }
                     }
-                    return Object.assign({}, state, { layers: newLayers, visible: action.value })
+                    return Object.assign({}, state, {
+                        layers: newLayers,
+                        visible: action.value,
+                    })
                 }
             }
             return Object.assign({}, state, { geometries: state.geometries })

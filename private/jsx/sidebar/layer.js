@@ -10,7 +10,12 @@ class Layer extends React.Component {
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
-        act.updateGeometry( this.props.name, 'Visibility', e.target.checked, 'visible' )
+        act.updateGeometry(
+            this.props.name,
+            'Visibility',
+            e.target.checked,
+            'visible'
+        )
         act.sideRemoveLayer(this.props.name)
     }
     handleCheckedEvent(e) {

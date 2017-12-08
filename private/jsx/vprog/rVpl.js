@@ -330,11 +330,10 @@ class VPL extends React.Component {
             })
             .subscribe(observer('panVpl$'))
 
-        this.shiftKeyEvent$ = Rx.Observable
-            .merge(
-                Rx.Observable.fromEvent(window, 'keydown'),
-                Rx.Observable.fromEvent(window, 'keyup')
-            )
+        this.shiftKeyEvent$ = Rx.Observable.merge(
+            Rx.Observable.fromEvent(window, 'keydown'),
+            Rx.Observable.fromEvent(window, 'keyup')
+        )
             .filter(f => f.key == 'Shift')
             .map(m => m.type == 'keydown')
             .do(d => {
@@ -481,7 +480,9 @@ class VPL extends React.Component {
 
         if (!_.isEmpty(newValue)) {
             console.log(
-                `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
+                `updated the ${value} => ${newValue} for '${attr}' of ${
+                    nodeKey
+                }`
             )
 
             nodes[nodeKey].options[attr] = newValue
@@ -936,7 +937,8 @@ class VPL extends React.Component {
                     <g
                         key={`${nodeKey}_plug_input_${input}`}
                         ref={ref =>
-                            (this[`${nodeKey}_plug_input_${input}`] = ref)}
+                            (this[`${nodeKey}_plug_input_${input}`] = ref)
+                        }
                         className="plug"
                         data-node-key={nodeKey}
                         data-plug="true"
@@ -1173,8 +1175,9 @@ class VPL extends React.Component {
                         ref={ref => (this.mainSvgElement = ref)}
                         width="3000"
                         height="3000"
-                        viewBox={`${this.state.panning.x} ${this.state.panning
-                            .y} 3000 3000`}
+                        viewBox={`${this.state.panning.x} ${
+                            this.state.panning.y
+                        } 3000 3000`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
@@ -1188,8 +1191,9 @@ class VPL extends React.Component {
                         })}
 
                         <g
-                            transform={`translate(${this.state.panning.x},${this
-                                .state.panning.y})`}
+                            transform={`translate(${this.state.panning.x},${
+                                this.state.panning.y
+                            })`}
                         >
                             {// do not display temp link when its `from` and `to` is the same
                             // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
