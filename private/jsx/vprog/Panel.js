@@ -50,31 +50,14 @@ class Panel extends React.Component {
 
     componentDidMount() {
         // TODO: color1 to color
-        act.sideUpdateLayer(this.props.index, 'color1', this.props.color)
-        // act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.index]
-
-        if (pixels) {
-            pixels.material.uniforms.startColor.value.set(this.props.color)
-            pixels.material.uniforms.endColor.value.set(this.props.color)
-        }
+        act.updateGeometry(this.props.index, 'Color', this.props.color, 'color1')
     }
 
     changeColor(e) {
         console.log('changeColor(e)', e.target.value)
 
         // TODO: color1 to color
-        // act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
         act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
-
-        // Get geometry
-        // let pixels = this.props.geometries[this.props.index]
-        // if (pixels) {
-        //     pixels.material.uniforms.startColor.value.set(e.target.value)
-        //     pixels.material.uniforms.endColor.value.set(e.target.value)
-        // }
 
         this.setState({
             color: e.target.value,
@@ -91,21 +74,7 @@ class Panel extends React.Component {
     }
 
     toggleVisibility() {
-        console.log('toggleVisibility', !this.state.visible)
-
-        act.sideUpdateLayer(this.props.index, 'visible', !this.state.visible)
-        act.updateGeometry(this.props.index, 'Visibility', !this.state.visible, 'visible')
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.index]
-
-        if (pixels) {
-            if (this.state.visible) {
-                pixels.material.uniforms.show.value = 0.0
-            } else {
-                pixels.material.uniforms.show.value = 1.0
-            }
-        }
+        act.updateGeometry( this.props.index, 'Visibility', !this.state.visible, 'visible' )
     }
 
     soloShow() {
@@ -114,17 +83,14 @@ class Panel extends React.Component {
 
         for (let index in this.props.geometries) {
             // Get geometry
-            let pixels = this.props.geometries[index]
             console.log(`index=${index}, solo=${this.props.index}`)
 
             if (index === this.props.index) {
                 console.log(`set ${index} visiable`)
-                pixels.material.uniforms.show.value = 1.0
-                act.sideUpdateLayer(index, 'visible', true)
+                act.updateGeometry( index, 'Visibility', true, 'visible' )
             } else {
                 console.log(`set ${index} invisiable`)
-                pixels.material.uniforms.show.value = 0.0
-                act.sideUpdateLayer(index, 'visible', false)
+                act.updateGeometry( index, 'Visibility', false, 'visible' )
             }
         }
     }
