@@ -8,7 +8,10 @@ const initialMapState = {
     layers: [],
     optionShow: 'PCoords',
     opacity: 0.5,
+    visible: true,
 }
+
+// TODO: layers: don't use array, use key-value object
 
 export default (state = initialMapState, action) => {
     switch (action.type) {
@@ -73,24 +76,24 @@ export default (state = initialMapState, action) => {
             return Object.assign({}, state, { geometries: geos })
         }
         case c.MAP_UPDATE_GEOMETRY: {
-            console.log('changing....')
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
+
+            let newLayers = state.layers.slice()
+            newLayers = newLayers.map(layer => {
+                if (layer.name == action.name) {
+                    const newLayer = Object.assign({}, layer)
+                    // console.log(newLayer)
+                    // console.log(action.field, action.value)
+                    newLayer[action.field] = action.value
+                    return newLayer
+                } else {
+                    return layer
+                }
+            })
             switch (action.options) {
                 case 'Color': {
                     if (geo) {
-                        let newLayers = state.layers.slice()
-                        newLayers = newLayers.map(layer => {
-                            if (layer.name == action.name) {
-                                const newLayer = Object.assign({}, layer)
-                                // console.log(newLayer)
-                                // console.log(action.field, action.value)
-                                newLayer[action.field] = action.value
-                                return newLayer
-                            } else {
-                                return layer
-                            }
-                        })
                         geo.material.uniforms.startColor.value.set(action.value)
                         geo.material.uniforms.endColor.value.set(action.value)
                         if (window.renderSec)
@@ -118,9 +121,42 @@ export default (state = initialMapState, action) => {
                             [action.name]: geo,
                         }),
                     }
-                    return Object.assign({}, state, newGeos, {
-                        opacity: action.value,
+
+                    let newLayers = state.layers.slice()
+                    newLayers = newLayers.map(layer => {
+                        if (layer.name == action.name) {
+                            const newLayer = Object.assign({}, layer)
+                            // console.log(newLayer)
+                            // console.log(action.field, action.value)
+                            newLayer.visible = action.value
+                            return newLayer
+                        } else {
+                            return layer
+                        }
                     })
+
+                    return Object.assign(
+                        {},
+                        state,
+                        newGeos,
+                        { layers: newLayers },
+                        { opacity: action.value } // CHECK: set state.opacity ?
+                    )
+                }
+                case 'Visibility': {
+                    console.log(state.visible, action.name, state)
+                    for (let index in state.layers) {
+                        let currLayer = state.layers[index].name
+                        // let currValue = state.layers[index].visible
+                        if (currLayer == action.name) {
+                            if (!action.value) {
+                                geo.material.uniforms.show.value = 0.0
+                            } else {
+                                geo.material.uniforms.show.value = 1.0
+                            }
+                        }
+                    }
+                    return Object.assign({}, state, { layers: newLayers, visible: action.value })
                 }
             }
             return Object.assign({}, state, { geometries: state.geometries })

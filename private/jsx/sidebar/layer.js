@@ -10,16 +10,8 @@ class Layer extends React.Component {
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
-        act.sideUpdateLayer(this.props.name, 'visible', e.target.checked)
+        act.updateGeometry( this.props.name, 'Visibility', e.target.checked, 'visible' )
         act.sideRemoveLayer(this.props.name)
-        // Get geometry
-        let pixels = this.props.geometries[this.props.name]
-        // Change Size
-        if (!e.target.checked) {
-            pixels.material.uniforms.show.value = 0.0
-        } else {
-            pixels.material.uniforms.show.value = 1.0
-        }
     }
     handleCheckedEvent(e) {
         this.changeVisibility(e)
@@ -27,7 +19,6 @@ class Layer extends React.Component {
         // act.sideRemoveLayer(layerName);
     }
     changeColor(e) {
-        // act.sideUpdateLayer(this.props.name, e.target.name, e.target.value)
         act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
 
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
