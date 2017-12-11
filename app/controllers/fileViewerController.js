@@ -31,8 +31,8 @@ module.exports.saveShapes = function(req, res) {
         function(err){}
         );   
     });
-    res.send()
-    res.redirect('/layers/' + req.user.id);
+    console.log('changed id #LOOK')
+    res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
 }
 
 module.exports.getDatalayers = function(req, res){

@@ -26,7 +26,7 @@ var passport = require('passport'),
   });
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
-  router.post('', fileUploadController.upload);
+  router.post('/upload', fileUploadController.upload);
   
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     res.render('uploadViewer', {id: req.params.id, userSignedIn: req.isAuthenticated(), user: req.user});
@@ -36,7 +36,7 @@ var passport = require('passport'),
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
   router.get('/getThumbnailData/:id', isAuthenticated, fileViewerController.serveThumbnailData);
 
-  router.get('/layers/:id', isAuthenticated, datalayerController.show);
+  router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
 
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);

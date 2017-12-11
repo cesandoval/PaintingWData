@@ -1,18 +1,33 @@
-
 //todo
-///refactor widget elements to cached eles
+// rename it progress tracker
+// refactor widget elements to cached eles
+// add refresh handlers on instantiation, update jobs, and user clicks
 // build Widget CSS
 // augment upload controller to send a resposne id to the widget
-// construct widget in script that runs in layout
-// figure out how to pass the res to the layout code
+
+// pop up when the page is loaded
+// once every ele is done processing respring page
+// remove eles from the queueu once they have uploaded
+
+
 
 //stopping point, trying to figure out removing wigets
 //you added an event handler for the close button thing
-//also make sure that tool tips are working or ask carlose about it
+//also make sure that tool tips are working or ask about it
+
+// save sate on destroy
+
 
 
 //this fucntion is supposed to take int he upload id, may refactor to a res param.
-function ProgressWidget(uploadID = null) {
+
+(function() {
+    if(!$('.progress-tracker').length) {// only launch if a user is signed in
+        return
+    }
+    else {
+
+
     // isPolling
     // pollType
     // currentJobs
@@ -23,16 +38,25 @@ function ProgressWidget(uploadID = null) {
     $.widget("custom.progressWidget", {
         
 
-        options: {
-            value: uploadID
-        },
+        options: {},
+        
         //constructor
         _create: function () {
             console.log('this is a test')
             // load saved state 
+            debugger
+
+            this.trackerBody = $('.progress-tracker-body');
+            this.$el = this.element;
+            this.$el.after(this.trackerBody)
+            
+            this.trackerBody.appendTo('.progress-tracker');
+
+            console.log('test passing')
+            this.$flashhandler = $('#flashes');
+            
             var savedState = localStorage.getItem('progressWidget');
 
-            this.$el = this.element;
             //if localstorage, initialize the widget with old state, else make new widget
             if (savedState) {
                 this.state = JSON.parse(savedState);
@@ -44,21 +68,18 @@ function ProgressWidget(uploadID = null) {
                 this.state = this._defaultState();
             }
 
-
-            this.$flashhandler = $('#flashes');
-
+            var urlString  = window.location.pathname;
+            if(urlString.indexOf('/layers') != -1) {
+                var newId = parseInt(urlString.split('/')[-1])
+                console.log(urlString)
+                console.log(newId)
+            }
+            this._createWidgetMenu();//initialize child views            
+            this._bindUIActions();
             //connect componenents
             // document.window.widget = this;// may not be neccessary as plugins are initialized on a component
         },
 
-        _init: function() {
-            // called whene there are no options
-            // call the constructor with id in value to add a val if post re renders
-            this._createWidgetMenu();//initialize child views            
-            this._bindUIActions();
-            
-
-        },
 
 
         //created childviews, called on change event
@@ -74,7 +95,8 @@ function ProgressWidget(uploadID = null) {
                     </div>   
             `
             widgetMenu = $.parseHTML(htmlBuilder);
-            for (job in this.state.currentJobs) {
+            widgetMenu = $(widgetMenu);
+            this.state.currentJobs.forEach(job => {
                 htmlBuilder = createProgressBar(...job);
                 var temp = $.parseHTML(htmlBuilder);
                 // temp.find('[data-toggle="tooltip"]').tooltip();
@@ -82,7 +104,7 @@ function ProgressWidget(uploadID = null) {
                 // widgetMenu += '\t';
                 // widgetMenu += createProgressBar(...job);
                 // widgetMenu += '\n';
-            }
+            })
             $(function() {
                 $('.js-tooltip').toolTip();
             });
@@ -92,19 +114,13 @@ function ProgressWidget(uploadID = null) {
 
 
 
-            this.$widgetMenu =  $(widgetMenu)
+            this.$widgetMenu = widgetMenu;
             this.$el.after(this.$widgetMenu);
-        },
 
-
-        _bindUIActions: function () {
-            this._on(this.$el, {
-                click: '_toggleDisplay'
-            })
-
-            this._on(this.$widgetMenu.children('.close-btn'), 
+            if(this.$widgetMenu.children('.close-btn').length) {
+                this._on(this.$widgetMenu.children('.close-btn'), 
                 'click', (e) => {
-                var id = $(this).attr('id');
+                var id = this.$el.attr('id');
                     
                 if(id === null){
                     console.log('UPLOAD WIDGET Error: False destroychild id' + id)
@@ -112,7 +128,6 @@ function ProgressWidget(uploadID = null) {
     
                 }
                 this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
-                _.pluck()
                 var delJob = this.state.currentJobs.filter((item) => {
                     if(item[0] == id) {
                         return item;
@@ -123,8 +138,19 @@ function ProgressWidget(uploadID = null) {
                 this._trigger('change');
 
                 e.preventDefault();
-                $(this).parent().remove();
+                // this.$el.parent().remove(); not sure if this will acutally work, may have to find selector by id
             })
+            }
+
+        },
+
+
+        _bindUIActions: function () {
+            this._on(this.$el, {
+                click: '_toggleDisplay'
+            })
+
+            
 
             // this._on(this.$widgetMenu.children('close-btn'), 
             // {
@@ -308,10 +334,10 @@ function ProgressWidget(uploadID = null) {
 
         _defaultState: function () {
             return {
-                currentJobs: [],
+                currentJobs: [[1, 'jobname', 100, 1000]],
                 isPolling: false,
                 pollType: "shape",//TODO Change back to shape
-                selectedIDs: [],
+                selectedIDs: [1],
                 timeouts: 3
             }
         }
@@ -331,42 +357,52 @@ function ProgressWidget(uploadID = null) {
     });
 }
 
-(function($) {
-    var toolTip = {
-        init: function() {
-            this.each(function() {
-                var $that = $(this);
-                // our boolean object to check if it already exists on the page
-                var $toolSpan = $('<div class="tooltip"><span class="tooltip_arrow"></span></div>');
-                var preloadImages = function() {
-                    var tempImage = new Image();
-                    tempImage.src = 'http://i.imgur.com/K5ynr.png';
-                    tempImage = null;
-                };
-                preloadImages();
-                $that.mouseover(function() {
-                    var $altText = $that.attr('alt');
-                    var $parentWidth = $that.outerWidth(true);
-                    var $pos = $that.offset();
-                    var $tip = $toolSpan.clone(true);
 
-                    $that.parent().after($tip);
-                    $tip.prepend($altText);
-                    $that.parent().next($tip).css({
-                        top: $pos.top - 30,
-                        left: $pos.left + ($that.width() /2) - ($tip.outerWidth(true)/2)
-                    }).fadeIn(100);
-                    $(".tooltip_arrow", $that.parent().next()).css({
-                        left: ($tip.outerWidth(true) / 2)
-                    }).fadeIn(100);
-                }).mouseout(function() {
-                    $that.parent().next().fadeOut(100).remove();
-                });
-            });
-        } /* end init */
-    };
-    $.fn.toolTip = toolTip.init;
-})(jQuery);
+})
+
+
+(function() {
+    var trackerBody = $('<div class="progress-tracker-body" />')
+        .appendTo('.progress-tracker')
+        .progressWidget()
+})
+
+// (function($) {
+//     var toolTip = {
+//         init: function() {
+//             this.each(function() {
+//                 var $that = $(this);
+//                 // our boolean object to check if it already exists on the page
+//                 var $toolSpan = $('<div class="tooltip"><span class="tooltip_arrow"></span></div>');
+//                 var preloadImages = function() {
+//                     var tempImage = new Image();
+//                     tempImage.src = 'http://i.imgur.com/K5ynr.png';
+//                     tempImage = null;
+//                 };
+//                 preloadImages();
+//                 $that.mouseover(function() {
+//                     var $altText = $that.attr('alt');
+//                     var $parentWidth = $that.outerWidth(true);
+//                     var $pos = $that.offset();
+//                     var $tip = $toolSpan.clone(true);
+
+//                     $that.parent().after($tip);
+//                     $tip.prepend($altText);
+//                     $that.parent().next($tip).css({
+//                         top: $pos.top - 30,
+//                         left: $pos.left + ($that.width() /2) - ($tip.outerWidth(true)/2)
+//                     }).fadeIn(100);
+//                     $(".tooltip_arrow", $that.parent().next()).css({
+//                         left: ($tip.outerWidth(true) / 2)
+//                     }).fadeIn(100);
+//                 }).mouseout(function() {
+//                     $that.parent().next().fadeOut(100).remove();
+//                 });
+//             });
+//         } /* end init */
+//     };
+//     $.fn.toolTip = toolTip.init;
+// })(jQuery);
 
     
 
@@ -391,17 +427,24 @@ function ProgressWidget(uploadID = null) {
 
 
 //for testing
-    var p = ProgressWidget();
-    console.log(ProgressWidget(1));
-    console.log($("upload-tracker").after(p))
+    // var p = ProgressWidget();
+    // (function() {
+    //     if(!$('progress-tracker').length) {
+    //         return
+    //     }
+    //     else {
 
-    // This is how instantiate a widget. 
-    var progress = $( "<div></div>" )
-        .appendTo( "body" )
-        .progressWidget({ value: 10000 });
+    //     }
+    // })
+    // console.log(ProgressWidget(1));
+    // console.log($("upload-tracker").after(p))
 
-    var id = 0;
-    progress.progressWidget('publicMethod', id);
+    // // This is how instantiate a widget. 
+    // var progress = $( "<div></div>" )
+    //     .appendTo( "body" )
+    //     .progressWidget({ value: 10000 });
+
+    // progress.progressWidget('publicMethod', id);
 
     // $.custom.progressWidget( {value: 10000}, $("upload-tracker").after(p));
 
