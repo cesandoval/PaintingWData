@@ -385,27 +385,27 @@ function testTracker(req, res) {
     console.log(numCalls)
     var output;
     switch(numCalls) {
-        case 0 :
+        case numCalls < 10 :
             output = [[0, 'test job 1', 0, 1000],[1, 'test job 2', 100, 1000],[2, 'test job 3', 500, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 100, 1000]]
             res.send({ progress: output });
             break;
         
-        case 1:
+        case numCalls < 20:
             output = [[0, 'test job 1', 100, 1000],[1, 'test job 2', 200, 1000],[2, 'test job 3', 600, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
             res.send({ progress: output });
             break;
         
-        case 2:
+        case numCalls < 30:
              output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', 900, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
             res.send({ progress: output });
             break;
         
-        case 3:
+        case numCalls < 40:
              output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', false],[3, 'test job 4 with an extremely long name that i don\'t think will fit', true]]
              res.send({ progress: output });
             break;
         
-        case 4:
+        case numCalls < 50:
             res.send(7+ "$$" + 'datafilelocation' + "$$" + 'errormessage');
         
             break;
