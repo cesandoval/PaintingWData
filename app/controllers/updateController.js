@@ -14,8 +14,7 @@ processVoxels = require('../../worker/worker2').processVoxels;
 // JSON PARSE this job and see if that works
 // res.send the id of the uploaded job to this controller>? or to this 
 //
-
-
+var numCalls = 0;
 //// TODO
 // maybe add a field to the user on recently uploaded 
 // ids so we can keep track of what to send to each user
@@ -72,31 +71,31 @@ function getLastId(req, res) {
                 var success = true;
 
                 //try deleting obj
-                // try{
-                //     fs_extra.remove(gfile.location, err => {
-                //         if (err) {
-                //             console.log("Error cleaning local directory: ", gfile.location);
-                //             // return gfile.location + "$$" + e.toString();                            
-                //             console.log(err, err.stack);
-                //             success = false;
-                //             // callback(err);
-                //         }
-                //     })
-                // }
-                // catch(e) {
-                //     console.log('File Location Error: ' + e);
-                //     console.log('RETRYING')
-                //     fs_extra.remove(dfile.location, err => {
-                //         success = true;
-                //         if (err) {
-                //             console.log("Error cleaning local directory: ", dfile.location);
-                //             console.log(err, err.stack);
-                //             success = false;
-                //             // callback(err);
-                //             //return error object here to make srue this is removed
-                //         }
-                //     })
-                // }
+                try{
+                    fs_extra.remove(gfile.location, err => {
+                        if (err) {
+                            console.log("Error cleaning local directory: ", gfile.location);
+                            // return gfile.location + "$$" + e.toString();                            
+                            console.log(err, err.stack);
+                            success = false;
+                            // callback(err);
+                        }
+                    })
+                }
+                catch(e) {
+                    console.log('File Location Error: ' + e);
+                    console.log('RETRYING')
+                    fs_extra.remove(dfile.location, err => {
+                        success = true;
+                        if (err) {
+                            console.log("Error cleaning local directory: ", dfile.location);
+                            console.log(err, err.stack);
+                            success = false;
+                            // callback(err);
+                            //return error object here to make srue this is removed
+                        }
+                    })
+                }
                 if (!success)
                     req.flash("Error cleaning local directory: ", gfile.location);
             }
@@ -179,31 +178,31 @@ function getById(req, res, id) {
                 var success = true;
 
                 //try deleting obj
-                // try{
-                //     fs_extra.remove(gfile.location, err => {
-                //         if (err) {
-                //             console.log("Error cleaning local directory: ", gfile.location);
-                //             // return gfile.location + "$$" + e.toString();                            
-                //             console.log(err, err.stack);
-                //             success = false;
-                //             // callback(err);
-                //         }
-                //     })
-                // }
-                // catch(e) {
-                //     console.log('File Location Error: ' + e);
-                //     console.log('RETRYING')
-                //     fs_extra.remove(dfile.location, err => {
-                //         success = true;
-                //         if (err) {
-                //             console.log("Error cleaning local directory: ", dfile.location);
-                //             console.log(err, err.stack);
-                //             success = false;
-                //             // callback(err);
-                //             //return error object here to make srue this is removed
-                //         }
-                //     })
-                // }
+                try{
+                    fs_extra.remove(gfile.location, err => {
+                        if (err) {
+                            console.log("Error cleaning local directory: ", gfile.location);
+                            // return gfile.location + "$$" + e.toString();                            
+                            console.log(err, err.stack);
+                            success = false;
+                            // callback(err);
+                        }
+                    })
+                }
+                catch(e) {
+                    console.log('File Location Error: ' + e);
+                    console.log('RETRYING')
+                    fs_extra.remove(dfile.location, err => {
+                        success = true;
+                        if (err) {
+                            console.log("Error cleaning local directory: ", dfile.location);
+                            console.log(err, err.stack);
+                            success = false;
+                            // callback(err);
+                            //return error object here to make srue this is removed
+                        }
+                    })
+                }
                 if (!success)
                     req.flash("Error cleaning local directory: ", gfile.location);
             }
@@ -246,8 +245,8 @@ function getLastIds(req, res) {
     var ids = []; // datafile and query id
     var denominators = [];
 
-    console.log(req.params)
-    ids = req.params.shapes.split("$$")
+    console.log(req.query)
+    ids = req.query.shapes.split("$$")
     if(!ids.length);
         return false; // don't query if there is no query object
 
@@ -303,32 +302,32 @@ function getLastIds(req, res) {
                     output.push([id, jobName[0], true])
                     var success = true;
 
-                    //try deleting obj
-                    // try{
-                    //     fs_extra.remove(gLocation, err => {
-                    //         if (err) {
-                    //             console.log("Error cleaning local directory: ", gLocation);
-                    //             // return gLocation + "$$" + e.toString();                            
-                    //             console.log(err, err.stack);
-                    //             success = false;
-                    //             // callback(err);
-                    //         }
-                    //     })
-                    // }
-                    // catch(e) {
-                    //     console.log('File Location Error: ' + e);
-                    //     console.log('RETRYING')
-                    //     fs_extra.remove(dLocation, err => {
-                    //         success = true;
-                    //         if (err) {
-                    //             console.log("Error cleaning local directory: ", dLocation);
-                    //             console.log(err, err.stack);
-                    //             success = false;
-                    //             // callback(err);
-                    //             //return error object here to make srue this is removed
-                    //         }
-                    //     })
-                    // }
+                    // try deleting obj
+                    try{
+                        fs_extra.remove(gLocation, err => {
+                            if (err) {
+                                console.log("Error cleaning local directory: ", gLocation);
+                                // return gLocation + "$$" + e.toString();                            
+                                console.log(err, err.stack);
+                                success = false;
+                                // callback(err);
+                            }
+                        })
+                    }
+                    catch(e) {
+                        console.log('File Location Error: ' + e);
+                        console.log('RETRYING')
+                        fs_extra.remove(dLocation, err => {
+                            success = true;
+                            if (err) {
+                                console.log("Error cleaning local directory: ", dLocation);
+                                console.log(err, err.stack);
+                                success = false;
+                                // callback(err);
+                                //return error object here to make srue this is removed
+                            }
+                        })
+                    }
                     if (!success)
                         req.flash("Error cleaning local directory: ", gLocation);
                 }
@@ -360,7 +359,7 @@ module.exports.updateShape = function (req, res) {
     console.log(req.user)
     console.log("END USER ----------------- \n \n ")
 
-    if (req.params.id) {
+    if (req.query.id) {
         response = getLastId(req, res, id);
     }
     else {
@@ -374,8 +373,50 @@ module.exports.updateShapes = function (req, res) {
     console.log(req.user)
     console.log("END USER ----------------- \n \n ")
 
-    response = getLastIds(req, res);
-    console.log(response);
+    // response = getLastIds(req, res);
+    // console.log(response);
+    testTracker(req, res);
 }
 
 
+
+
+function testTracker(req, res) {
+    console.log(numCalls)
+    var output;
+    switch(numCalls) {
+        case 0 :
+            output = [[0, 'test job 1', 0, 1000],[1, 'test job 2', 100, 1000],[2, 'test job 3', 500, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 100, 1000]]
+            res.send({ progress: output });
+            break;
+        
+        case 1:
+            output = [[0, 'test job 1', 100, 1000],[1, 'test job 2', 200, 1000],[2, 'test job 3', 600, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
+            res.send({ progress: output });
+            break;
+        
+        case 2:
+             output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', 900, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
+            res.send({ progress: output });
+            break;
+        
+        case 3:
+             output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', false],[3, 'test job 4 with an extremely long name that i don\'t think will fit', true]]
+             res.send({ progress: output });
+            break;
+        
+        case 4:
+            res.send(7+ "$$" + 'datafilelocation' + "$$" + 'errormessage');
+        
+            break;
+
+        case 5:
+        res.flash('this is a flash', "here is the flash content")
+        res.send(false)
+             break;
+        
+
+    }
+    numCalls++
+    
+}

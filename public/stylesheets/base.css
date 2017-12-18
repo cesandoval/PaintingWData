@@ -735,55 +735,145 @@ label {
 .progress {
     background-color: white;
 }
-/* yaateh's css classses */
+
+
+/* Begin Progress Tracker CSS*/
+.progress-tracker-body {
+    /* background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);  */
+    padding:1vh 1vh;
+    margin: 1vh 1vh 0px 0px;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    background-color: black;
+    /* max-height: 310px; */
+
+}
+#widget-menu {
+    display: flex;
+    flex-flow: row wrap;
+}
+#jobList{
+    -webkit-padding-start: 10px!important;
+    -webkit-padding-end: 10px!important;
+    overflow-y: auto;
+    max-height: 310px;
+    
+}
+#widget-menu .container {
+    width: auto!important;
+    align-content: left;
+
+
+}
+#widget-menu .progress-bar {
+    width: 100%;
+    height: 20px;
+    float: none;
+    display: block;    
+}
+
+#widget-menu .button {
+    float: right;
+    display: inline-block;
+    
+}
 
 .menu-item {
-    max-width: 400px;
     flex: 1;
     justify-content: left;
-
-    margin: 5px;
-    border-width: 1px
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    margin: 5% auto;
+    background: #FAFAFA;
+    background-color: #FAFAFA;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E7EEF4');
+    background: -moz-linear-gradient(top, #FAFAFA, #E7EEF4);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#E7EEF4));
+    height: auto;
+    padding: 10px; 
+    border: solid 1px #DCDCDC;
+    border-bottom: solid 1px #98B1C7;
+    -moz-border-radius: .5em; 
+    -webkit-border-radius: .5em;
+    -moz-box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
 }
+
+#widget-menu .fa {
+    background:  linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+    display: inline-block;
+    border-radius: 60px;
+    box-shadow: 0px 0px 2px #888;
+    padding: 0.1em 0.125em;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    cursor: pointer;
+}
+
+#widget-menu .fa-question {
+    top: -8px !important;
+    left: -5px;
+}
+
 
 .menu-item .progress-label {
     position: relative;
     margin-left: 5px;
-    max-width: auto;
     text-overflow: ellipsis;
 }
 
-.menu-item .tooltip {
+
+
+.tooltiper {
+    max-width: inherit;
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
-    background-color: transparent;
-    height: auto;
-    display: block;
-    text-align: center;
-    font-family: 'Karla', sans-serif;
-    width: 5vw;
-}
-
-.menu-item .tooltip .tooltiptext {
-    visibility: hidden;
-    min-width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
- 
+    color: rgb(38, 37, 37);
+    perspective: 600px;
+    text-overflow: ellipsis;
+    transform-style: preserve-3d;
+  }
+  
+  .tooltiper .tooltip {
+      max-width: unset;
+    min-width: 100px;
+    /* max-width:350px; */
     position: absolute;
-    z-index: 1;
-}
-
-.menu-item .tooltip:hover .tooltiptext {
-    visibility: visible;
-    min-width: 120px;
-    bottom: 100%;
-    left: 50%; 
-    margin-left: -60px;
+    /* font-size: 3vh; */
+    text-align: left;
+    background: rgb(38, 37, 37);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: block;
+    top: 0;left: 0;
+    line-height: 1.4em;
+    transform: rotateX(90deg) translateZ(0px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out 0.1s;
+  }
+  .tooltiper:hover .tooltip {
+    transform: rotateX(0) translateZ(20px);
+    opacity: 1;
+    transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out;
+    z-index: 100;
+  }
+  .tooltiper .tooltip:after {
+    content:"";
+    position: absolute;
+    left: 20px;
+    bottom: -7px;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 7px 0 7px;
+    border-color: rgb(38, 37, 37) transparent transparent transparent;
+    z-index: 100!important;
     
-}
+  }
+  .tooltiper .tooltip.no-after:after{content:none; display:none;}
 
+  /* end porgress tracker CSS*/

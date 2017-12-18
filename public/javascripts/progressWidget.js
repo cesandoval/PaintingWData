@@ -1,33 +1,20 @@
-//todo
-// rename it progress tracker
+
 // refactor widget elements to cached eles
-// add refresh handlers on instantiation, update jobs, and user clicks
-// build Widget CSS
-// augment upload controller to send a resposne id to the widget
-
-// pop up when the page is loaded
-// once every ele is done processing respring page
-// remove eles from the queueu once they have uploaded
+// put the flashes on a html div that has a removable event
 
 
 
-//stopping point, trying to figure out removing wigets
-//you added an event handler for the close button thing
-//also make sure that tool tips are working or ask about it
 
 // save sate on destroy
 
+//left to do 
+//flash alerts )(removable)
+// finish polling, make sure refreshing works
+// make sure support for multiple items works
+// 
 
 
-//this fucntion is supposed to take int he upload id, may refactor to a res param.
-
-(function() {
-    if(!$('.progress-tracker').length) {// only launch if a user is signed in
-        return
-    }
-    else {
-
-
+function progressWidget() {
     // isPolling
     // pollType
     // currentJobs
@@ -36,188 +23,230 @@
     // flashHandler
 
     $.widget("custom.progressWidget", {
-        
+        options: {
+            value: 0
+        },
 
-        options: {},
-        
         //constructor
         _create: function () {
-            console.log('this is a test')
+            console.log('initialize widget')
             // load saved state 
-            debugger
-
-            this.trackerBody = $('.progress-tracker-body');
-            this.$el = this.element;
-            this.$el.after(this.trackerBody)
-            
-            this.trackerBody.appendTo('.progress-tracker');
-
-            console.log('test passing')
+            this.element;
+            this.$el = $(this.element);
+            this.$anchor = $('.progress-tracker')
             this.$flashhandler = $('#flashes');
-            
-            var savedState = localStorage.getItem('progressWidget');
+            var savedState = window.localStorage.getItem('progressWidget');
 
-            //if localstorage, initialize the widget with old state, else make new widget
-            if (savedState) {
+            //if window.localStorage, initialize the widget with old state, else make new widget
+            if (savedState && savedState !== 'undefined') {
                 this.state = JSON.parse(savedState);
-                if(this.options.value && this.state.selectedIDs.indexOf(this.options.value) == -1){
+                if (this.options.value && this.state.selectedIDs.indexOf(this.options.value) == -1) {
                     this.state.selectedIDs.shift(this.options.value);
                 }
             }
             else {
                 this.state = this._defaultState();
             }
-
-            var urlString  = window.location.pathname;
-            if(urlString.indexOf('/layers') != -1) {
-                var newId = parseInt(urlString.split('/')[-1])
-                console.log(urlString)
-                console.log(newId)
+            this.state.fullRefresh = 5; // so that thte state is fully refreshed on creation
+            //check if a new layer has just been uploaded
+            var urlString = window.location.pathname;
+            if (urlString.indexOf('/layers') != -1) {
+                try {
+                    this.state.uploadId = parseInt(urlString.split('/')[-1]);
+                }
+                catch (e) {
+                    console.log('PROGRESSWIDGET ERROR: error adding ID, url: ' + urlString)
+                    console.log(this.state.uploadId)
+                }
             }
-            this._createWidgetMenu();//initialize child views            
+
+            // if a new layer has just been uploaded, poll it and display it
+            if (this.state.uploadId != null) {
+                this.state.isPolling = true;
+                this._xhrLoop();
+                this.state.isPolling = false
+                this.state.uploadId = null;
+                if (this.state.pageReload === false)
+                    this.state.pageReload = true;
+                if (!this.state.isDisplayed) {
+                    this._toggleDisplay();
+                    this.state.isDisplayed = true;
+                }
+            }
+            else {
+                this.refresh();//initialize child views  
+            }
             this._bindUIActions();
-            //connect componenents
-            // document.window.widget = this;// may not be neccessary as plugins are initialized on a component
+
+            if (this.state.isDisplayed) {
+                this.$el.show(200)
+            }
+            else {
+                this.$el.hide();
+
+            }
         },
-
-
 
         //created childviews, called on change event
         _createWidgetMenu: function () {
+            if(this.state.fullRefresh != 5){
+                this._partialRefresh();
+                return
+            }
             var $progressWidget = this.element,
                 opts = this.options,
-                widgetCaption = "this is a caption",
+                widgetCaption = "This tracks all current shape jobs in the queue. If you would like to turn off flash requests, click the options button",
                 htmlBuilder = '';
 
-            htmlBuilder += `<div class="widgetmenu"">
-                <span id="widgetcaption">${widgetCaption}</span>
-                    <ul id="jobList"></ul>
-                    </div>   
+
+            htmlBuilder += `
+            <div id="widget-menu"">
+                <span class="tooltiper" data-tooltip="${widgetCaption}"><i class="fa fa-question" style="top:'0px!important'"/></span>            
+                <ul id="jobList"></ul>
+            </div>   
             `
+            this.state.currentJobs;
             widgetMenu = $.parseHTML(htmlBuilder);
             widgetMenu = $(widgetMenu);
-            this.state.currentJobs.forEach(job => {
-                htmlBuilder = createProgressBar(...job);
-                var temp = $.parseHTML(htmlBuilder);
-                // temp.find('[data-toggle="tooltip"]').tooltip();
-                widgetMenu.find('#jobList').append(temp);
-                // widgetMenu += '\t';
-                // widgetMenu += createProgressBar(...job);
-                // widgetMenu += '\n';
-            })
-            $(function() {
-                $('.js-tooltip').toolTip();
-            });
-            // '\n';
-            // widgetMenu += '\t</div>\n';
-            // widgetMenu += '</div">';
+            widgetMenu.text = widgetCaption;
+            if (this.state.currentJobs.length) {
+                this.state.currentJobs.forEach(job => {
+                    htmlBuilder = createProgressBar(...job);
+                    var temp = $.parseHTML(htmlBuilder);
+                    widgetMenu.find('#jobList').append(temp);
+                })
+            }
+            else {
+                widgetMenu.find('#jobList').append($.parseHTML(noJobs()));
+            }
 
-
+            if ($('#widget-menu').length) {
+                $('#widget-menu').remove();
+            }
 
             this.$widgetMenu = widgetMenu;
-            this.$el.after(this.$widgetMenu);
+            this.$el.append(this.$widgetMenu);
 
-            if(this.$widgetMenu.children('.close-btn').length) {
-                this._on(this.$widgetMenu.children('.close-btn'), 
-                'click', (e) => {
-                var id = this.$el.attr('id');
-                    
-                if(id === null){
-                    console.log('UPLOAD WIDGET Error: False destroychild id' + id)
-                    return false;
-    
-                }
-                this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
-                var delJob = this.state.currentJobs.filter((item) => {
-                    if(item[0] == id) {
-                        return item;
-                    }
-                });
-                //may neeed deljob[0]
-                this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1)
-                this._trigger('change');
-
-                e.preventDefault();
-                // this.$el.parent().remove(); not sure if this will acutally work, may have to find selector by id
-            })
+            if (this.$widgetMenu.children().length) {
+                $('.close-btn').on('click', this._closeItem.bind(this));
             }
-
+            this.state.fullRefresh = 0;  
+            toolTiper();            
         },
 
 
-        _bindUIActions: function () {
-            this._on(this.$el, {
-                click: '_toggleDisplay'
-            })
-
-            
-
-            // this._on(this.$widgetMenu.children('close-btn'), 
-            // {
-            //     click: '_removeChild(this.id)'
-            // });
-            this._on(this.$flashhandler, {
-                'flash': function(event, message){
-                var flash = $('<div class="flash">');
-                flash.text(message);
-                flash.on('click', function(){
-                    $(this).remove();
-                    });
-                $(this).append(flash);
-            }
-        });
+        _partialRefresh: function() {
+            this.state.currentJobs.forEach(job => {
+                var [id, jobName, numerator, denominator] = job,
+                percentage = ((numerator / denominator) * 100).toFixed(2).toString(),
+                innerString = jobName + ": " + numerator + "/" + denominator,
+                menuItem = $('#' + id),
+                datatool = menuItem.find('.tooltiper').attr('data-tooltip', innerString)
+                menuItem.find('.progress-label').text(percentage + '%');
+                menuItem.find('.progress-bar').css('width', percentage + '%');
+            });
         },
 
-        //removes a child from the selectedId list and the currentJob List
-        _removeChild: function(id){
-            if(id === null){
+        _closeItem: function (e) {// for removing menu items from clicks
+            var menuItem = $(e.target).closest('.menu-item');
+            var id = menuItem.attr('id')
+            menuItem.remove();
+            if (id === null) {
                 console.log('UPLOAD WIDGET Error: False destroychild id' + id)
                 return false;
-
             }
             this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
-            _.pluck()
+            // update removal for async calls
             var delJob = this.state.currentJobs.filter((item) => {
-                if(item[0] == id) {
+                if (item[0] == id) {
                     return item;
                 }
             });
-            //may neeed deljob[0]
-            this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1)
-            this._trigger('change');
+            var removed = this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1);
+            console.log(removed)
+            this.refresh();
+            e.preventDefault();
         },
-        
+
+        _bindUIActions: function () {
+            this._on(this.$anchor, {
+                click: '_toggleDisplay'
+            })
+
+            window.addEventListener('beforeunload', this._destroy.bind(this), false);
+
+            this._on(this.$flashhandler, {
+                'flash': function (event, message) {
+                    var flash = $('<div class="flash">');
+                    flash.text(message);
+                    flash.on('click', function () {
+                        $(this).remove();
+                    });
+                    $(this).append(flash);
+                }
+            });
+
+
+        },
+
         //unload widget: save state and remove all components.
-        _onDestroy: function () {
-            localStorage.setItem('progressWidget', this.state);
-            this.$widgetMenu.hide();
-            this.$widgetMenu.remove();
-            this.$el.remove();//????
-            // this.$
+        _destroy: function () {
+            var test = JSON.stringify(this.state);
+            window.localStorage.setItem('progressWidget', JSON.stringify(this.state));
+            window.localStorage.getItem('progressWidget');
+
+            if(this.state.isDisplayed)
+                this.$el.hide(200);
+
+            if (this.$widgetMenu) {
+                this.$widgetMenu.remove();
+            }
+
+            if (this.$el && this.$el.children().length)
+                this.$el.children().remove();//????
         },
 
         //toggles display and polling controls
-        _toggleDisplay: function () {
-            this.$widgetMenu.slideToggle();
-            if (!this.$widgetMenu.is(":hidden")) { // if visible
-                // hidden works better than visible for some resason
-                this.state.isPolling = true;
-                this.state.timeouts = this.state.maxTimeouts;
-                this._xhrLoop();
+        _toggleDisplay: function (e) {
+            e.preventDefault();
+            if (this.state.isDisplayed) {
+                this.state.isPolling = false;// set polling var to false                
+                this.$el.hide(200);
+                this.state.isDisplayed = !this.state.isDisplayed;
+
             } else {
-                this.state.isPolling = false;// set polling var to false
-                //maybe add interrupt
+                this.$el.show(200);
+                this.state.isDisplayed = !this.state.isDisplayed;
+                this.state.isPolling = true;
+                this.state.timeouts = 3;
+                this._xhrLoop();
             }
         },
 
         //refresh state, should be triggered on init, user input (deletion), update jobs,=
-        _refresh: function() {
+        refresh: function () {
+            console.log('refreshed')
             this._createWidgetMenu();
-            this.this._trigger("change");
+
+
+
+            if (this.state.currentJobs.length == 0 && this.state.isDisplayed) {
+                this.selectedIDs = []
+                this._toggleDisplay();
+            }
+            else {
+                this.state.selectedIDs = this.state.currentJobs.map(function (obj) {
+                    return obj[0];
+                });
+            }
+            if (this.state.pageReload) {
+                this.state.isPolling = false;
+                location.reload(false);
+            }
         },
 
         // update state.currentJobs
-        _updateJobs: function (arr) {
+        updateJobs: function (arr) {
             jobsCompleted = [];
             newJobs = [];
 
@@ -230,12 +259,18 @@
                     continue; //continue when no vals
 
                 if (typeof input === 'string') { //error message
-                    var error = input.split('$$');
-                    var jobName = error[1].substring(0, error[1].lastIndexOf("."));
+                    var error = input.split('$$'),
+                        jobname;
+                    try {
+                        jobName = error[1].substring(0, error[1].lastIndexOf("."));
+                    } catch (e) {
+                        console.log(e)
+                        continue;
+                    }
 
                     for (var i = 0; i < this.state.currentJobs.length; i++) {
                         if (jobName.contains(this.state.currentJobs[i][1])) {
-                            // this.state.currentJobs.pop(i)
+                            this.state.fullRefresh = 5;
                             jobCompleted += this.state.currentJobs.splice(i, 1);
                             console.log(jobName + " has been removed from the queue (load error)");
                             // for testing only
@@ -244,16 +279,16 @@
                         else {
                             $('#flashes').trigger('flash', jobName + " was not found in the queue Error[1]")
                         }
-                    } // in case we want to make them stay in the queue until they're been x'ed out. (localstorage)
-                    // finishedJobsAlert(jobsCompleted);
+                    } // in case we want to make them stay in the queue until they're been x'ed out. (window.localStorage)
                 }
 
-                else if (input.length == 3) { // t
+                else if (input.length == 3) {
                     console.log('currentJobs -= ' + input);
-
                     for (var i = 0; i < this.state.currentJobs.length; i++) {
-                        if (input[0] == this.state.currentJobs[i][0]) { // assuming ids work
+                        if (input[0] == this.state.currentJobs[i][0]) {
                             jobCompleted += this.state.currentJobs.splice(i, 1);
+                            this.selectedIDs.splice(i, 1);
+                            this.state.fullRefresh = 5;
                             if (input[2]) {
                                 console.log(input[1] + " has been removed from the queue (success)");
                                 // for testing only
@@ -271,7 +306,7 @@
                 else if (input.length == 4) { // add new jobs to the end of the list
                     var inArr = false;
                     for (var i = 0; i < this.state.currentJobs.length; i++) {
-                        if (input[0] == this.state.currentJobs[i][0]) { // assuming ids work
+                        if (input[0] == this.state.currentJobs[i][0]) {
                             inArr = true;
                             newJobs.push(this.state.currentJobs.splice(i, 1, input));
                         }
@@ -280,19 +315,30 @@
                         this.state.currentJobs.push(input)
                 }
             }
-            // localStorage.setItem('this.state.currentJobs', JSON.stringify(this.state.currentJobs));
+            if (newJobs.length && !this.state.isDisplayed) {
+                this._toggleDisplay();
+            }
+            this.refresh();
+            // window.localStorage.setItem('this.state.currentJobs', JSON.stringify(this.state.currentJobs));
             console.log(this.state.currentJobs)
             console.log(jobsCompleted)
             console.log('updated jobs: ' + newJobs)
         },
 
         //XhrRequest Entry point. This is called upon completion of the last poll (async)
-        _xhrLoop: function () {// this should be private. ping protocol 2
+        _xhrLoop: function () {
             var pollquery = this.state.pollType + "?shapes=" + this.state.selectedIDs.join("$$");
             if (this.state.isPolling) {
-                this._createXhrRequest(pollquery);
+                this.request = this._createXhrRequest(pollquery);
                 console.log('firing pollFunction: ' + pollquery);
+                console.log('polling? ' + this.state.isPolling)
+                console.log('displayed? ' + this.state.isDisplayed)
 
+                $(window).on("beforeunload", function (event) {// abort the call on page unload
+                    if (this.request && this.request.readyState !== XMLHttpRequest.DONE)
+                        this.request.abort();
+                });
+                this.request.send();
             }
             else {
                 return false;
@@ -301,20 +347,23 @@
 
         //xhrpolling body method, created the request and handlers
         _createXhrRequest: function (pollquery) {
-            var xhr = XMLHttpRequest();
-            xhr.open('GET', '/' + pollquery, true);// rework poll functino to be a parameter with ids for both voxels and shapes
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/update/' + pollquery, true);// rework poll functino to be a parameter with ids for both voxels and shapes
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var arr;
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status == 200) {
+                    console.log('polling done')
+                    var progress;
                     try {
-                         arr = JSON.parse(xhr.response);
-                         this._updateJobs(arr);
-                    } catch(e) {
+                        progress = JSON.parse(xhr.response);
+
+                        this.updateJobs(progress.progress);
+                    } catch (e) {
                         console.log('XHR ERROR: ' + e.toString());
                     }
-                    if (this.state.isPolling)
-                        this._xhrLoop();
+                    if (this.state.isPolling) {
 
+                        this._xhrLoop();
+                    }
                 }
             }.bind(this);
             xhr.timeout = 500
@@ -326,143 +375,79 @@
                     console.log('too many timeout errors, polling stopped')
                 }
             }.bind(this);
+            return xhr;
         },
 
-        publicMethod: function(id){
+        publicMethod: function (id) {
             console.log('This is a Public Method')
         },
 
         _defaultState: function () {
             return {
-                currentJobs: [[1, 'jobname', 100, 1000]],
+                currentJobs: [],
                 isPolling: false,
-                pollType: "shape",//TODO Change back to shape
-                selectedIDs: [1],
-                timeouts: 3
+                pollType: "shapes",
+                selectedIDs: [],
+                timeouts: 3,
+                isDisplayed: false,
+                uploadId: null,
+                fullRefresh: 5,
+                pageReload: false // shows if there is a page reload pending 9ie, a new objecti s loaded and completed). Can be turned off?
             }
         }
-
-        // _cacheElements: function() {
-        //     var $flashhandler = this.$flashhandler,
-        //         $widgetMenu = cdthis.$widgetMenu,
-        //         $delJobBtn = this.$widgetMenu.find('close-btn'),
-        //         $lis = this.$el.children,
-        //         $pollingBtn = this.$el.find('fa-pulse upload-tracker')
-                
-        //         this.cached = {
-        //             //add all cached Jquery eles here
-        //         }
-                
-        // }
     });
+
+
 }
 
 
-})
-
-
-(function() {
+var test = function () {
+    if (!$('.progress-tracker').length) {// only launch if a user is signed in
+        return
+    }
+    progressWidget();
     var trackerBody = $('<div class="progress-tracker-body" />')
-        .appendTo('.progress-tracker')
-        .progressWidget()
-})
+        .insertAfter('.progress-tracker')
+        .progressWidget();
+}
+test();
 
-// (function($) {
-//     var toolTip = {
-//         init: function() {
-//             this.each(function() {
-//                 var $that = $(this);
-//                 // our boolean object to check if it already exists on the page
-//                 var $toolSpan = $('<div class="tooltip"><span class="tooltip_arrow"></span></div>');
-//                 var preloadImages = function() {
-//                     var tempImage = new Image();
-//                     tempImage.src = 'http://i.imgur.com/K5ynr.png';
-//                     tempImage = null;
-//                 };
-//                 preloadImages();
-//                 $that.mouseover(function() {
-//                     var $altText = $that.attr('alt');
-//                     var $parentWidth = $that.outerWidth(true);
-//                     var $pos = $that.offset();
-//                     var $tip = $toolSpan.clone(true);
-
-//                     $that.parent().after($tip);
-//                     $tip.prepend($altText);
-//                     $that.parent().next($tip).css({
-//                         top: $pos.top - 30,
-//                         left: $pos.left + ($that.width() /2) - ($tip.outerWidth(true)/2)
-//                     }).fadeIn(100);
-//                     $(".tooltip_arrow", $that.parent().next()).css({
-//                         left: ($tip.outerWidth(true) / 2)
-//                     }).fadeIn(100);
-//                 }).mouseout(function() {
-//                     $that.parent().next().fadeOut(100).remove();
-//                 });
-//             });
-//         } /* end init */
-//     };
-//     $.fn.toolTip = toolTip.init;
-// })(jQuery);
-
-    
-
-
-//deprecated, nay need to rework this so that it can launch from the upload controller but I don't think iw will be necessary
-// function initialize() {//
-//     var savedState = localStorage.getItem('progressWidget');
-//     if (savedState) {
-//         widget = JSON.parse(json);
-//         widget.$el = $('.progressWidget'); // reinitialize the jquery tab
-//         widget.flashHandler = $('#flashes');
-
-//         window.progressWidget = widget;
-
-//     } else {
-//         widget = new progressWidget();
-//         window.progressWidget = widget;
-//     }
-// }
-
-
-
-
-//for testing
-    // var p = ProgressWidget();
-    // (function() {
-    //     if(!$('progress-tracker').length) {
-    //         return
-    //     }
-    //     else {
-
-    //     }
-    // })
-    // console.log(ProgressWidget(1));
-    // console.log($("upload-tracker").after(p))
-
-    // // This is how instantiate a widget. 
-    // var progress = $( "<div></div>" )
-    //     .appendTo( "body" )
-    //     .progressWidget({ value: 10000 });
-
-    // progress.progressWidget('publicMethod', id);
-
-    // $.custom.progressWidget( {value: 10000}, $("upload-tracker").after(p));
-
-
-
-
-
-
-// not sure if theese funcitons need to be within the widget or if ti matters that they are/ aren't. what do you reccomnet @carlos?    
 function clearHTML() { // helper method that returns cleared inner html section
     var progressList = document.getElementById('progressList');
     if (progressList && progressList.hasChildNodes()) {
-        progressList.innerHTML = '';
+        progressList.innesrHTML = '';
     }
     return progressList
 }
 
 
+function closeItem(e) {
+    var menuItem = $(e.target).closest('.menu-item');
+    var id = menuItem.attr('id')
+
+    if (id === null) {
+        console.log('UPLOAD WIDGET Error: False destroychild id' + id)
+        return false;
+
+    }
+    this.state.selectedIDs.splice(this.state.selectedIDs.indexOf(id), 1);
+    var delJob = this.state.currentJobs.filter((item) => {
+        if (item[0] == id) {
+            return item;
+        }
+    });
+    this.state.currentJobs.splice(this.state.currentJobs.indexOf(delJob), 1)
+    this.refresh();
+    e.preventDefault();
+
+}
+
+function noJobs() {// return div with default message for no currnet jobs
+    return `
+    <div id="no-jobs" class="menu-item" style="">
+    <div> There are no current jobs </div>
+    </div>`
+}
 
 function createProgressBar(id, jobName, numerator, denominator) { //cleare a single progress bar DOM Element
     console.log(jobName, numerator, denominator)
@@ -472,14 +457,17 @@ function createProgressBar(id, jobName, numerator, denominator) { //cleare a sin
     console.log(percentage)
     var html = `
     <div id="${id}" class="menu-item" style="">
-        <div class="js-tooltip" alt="${innerString}"> ${jobName}</div>
+        <div class="container">
+        <span class="tooltiper" data-tooltip="${innerString}"> ${jobName}</span>
         <span class="progress-label" style=""> ${percentage}% </span>
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
             aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;
-    html += percentage + `%\"></div>
-    <button id="${id}" type="button" class="close-btn" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-    </button></div>"
+    html += percentage + `%\">
+        </div>
+        <i id="${id}" class="fa fa-times close-btn" aria-hidden="true"></i>            
+        </div>
+    </div>
+    
     `;
     return html
 }
@@ -492,6 +480,46 @@ function escapeHTML(unsafe_str) { // make sure strings are XXS Safe
         .replace(/\"/g, '&quot;')
         .replace(/\'/g, '&#39;')
         .replace(/\//g, '&#x2F;')
+}
+
+function toolTiper(effect) {
+    $('.tooltiper').each(function (i, j) {
+        console.log('i: ' + i)
+        console.log('j: ' + j)
+        var toolTip = $(this);
+        var eLcontent = toolTip.attr('data-tooltip'),
+            eDir = toolTip.attr('data-dir'),
+            eLtop = toolTip.position().top,
+            eLleft = toolTip.position().left;
+        $(this).append('<span class="tooltip">' + eLcontent + '</span>');
+        var eLtw = $(this).find('.tooltip').width(),
+            eLth = $(this).find('.tooltip').height();
+        //modify here with parameter for different directoins
+
+        if (i === 0) {
+            $(this).find('.tooltip').css({
+                "top": '0px',
+                "left": '-100px',
+                "z-index": '100'
+            });
+            $(this).find('.tooltip').addClass('no-after');
+        }
+        else if (i === 1) {
+            $(this).find('.tooltip').css({
+                "top": '0px',
+                "left": '-10px',
+                "z-index": '100'
+            });
+            $(this).find('.tooltip').addClass('no-after');
+
+        }
+        else {
+            $(this).find('.tooltip').css({
+                "top": (0 - eLth - 20) + 'px',
+                "left": '-20px'
+            });
+        }
+    });
 }
 
 // var html = `
