@@ -50,7 +50,12 @@ class Panel extends React.Component {
 
     componentDidMount() {
         // TODO: color1 to color
-        act.updateGeometry(this.props.index, 'Color', this.props.color, 'color1')
+        act.updateGeometry(
+            this.props.index,
+            'Color',
+            this.props.color,
+            'color1'
+        )
     }
 
     changeColor(e) {
@@ -74,7 +79,12 @@ class Panel extends React.Component {
     }
 
     toggleVisibility() {
-        act.updateGeometry( this.props.index, 'Visibility', !this.state.visible, 'visible' )
+        act.updateGeometry(
+            this.props.index,
+            'Visibility',
+            !this.state.visible,
+            'visible'
+        )
     }
 
     soloShow() {
@@ -87,10 +97,10 @@ class Panel extends React.Component {
 
             if (index === this.props.index) {
                 console.log(`set ${index} visiable`)
-                act.updateGeometry( index, 'Visibility', true, 'visible' )
+                act.updateGeometry(index, 'Visibility', true, 'visible')
             } else {
                 console.log(`set ${index} invisiable`)
-                act.updateGeometry( index, 'Visibility', false, 'visible' )
+                act.updateGeometry(index, 'Visibility', false, 'visible')
             }
         }
     }

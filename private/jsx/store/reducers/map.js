@@ -21,6 +21,12 @@ export default (state = initialMapState, action) => {
             //newLayers = newLayers.concat(action.layers);
             return Object.assign({}, state, { layers: action.layers })
 
+        case c.MAP_ADD_LAYER: {
+            // Push new layer
+            let newLayers = state.layers.slice()
+            newLayers.push(action.layer)
+            return Object.assign({}, state, { layers: newLayers })
+        }
         case c.MAP_ADD_INSTANCE: {
             const add = { instance: action.instance, started: true }
             return Object.assign({}, state, add)
@@ -147,6 +153,7 @@ export default (state = initialMapState, action) => {
                     console.log(state.visible, action.name, state)
                     for (let index in state.layers) {
                         let currLayer = state.layers[index].name
+                        console.log(55555, currLayer, action.name)
                         // let currValue = state.layers[index].visible
                         if (currLayer == action.name) {
                             if (!action.value) {
@@ -156,7 +163,10 @@ export default (state = initialMapState, action) => {
                             }
                         }
                     }
-                    return Object.assign({}, state, { layers: newLayers, visible: action.value })
+                    return Object.assign({}, state, {
+                        layers: newLayers,
+                        visible: action.value,
+                    })
                 }
             }
             return Object.assign({}, state, { geometries: state.geometries })
