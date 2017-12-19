@@ -142,8 +142,7 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        const pc = d3
-            .parcoords()('#parcoords')
+        const pc = d3.parcoords()('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')

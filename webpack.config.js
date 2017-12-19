@@ -11,6 +11,7 @@ module.exports = {
     ],
     output: {
         path: path.resolve(__dirname, './public/javascripts/'),
+        publicPath: '/javascripts/',
         // publicPath: 'CDN.../javascripts/',
         // In development Environment:
         // This does not produce a real file. It's just the virtual path that is
