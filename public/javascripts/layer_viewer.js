@@ -1,6 +1,5 @@
 var id = id;
 var size = size;
-var test = test;
 var $dropdown = $($('select')[0]);
 var $epsg= $('#epsg');
 var $map = $('#map_thumbnail_' + id);
@@ -8,9 +7,7 @@ console.log($map);
 $map.addClass('temporary_map_visuals');
 $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
 requestMap(id, function() {
-    console.log(test);
-    //console.log($("#size"));
-    //console.log(size);
+    console.log(size);
     //size is in mb 
     if(size <= 10) {
         render;

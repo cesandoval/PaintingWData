@@ -89,7 +89,7 @@ module.exports.upload = function(req, res, next) {
                           dataFile.centroid = centroid;
                           dataFile.bbox = bbox;
                           dataFile.save().then(function(d){
-                            res.send({id : d.id, size: size, test: 3});
+                            res.send({id : d.id, size: size});
                           });
                         }); 
                       });
