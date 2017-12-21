@@ -17,6 +17,8 @@ const NodeType = {
 }
 */
 
+import _ from 'lodash'
+
 export const DATASET = {
     fullName: 'Dataset',
     inputs: {
@@ -121,18 +123,79 @@ export const ADD = {
     },
 }
 
-export const AND = {
-    fullName: 'And',
+export const MIN = {
+    fullName: 'MIN',
     inputs: {
         Input1: 'I',
         Input2: 'I',
-        Input3: 'I',
-        Input4: 'I',
     },
     output: 'Output',
     options: {},
-    arithmetic(...input) {
-        // TODO
-        return input[0]
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.min(voxel))
+    },
+}
+
+export const MAX = {
+    fullName: 'MAX',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.max(voxel))
+    },
+}
+
+export const AND = {
+    fullName: 'AND',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.and(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
+export const OR = {
+    fullName: 'OR',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.or(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
+export const XOR = {
+    fullName: 'XOR',
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.xor(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
+export const NOT = {
+    fullName: 'NOT',
+    inputs: {
+        Input: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return inputs[0].map(m => !m)
     },
 }
