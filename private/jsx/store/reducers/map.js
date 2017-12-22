@@ -153,7 +153,6 @@ export default (state = initialMapState, action) => {
                     console.log(state.visible, action.name, state)
                     for (let index in state.layers) {
                         let currLayer = state.layers[index].name
-                        console.log(55555, currLayer, action.name)
                         // let currValue = state.layers[index].visible
                         if (currLayer == action.name) {
                             if (!action.value) {

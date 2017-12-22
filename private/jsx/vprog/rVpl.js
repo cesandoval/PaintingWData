@@ -1147,6 +1147,7 @@ class VPL extends React.Component {
             shaderText: geometry.shaderText,
             userLayerName: '',
             visible: true,
+            showSidebar: false,
         }
 
         Action.mapAddGeometry(geometry.layerName, P)
