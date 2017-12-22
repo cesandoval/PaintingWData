@@ -21,6 +21,12 @@ export default (state = initialMapState, action) => {
             //newLayers = newLayers.concat(action.layers);
             return Object.assign({}, state, { layers: action.layers })
 
+        case c.MAP_ADD_LAYER: {
+            // Push new layer
+            let newLayers = state.layers.slice()
+            newLayers.push(action.layer)
+            return Object.assign({}, state, { layers: newLayers })
+        }
         case c.MAP_ADD_INSTANCE: {
             const add = { instance: action.instance, started: true }
             return Object.assign({}, state, add)

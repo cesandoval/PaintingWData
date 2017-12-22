@@ -63,6 +63,12 @@ export const updateGeometry = (name, options, value, field) =>
         field,
     })
 
+export const mapAddLayer = layer =>
+    store.dispatch({
+        type: c.MAP_ADD_LAYER,
+        layer,
+    })
+
 export const setOptionShow = option =>
     store.dispatch({
         type: c.MAP_SET_OPTION_SHOW,
