@@ -1,69 +1,163 @@
 import * as consts from '../consts'
 
 const initialState = {
-    nodes: [],
-    links: [],
-    // nodes: [node1, node2, node3, node4],
-    // links: [link1, link2, link3]
+    nodes: {},
+    links: {},
+    // const inputs = {
+    //   [toNode]: {
+    //     [toInput]: srcNode,
+    //   },
+    // }
+    // const outputs = {
+    //   [srcNode]: {
+    //     [toNode]: toInput,
+    //   },
+    // }
 }
 
 export default (state = initialState, action) => {
-    switch (action.type) {
-        case consts.VLANG_ADD_LINK:
-            return {
-                nodes: [...state.nodes],
-                links: [...state.links, action.link],
-            }
-        case consts.VLANG_REMOVE_LINK:
-            var newState = {
-                nodes: [...state.nodes],
-                links: [
-                    ...state.links.slice(0, action.index),
-                    ...state.links.slice(action.index + 1),
-                ],
-            }
-            return newState
+    let nodes = Object.assign({}, state.nodes)
+    let links = Object.assign({}, state.links)
 
-        case consts.VLANG_ADD_NODE:
-            return {
-                nodes: [...state.nodes, action.node],
-                links: [...state.links],
+    switch (action.type) {
+        case consts.VLANG_ADD_LINK: {
+            const srcNode = action.srcNode
+            const toNode = action.toNode
+            const toInput = action.toInput
+
+            // limitation of link
+            if (srcNode == toNode)
+                return console.warn('linkNode(): link same node')
+
+            if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
+                console.warn('linkNode(): one input only allow one link')
+                delete links.outputs[links.inputs[toNode][toInput]][toNode]
             }
-        case consts.VLANG_REMOVE_NODE: {
-            let newLinks = []
-            state.links.map(link => {
-                if (
-                    !(
-                        link.sourceNode.ref === state.nodes[action.index].ref ||
-                        link.targetNode.ref === state.nodes[action.index].ref
-                    )
-                ) {
-                    newLinks.push(link)
+
+            for (
+                let checkNodes = new Set(
+                    Object.keys(links.outputs[toNode] || [])
+                );
+                checkNodes.size != 0;
+
+            ) {
+                if ([...checkNodes].find(f => f === srcNode)) {
+                    return console.warn('linkNode(): checking link loop error.')
                 }
-            })
+
+                ;[...checkNodes].map(node => {
+                    Object.keys(links.outputs[node] || {}).map(toNode => {
+                        checkNodes.add(toNode)
+                    })
+                    checkNodes.delete(node)
+                })
+            }
+
+            // inputs
+            if (links.inputs[toNode]) {
+                // delete the others same srcNode
+                Object.entries(
+                    links.inputs[toNode]
+                ).map(([_toInput, _srcNode]) => {
+                    if (srcNode == _srcNode)
+                        delete links.inputs[toNode][_toInput]
+                })
+
+                links.inputs[toNode][toInput] = srcNode
+            } else
+                links.inputs[toNode] = {
+                    [toInput]: srcNode,
+                }
+
+            // outputs
+            if (links.outputs[srcNode]) links.outputs[srcNode][toNode] = toInput
+            else
+                links.outputs[srcNode] = {
+                    [toNode]: toInput,
+                }
+
             return {
-                nodes: [
-                    ...state.nodes.slice(0, action.index),
-                    ...state.nodes.slice(action.index + 1),
-                ],
-                links: newLinks,
+                links,
+                nodes: state.nodes,
             }
         }
-        case consts.VLANG_UPDATE_NODE_POSITION: {
-            let newNode = state.nodes[action.index]
+        case consts.VLANG_REMOVE_LINK: {
+            const srcNode = action.srcNode
+            const toNode = action.toNode
 
-            newNode.translate = action.position
-            newNode.name = action.props[action.index].name
-            newNode.userLayerName = action.props[action.index].userLayerName
-            newNode.property = action.props[action.index].property
+            const toPlug = links.outputs[srcNode][toNode]
+
+            delete links.outputs[srcNode][toNode]
+            delete links.inputs[toNode][toPlug]
 
             return {
-                nodes: [
-                    ...state.nodes.slice(0, action.index),
-                    newNode,
-                    ...state.nodes.slice(action.index + 1),
-                ],
-                links: [...state.links],
+                links,
+                nodes: state.nodes,
+            }
+        }
+
+        case consts.VLANG_ADD_NODE: {
+            const nodeHashKey =
+                (+new Date()).toString(32) +
+                Math.floor(Math.random() * 36).toString(36)
+
+            nodes[nodeHashKey] = action.node
+
+            return {
+                nodes,
+                links: state.links,
+            }
+        }
+        case consts.VLANG_REMOVE_NODE: {
+            const nodeKey = action.nodeKey
+
+            // prevent to delete dataset node.
+            if (nodes[nodeKey].type == 'DATASET') {
+                console.warn('deleteNode(): can not delete dataset node.')
+                return state
+            }
+
+            delete nodes[nodeKey]
+
+            const toNode = nodeKey
+            const srcNodes = Object.values(links.inputs[toNode] || {})
+            srcNodes.map(srcNode => {
+                delete links.outputs[srcNode][toNode]
+            })
+            delete links.inputs[toNode]
+
+            const srcNode = nodeKey
+            const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
+            toNodesToPlugs.map(([toNode, toPlug]) => {
+                delete links.inputs[toNode][toPlug]
+            })
+
+            delete links.outputs[srcNode]
+
+            return { nodes, links }
+        }
+        case consts.VLANG_UPDATE_NODE: {
+            const nodes = Object.assign({}, state.nodes)
+
+            const nodeKey = action.nodeKey
+
+            nodes[nodeKey][action.attr] = action.value
+
+            return {
+                nodes,
+                links: state.links,
+            }
+        }
+        case consts.VLANG_UPDATE_NODE_OPTIONS: {
+            const nodes = Object.assign({}, state.nodes)
+
+            const nodeKey = action.nodeKey
+
+            nodes[nodeKey].options[action.attr] = action.value
+
+            return {
+                nodes,
+                links: state.links,
             }
         }
         case consts.VLANG_ADD_LAYERS: {

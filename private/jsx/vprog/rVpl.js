@@ -12,7 +12,7 @@ import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 
 import * as NodeType from './nodeTypes'
 
-import { Nodes, Links } from './mockData'
+// import { Nodes, Links } from './mockData' // deprecated
 
 /* TODO
     - remove color2
@@ -56,14 +56,6 @@ class VPL extends React.Component {
         this.newProps = {}
 
         this.state = {
-            Nodes,
-            Links: Object.assign(
-                {
-                    inputs: {},
-                    outputs: {},
-                },
-                Links
-            ),
             tempLink: {
                 from: { x: 50, y: 50 },
                 to: { x: 50, y: 50 },
@@ -82,34 +74,30 @@ class VPL extends React.Component {
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
         // TODO: should get dataset layers from props.
+
         const datasets = this.props.layers
-        const nodes = this.state.Nodes
-        console.log('initDatasetNode()', datasets, nodes)
+        console.log('initDatasetNode()', datasets, this.props.nodes)
 
         datasets.map((dataset, index) => {
             // console.log('dataset', dataset)
 
-            // TODO: generate hash key for datasets.
-            if (!nodes[dataset.name]) {
-                const datasetNode = this.newNodeObj('DATASET')
+            const datasetNode = this.newNodeObj('DATASET')
 
-                datasetNode.position = {
-                    x: 50,
-                    y: 100 + 150 * index,
-                }
-                datasetNode.name = dataset.name
-                datasetNode.color = dataset.color1
-
-                nodes[dataset.name] = datasetNode
+            datasetNode.position = {
+                x: 50,
+                y: 100 + 150 * index,
             }
+            datasetNode.name = dataset.name
+            datasetNode.color = dataset.color1
+
+            Action.vlangAddNode(datasetNode)
         })
-        this.setState({ Nodes: nodes })
 
         return datasets.length > 0
     }
 
     newNodeObj = type => {
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         // TODO: limit the nodes length
         const nodesLength =
@@ -365,49 +353,18 @@ class VPL extends React.Component {
 
     moveNode = ({ nodeKey, newPosition }) => {
         // console.log('moveNode()', {nodeKey, newPosition})
-        const nodes = this.state.Nodes
-        nodes[nodeKey].position = newPosition
 
-        this.setState({ Nodes: nodes })
+        Action.vlangMoveNode({ nodeKey, newPosition })
     }
 
     deleteNode = nodeKey => {
         console.log(`deleteNode(${nodeKey})`)
 
-        const nodes = this.state.Nodes
-
-        // prevent to delete dataset node.
-        if (nodes[nodeKey].type == 'DATASET') {
-            console.warn('deleteNode(): can not delete dataset node.')
-            return false
-        }
-
-        delete nodes[nodeKey]
-
-        const links = this.state.Links
-
-        const toNode = nodeKey
-        const srcNodes = Object.values(links.inputs[toNode] || {})
-        srcNodes.map(srcNode => {
-            delete links.outputs[srcNode][toNode]
-        })
-        delete links.inputs[toNode]
-
-        const srcNode = nodeKey
-        const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
-        toNodesToPlugs.map(([toNode, toPlug]) => {
-            delete links.inputs[toNode][toPlug]
-        })
-
-        delete links.outputs[srcNode]
-
-        this.setState({
-            Nodes: nodes,
-            Links: links,
-        })
+        Action.vlangRemoveNode(nodeKey)
 
         // force remove the node geometry on the map.
         Action.mapRemoveGeometry(nodeKey)
+
         this.linkThenComputeNode()
     }
 
@@ -425,58 +382,10 @@ class VPL extends React.Component {
         //   },
         // }
 
-        const links = this.state.Links
-
-        // limitation of link
-        if (srcNode == toNode) return console.warn('linkNode(): link same node')
-
-        if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
-            console.warn('linkNode(): one input only allow one link')
-            delete links.outputs[links.inputs[toNode][toInput]][toNode]
-        }
-
-        for (
-            let checkNodes = new Set(Object.keys(links.outputs[toNode] || []));
-            checkNodes.size != 0;
-
-        ) {
-            if ([...checkNodes].find(f => f === srcNode)) {
-                return console.warn('linkNode(): checking link loop error.')
-            }
-
-            ;[...checkNodes].map(node => {
-                Object.keys(links.outputs[node] || {}).map(toNode => {
-                    checkNodes.add(toNode)
-                })
-                checkNodes.delete(node)
-            })
-        }
-
-        // inputs
-        if (links.inputs[toNode]) {
-            // delete the others same srcNode
-            Object.entries(links.inputs[toNode]).map(([_toInput, _srcNode]) => {
-                if (srcNode == _srcNode) delete links.inputs[toNode][_toInput]
-            })
-
-            links.inputs[toNode][toInput] = srcNode
-        } else
-            links.inputs[toNode] = {
-                [toInput]: srcNode,
-            }
-
-        // outputs
-        if (links.outputs[srcNode]) links.outputs[srcNode][toNode] = toInput
-        else
-            links.outputs[srcNode] = {
-                [toNode]: toInput,
-            }
-
-        this.setState({ Links: links })
+        Action.vlangAddLink({ srcNode, toNode, toInput })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
-        const nodes = this.state.Nodes
         const newValue = prompt(`Please input a value for ${attr}`, value)
 
         if (!_.isEmpty(newValue)) {
@@ -484,8 +393,8 @@ class VPL extends React.Component {
                 `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
             )
 
-            nodes[nodeKey].options[attr] = newValue
-            this.setState({ Nodes: nodes })
+            Action.vlangUpdateNodeOptions({ nodeKey, attr, value })
+
             this.linkThenComputeNode()
         }
     }
@@ -493,10 +402,10 @@ class VPL extends React.Component {
     changeNodeFilter = (nodeKey, min, max) => {
         console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
 
-        const nodes = this.state.Nodes
-        nodes[nodeKey].options.filter = { min, max }
+        const filter = { min, max }
 
-        this.setState({ Nodes: nodes })
+        Action.vlangUpdateNodeOptions({ nodeKey, attr: 'filter', filter })
+
         this.linkThenComputeNode()
     }
 
@@ -541,19 +450,13 @@ class VPL extends React.Component {
         const srcNode = linkDOM.getAttribute('data-src-node')
         const toNode = linkDOM.getAttribute('data-to-node')
 
-        const links = this.state.Links
+        Action.vlangRemoveLink({ srcNode, toNode })
 
-        const toPlug = links.outputs[srcNode][toNode]
-
-        delete links.outputs[srcNode][toNode]
-        delete links.inputs[toNode][toPlug]
-
-        this.setState({ Links: links })
         this.linkThenComputeNode()
     }
 
     createLinks = () => {
-        const outputs = this.state.Links.outputs
+        const outputs = this.props.links.outputs
 
         const svgDOM = document.querySelector('svg.vpl')
         if (!svgDOM) return ''
@@ -625,14 +528,14 @@ class VPL extends React.Component {
         },
         */
 
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         const datasetNodes = Object.entries(nodes)
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
-        const outputs = _.cloneDeep(this.state.Links.outputs)
-        const inputs = _.cloneDeep(this.state.Links.inputs)
+        const outputs = _.cloneDeep(this.props.links.outputs)
+        const inputs = _.cloneDeep(this.props.links.inputs)
 
         // collect node inputs if inputs enough like node type setting
         const nodeInputsFromNode = {}
@@ -903,7 +806,7 @@ class VPL extends React.Component {
     }
 
     nodeSVG = ({ color, name, type, nodeKey, options }) => {
-        // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
+        console.log(`nodeSVG({${color}, ${name}, ${type}})`)
         //const p = {x: 0, y: 0}
 
         const inputs = NodeType[type].inputs
@@ -1076,13 +979,7 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
-        const nodes = this.state.Nodes
-        const nodeHashKey =
-            (+new Date()).toString(32) +
-            Math.floor(Math.random() * 36).toString(36)
-        nodes[nodeHashKey] = this.newNodeObj(type)
-
-        this.setState({ Nodes: nodes })
+        Action.vlangAddNode(this.newNodeObj(type))
     }
 
     linkMarker() {
@@ -1154,7 +1051,7 @@ class VPL extends React.Component {
     }
 
     render() {
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         return (
             <div className="pull-right col-md-10 vplContainer">

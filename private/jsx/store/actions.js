@@ -81,10 +81,11 @@ export const vlangAddLink = link =>
         link,
     })
 
-export const vlangRemoveLink = index =>
+export const vlangRemoveLink = ({ srcNode, toNode }) =>
     store.dispatch({
         type: c.VLANG_REMOVE_LINK,
-        index,
+        srcNode,
+        toNode,
     })
 
 export const vlangAddNode = node =>
@@ -93,18 +94,26 @@ export const vlangAddNode = node =>
         node,
     })
 
-export const vlangRemoveNode = index =>
+export const vlangRemoveNode = nodeKey =>
     store.dispatch({
         type: c.VLANG_REMOVE_NODE,
-        index,
+        nodeKey,
     })
 
-export const vlangMoveNode = (index, newPosition, props) =>
+export const vlangMoveNode = ({ nodeKey, newPosition }) =>
     store.dispatch({
-        type: c.VLANG_UPDATE_NODE_POSITION,
-        index: index,
-        position: newPosition,
-        props: props,
+        type: c.VLANG_UPDATE_NODE,
+        nodeKey,
+        attr: 'position',
+        value: newPosition,
+    })
+
+export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
+    store.dispatch({
+        type: c.VLANG_UPDATE_NODE_OPTIONS,
+        nodeKey,
+        attr,
+        value,
     })
 
 export const vlangAddLayers = layers =>
