@@ -167,6 +167,17 @@ export default (state = initialState, action) => {
             }
         }
 
+        case consts.VLANG_UPDATE_ALL_NODE: {
+            for (let index in nodes) {
+                nodes[index][action.attr] = action.value
+            }
+
+            return {
+                nodes,
+                links: state.links,
+            }
+        }
+
         default: {
             return state
         }

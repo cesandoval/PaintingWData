@@ -110,7 +110,16 @@ class Panel extends React.Component {
 
     soloShow() {
         console.log('soloShow()', this.props.index)
-        this.setState({ visible: true })
+
+        act.vlangUpdateAllNode({
+            attr: 'visibility',
+            value: false,
+        })
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: true,
+        })
 
         for (let index in this.props.geometries) {
             // Get geometry

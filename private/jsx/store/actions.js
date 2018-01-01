@@ -126,3 +126,10 @@ export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
         attr,
         value,
     })
+
+export const vlangUpdateAllNode = ({ attr, value }) =>
+    store.dispatch({
+        type: c.VLANG_UPDATE_ALL_NODE,
+        attr,
+        value,
+    })
