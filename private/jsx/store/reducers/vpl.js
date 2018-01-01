@@ -2,17 +2,22 @@ import * as consts from '../consts'
 
 const initialState = {
     nodes: {},
-    links: {},
-    // const inputs = {
-    //   [toNode]: {
-    //     [toInput]: srcNode,
-    //   },
-    // }
-    // const outputs = {
-    //   [srcNode]: {
-    //     [toNode]: toInput,
-    //   },
-    // }
+    links: {
+        inputs: {},
+        outputs: {},
+    },
+    // links: {
+    //     inputs: {
+    //         [toNode]: {
+    //             [toInput]: srcNode,
+    //         },
+    //     },
+    //     outputs: {
+    //         [srcNode]: {
+    //             [toNode]: toInput,
+    //         },
+    //     },
+    // },
 }
 
 export default (state = initialState, action) => {
@@ -158,26 +163,6 @@ export default (state = initialState, action) => {
             return {
                 nodes,
                 links: state.links,
-            }
-        }
-        case consts.VLANG_ADD_LAYERS: {
-            let allNodes = []
-            action.layers.map((layer, index) => {
-                let nodeIndex = 'node_' + parseInt(parseInt(index) + 1)
-                let currNode = {
-                    ref: nodeIndex,
-                    type: consts.LAYER_NODE,
-                    position: { x: 100, y: 100 + 150 * index },
-                    translate: { x: 0, y: 0 },
-                    name: layer.name,
-                    userLayerName: layer.userLayerName,
-                    property: layer.property,
-                }
-                allNodes[index] = currNode
-            })
-            return {
-                nodes: allNodes,
-                links: [],
             }
         }
 
