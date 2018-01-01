@@ -105,11 +105,9 @@ export default (state = initialState, action) => {
         }
 
         case consts.VLANG_ADD_NODE: {
-            const nodeHashKey =
-                (+new Date()).toString(32) +
-                Math.floor(Math.random() * 36).toString(36)
+            const nodeKey = action.nodeKey
 
-            nodes[nodeHashKey] = action.node
+            nodes[nodeKey] = action.node
 
             return {
                 nodes,

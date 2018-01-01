@@ -90,7 +90,11 @@ class VPL extends React.Component {
             datasetNode.name = dataset.name
             datasetNode.color = dataset.color1
 
-            Action.vlangAddNode(datasetNode)
+            // TODO: use hashKey as nodeKey of dataset node
+            Action.vlangAddNode({
+                nodeKey: dataset.name,
+                node: datasetNode,
+            })
         })
 
         return datasets.length > 0
@@ -806,7 +810,7 @@ class VPL extends React.Component {
     }
 
     nodeSVG = ({ color, name, type, nodeKey, options }) => {
-        console.log(`nodeSVG({${color}, ${name}, ${type}})`)
+        // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
         //const p = {x: 0, y: 0}
 
         const inputs = NodeType[type].inputs
@@ -979,7 +983,14 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
-        Action.vlangAddNode(this.newNodeObj(type))
+        const nodeHashKey =
+            (+new Date()).toString(32) +
+            Math.floor(Math.random() * 36).toString(36)
+
+        Action.vlangAddNode({
+            nodeKey: nodeHashKey,
+            node: this.newNodeObj(type),
+        })
     }
 
     linkMarker() {

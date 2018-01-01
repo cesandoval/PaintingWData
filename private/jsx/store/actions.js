@@ -90,9 +90,10 @@ export const vlangRemoveLink = ({ srcNode, toNode }) =>
         toNode,
     })
 
-export const vlangAddNode = node =>
+export const vlangAddNode = ({ nodeKey, node }) =>
     store.dispatch({
         type: c.VLANG_ADD_NODE,
+        nodeKey,
         node,
     })
 
