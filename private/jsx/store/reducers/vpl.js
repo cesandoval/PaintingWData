@@ -31,8 +31,10 @@ export default (state = initialState, action) => {
             const toInput = action.toInput
 
             // limitation of link
-            if (srcNode == toNode)
-                return console.warn('linkNode(): link same node')
+            if (srcNode == toNode) {
+                console.warn('linkNode(): link same node')
+                return state
+            }
 
             if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
                 console.warn('linkNode(): one input only allow one link')
@@ -47,7 +49,8 @@ export default (state = initialState, action) => {
 
             ) {
                 if ([...checkNodes].find(f => f === srcNode)) {
-                    return console.warn('linkNode(): checking link loop error.')
+                    console.warn('linkNode(): checking link loop error.')
+                    return state
                 }
 
                 ;[...checkNodes].map(node => {

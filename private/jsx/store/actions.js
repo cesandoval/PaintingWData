@@ -75,10 +75,12 @@ export const setOptionShow = option =>
         option,
     })
 
-export const vlangAddLink = link =>
+export const vlangAddLink = ({ srcNode, toNode, toInput }) =>
     store.dispatch({
         type: c.VLANG_ADD_LINK,
-        link,
+        srcNode,
+        toNode,
+        toInput,
     })
 
 export const vlangRemoveLink = ({ srcNode, toNode }) =>
