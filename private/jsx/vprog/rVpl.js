@@ -90,7 +90,7 @@ class VPL extends React.Component {
             datasetNode.name = dataset.name
             datasetNode.color = dataset.color1
 
-            // TODO: use hashKey as nodeKey of dataset node
+            // TODO: use hashkey as nodeKey of dataset node
             Action.vlangAddNode({
                 nodeKey: dataset.name,
                 node: datasetNode,

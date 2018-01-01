@@ -111,6 +111,14 @@ export const vlangMoveNode = ({ nodeKey, newPosition }) =>
         value: newPosition,
     })
 
+export const vlangUpdateNode = ({ nodeKey, attr, value }) =>
+    store.dispatch({
+        type: c.VLANG_UPDATE_NODE,
+        nodeKey,
+        attr,
+        value,
+    })
+
 export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
     store.dispatch({
         type: c.VLANG_UPDATE_NODE_OPTIONS,
