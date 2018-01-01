@@ -115,9 +115,3 @@ export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
         attr,
         value,
     })
-
-export const vlangAddLayers = layers =>
-    store.dispatch({
-        type: c.VLANG_ADD_LAYERS,
-        layers,
-    })
