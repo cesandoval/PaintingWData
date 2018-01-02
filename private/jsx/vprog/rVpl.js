@@ -408,7 +408,11 @@ class VPL extends React.Component {
 
         const filter = { min, max }
 
-        Action.vlangUpdateNodeOptions({ nodeKey, attr: 'filter', filter })
+        Action.vlangUpdateNodeOptions({
+            nodeKey,
+            attr: 'filter',
+            value: filter,
+        })
 
         this.linkThenComputeNode()
     }
