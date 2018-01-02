@@ -10,6 +10,7 @@ requestMap(id, function() {
     console.log(size);
     //size is in mb 
     if(size <= 10) {
+        console.log('renderingggggg')
         render;
     }
 });
