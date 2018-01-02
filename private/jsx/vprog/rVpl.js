@@ -464,6 +464,7 @@ class VPL extends React.Component {
         const style = {
             cursor: 'pointer',
             strokeWidth: nodeHover ? '3px' : null,
+            stroke: nodeHover ? '#ec6651' : null,
         }
 
         return (
