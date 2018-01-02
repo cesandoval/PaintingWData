@@ -6,14 +6,12 @@ var $map = $('#map_thumbnail_' + id);
 console.log($map);
 $map.addClass('temporary_map_visuals');
 $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
-requestMap(id, function() {
-    console.log(size);
-    //size is in mb 
-    if(size <= 10) {
-        console.log('renderingggggg')
-        render;
-    }
-});
+
+if (size <= 10) {
+    requestMap(id, render)
+} else {
+    requestMap(id, function() {})
+}
 
 function render(boundingBox, geoJSON, centroid){
     var centroid = centroid;
