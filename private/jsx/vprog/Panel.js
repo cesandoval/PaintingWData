@@ -26,16 +26,28 @@ class Panel extends React.Component {
         this.props = props
         // console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
         // Get geometry
+
+        const node = this.props.nodes[this.props.index]
+
         let pixels = this.props.geometries[this.props.index]
 
         if (pixels) {
+            pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+
+            /*
             this.setState({
                 visible: pixels.material.uniforms.show.value == 1,
                 color:
                     '#' +
                     pixels.material.uniforms.startColor.value.getHexString(),
             })
+            */
         }
+
+        this.setState({
+            visible: node.visibility,
+            color: node.color,
+        })
 
         /*
         if (pixels.material) {
@@ -63,10 +75,12 @@ class Panel extends React.Component {
 
         // TODO: color1 to color
         act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
-
-        this.setState({
-            color: e.target.value,
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'color',
+            value: e.target.value,
         })
+
         /* // using two color options for each layer
         if (e.target.name == 'color1'){
             pixels.material.uniforms.startColor.value.set(e.target.value)
@@ -79,17 +93,33 @@ class Panel extends React.Component {
     }
 
     toggleVisibility() {
+        const visibility = !this.state.visible
+
         act.updateGeometry(
             this.props.index,
             'Visibility',
-            !this.state.visible,
+            visibility,
             'visible'
         )
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: visibility,
+        })
     }
 
     soloShow() {
         console.log('soloShow()', this.props.index)
-        this.setState({ visible: true })
+
+        act.vlangUpdateAllNode({
+            attr: 'visibility',
+            value: false,
+        })
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: true,
+        })
 
         for (let index in this.props.geometries) {
             // Get geometry

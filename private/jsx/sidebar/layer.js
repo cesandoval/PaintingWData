@@ -16,7 +16,7 @@ class Layer extends React.Component {
             e.target.checked,
             'visible'
         )
-        act.sideRemoveLayer(this.props.name)
+        // act.sideRemoveLayer(this.props.name) // deprecated
     }
     handleCheckedEvent(e) {
         this.changeVisibility(e)
