@@ -16,6 +16,11 @@ class Layer extends React.Component {
             e.target.checked,
             'visible'
         )
+        act.vlangUpdateNode({
+            nodeKey: this.props.name,
+            attr: 'visibility',
+            value: e.target.checked,
+        })
         // act.sideRemoveLayer(this.props.name) // deprecated
     }
     handleCheckedEvent(e) {
@@ -25,6 +30,11 @@ class Layer extends React.Component {
     }
     changeColor(e) {
         act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
+        act.vlangUpdateNode({
+            nodeKey: this.props.name,
+            attr: 'color',
+            value: e.target.value,
+        })
 
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
