@@ -64,6 +64,7 @@ class VPL extends React.Component {
                 x: 0,
                 y: 0,
             },
+            hover: '',
         }
 
         this.checked = {
@@ -153,7 +154,7 @@ class VPL extends React.Component {
         const vplDOM = document.querySelector('svg.vpl')
         const mouseDown$ = Rx.Observable.fromEvent(vplDOM, 'mousedown')
         const mouseUp$ = Rx.Observable.fromEvent(vplDOM, 'mouseup')
-        const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove')
+        const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove').share()
         const mouseLeave$ = Rx.Observable.fromEvent(vplDOM, 'mouseleave')
         // const empty$ = Rx.Observable.empty()
 
@@ -333,6 +334,21 @@ class VPL extends React.Component {
                 vplDOM.style.cursor = d ? 'all-scroll' : ''
             })
             .subscribe(observer('shiftKeyEvent$'))
+
+        this.mouseHover$ = mouseMove$
+            .throttleTime(100) // limit execution time for opt performance
+            .map(move => {
+                const nodeDOM = move.target.closest('g.node')
+
+                // return nodeKey
+                return nodeDOM ? nodeDOM.getAttribute('data-key') : null
+            })
+            .distinctUntilChanged()
+            .do(nodeKey => {
+                this.setState({ hover: nodeKey })
+                console.log('mouseHover', nodeKey)
+            })
+            .subscribe(observer('mouseHover$'))
     }
 
     componentWillUnmount() {
@@ -341,6 +357,7 @@ class VPL extends React.Component {
         this.linkNode$.unsubscribe()
         this.panVpl$.unsubscribe()
         this.shiftKeyEvent$.unsubscribe()
+        this.mouseHover$.unsubscribe()
     }
 
     componentDidUpdate() {
@@ -438,9 +455,21 @@ class VPL extends React.Component {
 
     createLink = ({ linkKey, linkInfo, from, to }) => {
         const linkRef = 'link_' + linkKey
+        const hoverNode = this.state.hover
+
+        const nodeHover = hoverNode
+            ? hoverNode == linkInfo.srcNode || hoverNode == linkInfo.toNode
+            : null
+
+        const style = {
+            cursor: 'pointer',
+            strokeWidth: nodeHover ? '3px' : null,
+            stroke: nodeHover ? '#ec6651' : null,
+        }
+
         return (
             <path
-                style={{ cursor: 'pointer' }}
+                style={style}
                 markerEnd="url(#Triangle)"
                 ref={ref => (this[linkRef] = ref)}
                 key={linkKey}
@@ -1005,9 +1034,10 @@ class VPL extends React.Component {
                     viewBox="0 0 10 10"
                     refX="10"
                     refY="5"
-                    markerWidth="3"
-                    markerHeight="3"
+                    markerWidth="6"
+                    markerHeight="6"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
                     <path d="M 0 0 L 0 10 L 10 10 L 10 0 z" />
                 </marker>
