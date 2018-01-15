@@ -4,6 +4,7 @@ var fileUploadHelper = require('../../lib/fileUploadHelper'),
     fs = require('fs'),
     formidable = require('formidable');
     fs_extra = require('fs-extra')
+    getSize = require('get-folder-size');
 
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user, uploadAlert: req.flash('uploadAlert')[0]});
@@ -75,18 +76,23 @@ module.exports.upload = function(req, res, next) {
                       });
                     }
                     else{
-                      fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
-                        var dataFile = Models.Datafile.build();
-                        dataFile.userId = req.user.id;
-                        dataFile.location = targetPath;
-                        dataFile.filename = shapeFiles[0];
-                        dataFile.epsg = epsg;
-                        dataFile.centroid = centroid;
-                        dataFile.bbox = bbox;
-                        dataFile.save().then(function(d){
-                          res.send({id : d.id});
-                        });
-                      })  
+                      getSize(targetPath, function(err, size) {
+                        if (err) { throw err; }
+                        var size = (size / 1024 / 1024).toFixed(2);
+                        var size = '' + size;
+                        fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
+                          var dataFile = Models.Datafile.build();
+                          dataFile.userId = req.user.id;
+                          dataFile.location = targetPath;
+                          dataFile.filename = shapeFiles[0];
+                          dataFile.epsg = epsg;
+                          dataFile.centroid = centroid;
+                          dataFile.bbox = bbox;
+                          dataFile.save().then(function(d){
+                            res.send({id: d.id+'$$'+size});
+                          });
+                        }); 
+                      });
                     }
                   });
                 }})
