@@ -21,7 +21,6 @@ module.exports.saveShapes = function(req, res) {
             id: req.user.id
         }
     }
-    
 
     // console.log(typeof(util.inspect(req)))
     processTheShapes(newReq, function(){});

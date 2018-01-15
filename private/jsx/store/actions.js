@@ -63,46 +63,73 @@ export const updateGeometry = (name, options, value, field) =>
         field,
     })
 
+export const mapAddLayer = layer =>
+    store.dispatch({
+        type: c.MAP_ADD_LAYER,
+        layer,
+    })
+
 export const setOptionShow = option =>
     store.dispatch({
         type: c.MAP_SET_OPTION_SHOW,
         option,
     })
 
-export const vlangAddLink = link =>
+export const vlangAddLink = ({ srcNode, toNode, toInput }) =>
     store.dispatch({
         type: c.VLANG_ADD_LINK,
-        link,
+        srcNode,
+        toNode,
+        toInput,
     })
 
-export const vlangRemoveLink = index =>
+export const vlangRemoveLink = ({ srcNode, toNode }) =>
     store.dispatch({
         type: c.VLANG_REMOVE_LINK,
-        index,
+        srcNode,
+        toNode,
     })
 
-export const vlangAddNode = node =>
+export const vlangAddNode = ({ nodeKey, node }) =>
     store.dispatch({
         type: c.VLANG_ADD_NODE,
+        nodeKey,
         node,
     })
 
-export const vlangRemoveNode = index =>
+export const vlangRemoveNode = nodeKey =>
     store.dispatch({
         type: c.VLANG_REMOVE_NODE,
-        index,
+        nodeKey,
     })
 
-export const vlangMoveNode = (index, newPosition, props) =>
+export const vlangMoveNode = ({ nodeKey, newPosition }) =>
     store.dispatch({
-        type: c.VLANG_UPDATE_NODE_POSITION,
-        index: index,
-        position: newPosition,
-        props: props,
+        type: c.VLANG_UPDATE_NODE,
+        nodeKey,
+        attr: 'position',
+        value: newPosition,
     })
 
-export const vlangAddLayers = layers =>
+export const vlangUpdateNode = ({ nodeKey, attr, value }) =>
     store.dispatch({
-        type: c.VLANG_ADD_LAYERS,
-        layers,
+        type: c.VLANG_UPDATE_NODE,
+        nodeKey,
+        attr,
+        value,
+    })
+
+export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
+    store.dispatch({
+        type: c.VLANG_UPDATE_NODE_OPTIONS,
+        nodeKey,
+        attr,
+        value,
+    })
+
+export const vlangUpdateAllNode = ({ attr, value }) =>
+    store.dispatch({
+        type: c.VLANG_UPDATE_ALL_NODE,
+        attr,
+        value,
     })
