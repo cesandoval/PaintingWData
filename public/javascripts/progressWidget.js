@@ -52,7 +52,8 @@ function progressWidget() {
             var urlString = window.location.pathname;
             if (urlString.indexOf('/layers') != -1) {
                 try {
-                    this.state.uploadId = parseInt(urlString.split('/')[-1]);
+                    var temp = urlString.split('/');
+                    this.state.uploadId = parseInt(temp[temp.length -1]);
                 }
                 catch (e) {
                     console.log('PROGRESSWIDGET ERROR: error adding ID, url: ' + urlString)
@@ -63,7 +64,7 @@ function progressWidget() {
             // if a new layer has just been uploaded, poll it and display it
             if (this.state.uploadId != null) {
                 this.state.isPolling = true;
-                this._xhrLoop();
+                this._xhrLoop(); // start polling on open wasn't working
                 this.state.isPolling = false
                 this.state.uploadId = null;
                 if (this.state.pageReload === false)
@@ -208,7 +209,9 @@ function progressWidget() {
 
         //toggles display and polling controls
         _toggleDisplay: function (e) {
-            e.preventDefault();
+            if(e)
+                e.preventDefault();
+
             if (this.state.isDisplayed) {
                 this.state.isPolling = false;// set polling var to false                
                 this.$el.hide(200);
@@ -271,7 +274,7 @@ function progressWidget() {
                     for (var i = 0; i < this.state.currentJobs.length; i++) {
                         if (jobName.contains(this.state.currentJobs[i][1])) {
                             this.state.fullRefresh = 5;
-                            jobCompleted += this.state.currentJobs.splice(i, 1);
+                            jobsCompleted += this.state.currentJobs.splice(i, 1);
                             console.log(jobName + " has been removed from the queue (load error)");
                             // for testing only
                             $('#flashes').trigger('flash', jobName + " has been removed from the queue")
@@ -286,7 +289,7 @@ function progressWidget() {
                     console.log('currentJobs -= ' + input);
                     for (var i = 0; i < this.state.currentJobs.length; i++) {
                         if (input[0] == this.state.currentJobs[i][0]) {
-                            jobCompleted += this.state.currentJobs.splice(i, 1);
+                            jobsCompleted += this.state.currentJobs.splice(i, 1);
                             this.selectedIDs.splice(i, 1);
                             this.state.fullRefresh = 5;
                             if (input[2]) {
@@ -361,8 +364,8 @@ function progressWidget() {
                         console.log('XHR ERROR: ' + e.toString());
                     }
                     if (this.state.isPolling) {
-
-                        this._xhrLoop();
+                        setTimeout(this._xhrLoop(), 100);
+                                                
                     }
                 }
             }.bind(this);
