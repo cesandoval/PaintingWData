@@ -25,18 +25,29 @@ class Panel extends React.Component {
     componentWillReceiveProps(props) {
         this.props = props
         // console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
-
         // Get geometry
+
+        const node = this.props.nodes[this.props.index]
+
         let pixels = this.props.geometries[this.props.index]
 
         if (pixels) {
+            pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+
+            /*
             this.setState({
                 visible: pixels.material.uniforms.show.value == 1,
                 color:
                     '#' +
                     pixels.material.uniforms.startColor.value.getHexString(),
             })
+            */
         }
+
+        this.setState({
+            visible: node.visibility,
+            color: node.color,
+        })
 
         /*
         if (pixels.material) {
@@ -51,33 +62,23 @@ class Panel extends React.Component {
 
     componentDidMount() {
         // TODO: color1 to color
-        act.sideUpdateLayer(this.props.index, 'color1', this.props.color)
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.index]
-
-        if (pixels) {
-            pixels.material.uniforms.startColor.value.set(this.props.color)
-            pixels.material.uniforms.endColor.value.set(this.props.color)
-        }
+        act.updateGeometry(
+            this.props.index,
+            'Color',
+            this.props.color,
+            'color1'
+        )
     }
 
     changeColor(e) {
         console.log('changeColor(e)', e.target.value)
 
         // TODO: color1 to color
-        act.sideUpdateLayer(this.props.index, 'color1', e.target.value)
         act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
-
-        // Get geometry
-        // let pixels = this.props.geometries[this.props.index]
-        // if (pixels) {
-        //     pixels.material.uniforms.startColor.value.set(e.target.value)
-        //     pixels.material.uniforms.endColor.value.set(e.target.value)
-        // }
-
-        this.setState({
-            color: e.target.value,
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'color',
+            value: e.target.value,
         })
 
         /* // using two color options for each layer
@@ -92,39 +93,44 @@ class Panel extends React.Component {
     }
 
     toggleVisibility() {
-        console.log('toggleVisibility', !this.state.visible)
+        const visibility = !this.state.visible
 
-        act.sideUpdateLayer(this.props.index, 'visible', !this.state.visible)
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.index]
-
-        if (pixels) {
-            if (this.state.visible) {
-                pixels.material.uniforms.show.value = 0.0
-            } else {
-                pixels.material.uniforms.show.value = 1.0
-            }
-        }
+        act.updateGeometry(
+            this.props.index,
+            'Visibility',
+            visibility,
+            'visible'
+        )
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: visibility,
+        })
     }
 
     soloShow() {
         console.log('soloShow()', this.props.index)
-        this.setState({ visible: true })
+
+        act.vlangUpdateAllNode({
+            attr: 'visibility',
+            value: false,
+        })
+        act.vlangUpdateNode({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: true,
+        })
 
         for (let index in this.props.geometries) {
             // Get geometry
-            let pixels = this.props.geometries[index]
             console.log(`index=${index}, solo=${this.props.index}`)
 
             if (index === this.props.index) {
                 console.log(`set ${index} visiable`)
-                pixels.material.uniforms.show.value = 1.0
-                act.sideUpdateLayer(index, 'visible', true)
+                act.updateGeometry(index, 'Visibility', true, 'visible')
             } else {
                 console.log(`set ${index} invisiable`)
-                pixels.material.uniforms.show.value = 0.0
-                act.sideUpdateLayer(index, 'visible', false)
+                act.updateGeometry(index, 'Visibility', false, 'visible')
             }
         }
     }

@@ -11,10 +11,8 @@ import Panel from './Panel.js'
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
 
 import * as NodeType from './nodeTypes'
-// console.log('NodeType', Object.keys(NodeType))
 
-import { Nodes, Links } from './mockData'
-// console.log('mockData', {nodes, links})
+// import { Nodes, Links } from './mockData' // deprecated
 
 /* TODO
     - remove color2
@@ -58,14 +56,6 @@ class VPL extends React.Component {
         this.newProps = {}
 
         this.state = {
-            Nodes,
-            Links: Object.assign(
-                {
-                    inputs: {},
-                    outputs: {},
-                },
-                Links
-            ),
             tempLink: {
                 from: { x: 50, y: 50 },
                 to: { x: 50, y: 50 },
@@ -74,6 +64,7 @@ class VPL extends React.Component {
                 x: 0,
                 y: 0,
             },
+            hover: '',
         }
 
         this.checked = {
@@ -84,34 +75,34 @@ class VPL extends React.Component {
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
         // TODO: should get dataset layers from props.
+
         const datasets = this.props.layers
-        const nodes = this.state.Nodes
-        console.log('initDatasetNode()', datasets)
+        console.log('initDatasetNode()', datasets, this.props.nodes)
 
         datasets.map((dataset, index) => {
             // console.log('dataset', dataset)
 
-            // TODO: generate hash key for datasets.
-            if (!nodes[dataset.name]) {
-                const datasetNode = this.newNodeObj('DATASET')
+            const datasetNode = this.newNodeObj('DATASET')
 
-                datasetNode.position = {
-                    x: 50,
-                    y: 100 + 150 * index,
-                }
-                datasetNode.name = dataset.name
-
-                nodes[dataset.name] = datasetNode
+            datasetNode.position = {
+                x: 50,
+                y: 100 + 150 * index,
             }
-        })
+            datasetNode.name = dataset.name
+            datasetNode.color = dataset.color1
 
-        this.setState({ Nodes: nodes })
+            // TODO: use hashkey as nodeKey of dataset node
+            Action.vlangAddNode({
+                nodeKey: dataset.name,
+                node: datasetNode,
+            })
+        })
 
         return datasets.length > 0
     }
 
     newNodeObj = type => {
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         // TODO: limit the nodes length
         const nodesLength =
@@ -147,13 +138,11 @@ class VPL extends React.Component {
             opacity: 0.5,
             visibility: true,
         }
-
         return newNode
     }
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
-        // console.log(this.newProps)
 
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
@@ -165,14 +154,12 @@ class VPL extends React.Component {
         const vplDOM = document.querySelector('svg.vpl')
         const mouseDown$ = Rx.Observable.fromEvent(vplDOM, 'mousedown')
         const mouseUp$ = Rx.Observable.fromEvent(vplDOM, 'mouseup')
-        const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove')
+        const mouseMove$ = Rx.Observable.fromEvent(vplDOM, 'mousemove').share()
         const mouseLeave$ = Rx.Observable.fromEvent(vplDOM, 'mouseleave')
         // const empty$ = Rx.Observable.empty()
 
         this.mouseTracker$ = mouseDown$
             .map(down => {
-                // console.log(down)
-
                 const nodeDOM = down.target.closest('g.node')
                 const plugDOM = down.target.closest('g.plug')
                 const controlDOM = down.target.closest('g.control')
@@ -347,6 +334,21 @@ class VPL extends React.Component {
                 vplDOM.style.cursor = d ? 'all-scroll' : ''
             })
             .subscribe(observer('shiftKeyEvent$'))
+
+        this.mouseHover$ = mouseMove$
+            .throttleTime(100) // limit execution time for opt performance
+            .map(move => {
+                const nodeDOM = move.target.closest('g.node')
+
+                // return nodeKey
+                return nodeDOM ? nodeDOM.getAttribute('data-key') : null
+            })
+            .distinctUntilChanged()
+            .do(nodeKey => {
+                this.setState({ hover: nodeKey })
+                console.log('mouseHover', nodeKey)
+            })
+            .subscribe(observer('mouseHover$'))
     }
 
     componentWillUnmount() {
@@ -355,6 +357,7 @@ class VPL extends React.Component {
         this.linkNode$.unsubscribe()
         this.panVpl$.unsubscribe()
         this.shiftKeyEvent$.unsubscribe()
+        this.mouseHover$.unsubscribe()
     }
 
     componentDidUpdate() {
@@ -371,49 +374,18 @@ class VPL extends React.Component {
 
     moveNode = ({ nodeKey, newPosition }) => {
         // console.log('moveNode()', {nodeKey, newPosition})
-        const nodes = this.state.Nodes
-        nodes[nodeKey].position = newPosition
 
-        this.setState({ Nodes: nodes })
+        Action.vlangMoveNode({ nodeKey, newPosition })
     }
 
     deleteNode = nodeKey => {
         console.log(`deleteNode(${nodeKey})`)
 
-        const nodes = this.state.Nodes
-
-        // prevent to delete dataset node.
-        if (nodes[nodeKey].type == 'DATASET') {
-            console.warn('deleteNode(): can not delete dataset node.')
-            return false
-        }
-
-        delete nodes[nodeKey]
-
-        const links = this.state.Links
-
-        const toNode = nodeKey
-        const srcNodes = Object.values(links.inputs[toNode] || {})
-        srcNodes.map(srcNode => {
-            delete links.outputs[srcNode][toNode]
-        })
-        delete links.inputs[toNode]
-
-        const srcNode = nodeKey
-        const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
-        toNodesToPlugs.map(([toNode, toPlug]) => {
-            delete links.inputs[toNode][toPlug]
-        })
-
-        delete links.outputs[srcNode]
-
-        this.setState({
-            Nodes: nodes,
-            Links: links,
-        })
+        Action.vlangRemoveNode(nodeKey)
 
         // force remove the node geometry on the map.
         Action.mapRemoveGeometry(nodeKey)
+
         this.linkThenComputeNode()
     }
 
@@ -431,58 +403,10 @@ class VPL extends React.Component {
         //   },
         // }
 
-        const links = this.state.Links
-
-        // limitation of link
-        if (srcNode == toNode) return console.warn('linkNode(): link same node')
-
-        if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
-            console.warn('linkNode(): one input only allow one link')
-            delete links.outputs[links.inputs[toNode][toInput]][toNode]
-        }
-
-        for (
-            let checkNodes = new Set(Object.keys(links.outputs[toNode] || []));
-            checkNodes.size != 0;
-
-        ) {
-            if ([...checkNodes].find(f => f === srcNode)) {
-                return console.warn('linkNode(): checking link loop error.')
-            }
-
-            ;[...checkNodes].map(node => {
-                Object.keys(links.outputs[node] || {}).map(toNode => {
-                    checkNodes.add(toNode)
-                })
-                checkNodes.delete(node)
-            })
-        }
-
-        // inputs
-        if (links.inputs[toNode]) {
-            // delete the others same srcNode
-            Object.entries(links.inputs[toNode]).map(([_toInput, _srcNode]) => {
-                if (srcNode == _srcNode) delete links.inputs[toNode][_toInput]
-            })
-
-            links.inputs[toNode][toInput] = srcNode
-        } else
-            links.inputs[toNode] = {
-                [toInput]: srcNode,
-            }
-
-        // outputs
-        if (links.outputs[srcNode]) links.outputs[srcNode][toNode] = toInput
-        else
-            links.outputs[srcNode] = {
-                [toNode]: toInput,
-            }
-
-        this.setState({ Links: links })
+        Action.vlangAddLink({ srcNode, toNode, toInput })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
-        const nodes = this.state.Nodes
         const newValue = prompt(`Please input a value for ${attr}`, value)
 
         if (!_.isEmpty(newValue)) {
@@ -490,8 +414,8 @@ class VPL extends React.Component {
                 `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
             )
 
-            nodes[nodeKey].options[attr] = newValue
-            this.setState({ Nodes: nodes })
+            Action.vlangUpdateNodeOptions({ nodeKey, attr, value })
+
             this.linkThenComputeNode()
         }
     }
@@ -499,10 +423,14 @@ class VPL extends React.Component {
     changeNodeFilter = (nodeKey, min, max) => {
         console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
 
-        const nodes = this.state.Nodes
-        nodes[nodeKey].options.filter = { min, max }
+        const filter = { min, max }
 
-        this.setState({ Nodes: nodes })
+        Action.vlangUpdateNodeOptions({
+            nodeKey,
+            attr: 'filter',
+            value: filter,
+        })
+
         this.linkThenComputeNode()
     }
 
@@ -527,9 +455,21 @@ class VPL extends React.Component {
 
     createLink = ({ linkKey, linkInfo, from, to }) => {
         const linkRef = 'link_' + linkKey
+        const hoverNode = this.state.hover
+
+        const nodeHover = hoverNode
+            ? hoverNode == linkInfo.srcNode || hoverNode == linkInfo.toNode
+            : null
+
+        const style = {
+            cursor: 'pointer',
+            strokeWidth: nodeHover ? '3px' : null,
+            stroke: nodeHover ? '#ec6651' : null,
+        }
+
         return (
             <path
-                style={{ cursor: 'pointer' }}
+                style={style}
                 markerEnd="url(#Triangle)"
                 ref={ref => (this[linkRef] = ref)}
                 key={linkKey}
@@ -547,19 +487,13 @@ class VPL extends React.Component {
         const srcNode = linkDOM.getAttribute('data-src-node')
         const toNode = linkDOM.getAttribute('data-to-node')
 
-        const links = this.state.Links
+        Action.vlangRemoveLink({ srcNode, toNode })
 
-        const toPlug = links.outputs[srcNode][toNode]
-
-        delete links.outputs[srcNode][toNode]
-        delete links.inputs[toNode][toPlug]
-
-        this.setState({ Links: links })
         this.linkThenComputeNode()
     }
 
     createLinks = () => {
-        const outputs = this.state.Links.outputs
+        const outputs = this.props.links.outputs
 
         const svgDOM = document.querySelector('svg.vpl')
         if (!svgDOM) return ''
@@ -631,14 +565,14 @@ class VPL extends React.Component {
         },
         */
 
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         const datasetNodes = Object.entries(nodes)
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
-        const outputs = _.cloneDeep(this.state.Links.outputs)
-        const inputs = _.cloneDeep(this.state.Links.inputs)
+        const outputs = _.cloneDeep(this.props.links.outputs)
+        const inputs = _.cloneDeep(this.props.links.inputs)
 
         // collect node inputs if inputs enough like node type setting
         const nodeInputsFromNode = {}
@@ -767,7 +701,6 @@ class VPL extends React.Component {
 
     createNodeObject = (node, key) => {
         // console.log(`createNodeObject(${node}, ${key})`, node)
-
         const nodeRef = 'node_' + key
 
         return (
@@ -906,13 +839,11 @@ class VPL extends React.Component {
 
     decideNodeType(node) {
         // console.log(`decideNodeType()`, node)
-
         return this.nodeSVG(node)
     }
 
     nodeSVG = ({ color, name, type, nodeKey, options }) => {
         // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
-
         //const p = {x: 0, y: 0}
 
         const inputs = NodeType[type].inputs
@@ -1085,13 +1016,14 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
-        const nodes = this.state.Nodes
         const nodeHashKey =
             (+new Date()).toString(32) +
             Math.floor(Math.random() * 36).toString(36)
-        nodes[nodeHashKey] = this.newNodeObj(type)
 
-        this.setState({ Nodes: nodes })
+        Action.vlangAddNode({
+            nodeKey: nodeHashKey,
+            node: this.newNodeObj(type),
+        })
     }
 
     linkMarker() {
@@ -1102,9 +1034,10 @@ class VPL extends React.Component {
                     viewBox="0 0 10 10"
                     refX="10"
                     refY="5"
-                    markerWidth="3"
-                    markerHeight="3"
+                    markerWidth="6"
+                    markerHeight="6"
                     orient="auto"
+                    markerUnits="userSpaceOnUse"
                 >
                     <path d="M 0 0 L 0 10 L 10 10 L 10 0 z" />
                 </marker>
@@ -1140,11 +1073,30 @@ class VPL extends React.Component {
             true,
             geometry.properties
         )
+
+        const layer = {
+            allIndices: '',
+            bbox: '',
+            bounds: geometry.bounds,
+            color1: color1,
+            color2: color2,
+            geojson: '',
+            name: geometry.layerName,
+            propertyName: '',
+            rowsCols: '',
+            shaderText: geometry.shaderText,
+            userLayerName: '',
+            visible: true,
+            showSidebar: false,
+        }
+
         Action.mapAddGeometry(geometry.layerName, P)
+        // Here I should also add the geometry to the layers
+        Action.mapAddLayer(layer)
     }
 
     render() {
-        const nodes = this.state.Nodes
+        const nodes = this.props.nodes
 
         return (
             <div className="pull-right col-md-10 vplContainer">

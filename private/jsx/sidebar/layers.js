@@ -57,18 +57,6 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
-                act.vlangAddLayers(
-                    data.map(l => {
-                        let property =
-                            l.geojson.geojson.features[0].properties.property
-                        return {
-                            userLayerName:
-                                l.Datafile.Datalayers[0].userLayerName,
-                            name: l.geojson.layername,
-                            property: property,
-                        }
-                    })
-                )
                 act.sideAddLayers(
                     data.map((l, index) => {
                         const length = l.geojson.geojson.features.length
@@ -172,6 +160,7 @@ class Layers extends React.Component {
                     })
                 )
             })
+            .catch(e => console.log('getLayers() error', e))
     }
     render() {
         return (
@@ -183,6 +172,7 @@ class Layers extends React.Component {
                         userPropName={layer.userLayerName}
                         name={layer.name}
                         visible={layer.visible}
+                        showSidebar={layer.showSidebar}
                         color1={layer.color1}
                         color2={layer.color2}
                     />
@@ -192,4 +182,4 @@ class Layers extends React.Component {
     }
 }
 
-export default connect(s => ({ layers: s.sidebar.layers }))(Layers)
+export default connect(s => ({ layers: s.map.layers }))(Layers)

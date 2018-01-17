@@ -21,11 +21,10 @@ module.exports.saveShapes = function(req, res) {
             id: req.user.id
         }
     }
-    
 
     // console.log(typeof(util.inspect(req)))
-    processTheShapes(newReq, function(){
-        User.findById(req.user.id).then(function(user){
+    processTheShapes(newReq, function(){});
+    User.findById(req.user.id).then(function(user){
             mailController.sendLayerEmail(user.email ,req.user.id);
         },
         function(err){}

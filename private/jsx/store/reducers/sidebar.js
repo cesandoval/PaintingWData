@@ -24,8 +24,6 @@ export default (state = initialSidebarState, action) => {
             newLayers = newLayers.map(layer => {
                 if (layer.name == action.name) {
                     const newLayer = Object.assign({}, layer)
-                    // console.log(newLayer)
-                    // console.log(action.field, action.value)
                     newLayer[action.field] = action.value
                     return newLayer
                 } else {

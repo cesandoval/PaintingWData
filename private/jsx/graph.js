@@ -149,6 +149,7 @@ export default class Graph {
         )
     }
 
+    // eslint-disable-next-line
     renderSec(sec = 1, label = '') {
         const untilTime = Date.now() + sec * 1000
 
@@ -159,7 +160,7 @@ export default class Graph {
             this.render()
         }
 
-        console.log(`renderSec(${sec}) until ${this.renderUntil}. ${label}`)
+        // console.log(`renderSec(${sec}) until ${this.renderUntil}. ${label}`)
     }
 
     render() {

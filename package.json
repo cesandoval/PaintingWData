@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./bin/www",
-    "build": "gulp build",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
     "lint:fix": "eslint . --color --fix --debug",
@@ -33,6 +33,7 @@
     "fs": "0.0.2",
     "fs-extra": "^2.0.0",
     "gdal": "^0.9.4",
+    "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
