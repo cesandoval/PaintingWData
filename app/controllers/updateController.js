@@ -432,6 +432,6 @@ function testTracker(req, res) {
         }
 
     
-    numCalls++
+    numCalls;
     
 }

@@ -15,7 +15,7 @@
 
 
 function progressWidget() {
-    // isPolling
+    // ajaxInProgress
     // pollType
     // currentJobs
     // selectedIDs
@@ -63,9 +63,9 @@ function progressWidget() {
 
             // if a new layer has just been uploaded, poll it and display it
             if (this.state.uploadId != null) {
-                this.state.isPolling = true;
+                this.state.ajaxInProgress = true;
                 this._xhrLoop(); // start polling on open wasn't working
-                this.state.isPolling = false
+                this.state.ajaxInProgress = false
                 this.state.uploadId = null;
                 if (this.state.pageReload === false)
                     this.state.pageReload = true;
@@ -80,12 +80,36 @@ function progressWidget() {
             this._bindUIActions();
 
             if (this.state.isDisplayed) {
+                this.state.pollingState = 1;
                 this.$el.show(200)
             }
             else {
+                this.state.pollingState = 0;
                 this.$el.hide();
 
             }
+
+            // this._createModal();
+        },
+
+
+        _createModal: function() {
+            var modal = $.parseHTML(
+                `<div id="widget-modal"">
+                            <div class="topbar">
+                                <span class="title float-left"> Progress Tracker</> 
+                                <img src="images/thex.png" class="close_expanded">
+                                <div class="row"/>
+                            </div>
+                            <div class="body float-center">
+                                <div class="job-container">
+                                    <ul id="jobList"></ul>
+                                </div>
+                            </div>
+                            </div>   
+                            `);
+                this.$modal = $(modal);
+                this.$modal.show();
         },
 
         //created childviews, called on change event
@@ -96,12 +120,12 @@ function progressWidget() {
             }
             var $progressWidget = this.element,
                 opts = this.options,
-                widgetCaption = "This tracks all current shape jobs in the queue. If you would like to turn off flash requests, click the options button",
+                widgetCaption = "This tracks all current shape jobs in the worker queue. hover over the job names to see how many shapes have been processed.",
                 htmlBuilder = '';
 
 
             htmlBuilder += `
-            <div id="widget-menu"">
+            <div id="widget-menu">
                 <span class="tooltiper" data-tooltip="${widgetCaption}"><i class="fa fa-question" style="top:'0px!important'"/></span>            
                 <ul id="jobList"></ul>
             </div>   
@@ -141,8 +165,9 @@ function progressWidget() {
                 var [id, jobName, numerator, denominator] = job,
                 percentage = ((numerator / denominator) * 100).toFixed(2).toString(),
                 innerString = jobName + ": " + numerator + "/" + denominator,
+                frac = numerator + "/" + denominator,
                 menuItem = $('#' + id),
-                datatool = menuItem.find('.tooltiper').attr('data-tooltip', innerString)
+                datatool = menuItem.find('.tooltiper').attr('data-tooltip', frac)
                 menuItem.find('.progress-label').text(percentage + '%');
                 menuItem.find('.progress-bar').css('width', percentage + '%');
             });
@@ -213,14 +238,14 @@ function progressWidget() {
                 e.preventDefault();
 
             if (this.state.isDisplayed) {
-                this.state.isPolling = false;// set polling var to false                
+                this.state.ajaxInProgress = false;// set polling var to false                
                 this.$el.hide(200);
                 this.state.isDisplayed = !this.state.isDisplayed;
 
             } else {
                 this.$el.show(200);
                 this.state.isDisplayed = !this.state.isDisplayed;
-                this.state.isPolling = true;
+                this.state.ajaxInProgress = true;
                 this.state.timeouts = 3;
                 this._xhrLoop();
             }
@@ -230,6 +255,7 @@ function progressWidget() {
         refresh: function () {
             console.log('refreshed')
             this._createWidgetMenu();
+            debugger;
 
 
 
@@ -243,7 +269,7 @@ function progressWidget() {
                 });
             }
             if (this.state.pageReload) {
-                this.state.isPolling = false;
+                this.state.ajaxInProgress = false;
                 location.reload(false);
             }
         },
@@ -331,10 +357,10 @@ function progressWidget() {
         //XhrRequest Entry point. This is called upon completion of the last poll (async)
         _xhrLoop: function () {
             var pollquery = this.state.pollType + "?shapes=" + this.state.selectedIDs.join("$$");
-            if (this.state.isPolling) {
+            if (this.state.ajaxInProgress) {
                 this.request = this._createXhrRequest(pollquery);
                 console.log('firing pollFunction: ' + pollquery);
-                console.log('polling? ' + this.state.isPolling)
+                console.log('polling? ' + this.state.ajaxInProgress)
                 console.log('displayed? ' + this.state.isDisplayed)
 
                 $(window).on("beforeunload", function (event) {// abort the call on page unload
@@ -363,7 +389,7 @@ function progressWidget() {
                     } catch (e) {
                         console.log('XHR ERROR: ' + e.toString());
                     }
-                    if (this.state.isPolling) {
+                    if (this.state.ajaxInProgress) {
                         setTimeout(this._xhrLoop(), 100);
                                                 
                     }
@@ -374,7 +400,7 @@ function progressWidget() {
             xhr.ontimeout = function () {
                 this.state.timeouts -= 1;
                 if (this.state.timeouts == 0) {
-                    this.state.isPolling = false;
+                    this.state.ajaxInProgress = false;
                     console.log('too many timeout errors, polling stopped')
                 }
             }.bind(this);
@@ -388,14 +414,15 @@ function progressWidget() {
         _defaultState: function () {
             return {
                 currentJobs: [],
-                isPolling: false,
+                ajaxInProgress: false,
+                pollingState: 0,
                 pollType: "shapes",
                 selectedIDs: [],
                 timeouts: 3,
                 isDisplayed: false,
                 uploadId: null,
                 fullRefresh: 5,
-                pageReload: false // shows if there is a page reload pending 9ie, a new objecti s loaded and completed). Can be turned off?
+                pageReload: false, // shows if there is a page reload pending 9ie, a new objecti s loaded and completed). Can be turned off?
             }
         }
     });
@@ -455,13 +482,14 @@ function noJobs() {// return div with default message for no currnet jobs
 function createProgressBar(id, jobName, numerator, denominator) { //cleare a single progress bar DOM Element
     console.log(jobName, numerator, denominator)
     jobname = escapeHTML(jobName);
-    var percentage = ((numerator / denominator) * 100).toFixed(2).toString();
-    var innerString = jobName + ": " + numerator + "/" + denominator;
+    var percentage = ((numerator / denominator) * 100).toFixed(2).toString(),
+         innerString = jobName + ": " + numerator + "/" + denominator,
+         frac = numerator + "/" + denominator + " processed";
     console.log(percentage)
     var html = `
     <div id="${id}" class="menu-item" style="">
         <div class="container">
-        <span class="tooltiper" data-tooltip="${innerString}"> ${jobName}</span>
+        <span class="tooltiper" data-tooltip="${frac}"> ${jobName}</span>
         <span class="progress-label" style=""> ${percentage}% </span>
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
             aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;

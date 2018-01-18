@@ -714,15 +714,22 @@ label {
     color: white;
 }
 
-/*.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
-    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-}*/
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li {
+    height:100%;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    padding-left: .8vw;
+    padding-right: .8vw;
+    height: 100%;
+}
 
 .navbar-brand {
     float: left;
     font-size: 24px;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
     font-weight: 700;
     font-family: 'Karla', sans-serif;
 }
@@ -740,12 +747,16 @@ label {
 /* Begin Progress Tracker CSS*/
 .progress-tracker-body {
     /* background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);  */
-    padding:1vh 1vh;
-    margin: 1vh 1vh 0px 0px;
+    padding: 12px 0px 8px 8px;
+    margin: 0;
     -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
     -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
     box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
     background-color: black;
+    display: block;
+    top: 100%;
+    position: absolute;
+    max-width: none;
     /* max-height: 310px; */
 
 }
@@ -761,11 +772,11 @@ label {
     
 }
 #widget-menu .container {
-    width: auto!important;
+    max-width: 175px;
     align-content: left;
-
-
 }
+
+
 #widget-menu .progress-bar {
     width: 100%;
     height: 20px;
@@ -777,6 +788,9 @@ label {
     float: right;
     display: inline-block;
     
+}
+.dropdown-toggle{
+    width: 143px!important;
 }
 
 .menu-item {
@@ -839,7 +853,7 @@ label {
   }
   
   .tooltiper .tooltip {
-      max-width: unset;
+    max-width: unset;
     min-width: 100px;
     /* max-width:350px; */
     position: absolute;
@@ -875,5 +889,61 @@ label {
     
   }
   .tooltiper .tooltip.no-after:after{content:none; display:none;}
+
+
+  .widget-modal-wrapper {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-transition: 0.5s;
+    overflow: auto;
+    /* transition: all 0.3s linear; */
+     
+   }
+   
+   .widget-modal-body {
+       /* background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);  */
+       position: fixed;
+       margin-left: auto;
+       margin-right: auto; 
+       left: 12.5vw;
+       top: 12.5vh;
+       z-index: 1000;
+       width: 75vw;
+       height: 75vh;
+       padding:1vh 1vh;
+       margin: 1vh 1vh 0px 0px;
+       -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       background-color: white;
+       /* max-height: 310px; */
+   
+   }
+   #widget-modal {
+       display: inline-block;
+       width: 100%;
+       height: 100%;
+       padding: 10px;
+       justify-content: center;
+   
+   }
+   
+   #widget-modal .title {
+       font-size: 30px;
+       margin: 10px;
+       font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+       color: rgba(0, 0, 0, 0.6);
+     }
+   
+
+
 
   /* end porgress tracker CSS*/
