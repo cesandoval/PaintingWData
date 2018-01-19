@@ -30,6 +30,9 @@ module.exports = function(sequelize, DataTypes) {
       deleted: {
         type: DataTypes.BOOLEAN,
       },
+      geometryType: {
+        type: DataTypes.STRING,
+      },
   }, {
 
     classMethods: {
