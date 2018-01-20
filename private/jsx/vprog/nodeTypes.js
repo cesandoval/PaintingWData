@@ -2,6 +2,9 @@
 const NodeType = {
   [name]: { // e.g. 'layer', 'add', 'sub', 'log'
     fullname: '', // e.g. 'Subraction', 'Multiplication', 'Division', 'Logarithm'
+    desc: `', // some 
+        descripti
+    `n
     inputs: {
       // e.g. 'Input', 'Input2', 'Numerator', 'Denominator'.
       [name]: 'N', // 'N' is one letter abbreviation to uppercase.
@@ -21,6 +24,9 @@ import _ from 'lodash'
 
 export const DATASET = {
     fullName: 'Dataset',
+    desc: `
+        Dataset
+    `,
     inputs: {
         // no input
     },
@@ -31,6 +37,9 @@ export const DATASET = {
 
 export const LOG = {
     fullName: 'Logarithm',
+    desc: `
+        Logarithm
+    `,
     inputs: {
         Input: 'I',
     },
@@ -73,6 +82,9 @@ export const LOG = {
 
 export const SUB = {
     fullName: 'Subraction',
+    desc: `
+        Subraction
+    `,
     inputs: {
         Minuend: 'M',
         Subtrahend: 'S',
@@ -86,6 +98,9 @@ export const SUB = {
 
 export const DIV = {
     fullName: 'Division',
+    desc: `
+        Division
+    `,
     inputs: {
         Numerator: 'N',
         Denominator: 'D',
@@ -99,6 +114,15 @@ export const DIV = {
 
 export const MULT = {
     fullName: 'Multiplication',
+    desc: `
+        Multiplication, Multiplication, Multiplication,
+        Multiplication, Multiplicatio
+        n, Multiplication, Multiplication, Multiplication, Multiplication, Multiplication
+        Mu
+        ltipli
+        cation, Multiplication, Multiplication, Mu
+        ltiplication, Multiplication, Multiplication, Multiplication
+    `,
     inputs: {
         Mulitplicand: 'M',
         Multiplier: 'M',
@@ -112,6 +136,9 @@ export const MULT = {
 
 export const ADD = {
     fullName: 'Addition',
+    desc: `
+        Addition
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -125,6 +152,9 @@ export const ADD = {
 
 export const MIN = {
     fullName: 'MIN',
+    desc: `
+        MIN
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -138,6 +168,9 @@ export const MIN = {
 
 export const MAX = {
     fullName: 'MAX',
+    desc: `
+        MAX
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -151,6 +184,9 @@ export const MAX = {
 
 export const AND = {
     fullName: 'AND',
+    desc: `
+        AND
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -164,6 +200,9 @@ export const AND = {
 
 export const OR = {
     fullName: 'OR',
+    desc: `
+        OR
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -177,6 +216,9 @@ export const OR = {
 
 export const XOR = {
     fullName: 'XOR',
+    desc: `
+        XOR
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -190,6 +232,9 @@ export const XOR = {
 
 export const NOT = {
     fullName: 'NOT',
+    desc: `
+        NOT
+    `,
     inputs: {
         Input: 'I',
     },
