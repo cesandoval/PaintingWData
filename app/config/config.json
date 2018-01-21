@@ -6,7 +6,6 @@
     "database": "PaintingWithData_Riyadh",
     "host": "localhost",
     "dialect": "postgres"
-    
   },
   "test": {
     "logging": false,

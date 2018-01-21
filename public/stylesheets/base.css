@@ -272,11 +272,14 @@ label {
 }
 
 label[for="file-selector"] {
-    height: 12vh;
-    width: 100%;
-    line-height: 10vh;
-    font-size: 2vh;
+    height: auto;
+    font-size: 12pt;
     font-weight: 400;
+}
+
+label[for="file-selector"]:visited {
+    background-color: #e75332;
+    color: white;
 }
 
 .layerBoxes{
@@ -321,8 +324,6 @@ label[for="file-selector"] {
     background-image: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    
-    outline: none;
 }
 
 
@@ -729,9 +730,14 @@ label {
 
 .progress-bar {
     width: 100%;
-    height: 20px;
+    height: 40px;
+    background: #e75332;
+    border-radius: 0px 0px;
 }
 
 .progress {
     background-color: white;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-radius: 0;
 }
