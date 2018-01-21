@@ -156,6 +156,7 @@ class MapCanvas extends React.Component {
                             position: 'absolute',
                             left: '40px',
                             top: '20px',
+                            display: mapOptionShow == 'VPL' ? 'none' : '',
                         }}
                         className="map-menu"
                     >
