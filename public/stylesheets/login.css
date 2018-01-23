@@ -8,10 +8,9 @@
 }*/
 
 input[type="submit"] {
-	height: 10vh;
-	width: 100%;
 	background-color: transparent;
 	font-size: 2vh;
+	width: auto;
 }
 
 .prompt {
