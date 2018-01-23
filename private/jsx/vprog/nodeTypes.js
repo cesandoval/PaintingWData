@@ -25,7 +25,7 @@ import _ from 'lodash'
 export const DATASET = {
     fullName: 'Dataset',
     desc: `
-        Dataset
+        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes. 
     `,
     inputs: {
         // no input
@@ -38,7 +38,7 @@ export const DATASET = {
 export const LOG = {
     fullName: 'Logarithm',
     desc: `
-        Logarithm
+        Computes the Logarithm value of a dataset. Options: Maximum Interval, Base of Logarithm.
     `,
     inputs: {
         Input: 'I',
@@ -83,7 +83,7 @@ export const LOG = {
 export const SUB = {
     fullName: 'Subraction',
     desc: `
-        Subraction
+        Computes the arithmetic Subtraction of two datasets, the minuend and subtrahend.
     `,
     inputs: {
         Minuend: 'M',
@@ -99,7 +99,7 @@ export const SUB = {
 export const DIV = {
     fullName: 'Division',
     desc: `
-        Division
+        Computes the arithmetic Division of two datasets, the numerator and denominator. Returns 0 if dividing by 0.
     `,
     inputs: {
         Numerator: 'N',
@@ -115,13 +115,8 @@ export const DIV = {
 export const MULT = {
     fullName: 'Multiplication',
     desc: `
-        Multiplication, Multiplication, Multiplication,
-        Multiplication, Multiplicatio
-        n, Multiplication, Multiplication, Multiplication, Multiplication, Multiplication
-        Mu
-        ltipli
-        cation, Multiplication, Multiplication, Mu
-        ltiplication, Multiplication, Multiplication, Multiplication
+        Computes the arithmetic Multiplication of two datasets, the multiplicand and multiplier.
+
     `,
     inputs: {
         Mulitplicand: 'M',
@@ -137,7 +132,7 @@ export const MULT = {
 export const ADD = {
     fullName: 'Addition',
     desc: `
-        Addition
+        Computes the arithmetic Addition of two datasets.
     `,
     inputs: {
         Input1: 'I',
@@ -185,7 +180,7 @@ export const MAX = {
 export const AND = {
     fullName: 'AND',
     desc: `
-        AND
+        Returns the voxels that contain a visible voxel in both datasets. Algebraic Function: F=A*B.
     `,
     inputs: {
         Input1: 'I',
@@ -201,7 +196,7 @@ export const AND = {
 export const OR = {
     fullName: 'OR',
     desc: `
-        OR
+        Returns the voxels that contain a visible voxel in either dataset. Algebraic Function: F=A+B.
     `,
     inputs: {
         Input1: 'I',
@@ -217,7 +212,7 @@ export const OR = {
 export const XOR = {
     fullName: 'XOR',
     desc: `
-        XOR
+        Returns the voxels that contain a visible voxel in one, and only one of the input datasets. 
     `,
     inputs: {
         Input1: 'I',
@@ -233,7 +228,7 @@ export const XOR = {
 export const NOT = {
     fullName: 'NOT',
     desc: `
-        NOT
+        Returns the voxels that contain an invisible voxel in a dataset (logical negation). Algebraic Function: F=A'.
     `,
     inputs: {
         Input: 'I',
