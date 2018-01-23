@@ -11,9 +11,7 @@
 	opacity:1;
 	transition: 1s ease;
 
-	/*border: 3px solid #D34031;*/
-	border: 3px solid #1D254B;
-	/*border: 3px solid #F9CBC2;*/
+	border: 3px solid #D34031;
 }
 
 .thumbnail .datalayer {

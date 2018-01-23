@@ -43,13 +43,12 @@ block pageTitle
         if datafile.Datalayers[0]
           .col-sm-6.col-md-4
             .thumbnail.datalayer(selected = "false", style="z-index: 1;")
-              .caption.text-center
-                .layername
-                  h3(style="font-weight: 600; text-transform: uppercase;") #{datafile.Datalayers[0].userLayerName}
-                div(style="border-top: 1px solid black; height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
+              .caption
+                div(style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
               div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
               .caption(style="padding-left: 5%;")
                   .layername
+                    h3(style="font-weight: 700;") #{datafile.Datalayers[0].userLayerName}
                     br
                     label.layer-label Layer Name
                     p(display='inline').label-body #{datafile.Datalayers[0].layername}
