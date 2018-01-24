@@ -959,7 +959,7 @@ class VPL extends React.Component {
 
                 <Popover
                     placement="top"
-                    title="Node Description"
+                    title={nodeName}
                     content={desc}
                     trigger="click"
                 >
