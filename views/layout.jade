@@ -116,10 +116,6 @@ script.
     }, 2000);
   });
   $("#about").click(() => {
-      console.log(window.location.hostname);
-        console.log(window.location.href);
-
-
     $('html, body').animate({
         scrollTop: $("#about_section").offset().top-80
     }, 2000);
@@ -133,7 +129,6 @@ script.
 
 
   $(".pop_team").click(function () {
-      //console.log($(this).attr("bio1"));
 
       d3.select("body").append("div")
           .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
