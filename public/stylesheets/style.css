@@ -333,7 +333,7 @@ ul.dropdown-menu {
 
 .spacing-large {
     padding-top: 10vh;
-    padding-bottom: 10vh;
+    padding-bottom: 6vh;
 }
 
 .site-title {
@@ -899,3 +899,10 @@ p {
 
 
 
+.iframe_post {
+    width: 100%;
+    max-width: 800px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

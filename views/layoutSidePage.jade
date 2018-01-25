@@ -224,3 +224,93 @@ script.
       });
       
   });
+
+
+    var fixiframe = function(myid){
+        $(myid).contents().find("head")
+            .append($("<style type='text/css'>  *{background-color:rgba(0,0,0,0)!important; overflow:hidden;}  .content_left{width:65%;float:left;} .content_right{width:33%;float:left;} .content_right_full{width:100%;float:right;}</style>"));
+        $(myid).contents().find("a")
+            .attr("target","_blank")
+            .attr("href", function(d,dd){
+                //console.log(d,dd);
+                if(dd){
+                    var out = dd;
+                    if(out.indexOf("?q=")>-1)
+                        out = dd.split("?q=")[1];
+                    if(out.indexOf("&sa=D&ust=")>-1)
+                    out = out.split("&sa=D&ust=")[0];
+                    return out;
+                }
+            })
+            ;
+        $(myid).contents().find("img")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("span")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("body")
+            .css("padding","0 0 0 0");
+
+
+
+        $(myid).contents().find("span")
+            .filter(function(){
+                return this.innerHTML.indexOf("&lt;iframe")!=-1;
+            }).html(function(){
+                return this.innerHTML.replace("&lt;","<").replace("&gt;",">");
+            });
+        $(myid).contents().find("td")
+            .filter(function(){
+                if($(this).attr("colspan") == "1" && $(this).attr("rowspan") == "1"){
+                    var widththis = +d3.select(this).style("width").split("px")[0];
+                    //console.log($(document).width(),widththis);
+
+                    if($(document).width()<500){
+                        if(this.innerHTML.indexOf("Overview")!=-1){
+                            $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                            );
+                        }else{
+                            $(this).replaceWith( "<div class = 'content_right_full right_proj'>"+$(this).html()+"</div>"
+                            );
+                        }
+
+                    }else{
+                        if(this.innerHTML.indexOf("Overview")!=-1){
+                            $(this).replaceWith( "<div class = 'content_left'>"+$(this).html()+"</div>"
+                            );
+                        }else{
+                            $(this).replaceWith( "<div class = 'content_right'>"+$(this).html()+"</div>"
+                            );
+                        }
+                    }
+
+                    return true;
+                }
+            });
+            
+            $(myid).contents().find("div")
+            .filter(function(){
+                //console.log($(this).attr("class"));
+                if($(this).attr("class"))
+                return $(this).attr("class").indexOf("left_proj")>-1;
+            }).insertAfter(
+                $(myid).contents().find("div")
+                .filter(function(){
+                    if($(this).attr("class"))
+                    return $(this).attr("class").indexOf("right_proj")>-1;
+                })
+            )
+    };
+
+    var expand_function = function(myid){
+        var iFrame = document.getElementById( myid );
+        this.resizeIFrameToFitContent( iFrame );
+        iFrame.parentElement.style.height = $("#"+myid).height()+20 + "px";
+    }
+
+    var resizeIFrameToFitContent = function( obj ) {
+        if(obj)
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+
+        console.log(obj.contentWindow.document.body.scrollHeight);
+    };
+
