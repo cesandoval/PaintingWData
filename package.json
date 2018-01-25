@@ -11,6 +11,9 @@
     "lint:check": "eslint . --color --quiet"
   },
   "dependencies": {
+    "@turf/interpolate": "^5.1.5",
+    "@turf/meta": "^6.0.0-beta.3",
+    "@turf/random": "^5.1.5",
     "amqplib": "^0.5.1",
     "antd": "^2.13.8",
     "async": "^2.0.0",
@@ -32,7 +35,7 @@
     "formidable": "^1.0.17",
     "fs": "0.0.2",
     "fs-extra": "^2.0.0",
-    "gdal": "^0.9.4",
+    "gdal": "^0.9.6",
     "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
     "jade": "~1.11.0",

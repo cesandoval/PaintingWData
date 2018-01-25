@@ -5,7 +5,6 @@ var async = require('async'),
     fileViewerHelper = require('../lib/fileViewerHelper');
     model = require('../app/models');
     fs_extra = require('fs-extra');
-    interpolate = require('@turf/interpolate');
 
 function startVoxelWorker(datalayerIds, req, callback){
     async.waterfall([
@@ -387,20 +386,6 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             callback(null, [voxelId, rowsCols, allIndices, ptDistance, req]);
         });
 
-}
-
-function processPoints(callback) {
-    // this should grab the points if they are flagged as points and parse them for turf/interpolate
-    // var points = turf.randomPoint(30, {bbox: [50, 30, 70, 50]});
-
-    // // add a random property to each point
-    // turf.featureEach(points, function(point) {
-    //     point.properties.solRad = Math.random() * 50;
-    // });
-    // var options = {gridType: 'points', property: 'solRad', units: 'miles'};
-    // var grid = turf.interpolate(points, 100, options);
-    
-    callback(null);
 }
 
 module.exports.processDatalayer = startVoxelWorker;
