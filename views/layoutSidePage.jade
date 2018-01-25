@@ -25,11 +25,7 @@ html
 
     //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //- //on our web server and will be delivered faster to the client than our own server.
-    //- script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')		
-
-    
-    script(src='http://code.jquery.com/jquery-1.9.1.js')
-    script(src="http://code.jquery.com/ui/1.10.2/jquery-ui.js")
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
 
@@ -77,7 +73,7 @@ html
 
   body
     block navBar
-      include ./partials/navbar
+      include ./partials/navbarSidePage
 
     block pageTitle
     block content
@@ -228,6 +224,3 @@ script.
       });
       
   });
-
-
-script(src="/javascripts/progressWidget.js", type="text/javascript")
