@@ -60,7 +60,6 @@ module.exports.computeVoxels = function(req, res){
         console.log('select layers!!!!');
         req.flash('layerAlert', "You haven't selected layers. Please select at least one layer.");
         res.redirect('/layers/'+ req.user.id); 
-
     } 
 };
 

@@ -104,7 +104,6 @@ function getBbox(datalayerIds, req, callback) {
 
 
 function createDatavoxel(bbox, props, req, callback){
-
     var voxelname = req.body.voxelname;
     var currBbox = bbox;
     currBbox['crs'] = { type: 'name', properties: { name: 'EPSG:'+ 4326} };
