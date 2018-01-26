@@ -861,7 +861,12 @@ class VPL extends React.Component {
         const nodeHeight = Style.minHeight
 
         const desc = (
-            <span>
+            <span
+                style={{
+                    width: '280px',
+                    display: 'block',
+                }}
+            >
                 {NodeType[type].desc.split('\n').map((line, idx) => (
                     <p
                         style={{ fontSize: '12px' }}
@@ -959,7 +964,7 @@ class VPL extends React.Component {
 
                 <Popover
                     placement="top"
-                    title="Node Description"
+                    title={nodeName}
                     content={desc}
                     trigger="click"
                 >
