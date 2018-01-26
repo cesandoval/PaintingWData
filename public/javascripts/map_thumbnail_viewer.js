@@ -31,7 +31,7 @@ $('.modal').on('show.bs.modal', function(e) {
   else {
     console.log('Adding visuals to map.');
     $map.addClass('temporary_map_visuals');
-    $map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');  
+    //$map.append('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');  
   }
 
   $.ajax({
