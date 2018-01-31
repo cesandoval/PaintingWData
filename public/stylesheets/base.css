@@ -755,8 +755,10 @@ label {
     background-color: black;
     display: block;
     top: 100%;
+    left: -50%;
+    right:11%;    
     position: absolute;
-    max-width: none;
+    max-width: 210px;
     /* max-height: 310px; */
 
 }
@@ -769,10 +771,11 @@ label {
     -webkit-padding-end: 10px!important;
     overflow-y: auto;
     max-height: 310px;
+    padding-top:4px;
     
 }
 #widget-menu .container {
-    max-width: 175px;
+    width: auto;
     align-content: left;
 }
 
@@ -828,10 +831,23 @@ label {
     cursor: pointer;
 }
 
+.pflash {
+    margin-bottom: 0px;
+}
+
 #widget-menu .fa-question {
     top: -8px !important;
     left: -5px;
 }
+
+#widget-menu .fa-refresh {
+    top: -8px !important;
+    left: calc(150px + 1.4vw);
+}
+/* #widget-menu .caption-right {
+    /* top: -8px !important;
+    left: 175px; */
+
 
 
 .menu-item .progress-label {
@@ -839,8 +855,6 @@ label {
     margin-left: 5px;
     text-overflow: ellipsis;
 }
-
-
 
 .tooltiper {
     max-width: inherit;
