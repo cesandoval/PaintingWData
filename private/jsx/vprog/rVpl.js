@@ -9,6 +9,7 @@ import * as Action from '../store/actions.js'
 import Slider from './Slider.js'
 import Panel from './Panel.js'
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Popover } from 'antd'
 
 import * as NodeType from './nodeTypes'
 
@@ -859,6 +860,24 @@ class VPL extends React.Component {
         const nodeWidth = Style.minWidth
         const nodeHeight = Style.minHeight
 
+        const desc = (
+            <span
+                style={{
+                    width: '280px',
+                    display: 'block',
+                }}
+            >
+                {NodeType[type].desc.split('\n').map((line, idx) => (
+                    <p
+                        style={{ fontSize: '12px' }}
+                        key={`${nodeKey}_desc_${idx}`}
+                    >
+                        {line}
+                    </p>
+                ))}
+            </span>
+        )
+
         return (
             <g data-node-name={nodeName}>
                 <rect
@@ -943,18 +962,26 @@ class VPL extends React.Component {
                     </text>
                 </g>
 
-                <text
-                    x={nodeWidth / 2}
-                    y="25"
-                    fontSize={Style.fontSize.nodeName + 'px'}
-                    style={{
-                        textAnchor: 'middle',
-                        fontFamily: 'Monospace',
-                        fill: '#536469',
-                    }}
+                <Popover
+                    placement="top"
+                    title={nodeName}
+                    content={desc}
+                    trigger="click"
                 >
-                    {nodeName}
-                </text>
+                    <text
+                        x={nodeWidth / 2}
+                        y="25"
+                        fontSize={Style.fontSize.nodeName + 'px'}
+                        style={{
+                            textAnchor: 'middle',
+                            fontFamily: 'Monospace',
+                            fill: '#536469',
+                            cursor: 'help',
+                        }}
+                    >
+                        {nodeName}
+                    </text>
+                </Popover>
 
                 <g className="control">
                     {/* TODO: modify slider width */}

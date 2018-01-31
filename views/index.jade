@@ -5,10 +5,11 @@ block pageTitle
   div(class='').brand-title
     .row
       div.title-frame
-        h1.site-title Painting
-        h1.site-title2 with Data
-
-        p.title-txt Painting with data is a user-friendly, collaborative, web-based tool for analyzing and visualizing spatial data suitable for users across disciplines and across levels of data- and spatial- literacy. Anyone with a modern browser can now visualize and explore the relationship of multiple datasets at once, leading to sound, informed policy or business decisions. 
+        .col-md-12
+          h1.site-title Painting with Data
+          br
+        .col-md-9
+          p.title-txt Painting with data is a user-friendly, collaborative, web-based tool for analyzing and visualizing spatial data suitable for users across disciplines and across levels of data- and spatial- literacy. Anyone with a modern browser can now visualize and explore the relationship of multiple datasets at once, leading to sound, informed policy or business decisions. 
       .col-md-2.col-md-offset-10
         p.spacing-large(style="font-family: 'Karla'; font-size: 10pt;") Background showing cancer (red) and income (blue) data from NYC.      
     .row.explore
@@ -25,26 +26,23 @@ block content
           a(href="/upload", role="button")
             h2.col-md-3.application-lc -> Launch App
 
-        p.col-md-7.application-txt Painting with Data was created to promote accessibility and transparency in urban research and decision-making for planning and policy officials, as well as city residents. With the tool, users can create an interactive map and explore relationships between georeferenced datasets. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map.
-        p.col-md-7.application-txt Through the easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
+        p.col-md-6.application-txt Painting with Data was created to promote accessibility and transparency in urban research and decision-making for planning and policy officials, as well as city residents. With the tool, users can create an interactive map and explore relationships between georeferenced datasets. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map.
+        p.col-md-6.application-txt Through the easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
         br
  
-
+    div.spacing
     div.container(id="about_section")
-      div.col-md-12.application-title
-        h2.spacing-small.col-md-9 About Painting with Data
-
-
-      //- .row.spacing
-      //-   h2.center About Painting with Data
-
-      .row.spacing-large
-        p.spacing-medium.text-left Increasingly, geospatial data are becoming a standard aspect of decision-making in both private and public sectors due to recent strides in spatial data capture.  While the data may be plentiful, the technical skills required to understand and analyze it may not always be present.  <strong>Painting with Data</strong> facilitates the analysis and visualization of spatial data by dramatically reducing the steep learning curve required for most geographic information system (GIS) software.  
-        p.spacing-medium.text-left <strong>Painting with Data</strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction. 
-        p.spacing-medium.text-left <strong>Painting with Data</strong> provides users with a more intuitive and visually-based method of understanding spatial data in order to tell a compelling story, iteratively exploring spatial correlations, without the upfront cost of spending long time learning software.  
-        p.spacing-medium.text-left Contrary to traditional mapping software that operates as a database paired with a map or a graphical representation, <strong>Painting with Data</strong> allows users to directly manipulate the map itself instead of through abstract numbers and symbols. This creates a more intuitive way of understanding spatial data and creating spatial models, and redefines the way in which users explore and gain intuitions from spatial data. 
-        p.spacing-medium.text-left Additionally, <strong>Painting with Data</strong> introduces a visual coding interface through drag-and-drop building blocks which allows for ‘real-time’ geospatial computing, extending its mapping and analytical capacities. Through user-generated building-blocks, the visual coding language allows the extension of the software according to the needs of the user, and generates a broader user-community. Through its open-source, web-based availability the software allows multi-disciplinary collaborations, facilitating the display and shareability of spatial data modeling. Through its features, our software allows non-experts to access spatial models providing contextual knowledge.
-        p.spacing-medium.text-left With an account, users are able to upload spatial data and create projects that are accessible anytime they log in. You simply need a valid email address and shapefiles to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles. Future functionality will include point and line data.
+      .row
+        div.col-md-6.application-title
+          h2.spacing-small About Painting with Data
+      .row.application-txt.col-md-6
+          p.text-left Increasingly, geospatial data are becoming a standard aspect of decision-making in both private and public sectors due to recent strides in spatial data capture.  While the data may be plentiful, the technical skills required to understand and analyze it may not always be present.  <strong>Painting with Data</strong> facilitates the analysis and visualization of spatial data by dramatically reducing the steep learning curve required for most geographic information system (GIS) software.  
+          p.text-left <strong>Painting with Data</strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and representational modeling through a real-time and user-friendly interface, with the objective of lowering the barriers of entry to urban modeling and interaction. 
+          p.text-left <strong>Painting with Data</strong> provides users with a more intuitive and visually-based method of understanding spatial data in order to tell a compelling story, iteratively exploring spatial correlations, without the upfront cost of spending long time learning software.  
+      .row.application-txt.col-md-6
+          p.text-left Contrary to traditional mapping software that operates as a database paired with a map or a graphical representation, <strong>Painting with Data</strong> allows users to directly manipulate the map itself instead of through abstract numbers and symbols. This creates a more intuitive way of understanding spatial data and creating spatial models, and redefines the way in which users explore and gain intuitions from spatial data. 
+          p.spacing-medium.text-left Additionally, <strong>Painting with Data</strong> introduces a visual coding interface through drag-and-drop building blocks which allows for ‘real-time’ geospatial computing, extending its mapping and analytical capacities. Through user-generated building-blocks, the visual coding language allows the extension of the software according to the needs of the user, and generates a broader user-community. Through its open-source, web-based availability the software allows multi-disciplinary collaborations, facilitating the display and shareability of spatial data modeling. Through its features, our software allows non-experts to access spatial models providing contextual knowledge.
+          p.spacing-medium.text-left With an account, users are able to upload spatial data and create projects that are accessible anytime they log in. You simply need a valid email address and shapefiles to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles. Future functionality will include point and line data.
     
     div.container(id="team_section")
       div.col-md-12.application-title

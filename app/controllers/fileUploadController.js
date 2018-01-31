@@ -81,7 +81,7 @@ module.exports.upload = function(req, res, next) {
                         if (err) { throw err; }
                         var size = (size / 1024 / 1024).toFixed(2);
                         var size = '' + size;
-                        fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid){
+                        fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid, geomType){
                           var dataFile = Models.Datafile.build();
                           dataFile.userId = req.user.id;
                           dataFile.location = targetPath;
@@ -89,6 +89,7 @@ module.exports.upload = function(req, res, next) {
                           dataFile.epsg = epsg;
                           dataFile.centroid = centroid;
                           dataFile.bbox = bbox;
+                          dataFile.geometryType = geomType;
                           dataFile.save().then(function(d){
                             res.send({id: d.id+'$$'+size});
                           });
