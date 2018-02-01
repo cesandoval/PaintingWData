@@ -54,7 +54,5 @@ var passport = require('passport'),
   router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
-  router.get('/update/shape', isAuthenticated, updateController.updateShape);
-  //de[recated for now, will have to reroute to Upload endpoint
 
 module.exports = router;

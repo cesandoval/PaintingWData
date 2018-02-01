@@ -61,10 +61,9 @@ function startShapeWorker(req, callback) {
             //          callback(null);
             //       }
             // })
-            console.log(file)
-            console.log(thingsArray)
-            callback(null);
-           
+            // console.log(file)
+            // console.log(thingsArray)
+            // callback(null);         
         }
         // pushDataRaster
     ], function (err, result) {

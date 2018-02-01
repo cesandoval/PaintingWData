@@ -7,18 +7,10 @@ var Model = require('../models'),
 Channel = require('../../worker/channel');
 processVoxels = require('../../worker/worker2').processVoxels;
 // const Op = Sequelize.Op;
-// automatically render the layers page after a job is completed
-// have a job completed show a full progresss bar until it is X'ed out by the user
-// load a class for the widhget and serialize every time
-// check if the values are correct??
-// JSON PARSE this job and see if that works
-// res.send the id of the uploaded job to this controller>? or to this 
-//
-var numCalls = 0;
-//// TODO
-// maybe add a field to the user on recently uploaded 
-// ids so we can keep track of what to send to each user
 
+var numCalls = 0;
+
+// deprecated, see getByIds
 function getLastId(req, res) {
     var output = [];
     var dataset = null;
@@ -118,6 +110,8 @@ function getLastId(req, res) {
     });
 }
 
+
+// deprecated, see getByIds
 function getById(req, res, id) {
     var output = [];
     var dataset = null;
@@ -157,11 +151,6 @@ function getById(req, res, id) {
         }
 
         dataset = gfile.layers.get(0);
-
-        //#TODO
-        // datafilenames are not necessarily unique, so theri layers aren't going to be distinguashable
-        // query bu the datafile id
-
         totalLayers = dataset.features.count();
         console.log('totalLayers = ' + totalLayers);
 
@@ -226,11 +215,12 @@ function getById(req, res, id) {
 }
 
 
-//this is the funcitno that htprogresswidget will be using
-// queries teh database by  Job id's and returns an array of items in the form....
-//[id, jobname, progress, denominator] if the job is in progress or waiting
+//The main Progress Traker Function
+// queries the database by job id and returns an array of items in the form....
+//[id, jobname, progress, denominator] if the job is in progress or waiting (null null when the job has been deleted after completion)
 //[id, jobname, bool] bool == true if the job is done, false if the output is invalid
-// jobname$$Errormessage
+// [id$$jobname$$Errormessage]
+// [~/~ Error message here]
 //takes query string of enpoint?shapes=id1$$id2$$id3
 //hope to add the param &voxels=ids 
 function getLastIds(req, res) {
@@ -390,7 +380,7 @@ module.exports.updateShapes = function (req, res) {
 
 
 
-
+// for testing purposes. Does not make the progress tracker behave accurately.
 function testTracker(req, res) {
     console.log(numCalls)
     var output;

@@ -719,7 +719,6 @@ label {
     height: 120%;
 }
 
-
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li {
     height:100%;
 }
@@ -843,7 +842,6 @@ label {
 
 .pflash {
     margin-bottom: 0px;
-    /* width: 100vw; */
 }
 
 #widget-menu .fa-question {
@@ -855,11 +853,6 @@ label {
     top: -8px !important;
     left: calc(150px + 1.4vw);
 }
-/* #widget-menu .caption-right {
-    /* top: -8px !important;
-    left: 175px; */
-
-
 
 .menu-item .progress-label {
     position: relative;
@@ -896,12 +889,14 @@ label {
     opacity: 0;
     transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out 0.1s;
   }
+
   .tooltiper:hover .tooltip {
     transform: rotateX(0) translateZ(20px);
     opacity: 1;
     transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out;
     z-index: 1000;
   }
+
   .tooltiper .tooltip:after {
     content:"";
     position: absolute;
@@ -916,7 +911,7 @@ label {
   }
   .tooltiper .tooltip.no-after:after{content:none; display:none;}
 
-
+/***
   .widget-modal-wrapper {
     display: block;
     position: fixed;
@@ -929,13 +924,10 @@ label {
     background-color: black;
     background-color: rgba(0, 0, 0, 0.4);
     -webkit-transition: 0.5s;
-    overflow: auto;
-    /* transition: all 0.3s linear; */
-     
+    overflow: auto; 
    }
    
    .widget-modal-body {
-       /* background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);  */
        position: fixed;
        margin-left: auto;
        margin-right: auto; 
@@ -950,7 +942,6 @@ label {
        -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
        box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
        background-color: white;
-       /* max-height: 310px; */
    
    }
    #widget-modal {
@@ -970,6 +961,6 @@ label {
      }
    
 
-
+**/
 
   /* end porgress tracker CSS*/
