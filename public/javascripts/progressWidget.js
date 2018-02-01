@@ -269,9 +269,9 @@ function progressWidgetInit() {
                 this.flashes.forEach(item => {
                     clearTimeout(item);
                 })
-                $(".pflash").each(e, i => {
-                    $(i).remove();
-                });
+                // $(".pflash").each(e, i => {
+                //     $(i).remove();
+                // });
             }
             if (this.$el && this.$el.children().length)
                 this.$el.children().remove();
@@ -504,8 +504,24 @@ function progressWidgetInit() {
                 }
             }
 
-            var temp = new Set(this.state.completedJobs);// remove duplicates
-            this.state.completedJobs = Array.from(temp);
+
+            // remove duplicates
+
+            if(this.state.completedJobs.length) {
+                var temp = new Set(this.state.completedJobs.map(i=> {
+                    return i[0];
+                }));
+    
+                this.state.completedJobs = this.state.completedJobs.filter(job => {
+                    if(temp.has(job[0])){
+                        temp.delete(job[0]);
+                        return job;
+                    }
+                });
+            }
+
+
+
 
 
             this.refresh();
@@ -574,8 +590,10 @@ function progressWidgetInit() {
 
                         if (this.pageReload) {
                             setTimeout(function() {
+                                this.request.abort();
                                 window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-                            }, 1000);
+                            }.bind(this), 1000);
+                            return;
                         }
                     } catch (e) {
                         progress = JSON.parse(xhr.response);
@@ -593,23 +611,23 @@ function progressWidgetInit() {
                     }
                 }
             }.bind(this);
-            xhr.timeout = timeout + 200;
+            // xhr.timeout = timeout + 200;
             xhr.responsetype = "json"
-            xhr.ontimeout = function () {
-                if(this.state.timeouts > 0)
-                     this.state.timeouts -= 1;
+            // xhr.ontimeout = function () {
+            //     if(this.state.timeouts > 0)
+            //          this.state.timeouts -= 1;
 
-                if (this.state.timeouts == 0) {
-                    this.pollingState = 0;
-                }
-                var timeout = this.state.pollingState === 0 ? 5000 : 100;
+            //     if (this.state.timeouts == 0) {
+            //         this.pollingState = 0;
+            //     }
+            //     var timeout = this.state.pollingState === 0 ? 5000 : 100;
 
-                if (!this.inLoop && this.request === null)
-                {
-                    this.pollTimeout = setTimeout(function () { this._xhrLoop() }.bind(this), timeout +200);
+            //     if (!this.inLoop && this.request === null)
+            //     {
+            //         this.pollTimeout = setTimeout(function () { this._xhrLoop() }.bind(this), timeout +200);
 
-                }
-            }.bind(this);
+            //     }
+            // }.bind(this);
             return xhr;
         },
 

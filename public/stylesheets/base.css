@@ -715,6 +715,10 @@ label {
     color: white;
 }
 
+.nav-container {
+    height: 120%;
+}
+
 
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li {
     height:100%;

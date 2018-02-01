@@ -245,12 +245,12 @@ function getLastIds(req, res) {
 
     console.log(req.query.shapes)
     if(req.query.shapes === '') {
-        console.log('no ids')
+        // console.log('no ids')
         res.send({progress: [[]]})
         return false; // don't query if there is no query object
     }
     ids = req.query.shapes.split("$$")
-    console.log(ids);
+    // console.log(ids);
 
     Model.Datafile.findAll({
         where: {
@@ -346,12 +346,12 @@ function getLastIds(req, res) {
                     }
                     else if(!outLayer[1] || !(outLayer[2] <= outLayer[3])){ // check if the output is valid
                         //put in an aerror flag
-                        console.log("line 349")
+                        console.log("Invalid format error - numerator: " + outLayer[2] + " denom: " + outLayer[3])
                         output.push([id, jobName[0], false]);
                     }
 
                     else {
-                        console.log('outlayer pushed')
+                        // console.log('outlayer pushed')
                         output.push(outLayer);
                     }
                 }
