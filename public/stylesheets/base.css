@@ -839,6 +839,7 @@ label {
 
 .pflash {
     margin-bottom: 0px;
+    /* width: 100vw; */
 }
 
 #widget-menu .fa-question {
@@ -863,13 +864,14 @@ label {
 }
 
 .tooltiper {
-    max-width: inherit;
+    max-width: 130px;
     position: relative;
     display: inline-block;
     color: rgb(38, 37, 37);
     perspective: 600px;
     text-overflow: ellipsis;
     transform-style: preserve-3d;
+    overflow-wrap: break-word;
   }
   
   .tooltiper .tooltip {
@@ -894,7 +896,7 @@ label {
     transform: rotateX(0) translateZ(20px);
     opacity: 1;
     transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out;
-    z-index: 100;
+    z-index: 1000;
   }
   .tooltiper .tooltip:after {
     content:"";
@@ -905,7 +907,7 @@ label {
     border-style: solid;
     border-width: 7px 7px 0 7px;
     border-color: rgb(38, 37, 37) transparent transparent transparent;
-    z-index: 100!important;
+    z-index: 1000!important;
     
   }
   .tooltiper .tooltip.no-after:after{content:none; display:none;}

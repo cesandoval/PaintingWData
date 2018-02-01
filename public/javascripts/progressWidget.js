@@ -239,7 +239,7 @@ function progressWidgetInit() {
                         this.flashes.shift();
                     }.bind(this).bind(flash), this.flashTimeout);
                     this.flashes.push(t);
-                    $('.navbar').append(flash);
+                    $('.navbar-fixed-top').append(flash);
                 }
             }
             );
@@ -450,7 +450,7 @@ function progressWidgetInit() {
                         if(!inArrs && i === this.state.currentJobs.length -1 ) {
                             index = this.state.selectedIDs.indexOf(input[0])
                             delId = this.state.selectedIDs.splice(index, 1); // stop querying this job
-                            this.completedJobs.push(input);
+                            this.state.completedJobs.push(input);
                             inArrs = true;
                             this._createFlash(input[1] + " has completed!");
 
@@ -460,7 +460,7 @@ function progressWidgetInit() {
                         index = this.state.selectedIDs.indexOf(input[0])
                         delId = this.state.selectedIDs.splice(index, 1); // stop querying this job
                         this.recentlyDeleted.push(delId);
-                        this.completedJobs.push(input);
+                        this.state.completedJobs.push(input);
                         this._createFlash(input[1] + " has completed!");
 
                     }
