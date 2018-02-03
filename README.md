@@ -52,7 +52,7 @@ npm install -g gulp-cli
     ECHO $EMAILPASSWORD`
 
 ## Starting the Server
-* Run the following command to create the datbase files:
+* Run the following command to create the database files:
 ```
 $ cd app
 $ sequelize db:migrate
