@@ -51,17 +51,19 @@ function startShapeWorker(req, callback) {
         fileViewerHelper.pushDataLayerTransform,
         // fileViewerHelper.pushDataRaster,
         function(file, thingsArray, callback){
-              fs_extra.remove(file, err => {
-                  if (err) {
-                    console.log("Error cleaning local directory: ", file);
-                    console.log(err, err.stack);
-                    callback(err);
-                  }
-                  else{
-                     callback(null);
-                  }
-            })
-           
+            //   fs_extra.remove(file, err => {
+            //       if (err) {
+            //         console.log("Error cleaning local directory: ", file);
+            //         console.log(err, err.stack);
+            //         callback(err);
+            //       }
+            //       else{
+            //          callback(null);
+            //       }
+            // })
+            // console.log(file)
+            // console.log(thingsArray)
+            // callback(null);         
         }
         // pushDataRaster
     ], function (err, result) {
