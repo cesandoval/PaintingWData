@@ -35,6 +35,33 @@ function startVoxelWorker(datalayerIds, req, callback){
     });
 };
 
+function startRasterVoxelWorker(datalayerIds, req, callback){
+    async.waterfall([
+        async.apply(getBbox, datalayerIds, req),
+        createDatavoxel,
+        createRaster,
+        parseGeoJSON,
+        pushDatajson,
+    ], function (err, result) {
+        var voxelId = result[0];
+        Model.Datavoxel.findById(voxelId).then(function(datavoxel) {
+            datavoxel.update({
+                processed: true,
+                rowsCols: result[1], 
+                allIndices: result[2], 
+                ptDistance: result[3]
+            }).then(function(){
+                Model.User.findById(result[4].user.id).then(function(user) {
+                    //send user an email
+                    mailer.sendVoxelEmail(user.email, user.id);
+                }).then(function(){
+                    callback({name: datavoxel.voxelname});
+                })    
+            })
+        })
+    });
+};
+
 function startShapeWorker(req, callback) {
     var id = req.user.id;
     var newEpsg = req.body.epsg;
@@ -128,6 +155,64 @@ function createDatavoxel(bbox, props, req, callback){
         })
         callback(null, bbox, props, req);
     });
+}
+
+function createRaster(bbox, props, req, callback) {
+
+    var resultsObj ={};
+    var objProps = {};
+
+    // get pixel array dimensions
+    var numOfVoxels = req.body.voxelDensity;
+    var coords = bbox.coordinates[0],
+        length = Math.abs(coords[3][0]-coords[0][0])*1000000,
+        width = Math.abs(coords[2][1]-coords[0][1])*1000000,
+        area = length*width; 
+    var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
+    var columns = Math.floor(length/stepSize),
+        rows = Math.floor(width/stepSize);
+
+    var rowsCols = {rows: rows, cols: columns};
+    var ptDistance = 0;
+
+    var maxLength = 2,
+        processedProps = 0;
+
+    var cargo = async.cargo(function(tasks, callback) {
+        for (var i=0; i<tasks.length; i++) {
+            processedProps++;
+            saveRaster(tasks[i], function(results){
+                callback(results);
+            });
+        }
+
+    }, maxLength);
+
+    props.forEach(function(prop, index){
+        cargo.push(prop, function(results){
+            resultsObj[prop.datafileId] = results;
+            objProps[prop.datafileId] = prop;
+            if(processedProps == props.length){
+                callback(null, resultsObj, objProps, req, rowsCols, ptDistance);
+            }
+        });
+    });
+}
+
+function saveRaster(prop, callback) {
+    console.log("\n\n saving raster for " + prop.id + "\n");
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Dataraster" (id serial primary key, rast raster, layername text, datafileid integer);';
+
+    var rasterQuery = tableQuery + 
+                    `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', p.rasterval, -999999), `+
+                    prop.epsg + `), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p WHERE layername='`+prop.layername+`';`;
+
+    console.log(rasterQuery);
+
+    connection.query(rasterQuery).spread(function(results, metadata){
+            console.log('Rasters Pushed!!!!');
+            callback(results);
+        })
 }
 
 // This function creates a Datanet around the BBox that has been computed
@@ -387,5 +472,5 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
 
 }
 
-module.exports.processDatalayer = startVoxelWorker;
+module.exports.processDatalayer = startRasterVoxelWorker;
 module.exports.pushShapes = startShapeWorker;
