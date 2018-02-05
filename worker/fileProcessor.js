@@ -40,7 +40,7 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
         async.apply(getBbox, datalayerIds, req),
         createDatavoxel,
         createRaster,
-        parseGeoJSON,
+        parseRasterGeoJSON,
         pushDatajson,
     ], function (err, result) {
         var voxelId = result[0];
@@ -346,7 +346,7 @@ function pointQuery(prop, callback){
     AND ST_Within(p.geometry, g.geometry);`
 
     connection.query(rasterQuery).spread(function(results, metadata){
-        console.log(results.length)
+        console.log(results.length);
         callback(results);
     });
 }
@@ -390,6 +390,64 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
         });
     });
 
+}
+
+function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
+    for (var i; i<2000; i++){
+        console.log(i, '++++++++++++++++++')
+    }
+    var allIndices = [];
+    var currIndex = 0;
+
+    var newDataJsons = {};
+    var _keys = Object.keys(results);
+    _keys.forEach(function(key, index){
+        var layername = objProps[key].layername;
+        var currGeojson = results[key];
+        var features = [];
+        for (i = 0; i <currGeojson.length; i++){
+            var currentResult = currGeojson[i],
+                voxel = {
+                    type: 'Feature',
+                    geometry: currentResult.geom,
+                    properties: { }
+                };
+
+            var index = currentResult.x + rowsCols.rows * currentResult.y;
+            if (allIndices.indexOf(index) === -1) {
+                allIndices[currIndex] = index;
+                currIndex +=1;
+            }
+            voxel['properties'][layername] = currentResult.val;
+            voxel['properties']['neighborhood'] = {
+                column: currentResult.x,
+                row: currentResult.y
+            };
+            voxel['properties']['property'] = 'BLOCK';
+            voxel['properties']['pointIndex'] = index;
+
+            console.log("voxel: " + JSON.stringify(voxel, null, 4));
+
+            features.push(voxel);
+        }
+
+        var geoJSON = {
+            type: "FeatureCollection",
+            features: features
+        }
+        var newDataJSON = {
+            layername: objProps[key].layername,
+            userId: req.user.id,
+            datavoxelId: objProps[key].datavoxelId,
+            datafileId: objProps[key].datafileId,
+            epsg: 4326,
+            geojson: geoJSON,
+        }
+        newDataJsons[key] = newDataJSON;
+    });
+    allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});    
+    
+    callback(null, newDataJsons, objProps, req, rowsCols, allIndices, ptDistance);
 }
 
 function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
