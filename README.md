@@ -54,13 +54,42 @@ npm install -g gulp-cli
 ## Starting the Server
 * Run the following command to create the database files:
 ```
-$ cd app
-$ sequelize db:migrate
+$ yarn db:migrate
+```
+or 
+```
+$ npm db:migrate
 ```
 * To erase the database before migrating:
 ```
 $ cd app
 $ sequelize db:migrate:undo:all
+```
+* To add a new migration to add a column to a model:
+```
+$ sequelize migration:create
+```
+Then edit the newly created `js` file:
+```
+module.exports = {
+  up: function(queryInterface, Sequelize) {
+    // logic for transforming into the new state
+    queryInterface.addColumn(
+      'Todo',
+      'completed',
+     Sequelize.BOOLEAN
+    );
+
+  },
+
+  down: function(queryInterface, Sequelize) {
+    // logic for reverting the changes
+    queryInterface.removeColumn(
+      'Todo',
+      'completed'
+    );
+  }
+}
 ```
 * Start **redis server**:
     * Google search: `install/connect to redis server locally`
