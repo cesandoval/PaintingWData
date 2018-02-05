@@ -158,12 +158,13 @@ function createDatavoxel(bbox, props, req, callback){
 }
 
 function createRaster(bbox, props, req, callback) {
-
+    // save pixel data
     var resultsObj ={};
     var objProps = {};
 
     // get pixel array dimensions
     var numOfVoxels = req.body.voxelDensity;
+    console.log("\nvoxel density: " + numOfVoxels);
     var coords = bbox.coordinates[0],
         length = Math.abs(coords[3][0]-coords[0][0])*1000000,
         width = Math.abs(coords[2][1]-coords[0][1])*1000000,
@@ -172,45 +173,49 @@ function createRaster(bbox, props, req, callback) {
     var columns = Math.floor(length/stepSize),
         rows = Math.floor(width/stepSize);
 
+    columns = 1000;
+    rows = 1000;
+
     var rowsCols = {rows: rows, cols: columns};
     var ptDistance = 0;
 
-    var maxLength = 2,
+    var maxLength = 1,
         processedProps = 0;
 
+    // process layers
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
-            processedProps++;
-            saveRaster(tasks[i], function(results){
+            processedProps+=1;
+            saveRaster(tasks[i], rowsCols, function(results){
                 callback(results);
             });
         }
-
     }, maxLength);
 
     props.forEach(function(prop, index){
         cargo.push(prop, function(results){
             resultsObj[prop.datafileId] = results;
             objProps[prop.datafileId] = prop;
-            if(processedProps == props.length){
+            if (processedProps == props.length){
+                console.log("\n ------ finished raster creation ------\n");
                 callback(null, resultsObj, objProps, req, rowsCols, ptDistance);
             }
         });
     });
 }
 
-function saveRaster(prop, callback) {
-    console.log("\n\n saving raster for " + prop.id + "\n");
-    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Dataraster" (id serial primary key, rast raster, layername text, datafileid integer);';
+function saveRaster(prop, rowsCols, callback) {
+    console.log("\n\n saving raster for " + prop.datafileId + "\n");
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Dataraster" (id serial primary key, rast raster, layername text, datafileid integer); ';
+
+    var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
 
     var rasterQuery = tableQuery + 
-                    `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_SetSRID(St_asRaster(p.geometry, 500, 500, '32BF', p.rasterval, -999999), `+
-                    prop.epsg + `), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p WHERE layername='`+prop.layername+`';`;
+                    `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_AsRaster(p.geometry, s` + rowsCols.rows + `, ` +  rowsCols.cols + `, '8BUI', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p WHERE layername='`+ prop.layername +` AND p."datafileId"=` + prop.datafileId + `' GROUP BY p.layername;` + dumpImgQuery;
 
     console.log(rasterQuery);
 
     connection.query(rasterQuery).spread(function(results, metadata){
-            console.log('Rasters Pushed!!!!');
             callback(results);
         })
 }
@@ -320,37 +325,12 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
 }
 
 function pointQuery(prop, callback){
-    // rasterQuery2 = `
-    // SELECT ST_Extent(p.geometry)
-    // FROM public.` +'"Datanets"' + ` AS p
-    // WHERE p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
-    // ;`
-    // connection.query(rasterQuery2).spread(function(results, metadata){
-    //     console.log(results.length, 888888888)
-    //     console.log(results)
-    // });
-
-    // rasterQuery3 = `
-    // SELECT p.geometry
-    // FROM public.` +'"Datalayers"' + ` AS p
-    // WHERE p.`+'"datafileId"'+ "=" + prop.datafileId+`
-    // ;`
-    // connection.query(rasterQuery3).spread(function(results, metadata){
-    //     console.log(results.length, 77777777)
-    // });
-
     rasterQuery = `
     SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + `g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
     FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
-    WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
+    WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId +`
     AND ST_Within(p.geometry, g.geometry);`
-    // 117, 45
 
-    // rasterQuery = `
-    // SELECT p.geometry as pt, CASE WHEN ST_Intersects(g.geometry, p.geometry) = TRUE THEN g.rasterval ELSE 0 end as pt_props
-    // FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g
-    // WHERE  p.` +'"datavoxelId"' + "=" +props[0].datavoxelId+`
-    // AND g.`+'"datafileId"'+ "=" + props[0].datafileId +";"
     connection.query(rasterQuery).spread(function(results, metadata){
         console.log(results.length)
         callback(results);
