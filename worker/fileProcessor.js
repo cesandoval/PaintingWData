@@ -173,9 +173,6 @@ function createRaster(bbox, props, req, callback) {
     var columns = Math.floor(length/stepSize),
         rows = Math.floor(width/stepSize);
 
-    columns = 1000;
-    rows = 1000;
-
     var rowsCols = {rows: rows, cols: columns};
     var ptDistance = 0;
 
@@ -194,6 +191,7 @@ function createRaster(bbox, props, req, callback) {
 
     props.forEach(function(prop, index){
         cargo.push(prop, function(results){
+            // resultsObj holds points (geom, val, x, y)
             resultsObj[prop.datafileId] = results;
             objProps[prop.datafileId] = prop;
             if (processedProps == props.length){
@@ -210,12 +208,28 @@ function saveRaster(prop, rowsCols, callback) {
 
     var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
 
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(r.rast)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
+
     var rasterQuery = tableQuery + 
-                    `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_AsRaster(p.geometry, s` + rowsCols.rows + `, ` +  rowsCols.cols + `, '8BUI', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p WHERE layername='`+ prop.layername +` AND p."datafileId"=` + prop.datafileId + `' GROUP BY p.layername;` + dumpImgQuery;
+                    `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_AsRaster(p.geometry, ST_AsRaster(g.bbox, ` + rowsCols.rows + `, ` +  rowsCols.cols + `, 100, 100, '8BUI'), '8BUI', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; ` + dumpImgQuery +centroidValueQuery;
 
     console.log(rasterQuery);
 
     connection.query(rasterQuery).spread(function(results, metadata){
+           // console.log("raster query results: " + JSON.stringify(results, null, 4));
+           /* {
+                "geom": {
+                    "type": "Point",
+                    "coordinates": [
+                        -74.23925759060683,
+                        40.49931907751085
+                    ]
+                },
+                "val": 74,
+                "x": 2,
+                "y": 300
+            } */
+
             callback(results);
         })
 }
