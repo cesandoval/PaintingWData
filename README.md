@@ -67,6 +67,7 @@ $ sequelize db:migrate:undo:all
 ```
 * To add a new migration to add a column to a model:
 ```
+$ cd app
 $ sequelize migration:create
 ```
 Then edit the newly created `js` file:
