@@ -372,12 +372,14 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
     var voxelId
     async.each(keys, function(key, callback) {
             var newDataJSON = Model.Datajson.build();
+            const hashKey = (+new Date()).toString(32) + Math.floor(Math.random() * 36).toString(36)
             newDataJSON.layername = objProps[key].layername;
             newDataJSON.datafileId = objProps[key].datafileId;
             newDataJSON.epsg = 4326;
             newDataJSON.datavoxelId = objProps[key].datavoxelId;
             newDataJSON.geojson = dataJSONs[key];
             newDataJSON.userId = req.user.id;
+            newDataJSON.layerKey = hashKey;
             newDataJSON.save().then(function(){
                 callback(null, 'STOPPPPPPPP');
             });
