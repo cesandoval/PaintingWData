@@ -182,7 +182,7 @@ function createRaster(bbox, props, req, callback) {
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
-            saveRaster(tasks[i], rowsCols, function(results){
+            saveRaster(tasks[i], rowsCols, bbox, function(results){
                 callback(results);
             });
         }
@@ -201,7 +201,7 @@ function createRaster(bbox, props, req, callback) {
     });
 }
 
-function saveRaster(prop, rowsCols, callback) {
+function saveRaster(prop, rowsCols, bbox, callback) {
 
     var epsg = 4326;
 
@@ -210,9 +210,11 @@ function saveRaster(prop, rowsCols, callback) {
 
     var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
 
-    var centroidValueQuery = `SELECT (ST_PixelasCentroids(r.rast)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
+    var bboxRaster = `ST_Resample(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ST_SetSRID(r.rast, ` + epsg + `))`;
 
-   // var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid, "rasterProperty", rasterval) SELECT ST_Union(ST_AsRaster(p.geometry, ST_AsRaster(g.bbox, ` + rowsCols.rows + `, ` +  rowsCols.cols + `, 100, 100, '8BUI'), '8BUI', p.rasterval, -999999)), layername, ` + prop.datafileId + `, p."rasterProperty", p.rasterval  FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; `;
+    var mapAlgebraQuery = `ST_MapAlgebra(ST_SetSRID(r.rast, ` + epsg + `), ST_AddBand(ST_MakeEmptyRaster(` + bboxRaster + `), '32BF'::text, -999999, -999999), '[rast1]', '32BF', 'SECOND')`;
+
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
 
     var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_AsRaster(ST_SetSRID(p.geometry, ` + epsg + `), ST_AsRaster(g.bbox, ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), '32BF', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; `;
 
@@ -222,7 +224,7 @@ function saveRaster(prop, rowsCols, callback) {
     console.log(rasterQuery);
 
     connection.query(rasterQuery).spread(function(results, metadata){
-            //console.log("raster query results: " + JSON.stringify(results, null, 4));
+            console.log("raster query results: " + JSON.stringify(results, null, 4));
             callback(results);
         })
 }
@@ -499,12 +501,14 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             });
             voxelId = objProps[key].datavoxelId;
 
+           /* 
             console.log("voxel: " + JSON.stringify(newDataJSON, null, 4));
             console.log("datafileId: " + newDataJSON.datafileId);
             console.log("datavoxelId: " + newDataJSON.datavoxelId);
             console.log("layername: " + newDataJSON.layername);
             console.log("voxelId: " + voxelId);
             console.log("ptDistance: " + ptDistance);
+            */
         },
         function(){
             callback(null, [voxelId, rowsCols, allIndices, ptDistance, req]);
