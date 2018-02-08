@@ -202,7 +202,6 @@ function createRaster(bbox, props, req, callback) {
 }
 
 function saveRaster(prop, rowsCols, bbox, callback) {
-
     var epsg = 4326;
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
