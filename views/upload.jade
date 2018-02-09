@@ -3,17 +3,18 @@ extends layout
 block pageTitle
 
   div.container.spacing-large
-      .row.spacing-large
+      .row
+        .col-md-6
          h1.center Upload Data
 
       if (uploadAlert)
         .alert.alert-danger(role='alert') #{uploadAlert}
 
       .row
-        .col-md-6.col-md-offset-3
-          h4.spacing-large.text-center Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
+        .col-md-6
+          h4.spacing Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
       .row
-        .col-md-6.col-md-offset-3.text-center
+        .col-md-6
           p.note *Currently, Painting with Data supports polygon shapefiles only. Shapefiles must be compressed in a ZIP file. <br>The ZIP file should include these files:
           p.note .dbf file
           p.note .prj file
@@ -21,14 +22,18 @@ block pageTitle
           p.note .shx files
           br
           p.note Do not include /shd.xml file in the ZIP.
-      .row
-        h3.spacing.text-center
-          label(for="file-selector").btn.btn-gray.btn-jumbotron.custom-upload Add File
+      .row.spacing
+        p.col-md-2
+          label(for="file-selector").btn.btn-outline-primary.custom-upload Add File
             input(id="file-selector",  name = "zip_file", type="file")
-        p.text-center
-          a(class="btn btn-lg btn-gray btn-jumbotron hidden", id="upload", name="upload", role="button", style="width: 100px") Upload
+      .row
+        p.col-md-2(id="file-name-display")
+      .row
+        p.col-md-2
+          a(class="btn btn-outline-primary hidden", id="upload", name="upload", role="button") Upload
           
-      .row.spacing  
+      .row.spacing
+        .col-md-12
           div.progress.hidden(style="backround-color: white")
             div(class="progress-bar progress-bar-warning" role="progressbar", style="width: 100%").
               Uploading File ...

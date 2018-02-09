@@ -2,6 +2,9 @@
 const NodeType = {
   [name]: { // e.g. 'layer', 'add', 'sub', 'log'
     fullname: '', // e.g. 'Subraction', 'Multiplication', 'Division', 'Logarithm'
+    desc: `', // some 
+        descripti
+    `n
     inputs: {
       // e.g. 'Input', 'Input2', 'Numerator', 'Denominator'.
       [name]: 'N', // 'N' is one letter abbreviation to uppercase.
@@ -19,6 +22,9 @@ const NodeType = {
 
 export const DATASET = {
     fullName: 'Dataset',
+    desc: `
+        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes. 
+    `,
     inputs: {
         // no input
     },
@@ -29,6 +35,9 @@ export const DATASET = {
 
 export const LOG = {
     fullName: 'Logarithm',
+    desc: `
+        Computes the Logarithm value of a dataset. Options: Maximum Interval, Base of Logarithm.
+    `,
     inputs: {
         Input: 'I',
     },
@@ -71,6 +80,9 @@ export const LOG = {
 
 export const SUB = {
     fullName: 'Subraction',
+    desc: `
+        Computes the arithmetic Subtraction of two datasets, the minuend and subtrahend.
+    `,
     inputs: {
         Minuend: 'M',
         Subtrahend: 'S',
@@ -84,6 +96,9 @@ export const SUB = {
 
 export const DIV = {
     fullName: 'Division',
+    desc: `
+        Computes the arithmetic Division of two datasets, the numerator and denominator. Returns 0 if dividing by 0.
+    `,
     inputs: {
         Numerator: 'N',
         Denominator: 'D',
@@ -97,6 +112,10 @@ export const DIV = {
 
 export const MULT = {
     fullName: 'Multiplication',
+    desc: `
+        Computes the arithmetic Multiplication of two datasets, the multiplicand and multiplier.
+
+    `,
     inputs: {
         Mulitplicand: 'M',
         Multiplier: 'M',
@@ -110,6 +129,9 @@ export const MULT = {
 
 export const ADD = {
     fullName: 'Addition',
+    desc: `
+        Computes the arithmetic Addition of two datasets.
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -121,8 +143,43 @@ export const ADD = {
     },
 }
 
+export const MIN = {
+    fullName: 'MIN',
+    desc: `
+        MIN
+    `,
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.min(voxel))
+    },
+}
+
+export const MAX = {
+    fullName: 'MAX',
+    desc: `
+        MAX
+    `,
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic(inputs) {
+        return _.zipWith(...inputs, (...voxel) => _.max(voxel))
+    },
+}
+
 export const AND = {
-    fullName: 'And',
+    fullName: 'AND',
+    desc: `
+        Returns the voxels that contain a visible voxel in both datasets. Algebraic Function: F=A*B.
+    `,
     inputs: {
         Input1: 'I',
         Input2: 'I',
@@ -134,5 +191,52 @@ export const AND = {
     arithmetic(...input) {
         // TODO
         return input[0]
+    },
+}
+
+export const OR = {
+    fullName: 'OR',
+    desc: `
+        Returns the voxels that contain a visible voxel in either dataset. Algebraic Function: F=A+B.
+    `,
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.or(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
+export const XOR = {
+    fullName: 'XOR',
+    desc: `
+        Returns the voxels that contain a visible voxel in one, and only one of the input datasets. 
+    `,
+    inputs: {
+        Input1: 'I',
+        Input2: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return math.xor(...inputs).map(m => (m ? 1 : 0))
+    },
+}
+
+export const NOT = {
+    fullName: 'NOT',
+    desc: `
+        Returns the voxels that contain an invisible voxel in a dataset (logical negation). Algebraic Function: F=A'.
+    `,
+    inputs: {
+        Input: 'I',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        return inputs[0].map(m => !m)
     },
 }

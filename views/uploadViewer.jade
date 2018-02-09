@@ -9,14 +9,14 @@ block pageTitle
     var id = #{id};
     var size = #{size}
 
-  .container(style="margin-top: 100px")
+  .container(style="width: 70vw")
 
-    .row.spacing-large
+    .row.col-md-9.spacing-large
         h1.center Create Layer
 
     .row
-      .col-md-6
-        div(id="map_thumbnail_#{id}", style="width: 400px; height: 400px; margin:0 auto;").spacing-large
+      .col-md-6.map-holder
+        div(id="map_thumbnail_#{id}", style="width: 400px; height: 400px; margin:0 0;").spacing-large
 
       .col-md-6
         form(method="post", action="/uploadViewer")
@@ -56,7 +56,7 @@ block pageTitle
               select.form-control(id='rasterProperty', name='rasterProperty')
               br
               br
-          div.text-center
-            button.btn.btn-block.btn-gray.btn-jumbotron(type='submit') Save Layer
+          div
+            button.btn.btn-outline-primary(type='submit') Save Layer
 
    script(src="/javascripts/layer_viewer.js") 

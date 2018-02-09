@@ -24,7 +24,11 @@ module.exports = function(sequelize, DataTypes) {
         color2: {
             type: DataTypes.STRING,
             defaultValue: '#0000ff'
+        },
+        layerKey:{
+            type: DataTypes.STRING,
         }
+        
     }, {
         classMethods: {
             associate: function(models) {

@@ -1,4 +1,4 @@
-function requestMap(id, callback){
+function requestMap(id, callback, size){
     $.ajax({
         url: '/getMapData/'+id ,
         type: 'GET',
@@ -20,7 +20,7 @@ function requestMap(id, callback){
                 renderEPSG(data.epsg);
 
                 var centroid = JSON.stringify(data.centroid);
-                callback(bBox, JSON.parse(geoJSON), JSON.parse(centroid));
+                callback(bBox, JSON.parse(geoJSON), JSON.parse(centroid), size);
             }
             else
             {

@@ -4,7 +4,9 @@ $(function() {
   var $zip_file = $('#file-selector');
   var $file_info = $('#upload-file-info');
   var $upload_btn = $('#upload');
+  var $add_file_btn = $('.custom-upload');
   var $progress_bar = $('.progress-bar');
+  var $filename_div = $('#file-name-display');
   $zip_file.on('change', prepareForUpload);
 
   function prepareForUpload(event)
@@ -14,6 +16,8 @@ $(function() {
     var filename = $($zip_file).val().replace(/C:\\fakepath\\/i, '');
     $file_info.html(filename);
     $upload_btn.removeClass('hidden');
+    $add_file_btn.addClass('btn-visited');
+    $filename_div.text("File added.");
   }
 
   $upload_btn.on('click', upload);

@@ -1,10 +1,10 @@
 /*@import url(https://fonts.googleapis.com/css?family=Quicksand:400,700,300);
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,700,600,900);*/
-@import url(https://fonts.googleapis.com/css?family=Karla:400,500,700,300);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300);
 @import 'https://fonts.googleapis.com/css?family=EB+Garamond';
-@import 'https://fonts.googleapis.com/css?family=Karla:400,700';
+@import 'https://fonts.googleapis.com/css?family=Roboto:400,700';
 @import url('https://fonts.googleapis.com/css?family=Droid+Sans');
-@import url('https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i&subset=latin-ext');
 
 ::-webkit-scrollbar
 {
@@ -146,7 +146,7 @@
     width: 20%;
     top: 25px;
     left: 7px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: bolder;
     color: black;
     text-align: left;
@@ -185,7 +185,7 @@
     color: white;
     text-align: right;
     font-size: 17px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: medium;
     text-transform: uppercase;
     vertical-align: middle;
@@ -204,7 +204,7 @@
 }
 
 #graphLayers {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 15px;
 }
@@ -272,11 +272,14 @@ label {
 }
 
 label[for="file-selector"] {
-    height: 12vh;
-    width: 100%;
-    line-height: 10vh;
-    font-size: 2vh;
+    height: auto;
+    font-size: 12pt;
     font-weight: 400;
+}
+
+label[for="file-selector"]:visited {
+    background-color: #e75332;
+    color: white;
 }
 
 .layerBoxes{
@@ -287,7 +290,7 @@ label[for="file-selector"] {
 
 .resetLayer{
     font-size: .08em;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     width: 20px;
     line-height: 8pt;
@@ -321,8 +324,6 @@ label[for="file-selector"] {
     background-image: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    
-    outline: none;
 }
 
 
@@ -336,7 +337,7 @@ label[for="file-selector"] {
 
 .btn-mapviewer {
     background-color: rgb(220, 220, 220);
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: black;
     border-radius: 5px;
     width: 5vw;
@@ -376,7 +377,7 @@ label[for="file-selector"] {
 .gridStatus label{
     /*position: relative;*/
     font-size: 14px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 300;
     color: white;
 }
@@ -396,7 +397,7 @@ label[for="file-selector"] {
     position: relative;
     font-size: 14px;
     line-height: 7vh;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     color: white;
     bottom: 0px;
@@ -415,7 +416,7 @@ input[type=checkbox]{
 }
 
 label {
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .layer-label {
@@ -459,7 +460,7 @@ label {
 
 .slidersText {
     font-size: 15px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
 
@@ -473,7 +474,7 @@ label {
     display: inline;
     padding-left: 5px;
     font-size: 13px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     color: black;
     height: 5vh;
@@ -554,7 +555,7 @@ label {
 
 .nodes {
     font-size: 12px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 400;
     color: rgb(100,100,100);
     position: relative;
@@ -567,7 +568,7 @@ label {
     /*border-bottom: 2px solid rgba(0,0,0,0);*/
     margin-bottom: 0;
     margin-top: -10px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .nodeNamesSelected {
@@ -604,7 +605,7 @@ label {
     border-radius: 0;
     z-index: 5;
     font-size: 15px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     vertical-align: middle;
     display: inline-block;
     color: black;
@@ -631,7 +632,7 @@ label {
     height: auto;
     display: block;
     text-align: center;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     width: 5vw;
 }
 
@@ -645,7 +646,7 @@ label {
     font-size: 13px;
     font-weight: 500;
     text-align: left;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .mydiv .rightAlign {
@@ -660,13 +661,13 @@ label {
     /*border-top: 1px solid white;*/
     padding-top: 1px;
     margin-top: -2px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .layerBoxes button {
     /*padding: 0px !important;*/
     /*height: 18px !important;*/
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 11px;
     font-weight: 300;
     width: 17%;
@@ -688,7 +689,7 @@ label {
     /*z-index: 10;*/
     /*bottom: 0;*/
     font-size: 15px;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 500;
     vertical-align: middle;
     color: white;
@@ -714,24 +715,252 @@ label {
     color: white;
 }
 
-/*.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
-    text-shadow: 0 -1px 0 rgba(0,0,0,.25);
-}*/
+.nav-container {
+    height: 120%;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li {
+    height:100%;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    padding-left: .8vw;
+    padding-right: .8vw;
+    height: 100%;
+}
 
 .navbar-brand {
     float: left;
     font-size: 24px;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-top: 0!important;
+    padding-bottom: 0!important;
     font-weight: 700;
-    font-family: 'Karla', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .progress-bar {
     width: 100%;
-    height: 20px;
+    height: 40px;
+    background: #e75332;
+    border-radius: 0px 0px;
 }
 
 .progress {
     background-color: white;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-radius: 0;
 }
+
+
+/* Begin Progress Tracker CSS*/
+.progress-tracker-body {
+    /* background: linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);  */
+    padding: 12px 0px 8px 8px;
+    margin: 0;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+    background-color: black;
+    display: block;
+    top: 100%;
+    left: -50%;
+    right:11%;    
+    position: absolute;
+    max-width: 210px;
+    /* max-height: 310px; */
+
+}
+#widget-menu {
+    display: flex;
+    flex-flow: row wrap;
+}
+#jobList{
+    -webkit-padding-start: 10px!important;
+    -webkit-padding-end: 10px!important;
+    overflow-y: auto;
+    max-height: 310px;
+    padding-top:4px;
+    
+}
+#widget-menu .container {
+    width: auto;
+    align-content: left;
+}
+
+
+#widget-menu .progress-bar {
+    width: 100%;
+    height: 20px;
+    float: none;
+    display: block;    
+}
+
+#widget-menu .button {
+    float: right;
+    display: inline-block;
+    
+}
+.dropdown-toggle{
+    width: 143px!important;
+}
+
+.menu-item {
+    flex: 1;
+    justify-content: left;
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    text-overflow: ellipsis;
+    margin: 5% auto;
+    background: #FAFAFA;
+    background-color: #FAFAFA;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E7EEF4');
+    background: -moz-linear-gradient(top, #FAFAFA, #E7EEF4);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FAFAFA), to(#E7EEF4));
+    height: auto;
+    padding: 10px; 
+    border: solid 1px #DCDCDC;
+    border-bottom: solid 1px #98B1C7;
+    -moz-border-radius: .5em; 
+    -webkit-border-radius: .5em;
+    -moz-box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+#widget-menu .fa {
+    background:  linear-gradient(to bottom, #ffffff 0%,#f6f6f6 47%,#ededed 100%);
+    display: inline-block;
+    border-radius: 60px;
+    box-shadow: 0px 0px 2px #888;
+    padding: 0.1em 0.125em;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    cursor: pointer;
+}
+
+.pflash {
+    margin-bottom: 0px;
+}
+
+#widget-menu .fa-question {
+    top: -8px !important;
+    left: -5px;
+}
+
+#widget-menu .fa-refresh {
+    top: -8px !important;
+    left: calc(150px + 1.4vw);
+}
+
+.menu-item .progress-label {
+    position: relative;
+    margin-left: 5px;
+    text-overflow: ellipsis;
+}
+
+.tooltiper {
+    max-width: 130px;
+    position: relative;
+    display: inline-block;
+    color: rgb(38, 37, 37);
+    perspective: 600px;
+    text-overflow: ellipsis;
+    transform-style: preserve-3d;
+    overflow-wrap: break-word;
+  }
+  
+  .tooltiper .tooltip {
+    max-width: unset;
+    min-width: 100px;
+    /* max-width:350px; */
+    position: absolute;
+    /* font-size: 3vh; */
+    text-align: left;
+    background: rgb(38, 37, 37);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: block;
+    top: 0;left: 0;
+    line-height: 1.4em;
+    transform: rotateX(90deg) translateZ(0px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out 0.1s;
+  }
+
+  .tooltiper:hover .tooltip {
+    transform: rotateX(0) translateZ(20px);
+    opacity: 1;
+    transition: transform 0.4s cubic-bezier(0.64, 0.57, 0.67, 1.53), opacity 0.1s ease-out;
+    z-index: 1000;
+  }
+
+  .tooltiper .tooltip:after {
+    content:"";
+    position: absolute;
+    left: 20px;
+    bottom: -7px;
+    height: 0;
+    border-style: solid;
+    border-width: 7px 7px 0 7px;
+    border-color: rgb(38, 37, 37) transparent transparent transparent;
+    z-index: 1000!important;
+    
+  }
+  .tooltiper .tooltip.no-after:after{content:none; display:none;}
+
+/***
+  .widget-modal-wrapper {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100vh;
+    padding-top: 100px;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-transition: 0.5s;
+    overflow: auto; 
+   }
+   
+   .widget-modal-body {
+       position: fixed;
+       margin-left: auto;
+       margin-right: auto; 
+       left: 12.5vw;
+       top: 12.5vh;
+       z-index: 1000;
+       width: 75vw;
+       height: 75vh;
+       padding:1vh 1vh;
+       margin: 1vh 1vh 0px 0px;
+       -webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       -moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.26);
+       background-color: white;
+   
+   }
+   #widget-modal {
+       display: inline-block;
+       width: 100%;
+       height: 100%;
+       padding: 10px;
+       justify-content: center;
+   
+   }
+   
+   #widget-modal .title {
+       font-size: 30px;
+       margin: 10px;
+       font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+       color: rgba(0, 0, 0, 0.6);
+     }
+   
+
+**/
+
+  /* end porgress tracker CSS*/

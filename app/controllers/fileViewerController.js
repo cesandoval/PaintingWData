@@ -28,8 +28,8 @@ module.exports.saveShapes = function(req, res) {
             mailController.sendLayerEmail(user.email ,req.user.id);
         },
         function(err){}
-        );
-    res.redirect('/layers/' + req.user.id);
+        );   
+    res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
 }
 
 module.exports.getDatalayers = function(req, res){

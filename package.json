@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "init:db": "cd app && sequelize db:migrate",
     "dev": "cross-env NODE_ENV=development node ./bin/www",
     "build": "gulp build",
     "start": "cross-env NODE_ENV=production node ./bin/www",
@@ -11,6 +12,9 @@
     "lint:check": "eslint . --color --quiet"
   },
   "dependencies": {
+    "@turf/interpolate": "^5.1.5",
+    "@turf/meta": "^6.0.0-beta.3",
+    "@turf/random": "^5.1.5",
     "amqplib": "^0.5.1",
     "antd": "^2.13.8",
     "async": "^2.0.0",
@@ -32,7 +36,7 @@
     "formidable": "^1.0.17",
     "fs": "0.0.2",
     "fs-extra": "^2.0.0",
-    "gdal": "^0.9.4",
+    "gdal": "^0.9.6",
     "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
     "jade": "~1.11.0",
@@ -42,6 +46,7 @@
     "kue": "^0.11.5",
     "lodash": "^4.17.4",
     "morgan": "~1.7.0",
+    "mysql": "^2.15.0",
     "ncp": "^2.0.0",
     "nodemailer": "^2.7.2",
     "passport": "^0.3.2",
@@ -49,6 +54,7 @@
     "passport-local-authenticate": "^1.2.0",
     "pg": "6.0.1",
     "pg-copy-streams": "^1.2.0",
+    "pg-promise": "^7.3.3",
     "rangeslider.js": "^2.3.0",
     "react-bootstrap": "^0.30.10",
     "redis-server": "^1.1.0",
@@ -61,6 +67,7 @@
     "shapefile": "^0.3.1",
     "srs": "^1.2.0",
     "supervisor": "0.11.0",
+    "turf": "^3.0.14",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

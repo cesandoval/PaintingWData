@@ -3,7 +3,7 @@ extends ../layout
 block pageTitle
   div.container.login-container
     div.row
-      div.col-md-offset-4.col-md-4
+      div.col-md-offset-3.col-md-6
         form(method="post", action="/users/login")
           h2.spacing.prompt Welcome!
           if !(message == '')
@@ -20,7 +20,10 @@ block pageTitle
                 Password
               input(type="password", id="password", class="form-control form-input-line", name="password")
               br
-          div(data-role='fieldcontain').spacing   
-            input(type='submit',value='Sign In',data-transition='fade', data-theme='c', class="btn btn-gray btn-sm")
-        form(method="get", action="/users/reset-password") 
-          input(type='submit',value='Forgot Password?', data-theme='c', class="btn btn-gray btn-sm", onclick="")
+          div.spacing
+          .col-md-3
+            div(data-role='fieldcontain')   
+              input(type='submit',value='Sign In',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
+          .col-md-3
+          form(method="get", action="/users/reset-password") 
+            input(type='submit',value='Forgot Password?', data-theme='c', class="btn btn-outline-primary", onclick="")

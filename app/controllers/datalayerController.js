@@ -60,7 +60,6 @@ module.exports.computeVoxels = function(req, res){
         console.log('select layers!!!!');
         req.flash('layerAlert', "You haven't selected layers. Please select at least one layer.");
         res.redirect('/layers/'+ req.user.id); 
-
     } 
 };
 
@@ -94,7 +93,6 @@ module.exports.showVoxels= function(req, res) {
             }]
         }).then(function(datavoxels){
             console.log("------------------------------------------------");
-
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });
 }
