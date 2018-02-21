@@ -8,8 +8,8 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
-    "lint:fix": "eslint . --color --fix --debug",
-    "lint:check": "eslint . --color --quiet"
+    "lint:fix": "eslint . --cache --color --fix --debug",
+    "lint:check": "eslint . --cache --color --quiet"
   },
   "dependencies": {
     "@turf/interpolate": "^5.1.5",
