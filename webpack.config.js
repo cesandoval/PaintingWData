@@ -112,6 +112,10 @@ module.exports = {
         // no reload page when any error (optional)
         new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
         // new webpack.optimize.OccurenceOrderPlugin(), it is now enabled by default
+        new webpack.ProvidePlugin({
+            turf: '@turf/turf',
+            _: 'lodash',
+        }),
     ],
     performance: {
         hints: false,
