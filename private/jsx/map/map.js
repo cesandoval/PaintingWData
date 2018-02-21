@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
+import Button from 'react-bootstrap/lib/Button'
 
 class MapCanvas extends React.Component {
     constructor(props) {
@@ -36,7 +37,7 @@ class MapCanvas extends React.Component {
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox)
 
-            this.setState({ layersAdded: true })
+            this.setState({ layersAdded: true, bbox: bbox, canvas: canvas })
 
             newProps.layers.map((layer, n) => {
                 // Defined geometry
@@ -130,6 +131,17 @@ class MapCanvas extends React.Component {
             }
         }
     }
+
+    zoomMap() {
+        PaintGraph.Pixels.zoomExtent(this.state.canvas, this.state.bbox)
+        // this might be adding many meshes
+        PaintGraph.Pixels.buildMapbox(
+            this.props.map,
+            this.state.canvas,
+            this.state.bbox
+        )
+    }
+
     render() {
         const mapOptionShow = this.props.mapOptionShow
         return (
@@ -184,6 +196,14 @@ class MapCanvas extends React.Component {
                             </MenuItem>
                         </DropdownButton>
                     </div>
+                    <Button
+                        id="zoomShow"
+                        className="buttons zoomText btn buttonsText"
+                        onClick={() => this.zoomMap()}
+                    >
+                        {' '}
+                        Zoom to Map{' '}
+                    </Button>
                 </div>
                 <div className="map" id="mapCanvas" />
                 <div id="pivot" />
