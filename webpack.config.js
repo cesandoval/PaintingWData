@@ -27,11 +27,14 @@ module.exports = {
             // Process JS with Babel.
             {
                 test: /\.jsx?$/,
+                exclude: /node_modules/,
                 loader: 'eslint-loader',
                 enforce: 'pre',
                 options: {
                     fix: true,
                     cache: true,
+                    emitError: true,
+                    // failOnError: true,
                 },
             },
             {
