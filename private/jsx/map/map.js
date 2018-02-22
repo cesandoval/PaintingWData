@@ -133,6 +133,8 @@ class MapCanvas extends React.Component {
     }
 
     zoomMap() {
+        console.log(this.state)
+        console.log(this.props)
         PaintGraph.Pixels.zoomExtent(this.state.canvas, this.state.bbox)
         // this might be adding many meshes
         PaintGraph.Pixels.buildMapbox(
