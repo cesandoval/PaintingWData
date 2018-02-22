@@ -209,13 +209,13 @@ function saveRaster(prop, rowsCols, bbox, callback) {
 
     var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
 
-    var bboxRaster = `ST_Resample(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ST_SetSRID(r.rast, ` + epsg + `))`;
+    var bboxRaster = `ST_SetSRID(ST_Transform(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + epsg + `)`;
 
     var mapAlgebraQuery = `ST_MapAlgebra(ST_SetSRID(r.rast, ` + epsg + `), ST_AddBand(ST_MakeEmptyRaster(` + bboxRaster + `), '32BF'::text, -999999, -999999), '[rast1]', '32BF', 'SECOND')`;
 
-    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
+    var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT (ST_Union(ST_AsRaster(ST_SetSRID(p.geometry, ` + epsg + `), 100, 100, '32BF', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; `;
 
-    var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_AsRaster(ST_SetSRID(p.geometry, ` + epsg + `), ST_AsRaster(g.bbox, ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), '32BF', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; `;
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
 
     var rasterQuery = tableQuery + 
                     rasterCreationQuery + centroidValueQuery;
