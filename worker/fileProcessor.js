@@ -114,18 +114,48 @@ function getBbox(datalayerIds, req, callback) {
     var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE "
         +'"datafileId"'+" in ("+idsQuery+");";
 
-    connection.query(distinctQuery).spread(function(results, metadata){
+     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datafilebbox" (id serial primary key, rast raster, voxelid integer, "rasterProperty" character varying(255), rasterval double precision);';
+
+
+    connection.query(distinctQuery + tableQuery).spread(function(results, metadata){
         var epsg = 4326;
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+
             epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "
             +'id'+" in ("+idsQuery+");";
 
         var props = results;
+
+        var voxelId = 0;
+
         connection.query(bboxQuery).spread(function(results, metadata){
-            var bbox = results[0].st_setsrid
-            callback(null, bbox, props, req);
+            var bbox = results[0].st_setsrid;
+            rowsCols = getBboxRC(bbox, req);
+
+            var bboxInsert = `INSERT INTO public."Datafilebbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + voxelId + `);`;
+
+            console.log("bbox query: \n \n " + bboxInsert);
+
+            connection.query(bboxInsert).spread(function(results, metadata){
+                callback(null, bbox, props, req);
+            })
         })
     })
+}
+
+function getBboxRC(bbox, req) {
+    var numOfVoxels = req.body.voxelDensity;
+
+    var coords = bbox.coordinates[0],
+        length = Math.abs(coords[3][0]-coords[0][0])*1000000,
+        width = Math.abs(coords[2][1]-coords[0][1])*1000000,
+        area = length*width; 
+    var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
+    var columns = Math.floor(length/stepSize),
+        rows = Math.floor(width/stepSize);
+
+    var rowsCols = {rows: rows, cols: columns};
+
+    return rowsCols;
 }
 
 
@@ -161,18 +191,8 @@ function createRaster(bbox, props, req, callback) {
     var resultsObj ={};
     var objProps = {};
 
-    // get pixel array dimensions
-    var numOfVoxels = req.body.voxelDensity;
-    console.log("\nvoxel density: " + numOfVoxels);
-    var coords = bbox.coordinates[0],
-        length = Math.abs(coords[3][0]-coords[0][0])*1000000,
-        width = Math.abs(coords[2][1]-coords[0][1])*1000000,
-        area = length*width; 
-    var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
-    var columns = Math.floor(length/stepSize),
-        rows = Math.floor(width/stepSize);
+    var rowsCols = getBboxRC(bbox, req);
 
-    var rowsCols = {rows: rows, cols: columns};
     var ptDistance =  0.004826000000001329;
 
     var maxLength = 1,
@@ -182,7 +202,7 @@ function createRaster(bbox, props, req, callback) {
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
-            saveRaster(tasks[i], rowsCols, bbox, function(results){
+            saveRaster(tasks[i], rowsCols, bbox, req, function(results){
                 callback(results);
             });
         }
@@ -201,21 +221,23 @@ function createRaster(bbox, props, req, callback) {
     });
 }
 
-function saveRaster(prop, rowsCols, bbox, callback) {
+function saveRaster(prop, rowsCols, bbox, req, callback) {
     var epsg = 4326;
+
+    var voxelId = 0;
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Dataraster" (id serial primary key, rast raster, layername text, datafileid integer, "rasterProperty" character varying(255), rasterval double precision); ';
 
     var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
 
-    var bboxRaster = `ST_SetSRID(ST_Transform(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + epsg + `)`;
+    var bboxSelect = `(SELECT b.rast FROM public."Datafilebbox" as b WHERE voxelid= ` + voxelId + `)`;
 
-    var mapAlgebraQuery = `ST_MapAlgebra(ST_SetSRID(r.rast, ` + epsg + `), ST_AddBand(ST_MakeEmptyRaster(` + bboxRaster + `), '32BF'::text, -999999, -999999), '[rast1]', '32BF', 'SECOND')`;
+    var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
 
-    var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT (ST_Union(ST_AsRaster(ST_SetSRID(p.geometry, ` + epsg + `), 100, 100, '32BF', p.rasterval, -999999)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId + ` GROUP BY p.layername; `;
+    var mapAlgebraQuery = `ST_MapAlgebra(ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast), ST_AddBand(ST_MakeEmptyRaster(b.rast), '32BF'::text, -999999, -999999), '[rast1]', '32BF', 'SECOND')`;
 
-    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `; `;
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r, public."Datafilebbox" as b WHERE datafileid=` + prop.datafileId + ` AND voxelid= ` + voxelId + `; `;
 
     var rasterQuery = tableQuery + 
                     rasterCreationQuery + centroidValueQuery;
