@@ -14,7 +14,6 @@ class KnnSlider extends React.Component {
     }
 
     componentWillReceiveProps(nprops) {
-        this.layers = nprops.layers
         this.geometries = nprops.geometries
 
         const layersNeighbors = {}
@@ -196,8 +195,8 @@ class KnnSlider extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layers: state.sidebar.layers,
         geometries: state.map.geometries,
+        knn: state.options.knnValue,
     }
 }
 

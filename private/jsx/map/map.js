@@ -27,7 +27,7 @@ class MapCanvas extends React.Component {
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
-        if (newProps.layers.length > 0 && !this.state.layersAdded) {
+        if (!_.isEmpty(newProps.layers) && !this.state.layersAdded) {
             // Sets the camera to the voxels' bbox
             const bbox = newProps.layers[0].bbox
             const canvas = newProps.map
@@ -72,7 +72,7 @@ class MapCanvas extends React.Component {
     }
 
     exportSVG(geoms) {
-        let layer = this.props.layers[0]
+        let layer = _.first(this.props.layers)
         let centroid = this.props.map.camera.position
         let bbox = layer.bbox[0]
         let projectedMin = project([bbox[0][0], bbox[0][1]])
@@ -216,7 +216,7 @@ class MapCanvas extends React.Component {
 }
 
 export default connect(s => ({
-    layers: s.sidebar.layers,
+    layers: s.datasets.layers,
     map: s.map.instance,
     mapOptionShow: s.map.optionShow,
     geometries: s.map.geometries,

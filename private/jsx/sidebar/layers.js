@@ -16,6 +16,7 @@ for (let i = color10.length; i; i--) {
     ;[color10[i - 1], color10[j]] = [color10[j], color10[i - 1]]
 }
 
+/*
 const createLayer = (
     name,
     propertyName,
@@ -43,12 +44,13 @@ const createLayer = (
     shaderText,
     userLayerName,
 })
+*/
 
 class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)
-        this.getLayers()
+        this.getLayers() // NEED REFACTORING
     }
     // Assumes that geojson will be nonzero size
     getLayers() {
@@ -57,6 +59,11 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                console.log({ data })
+
+                act.importDatasets(data)
+
+                /*
                 act.sideAddLayers(
                     data.map((l, index) => {
                         const length = l.geojson.geojson.features.length
@@ -159,13 +166,14 @@ class Layers extends React.Component {
                         )
                     })
                 )
+                */
             })
             .catch(e => console.log('getLayers() error', e))
     }
     render() {
         return (
             <div className="layers">
-                {this.props.layers.map((layer, i) => (
+                {Object.entries(this.props.layers).map(([i, layer]) => (
                     <Layer
                         key={i}
                         propName={layer.propertyName}

@@ -77,11 +77,11 @@ class VPL extends React.Component {
     initDatasetNode = () => {
         // TODO: should get dataset layers from props.
 
-        const datasets = this.props.layers
-        console.log('initDatasetNode()', datasets, this.props.nodes)
+        const layers = this.props.layers
+        console.log('initDatasetNode()', layers, this.props.nodes)
 
-        datasets.map((dataset, index) => {
-            // console.log('dataset', dataset)
+        Object.values(layers).map((layer, index) => {
+            // console.log(index, { layer })
 
             const datasetNode = this.newNodeObj('DATASET')
 
@@ -89,17 +89,17 @@ class VPL extends React.Component {
                 x: 50,
                 y: 100 + 150 * index,
             }
-            datasetNode.name = dataset.name
-            datasetNode.color = dataset.color1
+            datasetNode.name = layers.name
+            datasetNode.color = layers.color1
 
-            // TODO: use hashkey as nodeKey of dataset node
+            // TODO: use layerKey as nodeKey of layers node
             Action.vlangAddNode({
-                nodeKey: dataset.name,
+                nodeKey: layers.name,
                 node: datasetNode,
             })
         })
 
-        return datasets.length > 0
+        return !_.isEmpty(layers)
     }
 
     newNodeObj = type => {
@@ -723,7 +723,7 @@ class VPL extends React.Component {
         // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
-        const allIndices = this.newProps.layers[0].allIndices
+        const allIndices = this.newProps.datasets.allIndices
 
         const amplifier = 3
 
@@ -814,7 +814,7 @@ class VPL extends React.Component {
         }
 
         let geometry = {
-            minMax: this.newProps.layers[0].geojson.minMax,
+            minMax: this.newProps.datasets.minMax,
             addressArray: this.newProps.map.geometries[
                 Object.keys(this.newProps.map.geometries)[0]
             ].addresses,
@@ -1199,7 +1199,8 @@ const mapStateToProps = state => {
         nodes: state.vpl.nodes,
         links: state.vpl.links,
         map: state.map,
-        layers: state.sidebar.layers,
+        layers: state.datasets.layers,
+        datasets: state.datasets,
     }
 }
 

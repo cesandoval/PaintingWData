@@ -29,7 +29,7 @@ class PCoords extends React.Component {
     componentWillReceiveProps(nprops) {
         // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
-        if (!this.state.started && nprops.layers.length > 0) {
+        if (!this.state.started && !_.isEmpty(nprops.layers)) {
             // console.log(nprops, 8484848484)
             this.setState({ started: true })
 
@@ -247,7 +247,7 @@ class PCoords extends React.Component {
 const mapStateToProps = state => {
     return {
         mapStarted: state.map.started,
-        layers: state.sidebar.layers,
+        layers: state.datasets.layers,
         geometries: state.map.geometries,
     }
 }
