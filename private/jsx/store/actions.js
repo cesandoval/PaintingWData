@@ -1,135 +1,97 @@
 import store from './store'
-import * as c from './consts'
+import * as t from './types'
 
-export const sideAddLayer = layer =>
+// datasets
+export const importDatasets = payload =>
     store.dispatch({
-        type: c.SIDE_ADD_LAYER,
-        layer,
+        type: t.IMPORT_DATASETS,
+        ...payload,
     })
 
-export const sideAddLayers = layers =>
+// map
+export const mapInit = payload =>
     store.dispatch({
-        type: c.SIDE_ADD_LAYERS,
-        layers,
+        type: t.MAP_INIT,
+        ...payload,
     })
 
-export const sideUpdateLayer = (name, field, value) =>
+// options
+export const mapSetBgStyle = payload =>
     store.dispatch({
-        type: c.SIDE_UPDATE_LAYER,
-        name,
-        field,
-        value,
+        type: t.MAP_SET_BGSTYLE,
+        ...payload,
     })
 
-export const sideRemoveLayer = layerName =>
+export const mapSetOpacity = payload =>
     store.dispatch({
-        type: c.SIDE_REMOVE_LAYER,
-        layerName,
+        type: t.MAP_SET_OPACITY,
+        ...payload,
     })
 
-export const sideChangeOpacity = (name, opacity) =>
+export const mapSetKNN = payload =>
     store.dispatch({
-        type: c.SIDE_CHANGE_OPACITY,
-        name,
-        opacity,
+        type: t.MAP_SET_KNN,
+        ...payload,
     })
 
-export const mapAddInstance = map =>
+// vpl
+export const nodeAdd = payload =>
     store.dispatch({
-        type: c.MAP_ADD_INSTANCE,
-        instance: map,
+        type: t.NODE_ADD,
+        ...payload,
     })
 
-export const mapAddGeometry = (name, geometry) =>
+export const nodeRemove = payload =>
     store.dispatch({
-        type: c.MAP_ADD_GEOMETRY,
-        name,
-        geometry,
+        type: t.NODE_REMOVE,
+        ...payload,
     })
 
-export const mapRemoveGeometry = (name, geometry) =>
+export const nodeUpdate = payload =>
     store.dispatch({
-        type: c.MAP_REMOVE_GEOMETRY,
-        name,
-        geometry,
+        type: t.NODE_UPDATE,
+        ...payload,
     })
 
-export const updateGeometry = (name, options, value, field) =>
+export const nodeOptionUpdate = payload =>
     store.dispatch({
-        type: c.MAP_UPDATE_GEOMETRY,
-        name,
-        options,
-        value,
-        field,
+        type: t.NODE_OPTION_UPDATE,
+        ...payload,
     })
 
-export const mapAddLayer = layer =>
+export const allNodeUpdate = payload =>
     store.dispatch({
-        type: c.MAP_ADD_LAYER,
-        layer,
+        type: t.ALL_NODE_UPDATE,
+        ...payload,
     })
 
-export const setOptionShow = option =>
+export const linkAdd = payload =>
     store.dispatch({
-        type: c.MAP_SET_OPTION_SHOW,
-        option,
+        type: t.LINK_ADD,
+        ...payload,
     })
 
-export const vlangAddLink = ({ srcNode, toNode, toInput }) =>
+export const linkRemove = payload =>
     store.dispatch({
-        type: c.VLANG_ADD_LINK,
-        srcNode,
-        toNode,
-        toInput,
+        type: t.LINK_REMOVE,
+        ...payload,
     })
 
-export const vlangRemoveLink = ({ srcNode, toNode }) =>
+// interactions
+export const setActiveNode = payload =>
     store.dispatch({
-        type: c.VLANG_REMOVE_LINK,
-        srcNode,
-        toNode,
+        type: t.SET_ACTIVENODE,
+        ...payload,
     })
 
-export const vlangAddNode = ({ nodeKey, node }) =>
+export const setLoading = payload =>
     store.dispatch({
-        type: c.VLANG_ADD_NODE,
-        nodeKey,
-        node,
+        type: t.SET_LOADING,
+        ...payload,
     })
 
-export const vlangRemoveNode = nodeKey =>
+export const setPanelShow = payload =>
     store.dispatch({
-        type: c.VLANG_REMOVE_NODE,
-        nodeKey,
-    })
-
-export const vlangMoveNode = ({ nodeKey, newPosition }) =>
-    store.dispatch({
-        type: c.VLANG_UPDATE_NODE,
-        nodeKey,
-        attr: 'position',
-        value: newPosition,
-    })
-
-export const vlangUpdateNode = ({ nodeKey, attr, value }) =>
-    store.dispatch({
-        type: c.VLANG_UPDATE_NODE,
-        nodeKey,
-        attr,
-        value,
-    })
-
-export const vlangUpdateNodeOptions = ({ nodeKey, attr, value }) =>
-    store.dispatch({
-        type: c.VLANG_UPDATE_NODE_OPTIONS,
-        nodeKey,
-        attr,
-        value,
-    })
-
-export const vlangUpdateAllNode = ({ attr, value }) =>
-    store.dispatch({
-        type: c.VLANG_UPDATE_ALL_NODE,
-        attr,
-        value,
+        type: t.SET_PANELSHOW,
+        ...payload,
     })
