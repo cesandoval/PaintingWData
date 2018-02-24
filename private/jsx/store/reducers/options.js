@@ -14,6 +14,12 @@ export default (state = initialOptionsState, action) => {
             return Object.assign({}, state, bgStyle)
         }
 
+        case t.MAP_SET_OPACITY: {
+            const { value } = action
+            const opacity = { opacity: value }
+            return Object.assign({}, state, opacity)
+        }
+
         case t.MAP_SET_KNN: {
             const { value } = action
             const knnValue = { knnValue: value }

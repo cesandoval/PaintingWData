@@ -1,16 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as act from '../store/actions'
+
 class OpacitySlider extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { opacity: 50 }
 
         this.changeOpacity = this.changeOpacity.bind(this)
     }
 
     changeOpacity(e) {
-        this.setState({ opacity: e.target.value })
+        const value = e.target.value
+        act.mapSetOpacity({ value })
+
+        // TODO: may do this in reducer??
         for (var geo in this.props.geometries) {
             let geometry = this.props.geometries[geo]
             geometry.material.uniforms.transparency.value =
@@ -36,7 +40,7 @@ class OpacitySlider extends React.Component {
                             name="points"
                             id="points"
                             onChange={this.changeOpacity}
-                            value={this.state.opacity}
+                            value={this.props.opacity}
                             min="0"
                             max="100"
                         />
@@ -50,6 +54,8 @@ class OpacitySlider extends React.Component {
     }
 }
 
-export default connect(s => ({ map: s.map, geometries: s.map.geometries }))(
-    OpacitySlider
-)
+export default connect(s => ({
+    map: s.map,
+    geometries: s.map.geometries,
+    opacity: s.optaions.opacity,
+}))(OpacitySlider)
