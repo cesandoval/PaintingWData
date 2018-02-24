@@ -58,7 +58,6 @@ class Options extends React.Component {
                     }}
                 >
                     <OptionsMapStyle
-                        mapStyle="mapbox.light"
                         show={this.state.optionsMapStyleShow}
                         onHide={() => {
                             this.setState({ optionsMapStyleShow: false })

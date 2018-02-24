@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as act from '../store/actions'
+
 import { ButtonToolbar, DropdownButton, MenuItem } from 'react-bootstrap'
 
 class OptionsMapStyle extends React.Component {
@@ -9,9 +11,10 @@ class OptionsMapStyle extends React.Component {
 
         // default mapbox.light
         this.state = {
-            mapboxStyle: this.props.mapStyle,
             show: true,
         }
+
+        this.defaultBgStyle = 'mapbox.light'
 
         this.changeMapStyle = this.changeMapStyle.bind(this)
         this.updateMapStyle = this.updateMapStyle.bind(this)
@@ -19,7 +22,7 @@ class OptionsMapStyle extends React.Component {
         this.start()
     }
     start() {
-        if (this.updateMapStyle(this.state.mapboxStyle)) console.log('started')
+        if (this.updateMapStyle(this.props.bgStyle)) console.log('started')
         else
             setTimeout(() => {
                 this.start()
@@ -31,8 +34,11 @@ class OptionsMapStyle extends React.Component {
         const started = window.refreshTiles && window.updateTiles && true
         // console.log(`updateMapStyle(${style})`, started)
 
+        const value = style
+
         if (started) {
             try {
+                act.mapSetBgStyle({ value })
                 window.refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
                 window.updateTiles() // call window.updateTiles() to update the tiles.
                 return true
@@ -45,7 +51,6 @@ class OptionsMapStyle extends React.Component {
 
     changeMapStyle(style) {
         console.log('changeMapStyle(style) ', style)
-        this.setState({ mapboxStyle: style })
 
         this.updateMapStyle(style)
 
@@ -55,17 +60,16 @@ class OptionsMapStyle extends React.Component {
     componentWillReceiveProps({ show }) {
         // console.log(`componentWillReceiveProps(${show})`)
 
-        // const mapStyle = this.state.mapboxStyle
-        const mapStyle =
-            this.state.mapboxStyle == 'empty'
-                ? this.props.mapStyle
-                : this.state.mapboxStyle
+        const bgStyle =
+            this.props.bgStyle == 'empty'
+                ? this.defaultBgStyle
+                : this.props.bgStyle
 
         if (show != this.state.show) {
-            this.setState({ show: show })
+            this.setState({ show })
 
             if (show) {
-                this.changeMapStyle(mapStyle)
+                this.changeMapStyle(bgStyle)
             } else {
                 this.updateMapStyle('empty')
             }
@@ -77,7 +81,7 @@ class OptionsMapStyle extends React.Component {
             <ButtonToolbar>
                 <DropdownButton
                     id="mapStyleSelect"
-                    title={this.state.mapboxStyle
+                    title={this.props.bgStyle
                         .replace(/mapbox\./g, '')
                         .toUpperCase()}
                     bsSize="xsmall"
@@ -141,6 +145,8 @@ class OptionsMapStyle extends React.Component {
     }
 }
 
-export default connect(s => ({ map: s.map, geometries: s.map.geometries }))(
-    OptionsMapStyle
-)
+export default connect(s => ({
+    map: s.map,
+    geometries: s.map.geometries,
+    bgStyle: s.options.bgStyle,
+}))(OptionsMapStyle)
