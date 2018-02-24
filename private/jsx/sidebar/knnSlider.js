@@ -1,6 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as act from '../store/actions'
+
+// TODO: clean and rafctor knn algorithm
+
 class KnnSlider extends React.Component {
     constructor(props) {
         super(props)
@@ -25,8 +29,12 @@ class KnnSlider extends React.Component {
         this.layersNeighbors = layersNeighbors
     }
 
-    handleSlide() {
-        let numberOfNeighbors = document.getElementById('knnSlider').value
+    handleSlide(e) {
+        // let numberOfNeighbors = document.getElementById('knnSlider').value
+        let numberOfNeighbors = e.target.value
+
+        act.mapSetKNN({ value: e.target.value })
+
         for (var key in this.geometries) {
             if (this.geometries.hasOwnProperty(key)) {
                 this.getKNN(
@@ -177,7 +185,7 @@ class KnnSlider extends React.Component {
                             className="slider"
                             id="knnSlider"
                             type="range"
-                            onChange={() => this.handleSlide()}
+                            onChange={this.handleSlide}
                             min="0"
                             max="8"
                             defaultValue="0"
