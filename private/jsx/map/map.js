@@ -145,15 +145,15 @@ class MapCanvas extends React.Component {
     }
 
     render() {
-        const mapOptionShow = this.props.mapOptionShow
+        const panelShow = this.props.panelShow
         return (
             <div>
-                <div style={{ display: mapOptionShow == 'VPL' ? '' : 'none' }}>
+                <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
                 <div
                     style={{
-                        display: mapOptionShow == 'PCoords' ? '' : 'none',
+                        display: panelShow == 'PCoords' ? '' : 'none',
                     }}
                 >
                     <PCoords />
@@ -170,7 +170,7 @@ class MapCanvas extends React.Component {
                             position: 'absolute',
                             left: '40px',
                             top: '20px',
-                            display: mapOptionShow == 'VPL' ? 'none' : '',
+                            display: panelShow == 'VPL' ? 'none' : '',
                         }}
                         className="map-menu"
                     >
@@ -218,6 +218,6 @@ class MapCanvas extends React.Component {
 export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
-    mapOptionShow: s.map.optionShow,
+    panelShow: s.interaction.panelShow,
     geometries: s.map.geometries,
 }))(MapCanvas)

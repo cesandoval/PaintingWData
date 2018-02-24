@@ -13,17 +13,26 @@ class Options extends React.Component {
         this.state = {}
         this.state.optionsMapStyleShow = true
 
+        /*
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(
             this
         )
+        */
     }
     componentDidMount() {
         // console.log(gElement);
     }
+    /*
     toggleOptionShow(option) {
         console.log(`toggleOptionShow(${option})`)
         if (this.props.map.optionShow == option) act.setOptionShow('')
         else act.setOptionShow(option)
+    }
+    */
+    togglePanelShow = option => {
+        console.log(`togglePanelShow(${option})`)
+        if (this.props.map.panelShow == option) act.setPanelShow('')
+        else act.setPanelShow(option)
     }
 
     toggleOptionsMapStyleShow() {
@@ -87,7 +96,7 @@ class Options extends React.Component {
                 <Button
                     id="dataShow"
                     className="buttons dataText btn buttonsText"
-                    onClick={() => this.toggleOptionShow('PCoords')}
+                    onClick={() => this.togglePanelShow('PCoords')}
                 >
                     {' '}
                     Query Data{' '}
@@ -95,7 +104,7 @@ class Options extends React.Component {
                 <Button
                     id="graphShow"
                     className="buttons graphText btn buttonsText"
-                    onClick={() => this.toggleOptionShow('VPL')}
+                    onClick={() => this.togglePanelShow('VPL')}
                 >
                     {' '}
                     Compute Data{' '}
@@ -105,4 +114,7 @@ class Options extends React.Component {
     }
 }
 
-export default connect(s => ({ map: s.map, layers: s.sidebar.layers }))(Options)
+export default connect(s => ({
+    map: s.map,
+    panelShow: s.interaction.panelShow,
+}))(Options)
