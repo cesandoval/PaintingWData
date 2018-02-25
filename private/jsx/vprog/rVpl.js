@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import Rx from 'rxjs/Rx'
 import _ from 'lodash'
 
-import * as Action from '../store/actions.js'
-// import * as consts  from '../store/consts.js';
+import * as Act from '../store/actions.js'
 
 import Slider from './Slider.js'
 import Panel from './Panel.js'
@@ -93,7 +92,7 @@ class VPL extends React.Component {
             datasetNode.color = layers.color1
 
             // TODO: use layerKey as nodeKey of layers node
-            Action.vlangAddNode({
+            Act.nodeAdd({
                 nodeKey: layers.name,
                 node: datasetNode,
             })
@@ -376,16 +375,19 @@ class VPL extends React.Component {
     moveNode = ({ nodeKey, newPosition }) => {
         // console.log('moveNode()', {nodeKey, newPosition})
 
-        Action.vlangMoveNode({ nodeKey, newPosition })
+        Act.nodeUpdate({ nodeKey, attr: 'position', value: newPosition })
     }
 
     deleteNode = nodeKey => {
         console.log(`deleteNode(${nodeKey})`)
 
+        /*
         Action.vlangRemoveNode(nodeKey)
-
         // force remove the node geometry on the map.
         Action.mapRemoveGeometry(nodeKey)
+        */
+
+        Act.nodeRemove({ nodeKey })
 
         this.linkThenComputeNode()
     }
@@ -404,7 +406,7 @@ class VPL extends React.Component {
         //   },
         // }
 
-        Action.vlangAddLink({ srcNode, toNode, toInput })
+        Act.linkAdd({ srcNode, toNode, toInput })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
@@ -415,7 +417,7 @@ class VPL extends React.Component {
                 `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
             )
 
-            Action.vlangUpdateNodeOptions({ nodeKey, attr, value })
+            Act.nodeOptionUpdate({ nodeKey, attr, value })
 
             this.linkThenComputeNode()
         }
@@ -426,7 +428,7 @@ class VPL extends React.Component {
 
         const filter = { min, max }
 
-        Action.vlangUpdateNodeOptions({
+        Act.vlangUpdateNodeOptions({
             nodeKey,
             attr: 'filter',
             value: filter,
@@ -488,7 +490,7 @@ class VPL extends React.Component {
         const srcNode = linkDOM.getAttribute('data-src-node')
         const toNode = linkDOM.getAttribute('data-to-node')
 
-        Action.vlangRemoveLink({ srcNode, toNode })
+        Act.linkRemove({ srcNode, toNode })
 
         this.linkThenComputeNode()
     }
@@ -665,7 +667,8 @@ class VPL extends React.Component {
         }
 
         Object.entries(nodes).map(([nodeKey, node]) => {
-            if (node.type != 'DATASET') Action.mapRemoveGeometry(nodeKey)
+            if (node.type != 'DATASET')
+                Act.nodeOutput({ nodeKey, geometry: null })
         })
 
         outputOrder.map(nodeKey => {
@@ -1047,7 +1050,7 @@ class VPL extends React.Component {
             (+new Date()).toString(32) +
             Math.floor(Math.random() * 36).toString(36)
 
-        Action.vlangAddNode({
+        Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
         })
@@ -1101,6 +1104,7 @@ class VPL extends React.Component {
             geometry.properties
         )
 
+        /* may be need keep some property for dataset state
         const layer = {
             allIndices: '',
             bbox: '',
@@ -1120,6 +1124,9 @@ class VPL extends React.Component {
         Action.mapAddGeometry(geometry.layerName, P)
         // Here I should also add the geometry to the layers
         Action.mapAddLayer(layer)
+        */
+
+        Act.nodeOutput(geometry.layerName, P)
     }
 
     render() {
