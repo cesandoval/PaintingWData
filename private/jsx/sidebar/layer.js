@@ -1,5 +1,5 @@
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 class Layer extends React.Component {
@@ -10,6 +10,7 @@ class Layer extends React.Component {
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
+        /*
         act.updateGeometry(
             this.props.name,
             'Visibility',
@@ -21,6 +22,14 @@ class Layer extends React.Component {
             attr: 'visibility',
             value: e.target.checked,
         })
+        */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.name,
+            attr: 'visibility',
+            value: e.target.checked,
+        })
+
         // act.sideRemoveLayer(this.props.name) // deprecated
     }
     handleCheckedEvent(e) {
@@ -29,8 +38,16 @@ class Layer extends React.Component {
         // act.sideRemoveLayer(layerName);
     }
     changeColor(e) {
+        /*
         act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
         act.vlangUpdateNode({
+            nodeKey: this.props.name,
+            attr: 'color',
+            value: e.target.value,
+        })
+        */
+
+        Act.nodeUpdate({
             nodeKey: this.props.name,
             attr: 'color',
             value: e.target.value,
