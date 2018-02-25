@@ -31,6 +31,22 @@ router.post('/login',
   }
 );
 
+// OAUTH
+router.get('/callback',
+  passport.authenticate('facebookLogin', { 
+    failureRedirect: '/users/login',
+    failureFlash: true, 
+  }),
+  function(req, res) {
+    if (req.session.returnTo) {
+      res.redirect(req.session.returnTo);
+    }
+    else {
+      res.redirect('/');
+    }
+});
+
+
 router.get('/reset-password', function(req, res) {
   res.render('users/resetPassword', {message: ""});
 });

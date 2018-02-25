@@ -2,6 +2,7 @@ var User = require('../models').User,
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),
+    FacebookStrategy = require('passport-facebook').Strategy,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
@@ -61,7 +62,9 @@ var signUpStrategy =
             //console.log(newUser);
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
-              mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
+              mailer.sendVerificationEmail(email, 'http://localhost:3000/users/verify/' + id);
+              // mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
+              // NOTE: this is a noteworthy change in the git diff
               return done(null, false, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account."));
             });   
            }
@@ -106,6 +109,40 @@ var loginStrategy = new LocalStrategy({
 
   });
 
+var facebookStrategy = new FacebookStrategy({
+  passReqToCallback : true,
+  clientID: process.env.FACEBOOKCLIENTID, 
+  clientSecret: process.env.FACEBOOKCLIENTSECRET,
+  callbackURL: "http://localhost:3000/users/callback" //TODO: change this
+},
+function(req, accessToken, refreshToken, profile, done) {
+    console.log(accessToken);
+    console.log(refreshToken);
+    console.log(profile);
+    User.findOne({
+      where: {email: ""},
+    }).then(function(user) {
+      if (user) {
+        return done(null, user)
+      }
+      else {
+        var newUser = User.build();
+        newUser.email = "a@a.com" //TODO: get email from Facebook
+        newUser.password = "" //TODO: change something here
+        newUser.verified = true;
+        newUser.urlLink = uuid.v4();
+        newUser.save().then(function() {
+          return done(null, newUser)
+        });
+      }
+    }, function(error) {
+      console.log(error);
+      return done(null, false);
+    })
+
+});
+  
+
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()){
     return next();
@@ -118,5 +155,6 @@ var isAuthenticated = function (req, res, next) {
 module.exports = {
   LoginStrategy : loginStrategy,
   SignUpStrategy : signUpStrategy,
+  FacebookLoginStrategy : facebookStrategy,
   isAuthenticated : isAuthenticated
 }
