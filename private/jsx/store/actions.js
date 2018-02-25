@@ -59,6 +59,12 @@ export const nodeOptionUpdate = payload =>
         ...payload,
     })
 
+export const nodeOutput = payload =>
+    store.dispatch({
+        type: t.NODE_OUTPUT,
+        ...payload,
+    })
+
 export const linkAdd = payload =>
     store.dispatch({
         type: t.LINK_ADD,

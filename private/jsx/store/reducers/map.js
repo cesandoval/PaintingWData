@@ -22,11 +22,13 @@ export default (state = initialMapState, action) => {
             return Object.assign({}, state, newState)
         }
 
+        /*
         case t.NODE_ADD: {
             // const { nodeKey, node } = action
-
             return state
         }
+        */
+
         case t.NODE_REMOVE: {
             const { nodeKey } = action
 
@@ -45,21 +47,25 @@ export default (state = initialMapState, action) => {
 
             return update(state, { geometries: { $set: geometries } })
         }
+
+        case t.NODE_OUTPUT: {
+            const { nodeKey, geometry } = action
+
+            const geometries = mapGeometries(state).add({
+                key: nodeKey,
+                geometry,
+            })
+
+            return update(state, { geometries: { $set: geometries } })
+        }
+
+        /*
         case t.NODE_OPTION_UPDATE: {
             const { nodeKey, attr, value } = action
 
-            return update(state, {
-                nodes: {
-                    [nodeKey]: {
-                        options: {
-                            [attr]: {
-                                $set: value,
-                            },
-                        },
-                    },
-                },
-            })
+            return state
         }
+        */
 
         /*
         case c.MAP_ADD_LAYER: {
