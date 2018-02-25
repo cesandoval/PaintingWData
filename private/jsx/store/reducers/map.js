@@ -51,10 +51,14 @@ export default (state = initialMapState, action) => {
         case t.NODE_OUTPUT: {
             const { nodeKey, geometry } = action
 
-            const geometries = mapGeometries(state).add({
-                key: nodeKey,
-                geometry,
-            })
+            let geometries = {}
+
+            if (geometry)
+                geometries = mapGeometries(state).add({
+                    key: nodeKey,
+                    geometry,
+                })
+            else geometries = mapGeometries(state).remove({ key: nodeKey })
 
             return update(state, { geometries: { $set: geometries } })
         }
