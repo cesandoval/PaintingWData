@@ -1,36 +1,82 @@
-import * as c from '../consts'
-// import * as act from '../actions';
+import update from 'immutability-helper'
+
+import * as t from '../types'
 
 const initialMapState = {
-    instance: null,
-    started: false,
+    instance: {},
     geometries: {},
-    layers: [],
-    optionShow: 'PCoords',
-    opacity: 0.5,
-    visible: true,
+    started: false,
+    loaded: false,
 }
 
 // TODO: layers: don't use array, use key-value object
 
 export default (state = initialMapState, action) => {
     switch (action.type) {
-        case c.SIDE_ADD_LAYERS:
-            // Push new layer
-            //var newLayers = state.layers.slice();
-            //newLayers = newLayers.concat(action.layers);
-            return Object.assign({}, state, { layers: action.layers })
+        case t.MAP_INIT: {
+            // const {} = action
+            const newState = {}
 
+            // TODO: mapAddInstance
+
+            return Object.assign({}, state, newState)
+        }
+
+        case t.NODE_ADD: {
+            // const { nodeKey, node } = action
+
+            return state
+        }
+        case t.NODE_REMOVE: {
+            const { nodeKey } = action
+
+            const geometries = mapGeometries(state).remove({ key: nodeKey })
+
+            return update(state, { geometries: { $set: geometries } })
+        }
+        case t.NODE_UPDATE: {
+            const { nodeKey, attr, value } = action
+
+            const geometries = mapGeometries(state).update({
+                key: nodeKey,
+                attr,
+                value,
+            })
+
+            return update(state, { geometries: { $set: geometries } })
+        }
+        case t.NODE_OPTION_UPDATE: {
+            const { nodeKey, attr, value } = action
+
+            return update(state, {
+                nodes: {
+                    [nodeKey]: {
+                        options: {
+                            [attr]: {
+                                $set: value,
+                            },
+                        },
+                    },
+                },
+            })
+        }
+
+        /*
         case c.MAP_ADD_LAYER: {
             // Push new layer
             let newLayers = state.layers.slice()
             newLayers.push(action.layer)
             return Object.assign({}, state, { layers: newLayers })
         }
+        */
+
+        /*
+
         case c.MAP_ADD_INSTANCE: {
             const add = { instance: action.instance, started: true }
             return Object.assign({}, state, add)
         }
+
         case c.MAP_ADD_GEOMETRY: {
             const newGeos = {
                 geometries: Object.assign({}, state.geometries, {
@@ -39,6 +85,7 @@ export default (state = initialMapState, action) => {
             }
             return Object.assign({}, state, newGeos)
         }
+
         case c.MAP_REMOVE_GEOMETRY: {
             const geos = Object.assign({}, state.geometries)
             const geo = geos[action.name]
@@ -170,12 +217,96 @@ export default (state = initialMapState, action) => {
             }
             return Object.assign({}, state, { geometries: state.geometries })
         }
-        case c.MAP_SET_OPTION_SHOW: {
-            const optionShow = { optionShow: action.option }
-            return Object.assign({}, state, optionShow)
-        }
+        */
+
         default: {
             return state
         }
+    }
+}
+
+function mapGeometries(state) {
+    const geometries = state.geometries
+
+    return {
+        add({ key, geometry }) {
+            console.log('mapGeometry.add', state, geometry)
+            return update(geometries, {
+                [key]: { $set: geometry },
+            })
+        },
+        update({ key, attr, value }) {
+            console.log('mapGeometry.update', { key, attr, value })
+            const geo = geometries[key]
+
+            if (geo) {
+                switch (attr) {
+                    case 'color': {
+                        geo.material.uniforms.startColor.value.set(value)
+                        geo.material.uniforms.endColor.value.set(value)
+                        break
+                    }
+                    case 'opacity': {
+                        geo.material.uniforms.transparency.value = value
+                        break
+                    }
+                    case 'visibility': {
+                        if (!value) {
+                            geo.material.uniforms.show.value = 0.0
+                        } else {
+                            geo.material.uniforms.show.value = 1.0
+                        }
+                        break
+                    }
+                }
+            }
+
+            return update(geometries, {
+                [key]: { $set: geo },
+            })
+        },
+        remove({ key }) {
+            console.log('mapGeometry.delete', state)
+            const geo = geometries[key]
+
+            if (geo) {
+                let bufferGeo = state.instance.scene.getObjectByName(key)
+                state.instance.scene.remove(bufferGeo)
+                if (bufferGeo instanceof THREE.Mesh) {
+                    if (bufferGeo.geometry) {
+                        bufferGeo.geometry.dispose()
+                        bufferGeo.geometry = undefined
+                    }
+                    if (bufferGeo.material) {
+                        if (bufferGeo.material.map) {
+                            bufferGeo.material.map.dispose()
+                        }
+                        if (bufferGeo.material.lightMap) {
+                            bufferGeo.material.lightMap.dispose()
+                        }
+                        if (bufferGeo.material.bumpMap) {
+                            bufferGeo.material.bumpMap.dispose()
+                        }
+                        if (bufferGeo.material.normalMap) {
+                            bufferGeo.material.normalMap.dispose()
+                        }
+                        if (bufferGeo.material.specularMap) {
+                            bufferGeo.material.specularMap.dispose()
+                        }
+                        if (bufferGeo.material.envMap) {
+                            bufferGeo.material.envMap.dispose()
+                        }
+                        bufferGeo.material.dispose()
+                        bufferGeo.material = undefined
+                    }
+                }
+                bufferGeo = null
+                // delete geos[key]
+            }
+
+            return update(geometries, {
+                $unset: [key],
+            })
+        },
     }
 }
