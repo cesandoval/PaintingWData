@@ -113,25 +113,6 @@ export default (state = initialState, action) => {
                 },
             })
         }
-        case t.ALL_NODE_UPDATE: {
-            const { attr, value } = action
-
-            let nodes = state.nodes
-
-            Object.entries(nodes).map(([nodeKey, node]) => {
-                nodes[nodeKey] = update(node, {
-                    [attr]: {
-                        $set: value,
-                    },
-                })
-            })
-
-            return update(state, {
-                nodes: {
-                    $set: nodes,
-                },
-            })
-        }
         case t.LINK_ADD: {
             const { srcNode, toNode, toInput } = action
 

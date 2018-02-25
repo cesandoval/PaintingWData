@@ -14,7 +14,6 @@ export const NODE_ADD = 'NODE_ADD'
 export const NODE_REMOVE = 'NODE_REMOVE'
 export const NODE_UPDATE = 'NODE_UPDATE'
 export const NODE_OPTION_UPDATE = 'NODE_OPTION_UPDATE'
-export const ALL_NODE_UPDATE = 'ALL_NODE_UPDATE'
 export const LINK_ADD = 'LINK_ADD'
 export const LINK_REMOVE = 'LINK_REMOVE'
 
