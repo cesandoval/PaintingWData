@@ -86,7 +86,7 @@ class MapCanvas extends React.Component {
     }
 
     exportSVG(geoms) {
-        let layer = _.first(this.props.layers)
+        let layer = Object.values(this.props.layers)[0]
         let centroid = this.props.map.camera.position
         let bbox = layer.bbox[0]
         let projectedMin = project([bbox[0][0], bbox[0][1]])
