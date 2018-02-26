@@ -124,7 +124,7 @@ export default (state = initialDatasetsState, action) => {
             return {
                 ...state,
                 layers: _.keyBy(layers, 'layerKey'),
-                minMax: layers[0].minMax,
+                minMax: layers[0].geojson.minMax,
                 allIndices: layers[0].allIndices,
                 bounds: layers[0].bounds,
             }
