@@ -240,7 +240,6 @@ const mapStateToProps = state => {
         nodes: state.vpl.nodes,
         links: state.vpl.links,
         map: state.map,
-        layers: state.sidebar.layers,
         geometries: state.map.geometries,
     }
 }

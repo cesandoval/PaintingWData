@@ -57,5 +57,5 @@ class OpacitySlider extends React.Component {
 export default connect(s => ({
     map: s.map,
     geometries: s.map.geometries,
-    opacity: s.optaions.opacity,
+    opacity: s.options.opacity,
 }))(OpacitySlider)

@@ -59,9 +59,10 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
-                console.log({ data })
+                const datasets = data
+                console.log({ datasets })
 
-                act.importDatasets(data)
+                act.importDatasets({ datasets })
 
                 /*
                 act.sideAddLayers(
@@ -190,4 +191,4 @@ class Layers extends React.Component {
     }
 }
 
-export default connect(s => ({ layers: s.map.layers }))(Layers)
+export default connect(s => ({ layers: s.datasets.layers }))(Layers)
