@@ -1,7 +1,7 @@
 /* global project */
 
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
@@ -12,7 +12,8 @@ import Button from 'react-bootstrap/lib/Button'
 class MapCanvas extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { layersAdded: false }
+        // this.state = { layersAdded: false }
+        this.state = { mapInited: false, instance: {} }
     }
     componentDidMount() {
         const gElement = document.getElementById('mapCanvas')
@@ -20,13 +21,25 @@ class MapCanvas extends React.Component {
         const gWidth = gElement.clientWidth
         const G = new PaintGraph.Graph(gElement, gHeight, gWidth)
         G.start()
-        act.mapAddInstance(G)
+        this.setState({ instance: G })
+
+        // act.mapAddInstance(G)
     }
     componentWillReceiveProps(newProps) {
         // Get layers once they appear
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
+
+        if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
+            Act.mapInit({
+                instance: this.state.instance,
+                datasetsLayers: newProps.layers,
+            })
+            this.setState({ mapInited: true })
+        }
+
+        /*
         if (!_.isEmpty(newProps.layers) && !this.state.layersAdded) {
             // Sets the camera to the voxels' bbox
             const bbox = newProps.layers[0].bbox
@@ -69,6 +82,7 @@ class MapCanvas extends React.Component {
                 act.mapAddGeometry(layer.name, P)
             })
         }
+        */
     }
 
     exportSVG(geoms) {

@@ -7,6 +7,7 @@ const initialMapState = {
     geometries: {},
     started: false,
     loaded: false,
+    bbox: {},
 }
 
 // TODO: layers: don't use array, use key-value object
@@ -14,12 +15,71 @@ const initialMapState = {
 export default (state = initialMapState, action) => {
     switch (action.type) {
         case t.MAP_INIT: {
-            // const {} = action
-            const newState = {}
+            const { instance, datasetsLayers } = action
 
-            // TODO: mapAddInstance
+            // Sets the camera to the voxels' bbox
+            // const bbox = datasetsLayers[0].bbox
+            const bbox = state.bbox
+            const canvas = instance
+
+            // Set the camera
+            PaintGraph.Pixels.zoomExtent(canvas, bbox)
+            // Add the map to the canvas
+            PaintGraph.Pixels.buildMapbox(instance, canvas, bbox)
+            // TODO:CHECK: Is instance equal to canvas?
+
+            let geometries = Object.assign({}, state.geometries)
+
+            Object.entries(datasetsLayers).map(([n, layer]) => {
+                // Defined geometry
+                const circle = new THREE.CircleBufferGeometry(1, 20)
+                // Parses the layer
+                const out = PaintGraph.Pixels.parseDataJSON(layer)
+
+                const nodeHashKey =
+                    (+new Date()).toString(32) +
+                    Math.floor(Math.random() * 36).toString(36)
+
+                // Creates the Pixels object
+                const P = new PaintGraph.Pixels(
+                    nodeHashKey,
+                    instance, // this.props.map,
+                    circle,
+                    out.otherArray,
+                    out.startColor,
+                    out.endColor,
+                    layer.geojson.minMax,
+                    out.addressArray,
+                    layer.rowsCols.cols,
+                    layer.rowsCols.rows,
+                    n,
+                    layer.bounds,
+                    layer.shaderText
+                )
+
+                const geometry = P
+                // act.mapAddGeometry(layer.name, P)
+                geometries = Object.assign(
+                    geometries,
+                    mapGeometries(state).add({ n, geometry })
+                )
+            })
+
+            const newState = {
+                instance,
+                geometries,
+            }
 
             return Object.assign({}, state, newState)
+        }
+
+        case t.IMPORT_DATASETS: {
+            const { datasets } = action // datasets is an Array
+
+            const datasetLayerOne = datasets[0]
+            const bbox = datasetLayerOne.Datavoxel.bbox.coordinates
+
+            return update(state, { bbox: { $set: bbox } })
         }
 
         /*
