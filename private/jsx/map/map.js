@@ -232,6 +232,6 @@ class MapCanvas extends React.Component {
 export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
-    panelShow: s.interaction.panelShow,
+    panelShow: s.interactions.panelShow,
     geometries: s.map.geometries,
 }))(MapCanvas)

@@ -115,5 +115,5 @@ class Options extends React.Component {
 
 export default connect(s => ({
     map: s.map,
-    panelShow: s.interaction.panelShow,
+    panelShow: s.interactions.panelShow,
 }))(Options)
