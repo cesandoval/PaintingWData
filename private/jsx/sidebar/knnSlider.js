@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 
 // TODO: clean and rafctor knn algorithm
 
@@ -21,11 +21,18 @@ class KnnSlider extends React.Component {
         this.geometries = nprops.geometries
 
         const layersNeighbors = {}
+
+        /* use `Object.entries` to replace `for in`
         for (var key in this.geometries) {
             if (this.geometries.hasOwnProperty(key)) {
                 layersNeighbors[key] = this.neighborsOf(this.geometries[key])
             }
         }
+        */
+        Object.entries(([key, geometry]) => {
+            layersNeighbors[key] = this.neighborsOf(geometry)
+        })
+
         this.layersNeighbors = layersNeighbors
     }
 
@@ -33,8 +40,9 @@ class KnnSlider extends React.Component {
         // let numberOfNeighbors = document.getElementById('knnSlider').value
         let numberOfNeighbors = e.target.value
 
-        act.mapSetKNN({ value: e.target.value })
+        Act.mapSetKNN({ value: e.target.value })
 
+        /* use `Object.entries` to replace `for in`
         for (var key in this.geometries) {
             if (this.geometries.hasOwnProperty(key)) {
                 this.getKNN(
@@ -45,6 +53,16 @@ class KnnSlider extends React.Component {
                 )
             }
         }
+        */
+
+        Object.entries(([key, geometry]) => {
+            this.getKNN(
+                geometry,
+                key,
+                this.layersNeighbors[key],
+                numberOfNeighbors
+            )
+        })
 
         if (window.renderSec) window.renderSec(0.2, 'KnnSlider')
     }
@@ -160,6 +178,7 @@ class KnnSlider extends React.Component {
         pixels.geometry.attributes.size.array = newSizes
     }
 
+    /*
     changeKNN(e) {
         // TODO: is this function useless?
 
@@ -169,6 +188,7 @@ class KnnSlider extends React.Component {
         //     geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
         // }
     }
+    */
 
     render() {
         return (
