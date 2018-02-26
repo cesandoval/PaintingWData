@@ -34,6 +34,7 @@ router.post('/login',
 // OAUTH
 router.get('/callback',
   passport.authenticate('facebookLogin', { 
+    scope: ['email'],
     failureRedirect: '/users/login',
     failureFlash: true, 
   }),

@@ -113,7 +113,8 @@ var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, 
   clientSecret: process.env.FACEBOOKCLIENTSECRET,
-  callbackURL: "http://localhost:3000/users/callback" //TODO: change this
+  callbackURL: "http://localhost:3000/users/callback", //TODO: change this
+  profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {
     console.log(accessToken);
@@ -127,11 +128,12 @@ function(req, accessToken, refreshToken, profile, done) {
       }
       else {
         var newUser = User.build();
-        newUser.email = "a@a.com" //TODO: get email from Facebook
+        newUser.email = profile._json.email;
         newUser.password = "" //TODO: change something here
         newUser.verified = true;
         newUser.urlLink = uuid.v4();
         newUser.save().then(function() {
+          console.log(newUser);
           return done(null, newUser)
         });
       }
