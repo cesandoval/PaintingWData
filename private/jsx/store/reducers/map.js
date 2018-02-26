@@ -329,11 +329,10 @@ function mapGeometries(state) {
                         break
                     }
                 }
-            }
-
-            return update(geometries, {
-                [key]: { $set: geo },
-            })
+                return update(geometries, {
+                    [key]: { $set: geo },
+                })
+            } else return geometries
         },
         remove({ key }) {
             console.log('mapGeometry.delete', state)
