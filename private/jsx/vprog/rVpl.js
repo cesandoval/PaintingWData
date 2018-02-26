@@ -79,7 +79,7 @@ class VPL extends React.Component {
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
-        Object.values(layers).map((layer, index) => {
+        Object.entries(layers).map(([key, layer], index) => {
             // console.log(index, { layer })
 
             const datasetNode = this.newNodeObj('DATASET')
@@ -88,12 +88,12 @@ class VPL extends React.Component {
                 x: 50,
                 y: 100 + 150 * index,
             }
-            datasetNode.name = layers.name
-            datasetNode.color = layers.color1
+            datasetNode.name = layer.name
+            datasetNode.color = layer.color1
 
             // TODO: use layerKey as nodeKey of layers node
             Act.nodeAdd({
-                nodeKey: layers.name,
+                nodeKey: key,
                 node: datasetNode,
             })
         })

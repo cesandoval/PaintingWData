@@ -25,7 +25,7 @@ class Layer extends React.Component {
         */
 
         Act.nodeUpdate({
-            nodeKey: this.props.name,
+            nodeKey: this.props.layerKey,
             attr: 'visibility',
             value: e.target.checked,
         })
@@ -48,7 +48,7 @@ class Layer extends React.Component {
         */
 
         Act.nodeUpdate({
-            nodeKey: this.props.name,
+            nodeKey: this.props.layerKey,
             attr: 'color',
             value: e.target.value,
         })

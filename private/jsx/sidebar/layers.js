@@ -188,6 +188,7 @@ class Layers extends React.Component {
                 {Object.entries(this.props.layers).map(([i, layer]) => (
                     <Layer
                         key={i}
+                        layerKey={i}
                         propName={layer.propertyName}
                         userPropName={layer.userLayerName}
                         name={layer.name}
