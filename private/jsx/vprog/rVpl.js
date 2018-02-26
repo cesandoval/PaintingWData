@@ -816,16 +816,24 @@ class VPL extends React.Component {
             translation: translationArray,
         }
 
+        const firstLayer = Object.values(this.newProps.layers)[0]
+        const firstGeometry = Object.values(this.newProps.map.geometries)[0]
+
         let geometry = {
             minMax: this.newProps.datasets.minMax,
-            addressArray: this.newProps.map.geometries[
-                Object.keys(this.newProps.map.geometries)[0]
-            ].addresses,
+            addressArray: firstGeometry.addresses,
+            // addressArray: this.newProps.map.geometries[
+            //     Object.keys(this.newProps.map.geometries)[0]
+            // ].addresses,
             properties: props,
-            cols: this.newProps.layers[0].rowsCols.cols,
-            rows: this.newProps.layers[0].rowsCols.rows,
-            bounds: this.newProps.layers[0].bounds,
-            shaderText: this.newProps.layers[0].shaderText,
+            // cols: this.newProps.layers[0].rowsCols.cols,
+            // rows: this.newProps.layers[0].rowsCols.rows,
+            // bounds: this.newProps.layers[0].bounds,
+            // shaderText: this.newProps.layers[0].shaderText,
+            cols: firstLayer.rowsCols.cols,
+            rows: firstLayer.rowsCols.rows,
+            bounds: firstLayer.bounds,
+            shaderText: firstLayer.shaderText,
             n: this.newProps.layers.length + 1,
             name: node.name,
             type: node.type,
