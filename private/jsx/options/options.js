@@ -29,10 +29,11 @@ class Options extends React.Component {
         else act.setOptionShow(option)
     }
     */
-    togglePanelShow = option => {
-        console.log(`togglePanelShow(${option})`)
-        if (this.props.map.panelShow == option) act.setPanelShow('')
-        else act.setPanelShow(option)
+    togglePanelShow = panelName => {
+        console.log(`togglePanelShow(${panelName})`)
+        if (this.props.map.panelShow == panelName)
+            act.setPanelShow({ value: '' })
+        else act.setPanelShow({ value: panelName })
     }
 
     toggleOptionsMapStyleShow() {
