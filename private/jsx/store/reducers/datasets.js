@@ -4,6 +4,7 @@ const initialDatasetsState = {
     layers: {},
     minMax: [],
     allIndices: [],
+    bounds: [],
 }
 
 export default (state = initialDatasetsState, action) => {
@@ -125,6 +126,7 @@ export default (state = initialDatasetsState, action) => {
                 layers: _.keyBy(layers, 'layerKey'),
                 minMax: layers[0].minMax,
                 allIndices: layers[0].allIndices,
+                bounds: layers[0].bounds,
             }
         }
         default:
