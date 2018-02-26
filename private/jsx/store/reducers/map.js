@@ -30,7 +30,7 @@ export default (state = initialMapState, action) => {
 
             let geometries = Object.assign({}, state.geometries)
 
-            Object.entries(datasetsLayers).map(([n, layer]) => {
+            Object.entries(datasetsLayers).map(([key, layer]) => {
                 // Defined geometry
                 const circle = new THREE.CircleBufferGeometry(1, 20)
                 // Parses the layer
@@ -52,7 +52,7 @@ export default (state = initialMapState, action) => {
                     out.addressArray,
                     layer.rowsCols.cols,
                     layer.rowsCols.rows,
-                    n,
+                    key, // n
                     layer.bounds,
                     layer.shaderText
                 )
@@ -61,7 +61,7 @@ export default (state = initialMapState, action) => {
                 // act.mapAddGeometry(layer.name, P)
                 geometries = Object.assign(
                     geometries,
-                    mapGeometries(state).add({ n, geometry })
+                    mapGeometries(state).add({ key, geometry })
                 )
             })
 
