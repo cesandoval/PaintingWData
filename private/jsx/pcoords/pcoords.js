@@ -33,8 +33,13 @@ class PCoords extends React.Component {
             // console.log(nprops, 8484848484)
             this.setState({ started: true })
 
+            /*
             const bounds = nprops.layers[0].bounds
             const indicesArray = nprops.layers[0].allIndices
+            */
+            const bounds = nprops.datasets.bounds
+            const indicesArray = nprops.datasets.allIndices
+
             this.lowBnd = bounds[0]
             this.highBnd = bounds[1]
 
@@ -247,7 +252,8 @@ class PCoords extends React.Component {
 const mapStateToProps = state => {
     return {
         mapStarted: state.map.started,
-        layers: state.datasets.layers,
+        datasets: state.datasets,
+        layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
     }
 }
