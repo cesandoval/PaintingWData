@@ -574,8 +574,11 @@ class VPL extends React.Component {
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
-        const outputs = _.cloneDeep(this.props.links.outputs)
-        const inputs = _.cloneDeep(this.props.links.inputs)
+        // const outputs = _.cloneDeep(this.props.links.outputs)
+        // const inputs = _.cloneDeep(this.props.links.inputs)
+
+        const outputs = this.props.links.outputs
+        const inputs = this.props.links.inputs
 
         // collect node inputs if inputs enough like node type setting
         const nodeInputsFromNode = {}
@@ -603,7 +606,7 @@ class VPL extends React.Component {
         const getOutputToNode = output => {
             Object.keys(output).map(toNodeKey => {
                 if (outputs[toNodeKey]) {
-                    output[toNodeKey] = outputs[toNodeKey]
+                    output[toNodeKey] = _.clone(outputs[toNodeKey])
                     getOutputToNode(output[toNodeKey])
                 } else output[toNodeKey] = true
             })
@@ -611,7 +614,8 @@ class VPL extends React.Component {
 
         datasetNodes.map(datasetNodeKey => {
             if (outputs[datasetNodeKey]) {
-                nodeOutputTree[datasetNodeKey] = outputs[datasetNodeKey]
+                const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
+                nodeOutputTree[datasetNodeKey] = datasetNodeOutput
                 getOutputToNode(nodeOutputTree[datasetNodeKey])
             }
         })
