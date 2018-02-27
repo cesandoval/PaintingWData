@@ -335,7 +335,7 @@ function mapGeometries(state) {
             } else return geometries
         },
         remove({ key }) {
-            console.log('mapGeometry.delete', state)
+            console.log('mapGeometry.remove', state)
             const geo = geometries[key]
 
             if (geo) {
