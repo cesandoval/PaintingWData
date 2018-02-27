@@ -1135,7 +1135,7 @@ class VPL extends React.Component {
         Action.mapAddLayer(layer)
         */
 
-        Act.nodeOutput(geometry.layerName, P)
+        Act.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
     }
 
     render() {
