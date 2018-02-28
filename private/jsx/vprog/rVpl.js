@@ -293,7 +293,7 @@ class VPL extends React.Component {
                 }
             })
             .do(() => {
-                this.linkThenComputeNode()
+                this.computeNodes()
             })
             .subscribe(observer('linkNode$'))
 
@@ -389,7 +389,7 @@ class VPL extends React.Component {
 
         Act.nodeRemove({ nodeKey })
 
-        this.linkThenComputeNode()
+        this.computeNodes()
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
@@ -419,7 +419,7 @@ class VPL extends React.Component {
 
             Act.nodeOptionUpdate({ nodeKey, attr, value })
 
-            this.linkThenComputeNode()
+            this.computeNodes()
         }
     }
 
@@ -434,7 +434,7 @@ class VPL extends React.Component {
             value: filter,
         })
 
-        this.linkThenComputeNode()
+        this.computeNodes()
     }
 
     createTempLink = () => {
@@ -492,7 +492,7 @@ class VPL extends React.Component {
 
         Act.linkRemove({ srcNode, toNode })
 
-        this.linkThenComputeNode()
+        this.computeNodes()
     }
 
     createLinks = () => {
@@ -539,7 +539,7 @@ class VPL extends React.Component {
         })
     }
 
-    linkThenComputeNode = () => {
+    computeNodes = () => {
         /*
         inputs: { // for arithmetic iterate
           // [toNode]: {
