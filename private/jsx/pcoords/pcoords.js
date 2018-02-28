@@ -206,9 +206,12 @@ class PCoords extends React.Component {
         }
 
         // the range(min and max) of uniforms is 0 - 1
-        for (let name in minObjs) {
+        // for (let name in minObjs) {
+        for (let i in this.props.layers) {
             // review: replace minObjs to layerNames.length
-            let pixels = this.props.geometries[this.layersNameProperty[name]]
+            const layer = this.props.layers[i]
+            const name = `${layer.userLayerName}_${layer.propertyName}`
+            let pixels = this.props.geometries[layer.layerKey]
             pixels.material.uniforms.min.value = remap(
                 minObjs[name],
                 this.layerIndeces[name],

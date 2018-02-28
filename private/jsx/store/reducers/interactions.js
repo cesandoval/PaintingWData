@@ -2,7 +2,7 @@ import * as t from '../types'
 
 const initialInteractionsState = {
     loading: true,
-    panelShow: 'PCOORD', // 'VPL' or 'PCOORD' or Null.
+    panelShow: 'PCoords', // 'VPL' or 'PCoords' or Null.
     activeNode: '',
 }
 

@@ -68,6 +68,7 @@ export default (state = initialMapState, action) => {
             const newState = {
                 instance,
                 geometries,
+                started: true,
             }
 
             return Object.assign({}, state, newState)
