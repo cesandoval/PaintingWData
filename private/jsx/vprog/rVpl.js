@@ -422,7 +422,7 @@ class VPL extends React.Component {
                 `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
             )
 
-            Act.nodeOptionUpdate({ nodeKey, attr, value })
+            Act.nodeOptionUpdate({ nodeKey, attr, value: newValue })
 
             this.refreshVoxels = true // this.computeNodes()
         }
