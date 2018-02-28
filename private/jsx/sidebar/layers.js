@@ -194,8 +194,8 @@ class Layers extends React.Component {
                         name={layer.name}
                         visible={layer.visible}
                         showSidebar={layer.showSidebar}
-                        color1={layer.color1}
-                        color2={layer.color2}
+                        // color1={layer.color1}
+                        // color2={layer.color2}
                     />
                 ))}
             </div>
