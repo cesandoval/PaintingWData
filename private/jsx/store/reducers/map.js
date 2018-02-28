@@ -123,6 +123,23 @@ export default (state = initialMapState, action) => {
             return update(state, { geometries: { $set: geometries } })
         }
 
+        case t.MAP_SET_OPACITY: {
+            let { value } = action
+            value = parseFloat(value) / 100.0
+
+            let geometries = {}
+            Object.keys(state.geometries).map(key => {
+                const newGeometries = mapGeometries(state).update({
+                    key,
+                    attr: 'opacity',
+                    value,
+                })
+                geometries = Object.assign(geometries, newGeometries)
+            })
+
+            return update(state, { geometries: { $set: geometries } })
+        }
+
         /*
         case t.NODE_OPTION_UPDATE: {
             const { nodeKey, attr, value } = action

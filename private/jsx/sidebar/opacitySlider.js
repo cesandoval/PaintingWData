@@ -14,12 +14,14 @@ class OpacitySlider extends React.Component {
         const value = e.target.value
         act.mapSetOpacity({ value })
 
+        /*
         // TODO: may do this in reducer??
         for (var geo in this.props.geometries) {
             let geometry = this.props.geometries[geo]
             geometry.material.uniforms.transparency.value =
                 parseFloat(e.target.value) / 100.0
         }
+        */
 
         if (window.renderSec) window.renderSec(0.2, 'OpacitySlider')
     }
@@ -55,7 +57,6 @@ class OpacitySlider extends React.Component {
 }
 
 export default connect(s => ({
-    map: s.map,
-    geometries: s.map.geometries,
+    // geometries: s.map.geometries,
     opacity: s.options.opacity,
 }))(OpacitySlider)
