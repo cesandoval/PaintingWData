@@ -29,14 +29,14 @@ class KnnSlider extends React.Component {
             }
         }
         */
-        Object.entries(([key, geometry]) => {
+        Object.entries(this.geometries).map(([key, geometry]) => {
             layersNeighbors[key] = this.neighborsOf(geometry)
         })
 
         this.layersNeighbors = layersNeighbors
     }
 
-    handleSlide(e) {
+    handleSlide = e => {
         // let numberOfNeighbors = document.getElementById('knnSlider').value
         let numberOfNeighbors = e.target.value
 
@@ -55,7 +55,7 @@ class KnnSlider extends React.Component {
         }
         */
 
-        Object.entries(([key, geometry]) => {
+        Object.entries(this.props.geometries).map(([key, geometry]) => {
             this.getKNN(
                 geometry,
                 key,
