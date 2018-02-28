@@ -149,6 +149,13 @@ class VPL extends React.Component {
         }
     }
 
+    componentDidUpdate() {
+        if (this.refreshVoxels) {
+            this.refreshVoxels = false
+            this.computeNodes()
+        }
+    }
+
     componentDidMount() {
         // const bodyDOM = document.body
         const vplDOM = document.querySelector('svg.vpl')
@@ -293,7 +300,7 @@ class VPL extends React.Component {
                 }
             })
             .do(() => {
-                this.computeNodes()
+                this.refreshVoxels = true // this.computeNodes()
             })
             .subscribe(observer('linkNode$'))
 
@@ -360,11 +367,6 @@ class VPL extends React.Component {
         this.mouseHover$.unsubscribe()
     }
 
-    componentDidUpdate() {
-        // componentDidUpdate(nextProps){
-        // console.log('props changed ...', nextProps)
-    }
-
     panning = ({ x, y }) => {
         // console.log('panning()', { x, y })
         const panning = { x, y }
@@ -389,7 +391,7 @@ class VPL extends React.Component {
 
         Act.nodeRemove({ nodeKey })
 
-        this.computeNodes()
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
@@ -419,7 +421,7 @@ class VPL extends React.Component {
 
             Act.nodeOptionUpdate({ nodeKey, attr, value })
 
-            this.computeNodes()
+            this.refreshVoxels = true // this.computeNodes()
         }
     }
 
@@ -434,7 +436,7 @@ class VPL extends React.Component {
             value: filter,
         })
 
-        this.computeNodes()
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     createTempLink = () => {
@@ -492,7 +494,7 @@ class VPL extends React.Component {
 
         Act.linkRemove({ srcNode, toNode })
 
-        this.computeNodes()
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     createLinks = () => {
