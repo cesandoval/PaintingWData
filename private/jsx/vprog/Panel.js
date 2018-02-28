@@ -134,10 +134,18 @@ class Panel extends React.Component {
 
             if (index === this.props.index) {
                 console.log(`set ${index} visiable`)
-                Act.nodeUpdate(index, 'Visibility', true)
+                Act.nodeUpdate({
+                    nodeKey: index,
+                    attr: 'visibility',
+                    value: true,
+                })
             } else {
                 console.log(`set ${index} invisiable`)
-                Act.nodeUpdate(index, 'Visibility', false)
+                Act.nodeUpdate({
+                    nodeKey: index,
+                    attr: 'visibility',
+                    value: false,
+                })
             }
         }
     }
