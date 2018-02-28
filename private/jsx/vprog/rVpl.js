@@ -356,6 +356,7 @@ class VPL extends React.Component {
             .distinctUntilChanged()
             .do(nodeKey => {
                 this.setState({ hover: nodeKey })
+                Act.setActiveNode({ value: nodeKey })
                 console.log('mouseHover', nodeKey)
             })
             .subscribe(observer('mouseHover$'))
