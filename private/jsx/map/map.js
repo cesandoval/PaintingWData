@@ -86,9 +86,9 @@ class MapCanvas extends React.Component {
     }
 
     exportSVG(geoms) {
-        let layer = Object.values(this.props.layers)[0]
+        // let layer = Object.values(this.props.layers)[0]
         let centroid = this.props.map.camera.position
-        let bbox = layer.bbox[0]
+        let bbox = this.props.bbox[0]
         let projectedMin = project([bbox[0][0], bbox[0][1]])
         let projectedMax = project([bbox[2][0], bbox[2][1]])
 
@@ -149,12 +149,23 @@ class MapCanvas extends React.Component {
     zoomMap() {
         console.log(this.state)
         console.log(this.props)
+
+        /*
         PaintGraph.Pixels.zoomExtent(this.state.canvas, this.state.bbox)
         // this might be adding many meshes
         PaintGraph.Pixels.buildMapbox(
             this.props.map,
             this.state.canvas,
             this.state.bbox
+        )
+        */
+
+        PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
+        // this might be adding many meshes
+        PaintGraph.Pixels.buildMapbox(
+            this.props.map,
+            this.props.map, // canvas should equle to map.
+            this.props.bbox
         )
     }
 
@@ -234,4 +245,5 @@ export default connect(s => ({
     map: s.map.instance,
     panelShow: s.interactions.panelShow,
     geometries: s.map.geometries,
+    bbox: s.map.bbox,
 }))(MapCanvas)
