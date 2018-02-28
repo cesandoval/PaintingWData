@@ -70,6 +70,8 @@ class VPL extends React.Component {
         this.checked = {
             datasetNode: false,
         }
+
+        this.geometries = {}
     }
 
     // create the dataset nodes if they're not exitst.
@@ -143,6 +145,7 @@ class VPL extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
+        this.geometries = Object.assign({}, newProps.map.geometries)
 
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
@@ -654,7 +657,7 @@ class VPL extends React.Component {
 
         // TODO: save computed data to this state
         const computeNodeThenAddVoxel = (node, inputNodes) => {
-            const mapGeometries = this.newProps.map.geometries
+            const mapGeometries = this.geometries
             const mathFunction = NodeType[node.type].arithmetic
             const options = Object.assign(
                 NodeType[node.type].options,
@@ -674,7 +677,7 @@ class VPL extends React.Component {
 
         Object.entries(nodes).map(([nodeKey, node]) => {
             if (node.type != 'DATASET')
-                Act.nodeOutput({ nodeKey, geometry: null })
+                this.nodeOutput({ nodeKey, geometry: null })
         })
 
         outputOrder.map(nodeKey => {
@@ -1141,7 +1144,14 @@ class VPL extends React.Component {
         Action.mapAddLayer(layer)
         */
 
-        Act.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
+        this.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
+    }
+
+    nodeOutput = ({ nodeKey, geometry }) => {
+        if (geometry) this.geometries[nodeKey] = geometry
+        else delete this.geometries[nodeKey]
+
+        Act.nodeOutput({ nodeKey, geometry })
     }
 
     render() {
