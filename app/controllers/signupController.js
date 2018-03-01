@@ -109,29 +109,46 @@ var loginStrategy = new LocalStrategy({
 
   });
 
+/* Make Oauth call to facebook, retrieve information from facebook and store it in "profile" variable
+sample profile variable representation: 
+{ id: '119372979383927645',
+  username: undefined,
+  displayName: undefined,
+  name: { familyName: 'Anderson', givenName: 'Carl', middleName: undefined },
+  gender: undefined,
+  profileUrl: undefined,
+  emails: [ { value: 'carl@gmail.com' } ],
+  provider: 'facebook',
+  _raw: '{"id":"119372979383927645","email":"carl\\u0040gmail.com","last_name":"Anderson","first_name":"Carl"}',
+  _json: 
+   { id: '119372979383927645',
+     email: 'Carl@gmail.com',
+     last_name: 'Anderson',
+     first_name: 'Carl' } }
+
+*/
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, 
   clientSecret: process.env.FACEBOOKCLIENTSECRET,
-  callbackURL: "http://localhost:3000/users/facebook_oauth", //TODO: change this
+  callbackURL: "http://localhost:3000/users/facebook_oauth",
   profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {
-    console.log(accessToken);
-    console.log(refreshToken);
-    console.log(profile);
+    //console.log(profile);
     User.findOne({
-      where: {email: profile._json.email}, //TODO: check if user with same email already exists
+      where: {email: profile._json.email}, //check if user with same email already exists
     }).then(function(user) {
       if (user) {
         return done(null, user)
       }
       else {
         var newUser = User.build();
-        newUser.email = profile._json.email;
-        newUser.password = "" //TODO: change something here
-        newUser.verified = true;
+        newUser.email = profile._json.email; //use facebook email as the database's email
+        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
+        newUser.verified = true; //No need to verify when using oauth
         newUser.urlLink = uuid.v4();
+        newUser.extraUserInfo = profile._json //store all the rest of the info from facebook into here
         newUser.save().then(function() {
           console.log(newUser);
           return done(null, newUser)
