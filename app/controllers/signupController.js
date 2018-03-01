@@ -129,8 +129,8 @@ sample profile variable representation:
 */
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
-  clientID: process.env.FACEBOOKCLIENTID, 
-  clientSecret: process.env.FACEBOOKCLIENTSECRET,
+  clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
+  clientSecret: process.env.FACEBOOKCLIENTSECRET, //Same as above
   callbackURL: "http://localhost:3000/users/facebook_oauth",
   profileFields: ['id', 'email', 'name'],
 },
