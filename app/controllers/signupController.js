@@ -121,7 +121,7 @@ function(req, accessToken, refreshToken, profile, done) {
     console.log(refreshToken);
     console.log(profile);
     User.findOne({
-      where: {email: ""},
+      where: {email: profile._json.email}, //TODO: check if user with same email already exists
     }).then(function(user) {
       if (user) {
         return done(null, user)
