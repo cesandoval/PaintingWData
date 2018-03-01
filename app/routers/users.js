@@ -47,6 +47,22 @@ router.get('/facebook_oauth',
     }
 });
 
+// Google (Gmail) OAUTH
+router.get('/google_oauth',
+  passport.authenticate('googleLogin', { 
+    scope: ['email', 'profile'],
+    failureRedirect: '/users/login',
+    failureFlash: true, 
+  }),
+  function(req, res) {
+    if (req.session.returnTo) {
+      res.redirect(req.session.returnTo);
+    }
+    else {
+      res.redirect('/');
+    }
+});
+
 
 router.get('/reset-password', function(req, res) {
   res.render('users/resetPassword', {message: ""});
