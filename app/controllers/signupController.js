@@ -113,7 +113,7 @@ var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, 
   clientSecret: process.env.FACEBOOKCLIENTSECRET,
-  callbackURL: "http://localhost:3000/users/callback", //TODO: change this
+  callbackURL: "http://localhost:3000/users/facebook_oauth", //TODO: change this
   profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {

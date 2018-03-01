@@ -31,8 +31,8 @@ router.post('/login',
   }
 );
 
-// OAUTH
-router.get('/callback',
+// Facebook OAUTH
+router.get('/facebook_oauth',
   passport.authenticate('facebookLogin', { 
     scope: ['email'],
     failureRedirect: '/users/login',
