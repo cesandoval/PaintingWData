@@ -1,4 +1,4 @@
-var fileUploadHelper = require('../../lib/fileUploadHelper'), 
+var fileUploadHelper = require('../../lib/fileUploadHelper'),
     Models = require('../models'),
     path = require('path'),
     fs = require('fs'),
@@ -12,13 +12,13 @@ module.exports.show = function(req, res) {
 
 module.exports.upload = function(req, res, next) {
 
-  var form = new formidable.IncomingForm(); 
+  var form = new formidable.IncomingForm();
   var files = [];
   fs.mkdir(path.join(__dirname, `/tmp`), function(err){
     form.uploadDir = path.join(__dirname, '/tmp');
     var shapefiles = [];
     form.on('file', function(field, file) {
-      files.push(file); 
+      files.push(file);
     });
     form.on('error', function(err) {
       console.log('Error while uploading file: \n' + err);
@@ -57,7 +57,7 @@ module.exports.upload = function(req, res, next) {
             else{
               fileUploadHelper.verifyFiles(targetPath, function(err, targetPath){
                 if(err){
-                    //if file is messed up, file doesn't contain one of the extensions required 
+                    //if file is messed up, file doesn't contain one of the extensions required
                     console.log("Error 2: ", err);
 
                     req.flash('uploadAlert', "Error with your upload, it might be missing some required files. Upload a Different File.");
@@ -82,6 +82,7 @@ module.exports.upload = function(req, res, next) {
                         var size = '' + size;
                         fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid, geomType){
                           var dataFile = Models.Datafile.build();
+                          console.log("This increments up by 1. It is now: " + dataFile.id);
                           dataFile.userId = req.user.id;
                           dataFile.location = targetPath;
                           dataFile.filename = shapeFiles[0];
@@ -92,7 +93,7 @@ module.exports.upload = function(req, res, next) {
                           dataFile.save().then(function(d){
                             res.send({id: d.id+'$$'+size});
                           });
-                        }); 
+                        });
                       });
                     }
                   });
@@ -107,6 +108,6 @@ module.exports.upload = function(req, res, next) {
     // parse the incoming request containing the form data
     form.parse(req)
   });
-  
-   
+
+
 }

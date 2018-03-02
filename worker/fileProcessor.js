@@ -20,8 +20,8 @@ function startVoxelWorker(datalayerIds, req, callback){
         Model.Datavoxel.findById(voxelId).then(function(datavoxel) {
             datavoxel.update({
                 processed: true,
-                rowsCols: result[1], 
-                allIndices: result[2], 
+                rowsCols: result[1],
+                allIndices: result[2],
                 ptDistance: result[3]
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
@@ -29,7 +29,7 @@ function startVoxelWorker(datalayerIds, req, callback){
                     mailer.sendVoxelEmail(user.email, user.id);
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
-                })    
+                })
             })
         })
     });
@@ -63,7 +63,7 @@ function startShapeWorker(req, callback) {
             // })
             // console.log(file)
             // console.log(thingsArray)
-            // callback(null);         
+            // callback(null);
         }
         // pushDataRaster
     ], function (err, result) {
@@ -78,7 +78,7 @@ function startShapeWorker(req, callback) {
                 console.log(req.user.id);
             }
         });
-        
+
     });
 }
 
@@ -116,6 +116,7 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.userId = req.user.id;
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
+    newDatavoxel.voxelId = req.voxelID;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
@@ -141,7 +142,7 @@ function getNet(bbox, props, req, callback) {
     var coords = bbox.coordinates[0],
         length = Math.abs(coords[3][0]-coords[0][0])*1000000,
         width = Math.abs(coords[2][1]-coords[0][1])*1000000,
-        area = length*width; 
+        area = length*width;
     var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
 
     var columns = Math.floor(length/stepSize),
@@ -150,12 +151,12 @@ function getNet(bbox, props, req, callback) {
     var netFunctionQuery = `
 CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
 $$
-SELECT 
-    ST_Collect(st_setsrid(ST_POINT(x/1000000::float,y/1000000::float),st_srid($1))) 
-FROM 
+SELECT
+    ST_Collect(st_setsrid(ST_POINT(x/1000000::float,y/1000000::float),st_srid($1)))
+FROM
   generate_series(floor(st_xmin($1)*1000000)::int, ceiling(st_xmax($1)*1000000)::int,$2) as x,
-  generate_series(floor(st_ymin($1)*1000000)::int, ceiling(st_ymax($1)*1000000)::int,$2) as y 
-WHERE 
+  generate_series(floor(st_ymin($1)*1000000)::int, ceiling(st_ymax($1)*1000000)::int,$2) as y
+WHERE
     st_intersects($1,ST_SetSRID(ST_POINT(x/1000000::float,y/1000000::float),ST_SRID($1)))
 $$
 LANGUAGE sql VOLATILE;
@@ -220,7 +221,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
             neighborhood: {
                 column: Math.floor(i/rows),
                 row: i%rows
-            }, 
+            },
             voxelIndex: i
         }
 
@@ -258,7 +259,7 @@ function pointQuery(prop, callback){
 
     rasterQuery = `
     SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + `g.`+'"rasterProperty", ' + `g.rasterval  As rastervalue
-    FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g 
+    FROM public.` +'"Datanets"' + " AS p, public."+'"Datalayers"' + ` AS g
     WHERE g.`+'"datafileId"'+ "=" + prop.datafileId +` AND p.` +'"datavoxelId"' + "=" +prop.datavoxelId+`
     AND ST_Within(p.geometry, g.geometry);`
     // 117, 45
@@ -276,8 +277,8 @@ function pointQuery(prop, callback){
 
 function stValue(prop, callback) {
     var raw_query = `
-    SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + 'r.layername, ' + `ST_Value(r.rast, 1, p.geometry) As rastervalue 
-    FROM public.`+'"Datanets"' + ` AS p, public.dataraster AS r 
+    SELECT p.geometry, p.neighborhood, p.`+'"voxelIndex", ' + 'r.layername, ' + `ST_Value(r.rast, 1, p.geometry) As rastervalue
+    FROM public.`+'"Datanets"' + ` AS p, public.dataraster AS r
     WHERE ST_Intersects(r.rast, p.geometry) AND p.`+'"datavoxelId"' + "=" +prop.datavoxelId+" AND r.datafileid="+ prop.datafileId +";"
     console.log(raw_query)
     connection.query(raw_query).spread(function(results, metadata){
@@ -356,14 +357,15 @@ function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
             layername: objProps[key].layername,
             userId: req.user.id,
             datavoxelId: objProps[key].datavoxelId,
+            hashVoxelId: req.voxelID,
             datafileId: objProps[key].datafileId,
             epsg: 4326,
             geojson: geoJSON,
         }
         newDataJsons[key] = newDataJSON;
     });
-    allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});    
-    
+    allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});
+
     callback(null, newDataJsons, objProps, req, rowsCols, allIndices, ptDistance);
 }
 

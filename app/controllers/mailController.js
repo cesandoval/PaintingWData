@@ -12,7 +12,7 @@ var transporter = nodemailer.createTransport({
   });
 
 module.exports.sendVerificationEmail = function(email, verificationLink) {
-  
+
   var mailOptions = {
     from: '"Painting With Data Team" <' + email + '>',
     to: email,
@@ -31,11 +31,12 @@ module.exports.sendVerificationEmail = function(email, verificationLink) {
 };
 
 module.exports.sendVoxelEmail = function(email, userId) {
+  /* //chxu (temporary)
 	var mailOptions = {
-    	from: '"Painting With Data" <painting.with.data@gmail.com>', 
-		to: email, 
-    	subject: 'Done Processing Voxels', 
-    	text: 'Done Processing Voxels', 
+    	from: '"Painting With Data" <painting.with.data@gmail.com>',
+		to: email,
+    	subject: 'Done Processing Voxels',
+    	text: 'Done Processing Voxels',
     	html: 'Done processing voxels access them here: http://paintingwithdata.com/voxels/' + userId
    	};
 
@@ -45,14 +46,15 @@ module.exports.sendVoxelEmail = function(email, userId) {
     	}
     	console.log('Message %s sent: %s', info.messageId, info.response);
   	});
+    */
 };
 
 module.exports.sendResetPasswordEmail = function(email, passwordLink) {
   var mailOptions = {
-      from: '"Painting With Data" <painting.with.data@gmail.com>', 
-    to: email, 
-      subject: 'Reset Password', 
-      text: 'Reset Password', 
+      from: '"Painting With Data" <painting.with.data@gmail.com>',
+    to: email,
+      subject: 'Reset Password',
+      text: 'Reset Password',
       html: 'Click this link to reset your password: http://paintingwithdata.com/users/reset-password/' + passwordLink
     };
 
@@ -67,11 +69,12 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
 
 
 module.exports.sendLayerEmail = function(email, userId) {
+  /* //chxu (temporary)
   var mailOptions = {
-      from: '"Painting With Data" <painting.with.data@gmail.com>', 
-    to: email, 
-      subject: 'Done Uploading Layer', 
-      text: 'Done Uploading Layer', 
+      from: '"Painting With Data" <painting.with.data@gmail.com>',
+    to: email,
+      subject: 'Done Uploading Layer',
+      text: 'Done Uploading Layer',
       html: 'Done uploading layer access it here: http://paintingwithdata.com/layers/' + userId
     };
 
@@ -81,7 +84,5 @@ module.exports.sendLayerEmail = function(email, userId) {
       }
       console.log('Message %s sent: %s', info.messageId, info.response);
     });
+  */
 };
-
-
-

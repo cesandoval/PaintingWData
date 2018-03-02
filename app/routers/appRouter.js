@@ -27,12 +27,13 @@ var passport = require('passport'),
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
-  
+
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     var stringParse = req.params.id
+    //console.log("Upload viewer id: " + stringParse);
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
     var size = stringParse.substr(stringParse.indexOf('$$')+2, stringParse.length);
-    
+
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
@@ -42,10 +43,11 @@ var passport = require('passport'),
 
   router.get('/layers/:id', isAuthenticated, datalayerController.show);
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
-  router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
+  router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
-  router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);  
+  router.get('/voxels/:id/:datalayerId', isAuthenticated, datalayerController.showVoxels);
+  router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
@@ -54,5 +56,6 @@ var passport = require('passport'),
   router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
+  router.get('/update/voxels', isAuthenticated, updateController.updateVoxels);
 
 module.exports = router;

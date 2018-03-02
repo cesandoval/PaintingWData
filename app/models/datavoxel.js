@@ -30,6 +30,9 @@ var Datavoxel = sequelize.define('Datavoxel', {
     deleted: {
       type: DataTypes.BOOLEAN,
     },
+    voxelId: {
+      type: DataTypes.STRING,
+    },
 }, {
     classMethods: {
       associate: function(models) {

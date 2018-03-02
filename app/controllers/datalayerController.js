@@ -7,8 +7,9 @@ var Model = require('../models'),
     processVoxels = require('../../worker/worker2').processVoxels;
 
 // This file extracts the datalayer ids from the request object and saves it on
-// the datalayerIds object. 
+// the datalayerIds object.
 // The datalayer objects are all strings containing ids. Eg "3", "7" ...
+
 
 module.exports.computeVoxels = function(req, res){
     if  (req.body.datalayerIds !== ''){
@@ -40,27 +41,29 @@ module.exports.computeVoxels = function(req, res){
                     } else {
                         req.flash('layerAlert', "Your layers have been deleted");
                     }
-                    res.redirect('/layers/'+ req.user.id);  
-                })  
-            })  
+                    res.redirect('/layers/'+ req.user.id);
+                })
+            })
         } else {
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
             var datalayerIds = [];
+            console.log("req: " + req);
+            console.log("Data Layer ID: " + req.body.datalayerIds);
             req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
                 if(datalayerId !== ""){
                     datalayerIds.push(datalayerId);
-                    }
-                });
+                }
+            });
+            req['voxelID'] = hash();
+            processVoxels([datalayerIds, req], function(){});
 
-            processVoxels([datalayerIds, req], function(){}); 
-
-            res.redirect('/voxels/'+ req.user.id);  
+            res.redirect('/voxels/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
     } else {
         console.log('select layers!!!!');
         req.flash('layerAlert', "You haven't selected layers. Please select at least one layer.");
-        res.redirect('/layers/'+ req.user.id); 
-    } 
+        res.redirect('/layers/'+ req.user.id);
+    }
 };
 
 module.exports.show = function(req, res) {
@@ -75,7 +78,7 @@ module.exports.show = function(req, res) {
         }).then(function(datafiles){
 
             res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
-        });  
+        });
 }
 
 module.exports.showVoxels= function(req, res) {
@@ -104,9 +107,9 @@ module.exports.transformVoxels = function(req, res) {
     if  (req.body.datavoxelIds !== ''){
         var voxelId = parseInt(req.body.datavoxelIds);
         if (req.body.layerButton == 'open') {
-            res.redirect('/app/'+ voxelId);  
+            res.redirect('/app/'+ voxelId);
 
-        } else{ 
+        } else{
             Model.Datavoxel.update({
                 deleted: true
             }, {
@@ -115,14 +118,19 @@ module.exports.transformVoxels = function(req, res) {
                 }
             }).then(function(){
                 req.flash('voxelAlert', "Your Voxel has been deleted");
-                res.redirect('/voxels/'+ req.user.id);  
-            }); 
+                res.redirect('/voxels/'+ req.user.id);
+            });
         }
     } else {
         console.log('select layers!!!!');
 
         req.flash('voxelAlert', "You haven't selected a Voxel. Please select a Voxel.");
-        res.redirect('/voxels/'+ req.user.id); 
+        res.redirect('/voxels/'+ req.user.id);
 
-    } 
+    }
+}
+
+//Helper function to generate a unique ID
+function hash(){
+    return (+new Date()).toString(32) + Math.floor(Math.random()*36).toString(36);
 }

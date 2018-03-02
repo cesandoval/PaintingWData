@@ -65,7 +65,7 @@ function getLastId(req, res) {
                     fs_extra.remove(gfile.location, err => {
                         if (err) {
                             console.log("Error cleaning local directory: ", gfile.location);
-                            // return gfile.location + "$$" + e.toString();                            
+                            // return gfile.location + "$$" + e.toString();
                             console.log(err, err.stack);
                             success = false;
                             // callback(err);
@@ -170,7 +170,7 @@ function getById(req, res, id) {
                     fs_extra.remove(gfile.location, err => {
                         if (err) {
                             console.log("Error cleaning local directory: ", gfile.location);
-                            // return gfile.location + "$$" + e.toString();                            
+                            // return gfile.location + "$$" + e.toString();
                             console.log(err, err.stack);
                             success = false;
                             // callback(err);
@@ -222,8 +222,8 @@ function getById(req, res, id) {
 // [id$$jobname$$Errormessage]
 // [~/~ Error message here]
 //takes query string of enpoint?shapes=id1$$id2$$id3
-//hope to add the param &voxels=ids 
-function getLastIds(req, res) {
+//hope to add the param &voxels=ids
+function getLastIds(req, res, isVoxel=false) {
     var output = [];
     var dataset = null;
     var gfile = null; // gdal file
@@ -233,125 +233,159 @@ function getLastIds(req, res) {
     var ids = []; // datafile and query id
     var denominators = [];
 
-    console.log(req.query.shapes)
-    if(req.query.shapes === '') {
+    var query = isVoxel ? req.query.voxels : req.query.shapes;
+
+    console.log('Query: ' + query)
+    if(query === '') {
         // console.log('no ids')
         res.send({progress: [[]]})
         return false; // don't query if there is no query object
     }
-    ids = req.query.shapes.split("$$")
+
+    ids = query.split("$$");
+    //debugger;
     // console.log(ids);
-
-    Model.Datafile.findAll({
-        where: {
-            userId: req.user.id,
-            id: ids
-        },
-        order: [['createdAt', 'DESC']]
-
-    }).then(function (files) {
-        // console.log("Break ----------------- \n \n ");
-        files.forEach((dfile, i) => {
-            var jobName = []
-            jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
-            jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
-            ids.push(dfile.id);
-            jobNames.push(jobName);
-
-            try {
-                gfile = gdal.open(dfile.location);
-                dataset = gfile.layers.get(0);
-                totalLayers = dataset.features.count();
-                denominators.push(totalLayers);
-                locations.push([gfile.location, dfile.location]);
-            }
-            catch (e) {
-                console.log('error opening file. Current location: ' + dfile.location)
-                console.log(e);
-
-                // output.push(['~/~ Error opening file. Current location: ' + dfile.location]);
-                // output.push([dfile.id + "$$" + dfile.location + "$$" + e.toString()]);
-
-                denominators.push(null);
-                locations.push(["no glocation found", dfile.location]);
-            }
-        })
-
-        //progress
-        for (var i = 0; i < ids.length; ids++) {
-            jobName = jobNames[i]
-            totalLayers = denominators[i]
-            var id = ids[i]
-            var gLocation = locations[i][0]
-            var dLocation = locations[i][1]
-            Model.Datalayer.count({// count geometries loaded
+    if (isVoxel){
+        //THIS BLOCK IS FOR VOXELS ONLY
+        Model.Datavoxel.findAll({
+            where: {
+                voxelId: ids[0], //TODO: make the code cleaner
+            },
+            order: [['createdAt', 'DESC']] //We only want to compute progress for the LATEST created voxel.
+        }).then(function(voxels){
+            voxel = voxels[0]; //get the first one of only one
+            Model.Datajson.count({
                 where: {
-                    userId: req.user.id,
-                    datafileId: id
+                    hashVoxelId: voxel.voxelId,
                 }
-            }).then(function (response) {
-                if (response == totalLayers && totalLayers !== null) {
-
-
-                    console.log("resp: " + response + "  tlayers: " + totalLayers + "\n");
-                    output.push([id, jobName[0], true])
-                    var success = true;
-
-                    // try deleting obj
-                    try{
-                        fs_extra.remove(gLocation, err => {
-                            if (err) {
-                                console.log("Error cleaning local directory: ", gLocation);
-                                // return gLocation + "$$" + e.toString();                            
-                                console.log(err, err.stack);
-                                success = false;
-                                // callback(err);
-                            }
-                        })
-                    }
-                    catch(e) {
-                        console.log('File Location Error: ' + e);
-                        console.log('RETRYING')
-                        fs_extra.remove(dLocation, err => {
-                            success = true;
-                            if (err) {
-                                console.log("Error cleaning local directory: ", dLocation);
-                                console.log(err, err.stack);
-                                success = false;
-                                // callback(err);
-                                //return error object here to make srue this is removed
-                            }
-                        })
-                    }
-                    if (!success)
-                        output.push(["Error cleaning local directory: " + gLocation]);
+            }).then(function(response){ //response = number of voxels loaded! ids[0] = density, or total voxels
+                if (voxel.processed){
+                    output.push([voxel.voxelId, voxel.voxelname, true]);
                 }
-                //add obj to response if its valid
-                else {
-                    var outLayer = [id, jobName[0], response, totalLayers];
-                    // console.log("outlayer: " + outLayer)
-                    // console.log(outLayer);
-                    if(outLayer[3] === null) {
-                        output.push([id, jobName[0], null, null]);
-                    }
-                    else if(!outLayer[1] || !(outLayer[2] <= outLayer[3])){ // check if the output is valid
-                        //put in an aerror flag
-                        console.log("Invalid format error - numerator: " + outLayer[2] + " denom: " + outLayer[3])
-                        output.push([id, jobName[0], false]);
-                    }
-
-                    else {
-                        // console.log('outlayer pushed')
-                        output.push(outLayer);
-                    }
+                else{
+                    output.push([voxel.voxelId, voxel.voxelname, response, ids.length - 1]); //In "ids", first argument is ID; rest of arguments are the layers. We want number of layers processed / total number of layers
+                    console.log("Output: " + output);
                 }
-                // console.log(output)
                 res.send({ progress: output });
-                console.log(output);
-                return output
+                return output;
             });
-        }
-    });
+        });
+        //END BLOCK FOR VOXELS ONLY
+    }
+    else {
+        Model.Datafile.findAll({
+            where: {
+                userId: req.user.id,
+                id: ids
+            },
+            order: [['createdAt', 'DESC']]
+
+        }).then(function (files) {
+            // console.log("Break ----------------- \n \n ");
+            files.forEach((dfile, i) => {
+                var jobName = []
+                jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+                jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+                ids.push(dfile.id);
+                jobNames.push(jobName);
+
+                try {
+                    gfile = gdal.open(dfile.location);
+                    dataset = gfile.layers.get(0);
+                    console.log(dataset.features.count());
+                    totalLayers = dataset.features.count();
+                    denominators.push(totalLayers);
+                    locations.push([gfile.location, dfile.location]);
+                }
+                catch (e) {
+                    console.log('error opening file. Current location: ' + dfile.location)
+                    console.log(e);
+
+                    // output.push(['~/~ Error opening file. Current location: ' + dfile.location]);
+                    // output.push([dfile.id + "$$" + dfile.location + "$$" + e.toString()]);
+
+                    denominators.push(null);
+                    locations.push(["no glocation found", dfile.location]);
+                }
+            })
+
+            //progress
+            for (var i = 0; i < ids.length; ids++) {
+                jobName = jobNames[i]
+                totalLayers = denominators[i]
+                var id = ids[i]
+                var gLocation = locations[i][0]
+                var dLocation = locations[i][1]
+                console.log("We're trying to find all geometries where userID = " + req.user.id + " and datafileId = " + id);
+                Model.Datalayer.count({// count geometries loaded
+                    where: {
+                        userId: req.user.id,
+                        datafileId: id
+                    }
+                }).then(function (response) {
+                    if (response == totalLayers && totalLayers !== null) {
+
+
+                        console.log("resp: " + response + "  tlayers: " + totalLayers + "\n");
+                        output.push([id, jobName[0], true])
+                        var success = true;
+
+                        // try deleting obj
+                        try{
+                            fs_extra.remove(gLocation, err => {
+                                if (err) {
+                                    console.log("Error cleaning local directory: ", gLocation);
+                                    // return gLocation + "$$" + e.toString();
+                                    console.log(err, err.stack);
+                                    success = false;
+                                    // callback(err);
+                                }
+                            })
+                        }
+                        catch(e) {
+                            console.log('File Location Error: ' + e);
+                            console.log('RETRYING')
+                            fs_extra.remove(dLocation, err => {
+                                success = true;
+                                if (err) {
+                                    console.log("Error cleaning local directory: ", dLocation);
+                                    console.log(err, err.stack);
+                                    success = false;
+                                    // callback(err);
+                                    //return error object here to make srue this is removed
+                                }
+                            })
+                        }
+                        if (!success)
+                            output.push(["Error cleaning local directory: " + gLocation]);
+                    }
+                    //add obj to response if its valid
+                    else {
+                        var outLayer = [id, jobName[0], response, totalLayers];
+                        // console.log("outlayer: " + outLayer)
+                        // console.log(outLayer);
+                        if(outLayer[3] === null) {
+                            output.push([id, jobName[0], null, null]);
+                        }
+                        else if(!outLayer[1] || !(outLayer[2] <= outLayer[3])){ // check if the output is valid
+                            //put in an aerror flag
+                            console.log("Invalid format error - numerator: " + outLayer[2] + " denom: " + outLayer[3])
+                            output.push([id, jobName[0], false]);
+                        }
+
+                        else {
+                            // console.log('outlayer pushed')
+                            output.push(outLayer);
+                        }
+                    }
+                    // console.log(output)
+                    res.send({ progress: output });
+                    console.log("File progress output: " + output);
+                    return output
+                });
+            }
+        });
+    }
 }
 
 module.exports.updateShape = function (req, res) {
@@ -378,6 +412,12 @@ module.exports.updateShapes = function (req, res) {
     getLastIds(req, res);
 }
 
+module.exports.updateVoxels = function (req, res){
+    console.log('update voxels');
+    console.log("END USER ----------------- \n \n ");
+    getLastIds(req, res, true);
+}
+
 
 
 // for testing purposes. Does not make the progress tracker behave accurately.
@@ -391,50 +431,50 @@ function testTracker(req, res) {
             res.send({ progress: output });
             console.log('after send')
         }
-            
-        
+
+
         else if( numCalls < 200)
         {
             output = [[0, 'test job 1', 100, 1000],[1, 'test job 2', 200, 1000],[2, 'test job 3', 600, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
             res.send({ progress: output });
         }
-            
-        
+
+
         else if( numCalls < 300)
         {
              output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', 900, 1000],[3, 'test job 4 with an extremely long name that i don\'t think will fit', 800, 1000]]
             res.send({ progress: output });
         }
-            
-        
+
+
         else if( numCalls < 400)
         {
              output = [[0, 'test job 1', false],[1, 'test job 2', true],[2, 'test job 3', false],[3, 'test job 4 with an extremely long name that i don\'t think will fit', true]]
              res.send({ progress: output });
         }
-            
-        
+
+
         else if( numCalls < 500)
         {
             ouput = [[7+ "$$" + 'datafilelocation' + "$$" + 'errormessage']];
             res.send({progress: output});
 
         }
-            
+
 
         else
         {
         output = [['~/~ This is a flash: ' + "here is the flash content"]];
         res.send({progress: output})
         }
-             
+
         // else
         // {
         //     console.log('fdefault')
         // }
 
-    
-    
+
+
     numCalls++;
-    
+
 }

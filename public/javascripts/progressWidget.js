@@ -1,12 +1,14 @@
 function progressWidgetInit() {
-
+    /*
+    Voxels are negative ID's, to avoid collisions with Shapefile IDs.
+    */
     $.widget("custom.progressWidget", {
         options: {
             value: 0
         },
 
         _create: function () {
-            // load saved state 
+            // load saved state
             this.element;
             this.$el = $(this.element);
             this.$anchor = $('.progress-tracker')
@@ -36,13 +38,22 @@ function progressWidgetInit() {
             this.state.fullRefresh = 5; // so that thte state is fully refreshed on creation
             //check if a new layer has just been uploaded
             var urlString = window.location.pathname;
-            if (urlString.indexOf('/layers') != -1) {
+            console.log("URL String: " + urlString);
+            if (urlString.indexOf('/layers') != -1 || urlString.indexOf('/voxels') != -1) {
+                var isVoxel = (urlString.indexOf('/voxels') != -1);
+                this.state.pollType = isVoxel ? "voxels" : "shapes";
                 if (urlString.match(/\/\d+(?!\.)\/\d+(?!\.)/) != null) { // match two numbers with no decimal points
                     try {
                         var temp = urlString.split('/');
-                        this.uploadId = parseInt(temp[temp.length - 1]);
-                        if(typeof this.uploadId === 'number')
+                        this.uploadId = temp[temp.length - 1];
+                        if (!isVoxel){
+                            this.uploadId = parseInt(this.uploadId);
+                        }
+                        //IF IT IS A VOXEL, then "uploadId" is of the form id1$$id2$$etc. Remember that now.
+                        //if(typeof this.uploadId === 'number'){
                             this.state.selectedIDs.unshift(this.uploadId);
+                            console.log("ID: " + this.uploadId);
+                        //}
                     }
                     catch (e) {
                         console.log('PROGRESSWIDGET ERROR: error adding ID, url: ' + urlString)
@@ -87,16 +98,16 @@ function progressWidgetInit() {
             }
             var $progressWidget = this.element,
                 opts = this.options,
-                widgetCaption = "This tracks all current shape jobs in the worker queue. hover over the job names to see how many shapes have been processed.",
+                widgetCaption = "This tracks all current jobs in the worker queue. hover over the job names to see how many shapes/voxels have been processed.",
                 refreshCaption = "Click here to reset the Progress Tracker.",
                 htmlBuilder = '';
 
 
             htmlBuilder += `<div id="widget-menu">
-                <span class="tooltiper caption-left" data-tooltip="${widgetCaption}"><i class="fa fa-question" style="top:'0px!important'"/></span> 
-                <span class="tooltiper caption-right" data-tooltip="${refreshCaption}"><i class="fa fa-refresh refresh-widget" style="top:'0px!important'"/></span> 
+                <span class="tooltiper caption-left" data-tooltip="${widgetCaption}"><i class="fa fa-question" style="top:'0px!important'"/></span>
+                <span class="tooltiper caption-right" data-tooltip="${refreshCaption}"><i class="fa fa-refresh refresh-widget" style="top:'0px!important'"/></span>
                 <ul id="jobList"></ul>
-            </div>   
+            </div>
             `
             this.state.currentJobs;
             widgetMenu = $.parseHTML(htmlBuilder);
@@ -104,7 +115,7 @@ function progressWidgetInit() {
             widgetMenu.text = widgetCaption;
 
             if (this.state.currentJobs.length || this.state.completedJobs.length) {
-                
+
                 if(this.state.currentJobs.length) {
                 this.state.currentJobs.forEach(job => {
                     htmlBuilder = createProgressBar(...job);
@@ -226,7 +237,7 @@ function progressWidgetInit() {
                         message = arguments[2];
 
                     var flash = $('<div class="pflash alert alert-info alert-dismissible"> <strong>' + event + '</strong>' + message + '</div>');
-                     
+
                     flash.on('click', function () {
                         $(this).fadeOut(1000, function() {
                             $(this).remove();
@@ -254,9 +265,9 @@ function progressWidgetInit() {
                 window.localStorage.setItem('progressWidget', JSON.stringify(this.state));
             }
             else {
-                window.localStorage.removeItem('progressWidget');            
+                window.localStorage.removeItem('progressWidget');
             }
-            var temp = window.localStorage.getItem('progressWidget'); // sets changes 
+            var temp = window.localStorage.getItem('progressWidget'); // sets changes
 
 
             if (this.state.isDisplayed)
@@ -288,7 +299,7 @@ function progressWidgetInit() {
             {
                 this._createFlash("State will reset on page refresh. To cancel, click the refresh button again");
             }
-            else 
+            else
             {
                 this._createFlash("State will no longer reset on page refresh.");
 
@@ -302,7 +313,7 @@ function progressWidgetInit() {
                 e.preventDefault();
 
             if (this.state.isDisplayed) {
-                this.state.pollingState = 0;// set polling var to false                
+                this.state.pollingState = 0;// set polling var to false
                 this.$el.slideUp(200);
                 this.state.isDisplayed = !this.state.isDisplayed;
 
@@ -324,7 +335,7 @@ function progressWidgetInit() {
             }
         },
 
-        //refresh state, should be triggered on init, user input (deletion), update jobs,=
+        //refresh state, should be triggered on init, f input (deletion), update jobs,=
         refresh: function () {
             // console.log('refreshed')
             this._createWidgetMenu();
@@ -420,7 +431,7 @@ function progressWidgetInit() {
                             delId = this.state.selectedIDs.splice(index, 1); // stop querying this job
                             this.recentlyDeleted.push(delId);
                             this.state.fullRefresh = 5;
-                            
+
                             if (input[2] === true) {
                                 // console.log(input[1] + " has been removed from the queue (success)");
 
@@ -511,7 +522,7 @@ function progressWidgetInit() {
                 var temp = new Set(this.state.completedJobs.map(i=> {
                     return i[0];
                 }));
-    
+
                 this.state.completedJobs = this.state.completedJobs.filter(job => {
                     if(temp.has(job[0])){
                         temp.delete(job[0]);
@@ -543,8 +554,10 @@ function progressWidgetInit() {
 
             queryIds = new Set(queryIds);// remove duplicates
             queryIds = Array.from(queryIds);
+            this.state.pollType = (typeof queryIds[0] == "number") ? "shapes" : "voxels";
+            var pollquery = this.state.pollType + "?" + this.state.pollType + "=" + queryIds.join("$$"); //FOR VOXELS, FORMAT IS "hash$$id1$$etc." while for SHAPES, it's "id1$$id2$$etc."
 
-            var pollquery = this.state.pollType + "?shapes=" + queryIds.join("$$");
+            console.log(pollquery);
             if (this.ajaxInProgress && !this.request) {
                 this.request = this._createXhrRequest(pollquery);
                 // console.log('firing pollFunction: ' + pollquery);
@@ -566,7 +579,7 @@ function progressWidgetInit() {
             else {
                 if (this.request)
                     this.request.abort();
-                    
+
                 var timeout = 5000;
                 this.refresh();
                 // this.pollTimeout = setTimeout(function () { this._xhrLoop() }.bind(this), timeout);
@@ -581,11 +594,11 @@ function progressWidgetInit() {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === XMLHttpRequest.DONE ) {
                     if( xhr.status == 200) {
-                    // console.log('polling done')
+                    //console.log('polling done')
                     var progress;
                     try {
                         progress = JSON.parse(xhr.response);
-                        // console.log(progress.toString());
+                        console.log(progress.toString());
                         this._updateJobs(progress.progress);
 
                         if (this.pageReload) {
@@ -640,7 +653,7 @@ function progressWidgetInit() {
                 timeouts: 5,
                 isDisplayed: false,
                 fullRefresh: 5,
-                completedJobs: [] 
+                completedJobs: []
             }
         }
     });
@@ -690,10 +703,10 @@ function createCompleteBar(id, jobName) { //clear a single progress bar DOM Elem
             aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;
     html += percentage + `%\">
         </div>
-        <i id="${id}" class="fa fa-times close-btn" aria-hidden="true"></i>            
+        <i id="${id}" class="fa fa-times close-btn" aria-hidden="true"></i>
         </div>
     </div>
-    
+
     `;
     return html
 }
@@ -714,10 +727,10 @@ function createProgressBar(id, jobName, numerator, denominator) { //clear a sing
             aria-valuemin="3" aria-valuemax="100" style="min-width: 1%; width:`;
     html += percentage + `%\">
         </div>
-        <i id="${id}" class="fa fa-times close-btn" aria-hidden="true"></i>            
+        <i id="${id}" class="fa fa-times close-btn" aria-hidden="true"></i>
         </div>
     </div>
-    
+
     `;
     return html
 }

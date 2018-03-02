@@ -16,7 +16,9 @@ module.exports = function(sequelize, DataTypes) {
         datavoxelId: {
             type: DataTypes.INTEGER
         },
-
+        hashVoxelId: {
+            type: DataTypes.STRING
+        },
         color1: {
             type: DataTypes.STRING,
             defaultValue: '#00ff00'
@@ -28,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
         layerKey:{
             type: DataTypes.STRING,
         }
-        
+
     }, {
         classMethods: {
             associate: function(models) {
