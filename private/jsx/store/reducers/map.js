@@ -25,8 +25,7 @@ export default (state = initialMapState, action) => {
             // Set the camera
             PaintGraph.Pixels.zoomExtent(canvas, bbox)
             // Add the map to the canvas
-            PaintGraph.Pixels.buildMapbox(instance, canvas, bbox)
-            // TODO:CHECK: Is instance equal to canvas?
+            PaintGraph.Pixels.buildMapbox(instance, bbox)
 
             let geometries = Object.assign({}, state.geometries)
 
