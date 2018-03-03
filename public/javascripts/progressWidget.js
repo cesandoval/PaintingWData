@@ -38,14 +38,14 @@ function progressWidgetInit() {
             this.$anchor = $('.progress-tracker')
             this.$flashhandler = $('#flashes');
             this.recentlyDeleted = []; // holds recently deleted jobs, used to keep selectedIds state from regressing
-            this.inLoop = false; // informs calls if the widget is in the xhrLoop fucntion seuqence
+            this.inXhrLoop = false; // informs calls if the widget is in the xhrLoop fucntion seuqence
             this.pollTimeout = null;
-            this.flashes = [];
-            this.flashTimeout = 5000;
-            this.pageReload = false;
+            this.flashTimeouts = [];
+            this.flashTimeout = 5000; // modify time until flashes fade here
+            this.pageReload = false
             this.uploadId = null;
             this.ajaxInProgress = true;
-            this.reset = false;
+            this.resetWidgetState = false; // reset widget state
 
             //load saved state
             var stateString = window.localStorage.getItem('progressWidget');
@@ -53,8 +53,8 @@ function progressWidgetInit() {
             //if window.localStorage, initialize the widget with old state, else make new widget
             if (stateString && stateString !== 'undefined') {
                 this.state = JSON.parse(stateString);
-                savedState = JSON.parse(stateString);
-                // to prevent mutability errors we parse twice. DO NOT REVERSE ORDER
+                var savedState = JSON.parse(stateString);
+                // to prevent mutability errors we parse twice.
 
                 if (this.options.value && this.state.selectedIDs.indexOf(this.options.value) == -1) {// you can insert raw values in to the query list with the console
                     this.state.selectedIDs.shift(this.options.value);
@@ -278,9 +278,9 @@ function progressWidgetInit() {
                         $(flash).fadeOut(1000, function () {
                             $(this).remove();
                         });
-                        this.flashes.shift();
+                        this.flashTimeouts.shift();
                     }.bind(this).bind(flash), this.flashTimeout);
-                    this.flashes.push(t);
+                    this.flashTimeouts.push(t);
                     $('.navbar-fixed-top').append(flash);
                 }
             }
@@ -294,7 +294,7 @@ function progressWidgetInit() {
          */ 
         _destroy: function () {
             var test = JSON.stringify(this.state);
-            if (!this.reset) {
+            if (!this.resetWidgetState) {
                 window.localStorage.setItem('progressWidget', JSON.stringify(this.state));
             }
             else {
@@ -309,8 +309,8 @@ function progressWidgetInit() {
             if (this.$widgetMenu) 
                 this.$widgetMenu.remove();
             
-            if (this.flashes.length) {
-                this.flashes.forEach(item => {
+            if (this.flashTimeouts.length) {
+                this.flashTimeouts.forEach(item => {
                     clearTimeout(item);
                 })
             }
@@ -320,16 +320,16 @@ function progressWidgetInit() {
 
         /** 
          * toggles the state reset of the progress tracker on page refresh.
-         * this.reset
+         * this.resetWidgetState
         */
         _toggleReset: function (e) {
             console.log(this.state);
             if (e)
                 e.preventDefault();
 
-            this.reset = !this.reset;
+            this.resetWidgetState = !this.resetWidgetState;
 
-            if (this.reset) {
+            if (this.resetWidgetState) {
                 this._createFlash("State will reset on page refresh. To cancel, click the refresh button again");
             }
             else {
@@ -357,7 +357,7 @@ function progressWidgetInit() {
                     if (!this.ajaxInProgress) {
                         this.ajaxInProgress = true;
                         this._xhrLoop();
-                    } else if (!this.inLoop && this.request === null) {
+                    } else if (!this.inXhrLoop && this.request === null) {
                         clearTimeout(this.pollTimeout)
                         this._xhrLoop();
                     }
@@ -393,7 +393,7 @@ function progressWidgetInit() {
                 this.state.pollingState = 1;
             }
 
-            if (!this.request && !this.inLoop && !this.pageReload)
+            if (!this.request && !this.inXhrLoop && !this.pageReload)
                 this._xhrLoop();
 
         },
@@ -587,7 +587,7 @@ function progressWidgetInit() {
          * @field inLoop - prevents calls to xhrLoop from being duplicated
          */
         _xhrLoop: function () {
-            this.inLoop = true;
+            this.inXhrLoop = true;
             var queryIds = this.recentlyDeleted.length === 0 ? this.state.selectedIDs.filter(function (id) {
                 if (this.recentlyDeleted.length && this.recentlyDeleted.indexOf(id) === -1) {
                     return id;
@@ -613,7 +613,7 @@ function progressWidgetInit() {
                 });
 
                 this.request.send();
-                this.inLoop = false;
+                this.inXhrLoop = false;
             }
             else if (this.ajaxInProgress && this.request) {
                 return;
@@ -680,7 +680,7 @@ function progressWidgetInit() {
             //     }
             //     var timeout = this.state.pollingState === 0 ? 5000 : 100;
 
-            //     if (!this.inLoop && this.request === null)
+            //     if (!this.inXhrLoop && this.request === null)
             //     {
             //         this.pollTimeout = setTimeout(function () { this._xhrLoop() }.bind(this), timeout +200);
 
