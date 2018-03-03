@@ -217,8 +217,8 @@ function getById(req, res, id) {
 
 //The main Progress Traker Function
 // queries the database by job id and returns an array of items in the form....
-//[id, jobname, progress, denominator] if the job is in progress or waiting (null null when the job has been deleted after completion)
-//[id, jobname, bool] bool == true if the job is done, false if the output is invalid
+// [id, jobname, progress, denominator] if the job is in progress or waiting (null null when the job has been deleted after completion)
+// [id, jobname, bool] bool == true if the job is done, false if the output is invalid
 // [id$$jobname$$Errormessage]
 // [~/~ Error message here]
 //takes query string of enpoint?shapes=id1$$id2$$id3
