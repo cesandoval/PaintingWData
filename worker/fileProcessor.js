@@ -114,7 +114,7 @@ function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
     var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE " + '"datafileId"'+" in ("+idsQuery+");";
 
-     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid character varying(255));';
+     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid integer);';
 
 
     connection.query(distinctQuery + tableQuery).spread(function(results, metadata){
@@ -122,7 +122,7 @@ function getBbox(datalayerIds, req, callback) {
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+ epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "+'id'+" in ("+idsQuery+");";
         var props = results;
 
-        var voxelId = 'aaaaaaaa'//(+new Date()).toString(32) +Math.floor(Math.random() * 36).toString(36)
+        var voxelId = 5//(+new Date()).toString(32) +Math.floor(Math.random() * 36).toString(36)
         // Math.floor(Math.random()* 10000).toString();
 
         connection.query(bboxQuery).spread(function(results, metadata){
