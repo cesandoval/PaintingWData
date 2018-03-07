@@ -150,12 +150,12 @@ export default (state = initialState, action) => {
             // inputs
             if (links.inputs[toNode]) {
                 // delete the others same srcNode
-                Object.entries(
-                    links.inputs[toNode]
-                ).map(([_toInput, _srcNode]) => {
-                    if (srcNode == _srcNode)
-                        delete links.inputs[toNode][_toInput]
-                })
+                Object.entries(links.inputs[toNode]).map(
+                    ([_toInput, _srcNode]) => {
+                        if (srcNode == _srcNode)
+                            delete links.inputs[toNode][_toInput]
+                    }
+                )
 
                 links.inputs[toNode][toInput] = srcNode
             } else

@@ -30,7 +30,7 @@ class MapCanvas extends React.Component {
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
-
+        console.log(this.state)
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
             Act.mapInit({
                 instance: this.state.instance,
@@ -153,6 +153,10 @@ class MapCanvas extends React.Component {
         PaintGraph.Pixels.buildMapbox(this.props.map, this.props.bbox)
     }
 
+    dummyFunction() {
+        console.log('Chris says hi!')
+    }
+
     render() {
         const panelShow = this.props.panelShow
         return (
@@ -206,6 +210,15 @@ class MapCanvas extends React.Component {
                                 SHP (coming soon)
                             </MenuItem>
                         </DropdownButton>
+
+                        <Button
+                            id={`save-userfile`}
+                            onClick={() => {
+                                this.dummyFunction()
+                            }}
+                        >
+                            Save Userfile
+                        </Button>
                     </div>
                     <Button
                         id="zoomShow"
