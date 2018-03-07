@@ -114,22 +114,21 @@ function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
     var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE " + '"datafileId"'+" in ("+idsQuery+");";
 
-     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid integer);';
-
+     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid character varying(255));';
 
     connection.query(distinctQuery + tableQuery).spread(function(results, metadata){
         var epsg = 4326;
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+ epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "+'id'+" in ("+idsQuery+");";
         var props = results;
 
-        var voxelId = Math.floor(Math.random() * 2000000);//(+new Date()).toString(32) +Math.floor(Math.random() * 36).toString(36)
+        var voxelId = (+new Date()).toString(32) +Math.floor(Math.random() * 36).toString(36)
         // Math.floor(Math.random()* 10000).toString();
 
         connection.query(bboxQuery).spread(function(results, metadata){
             var bbox = results[0].st_setsrid;
             rowsCols = getBboxRC(bbox, req);
 
-            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + voxelId + `);` 
+            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), '` + voxelId + `');` 
             console.log("bbox query: \n \n " + bboxInsert);
             req.voxelRandomId = voxelId;
 
@@ -142,7 +141,7 @@ function getBbox(datalayerIds, req, callback) {
 
 function getDistance(bbox, props, req, callback) {
     var voxelId = req.voxelRandomId;
-    var ptQuery = `(SELECT ST_PixelAsCentroid(r.rast, 1, 1) FROM public."Datavoxelbbox" AS r  WHERE r.voxelid= ` + voxelId + `) UNION ALL  (SELECT ST_PixelAsCentroid(p.rast, 1, 2) FROM public."Datavoxelbbox" AS p  WHERE p.voxelid= ` + voxelId + `)`
+    var ptQuery = `(SELECT ST_PixelAsCentroid(r.rast, 1, 1) FROM public."Datavoxelbbox" AS r  WHERE r.voxelid= '` + voxelId + `') UNION ALL  (SELECT ST_PixelAsCentroid(p.rast, 1, 2) FROM public."Datavoxelbbox" AS p  WHERE p.voxelid= '` + voxelId + `')`
 
     connection.query(ptQuery).spread(function(results, metadata){
         var firstItem = results[0].st_pixelascentroid.coordinates
@@ -244,12 +243,10 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
-    var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= ` + req.voxelRandomId + `)`;
+    var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= '` + req.voxelRandomId + `')`;
     var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, ` + req.voxelId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
     var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
-    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= ` + req.voxelRandomId + `; `;
-
-    // var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, 'testing' FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
