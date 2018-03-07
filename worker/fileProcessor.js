@@ -38,6 +38,7 @@ function startVoxelWorker(datalayerIds, req, callback){
 function startRasterVoxelWorker(datalayerIds, req, callback){
     async.waterfall([
         async.apply(getBbox, datalayerIds, req),
+        getDistance,
         createDatavoxel,
         createRaster,
         parseRasterGeoJSON,
@@ -53,7 +54,7 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
                     //send user an email
-                    mailer.sendVoxelEmail(user.email, user.id);
+                    // mailer.sendVoxelEmail(user.email, user.id);
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
@@ -111,34 +112,48 @@ function startShapeWorker(req, callback) {
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
 function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
-    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE "
-        +'"datafileId"'+" in ("+idsQuery+");";
+    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE " + '"datafileId"'+" in ("+idsQuery+");";
 
-     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datafilebbox" (id serial primary key, rast raster, voxelid integer, "rasterProperty" character varying(255), rasterval double precision);';
+     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid character varying(255));';
 
 
     connection.query(distinctQuery + tableQuery).spread(function(results, metadata){
         var epsg = 4326;
-        var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+
-            epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "
-            +'id'+" in ("+idsQuery+");";
-
+        var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+ epsg+") FROM public."+'"Datafiles"' + " AS p WHERE "+'id'+" in ("+idsQuery+");";
         var props = results;
 
-        var voxelId = 0;
+        var voxelId = 'aaaaaaaa'//(+new Date()).toString(32) +Math.floor(Math.random() * 36).toString(36)
+        // Math.floor(Math.random()* 10000).toString();
 
         connection.query(bboxQuery).spread(function(results, metadata){
             var bbox = results[0].st_setsrid;
             rowsCols = getBboxRC(bbox, req);
 
-            var bboxInsert = `INSERT INTO public."Datafilebbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + voxelId + `);`;
-
+            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), ` + voxelId + `);` 
             console.log("bbox query: \n \n " + bboxInsert);
+            req.voxelRandomId = voxelId;
 
             connection.query(bboxInsert).spread(function(results, metadata){
                 callback(null, bbox, props, req);
             })
         })
+    })
+}
+
+function getDistance(bbox, props, req, callback) {
+    var voxelId = req.voxelRandomId;
+    var ptQuery = `(SELECT ST_PixelAsCentroid(r.rast, 1, 1) FROM public."Datavoxelbbox" AS r  WHERE r.voxelid= ` + voxelId + `) UNION ALL  (SELECT ST_PixelAsCentroid(p.rast, 1, 2) FROM public."Datavoxelbbox" AS p  WHERE p.voxelid= ` + voxelId + `)`
+
+    connection.query(ptQuery).spread(function(results, metadata){
+        var firstItem = results[0].st_pixelascentroid.coordinates
+        var secondItem = results[1].st_pixelascentroid.coordinates
+
+        var xDiff = Math.abs(parseFloat(firstItem[0])-parseFloat(secondItem[0]));
+        var yDiff = Math.abs(parseFloat(firstItem[1])-parseFloat(secondItem[1]));
+        var ptDistance = Math.max(xDiff, yDiff)
+
+        req.ptDistance = ptDistance;
+        callback(null, bbox, props, req);
     })
 }
 
@@ -193,7 +208,7 @@ function createRaster(bbox, props, req, callback) {
 
     var rowsCols = getBboxRC(bbox, req);
 
-    var ptDistance =  0.004826000000001329;
+    var ptDistance =  req.ptDistance;
 
     var maxLength = 1,
         processedProps = 0;
@@ -221,31 +236,21 @@ function createRaster(bbox, props, req, callback) {
     });
 }
 
+
+
 function saveRaster(prop, rowsCols, bbox, req, callback) {
     var epsg = 4326;
-
     var voxelId = 0;
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
-    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Dataraster" (id serial primary key, rast raster, layername text, datafileid integer, "rasterProperty" character varying(255), rasterval double precision); ';
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
+    var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= ` + req.voxelRandomId + `)`;
+    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= ` + req.voxelRandomId + `; `;
 
-    var dumpImgQuery = `COPY (SELECT encode(ST_AsPNG(r.rast), 'hex') AS png FROM public."Dataraster" as r WHERE datafileid=` + prop.datafileId + `) TO 'c:\\tiffs\\myimage` + prop.datafileId + `.hex';`;
-
-    var bboxSelect = `(SELECT b.rast FROM public."Datafilebbox" as b WHERE voxelid= ` + voxelId + `)`;
-
-    var rasterCreationQuery = `INSERT INTO public."Dataraster" (rast, layername, datafileid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
-
-    var mapAlgebraQuery = `ST_MapAlgebra(ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast), ST_AddBand(ST_MakeEmptyRaster(b.rast), '32BF'::text, -999999, -999999), '[rast1]', '32BF', 'SECOND')`;
-
-    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Dataraster" as r, public."Datafilebbox" as b WHERE datafileid=` + prop.datafileId + ` AND voxelid= ` + voxelId + `; `;
-
-    var rasterQuery = tableQuery + 
-                    rasterCreationQuery + centroidValueQuery;
-
-    console.log(rasterQuery);
-
+    var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
-            console.log("raster query results: " + JSON.stringify(results, null, 4));
             callback(results);
         })
 }
@@ -393,9 +398,6 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
 }
 
 function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
-    for (var i; i<2000; i++){
-        console.log(i, '++++++++++++++++++')
-    }
     var allIndices = [];
     var currIndex = 0;
 
@@ -427,7 +429,7 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
             voxel['properties']['property'] = objProps[key].rasterProperty;
             voxel['properties']['pointIndex'] = index;
 
-            console.log("voxel: " + JSON.stringify(voxel, null, 4));
+            // console.log("voxel: " + JSON.stringify(voxel, null, 4));
 
             features.push(voxel);
         }
