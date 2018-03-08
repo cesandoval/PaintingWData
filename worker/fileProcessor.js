@@ -53,8 +53,8 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
                 ptDistance: result[3]
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
-                    //send user an email
-                    // mailer.sendVoxelEmail(user.email, user.id);
+                    // send user an email
+                    mailer.sendVoxelEmail(user.email, user.id);
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
