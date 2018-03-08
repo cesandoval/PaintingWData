@@ -71,42 +71,37 @@ function startShapeWorker(req, callback) {
     var layerName = req.body.layername;
     var description = req.body.description;
     var dataProp = req.body.rasterProperty;
-    console.log(id);
 
     async.waterfall([
         async.apply(fileViewerHelper.loadData, datafileId, req),
         fileViewerHelper.queryRepeatedLayer,
         fileViewerHelper.pushDataLayerTransform,
-        // fileViewerHelper.pushDataRaster,
-        function(file, thingsArray, callback){
-            //   fs_extra.remove(file, err => {
-            //       if (err) {
-            //         console.log("Error cleaning local directory: ", file);
-            //         console.log(err, err.stack);
-            //         callback(err);
-            //       }
-            //       else{
-            //          callback(null);
-            //       }
-            // })
-            // console.log(file)
-            // console.log(thingsArray)
-            // callback(null);         
-        }
+        // function(file, thingsArray, callback){
+
+        //     //   fs_extra.remove(file, err => {
+        //     //       if (err) {
+        //     //         console.log("Error cleaning local directory: ", file);
+        //     //         console.log(err, err.stack);
+        //     //         callback(err);
+        //     //       }
+        //     //       else{
+        //     //          callback(null);
+        //     //       }
+        //     // })
+        //     // console.log(file)
+        //     // console.log(thingsArray)
+        //     callback(null, []);         
+        // },
         // pushDataRaster
     ], function (err, result) {
-        console.log(result)
-        model.Datafile.find({
-            where : {
-                userId : req.user.id,
-            }
-        }).then(function(datafiles){
-
-            if (req.user.id) {
-                console.log(req.user.id);
-            }
-        });
-        
+        // Send Layer complete user email
+        Model.User.findById(req.user.id).then(function(user){
+            mailer.sendLayerEmail(user.email ,req.user.id);
+        },
+        function(err){
+            console.log(err)
+        }
+        );       
     });
 }
 
