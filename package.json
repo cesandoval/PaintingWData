@@ -3,14 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "init:db": "cd app && sequelize db:migrate",
     "dev": "cross-env NODE_ENV=development node ./bin/www",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
-    "lint:fix": "eslint . --color --fix --debug",
-    "lint:check": "eslint . --color --quiet"
+    "lint:fix": "eslint . --cache --color --fix --debug",
+    "lint:check": "eslint . --cache --color --quiet"
   },
   "dependencies": {
+    "@turf/interpolate": "^5.1.5",
+    "@turf/meta": "^6.0.0-beta.3",
+    "@turf/random": "^5.1.5",
     "amqplib": "^0.5.1",
     "antd": "^2.13.8",
     "async": "^2.0.0",
@@ -35,6 +39,7 @@
     "gdal": "^0.9.6",
     "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
+    "immutability-helper": "^2.6.4",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
     "jsonfile": "^2.2.3",
@@ -63,6 +68,7 @@
     "shapefile": "^0.3.1",
     "srs": "^1.2.0",
     "supervisor": "0.11.0",
+    "turf": "^3.0.14",
     "uuid": "^3.0.1"
   },
   "devDependencies": {

@@ -62,8 +62,7 @@ var signUpStrategy =
             newUser.urlLink = id;
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
-              mailer.sendVerificationEmail(email, 'http://localhost:3000/users/verify/' + id);
-             // mailer.sendVerificationEmail(email, 'http://paintingwithdata.mit.edu/users/verify/' + id);
+              mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
               return done(null, false, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account."));
             });   
            }

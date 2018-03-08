@@ -79,17 +79,19 @@ function startShapeWorker(req, callback) {
         fileViewerHelper.pushDataLayerTransform,
         // fileViewerHelper.pushDataRaster,
         function(file, thingsArray, callback){
-              fs_extra.remove(file, err => {
-                  if (err) {
-                    console.log("Error cleaning local directory: ", file);
-                    console.log(err, err.stack);
-                    callback(err);
-                  }
-                  else{
-                     callback(null);
-                  }
-            })
-           
+            //   fs_extra.remove(file, err => {
+            //       if (err) {
+            //         console.log("Error cleaning local directory: ", file);
+            //         console.log(err, err.stack);
+            //         callback(err);
+            //       }
+            //       else{
+            //          callback(null);
+            //       }
+            // })
+            // console.log(file)
+            // console.log(thingsArray)
+            // callback(null);         
         }
         // pushDataRaster
     ], function (err, result) {
@@ -512,12 +514,14 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
     var voxelId
     async.each(keys, function(key, callback) {
             var newDataJSON = Model.Datajson.build();
+            const hashKey = (+new Date()).toString(32) + Math.floor(Math.random() * 36).toString(36)
             newDataJSON.layername = objProps[key].layername;
             newDataJSON.datafileId = objProps[key].datafileId;
             newDataJSON.epsg = 4326;
             newDataJSON.datavoxelId = objProps[key].datavoxelId;
             newDataJSON.geojson = dataJSONs[key];
             newDataJSON.userId = req.user.id;
+            newDataJSON.layerKey = hashKey;
             newDataJSON.save().then(function(){
                 callback(null, 'STOPPPPPPPP');
             });

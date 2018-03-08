@@ -20,6 +20,14 @@ module.exports = function(sequelize, DataTypes) {
     urlLink: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    paidUser:{
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
+    uploadsSize:{
+      type: DataTypes.DECIMAL,
+      defaultValue: 0.0
     }
   }, {
     classMethods: {

@@ -10,7 +10,7 @@ block pageTitle
   script.
 
     
-  .container(style = "margin-top: 10px")
+  .container.body-container
     .row.spacing-large
       .col-md-9
         h1 My Voxel Projects
@@ -18,7 +18,7 @@ block pageTitle
     if (voxelAlert)
       .alert.alert-danger(role='alert') #{voxelAlert}
 
-    .col-md-12
+    .col-md-12.space-row
       if datavoxels.length != 0
         .row
             h4.spacing To open a voxel, first select it from the library below.
@@ -32,7 +32,7 @@ block pageTitle
               input.form-control.hidden(style="width: 100%", name = "datavoxelIds" ,id="selectedLayers", type='hidden')
 
 
-    .row
+    .spacing-large
       .col-md-12
         if datavoxels.length == 0
           p(role='alert') No voxel projects found  &nbsp;

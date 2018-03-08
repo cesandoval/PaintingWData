@@ -9,6 +9,7 @@ import * as Action from '../store/actions.js'
 import Slider from './Slider.js'
 import Panel from './Panel.js'
 import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
+import { Popover } from 'antd'
 
 import * as NodeType from './nodeTypes'
 
@@ -323,10 +324,11 @@ class VPL extends React.Component {
             })
             .subscribe(observer('panVpl$'))
 
-        this.shiftKeyEvent$ = Rx.Observable.merge(
-            Rx.Observable.fromEvent(window, 'keydown'),
-            Rx.Observable.fromEvent(window, 'keyup')
-        )
+        this.shiftKeyEvent$ = Rx.Observable
+            .merge(
+                Rx.Observable.fromEvent(window, 'keydown'),
+                Rx.Observable.fromEvent(window, 'keyup')
+            )
             .filter(f => f.key == 'Shift')
             .map(m => m.type == 'keydown')
             .do(d => {
@@ -858,6 +860,24 @@ class VPL extends React.Component {
         const nodeWidth = Style.minWidth
         const nodeHeight = Style.minHeight
 
+        const desc = (
+            <span
+                style={{
+                    width: '280px',
+                    display: 'block',
+                }}
+            >
+                {NodeType[type].desc.split('\n').map((line, idx) => (
+                    <p
+                        style={{ fontSize: '12px' }}
+                        key={`${nodeKey}_desc_${idx}`}
+                    >
+                        {line}
+                    </p>
+                ))}
+            </span>
+        )
+
         return (
             <g data-node-name={nodeName}>
                 <rect
@@ -875,8 +895,7 @@ class VPL extends React.Component {
                     <g
                         key={`${nodeKey}_plug_input_${input}`}
                         ref={ref =>
-                            (this[`${nodeKey}_plug_input_${input}`] = ref)
-                        }
+                            (this[`${nodeKey}_plug_input_${input}`] = ref)}
                         className="plug"
                         data-node-key={nodeKey}
                         data-plug="true"
@@ -943,18 +962,26 @@ class VPL extends React.Component {
                     </text>
                 </g>
 
-                <text
-                    x={nodeWidth / 2}
-                    y="25"
-                    fontSize={Style.fontSize.nodeName + 'px'}
-                    style={{
-                        textAnchor: 'middle',
-                        fontFamily: 'Monospace',
-                        fill: '#536469',
-                    }}
+                <Popover
+                    placement="top"
+                    title={nodeName}
+                    content={desc}
+                    trigger="click"
                 >
-                    {nodeName}
-                </text>
+                    <text
+                        x={nodeWidth / 2}
+                        y="25"
+                        fontSize={Style.fontSize.nodeName + 'px'}
+                        style={{
+                            textAnchor: 'middle',
+                            fontFamily: 'Monospace',
+                            fill: '#536469',
+                            cursor: 'help',
+                        }}
+                    >
+                        {nodeName}
+                    </text>
+                </Popover>
 
                 <g className="control">
                     {/* TODO: modify slider width */}
@@ -1134,9 +1161,8 @@ class VPL extends React.Component {
                         ref={ref => (this.mainSvgElement = ref)}
                         width="3000"
                         height="3000"
-                        viewBox={`${this.state.panning.x} ${
-                            this.state.panning.y
-                        } 3000 3000`}
+                        viewBox={`${this.state.panning.x} ${this.state.panning
+                            .y} 3000 3000`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
@@ -1150,9 +1176,8 @@ class VPL extends React.Component {
                         })}
 
                         <g
-                            transform={`translate(${this.state.panning.x},${
-                                this.state.panning.y
-                            })`}
+                            transform={`translate(${this.state.panning.x},${this
+                                .state.panning.y})`}
                         >
                             {// do not display temp link when its `from` and `to` is the same
                             // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
