@@ -1,5 +1,5 @@
 var fileViewerHelper = require('../../lib/fileViewerHelper'),
-    processTheShapes = require('../../worker/worker2').processShapes,
+    processShapes = require('../../worker/worker2').processShapes,
     mailController = require('./mailController')
     util = require('util');
     var User = require('../models').User;
@@ -22,13 +22,7 @@ module.exports.saveShapes = function(req, res) {
         }
     }
 
-    // console.log(typeof(util.inspect(req)))
-    processTheShapes(newReq, function(){});
-    User.findById(req.user.id).then(function(user){
-            mailController.sendLayerEmail(user.email ,req.user.id);
-        },
-        function(err){}
-        );   
+    processShapes(newReq, function(){});
     res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
 }
 
