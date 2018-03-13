@@ -21,26 +21,26 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
         a(href='/documentation') Resources
       li
         a(href='/blog') Blog
-    //-   if userSignedIn
-    //-     li
-    //-       a(href='/voxels/#{user.id}') Application
+      if userSignedIn
+        li
+          a(href='/voxels/#{user.id}') Application
       
-    //- ul.nav.navbar-nav.navbar-right
-    //-   if userSignedIn
-    //-    li.dropdown
-    //-     a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
-    //-       <span class="caret"></span>
-    //-     ul.dropdown-menu(aria-labelledby="dropdownMenuLink")
-    //-       a.li(href='/upload', style="line-height: 30px;").dropdown-item Upload Layers
-    //-       br(style="padding-top: 20px;")
-    //-       a.li(href='/layers/#{user.id}', style="line-height: 30px;").dropdown-item My Layers
-    //-       br
-    //-       a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Projects
-    //-       br.spacing
-    //-       a.dropdown-item.li(href='/users/signout', style="line-height: 30px;") Logout
+    ul.nav.navbar-nav.navbar-right
+      if userSignedIn
+       li.dropdown
+        a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
+          <span class="caret"></span>
+        ul.dropdown-menu(aria-labelledby="dropdownMenuLink")
+          a.li(href='/upload', style="line-height: 30px;").dropdown-item Upload Layers
+          br(style="padding-top: 20px;")
+          a.li(href='/layers/#{user.id}', style="line-height: 30px;").dropdown-item My Layers
+          br
+          a.li(href='/voxels/#{user.id}', style="line-height: 30px;").dropdown-item My Projects
+          br.spacing
+          a.dropdown-item.li(href='/users/signout', style="line-height: 30px;") Logout
 
-    //-   else
-    //-     li
-    //-       a(href='/users/signup') Sign Up
-    //-     li
-    //-       a(href='/users/login') Login
+      else
+        li
+          a(href='/users/signup') Sign Up
+        li
+          a(href='/users/login') Login
