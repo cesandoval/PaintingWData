@@ -191,6 +191,18 @@ export default (state = initialState, action) => {
             })
         }
 
+        case t.MAP_SET_OPACITY: {
+            let { value } = action
+            value = parseFloat(value) / 100.0
+
+            Object.keys(nodes).map(key => {
+                nodes = update(nodes, { [key]: { opacity: { $set: value } } })
+            })
+
+            console.log('VPL t.MAP_SET_OPACITY', { nodes })
+            return update(state, { nodes: { $set: nodes } })
+        }
+
         default:
             return state
     }
