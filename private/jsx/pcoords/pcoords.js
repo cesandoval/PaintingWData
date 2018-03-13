@@ -212,6 +212,9 @@ class PCoords extends React.Component {
             const layer = this.props.layers[i]
             const name = `${layer.userLayerName}_${layer.propertyName}`
             let pixels = this.props.geometries[layer.layerKey]
+
+            if (!(minObjs[name] && maxObjs[name])) continue
+
             pixels.material.uniforms.min.value = remap(
                 minObjs[name],
                 this.layerIndeces[name],
@@ -224,7 +227,9 @@ class PCoords extends React.Component {
                 this.minVal,
                 this.maxVal
             )
+            // console.log('[PCoords] calcRanges', { minObjs, maxObjs })
         }
+        // console.log('[PCoords] calcRanges', { props: this.props })
     }
     style() {
         return {
