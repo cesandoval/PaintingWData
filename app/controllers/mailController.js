@@ -3,6 +3,8 @@ var nodemailer = require('nodemailer');
 var email = process.env.USEREMAIL;
 var password = process.env.EMAILPASSWORD; // Obtain the username and password somehow.
 
+console.log("email: " + email);
+
 var transporter = nodemailer.createTransport({
     host: 'email-smtp.us-east-1.amazonaws.com',
     port: 587,
@@ -22,6 +24,8 @@ module.exports.sendVerificationEmail = function(email, verificationLink) {
     html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
     text: 'Please confirm your account by clicking the following link: ${URL}'
   };
+
+  console.log(mailOptions);
 
   transporter.sendMail(mailOptions, function(error, info) {
     if(error) {
