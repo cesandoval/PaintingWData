@@ -55,6 +55,12 @@ module.exports = {
                                     'import',
                                     { libraryName: 'antd', style: 'css' },
                                 ],
+                                [
+                                    'styled-jsx/babel',
+                                    {
+                                        plugins: ['styled-jsx-plugin-sass'],
+                                    },
+                                ],
                             ],
                             // This is a feature of `babel-loader` for webpack (not Babel itself).
                             // It enables caching results in ./node_modules/.cache/babel-loader/
