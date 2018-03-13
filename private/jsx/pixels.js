@@ -133,7 +133,7 @@ export default class Pixels {
         var tilesToGet = 0
 
         function assembleUrl(img, coords) {
-            const mapboxStyle = window.mapboxStyle || 'mapbox.light'
+            const mapboxStyle = window.mapBgStyle || 'mapbox.light'
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
 
             if (mapboxStyle === 'empty') {
