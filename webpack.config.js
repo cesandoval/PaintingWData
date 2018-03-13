@@ -21,6 +21,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
+        alias: {
+            '@': path.resolve(__dirname, './private/jsx'),
+        },
     },
     module: {
         loaders: [
