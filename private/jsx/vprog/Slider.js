@@ -131,6 +131,19 @@ class Slider extends React.Component {
                         value={this.state.value}
                         onChange={this.changeOpacity}
                     />
+                    <style jsx>{`
+                        :global(.ant-slider) {
+                            &,
+                            &:hover {
+                                :global(.ant-slider-track) {
+                                    background-color: #b5b5b5;
+                                }
+                                :global(.ant-slider-handle) {
+                                    border-color: #757575;
+                                }
+                            }
+                        }
+                    `}</style>
                 </div>
             </foreignObject>
         )
