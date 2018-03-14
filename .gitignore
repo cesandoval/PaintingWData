@@ -25,3 +25,8 @@ public/javascripts/.DS_Store
 /lib/.DS_Store
 deploy.txt
 
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
