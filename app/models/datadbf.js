@@ -16,8 +16,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Datalayer.belongsTo(models.User, {foreignKey: 'userId'});
-        Datalayer.belongsTo(models.Datalayer, {foreignKey: 'datadbfId'});
+        Datadbf.belongsTo(models.User, {foreignKey: 'userId'});
+        Datadbf.belongsTo(models.Datalayer, {foreignKey: 'datalayerId'});
       }
     }
   });
