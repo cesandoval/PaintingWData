@@ -92,7 +92,7 @@ function processShapes(data, done) {
     });
 }
 
-queue.process('saveLayer', (job, done) => { 
+queue.process('saveLayer', 5, (job, done) => { 
   var data = job.data;
   var req = data;
   // var res = data[1];
