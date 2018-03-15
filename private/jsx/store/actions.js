@@ -95,3 +95,9 @@ export const setPanelShow = payload =>
         type: t.SET_PANELSHOW,
         ...payload,
     })
+
+export const saveUserFile = payload =>
+    store.dispatch({
+        type: t.SAVE_USERFILE,
+        ...payload,
+    })

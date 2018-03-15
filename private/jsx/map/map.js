@@ -153,8 +153,10 @@ class MapCanvas extends React.Component {
         PaintGraph.Pixels.buildMapbox(this.props.map, this.props.bbox)
     }
 
-    dummyFunction() {
-        console.log('Chris says hi!')
+    saveFile() {
+        Act.saveUserFile({
+            instance: this.state.instance,
+        })
     }
 
     render() {
@@ -214,7 +216,7 @@ class MapCanvas extends React.Component {
                         <Button
                             id={`save-userfile`}
                             onClick={() => {
-                                this.dummyFunction()
+                                this.saveFile()
                             }}
                         >
                             Save Userfile
