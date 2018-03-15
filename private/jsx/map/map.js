@@ -30,7 +30,6 @@ class MapCanvas extends React.Component {
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
-        console.log(this.state)
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
             Act.mapInit({
                 instance: this.state.instance,
@@ -154,8 +153,38 @@ class MapCanvas extends React.Component {
     }
 
     saveFile() {
+        //Gets the voxel ID.
+        var temp = window.location.toString().split('/')
+        var voxelId = temp[temp.length - 1]
+        //This is horrible coding, copying from exportSVG... lolrip
+        let _centroid = this.props.map.camera.position
+        let bbox = this.props.bbox[0]
+        let projectedMin = project([bbox[0][0], bbox[0][1]])
+        let projectedMax = project([bbox[2][0], bbox[2][1]])
+
+        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
+        let _bounds = [
+            Math.abs(projectedMax.x + _translation[0]),
+            Math.abs(projectedMax.z + (0 - projectedMin.z)),
+        ]
+        //Save everything in one JSON -- pass variable "info" to the request handler.
+        var _info = {
+            //map: this.exportJSON(this.props.geometries),
+            map: {
+                translation: _translation,
+                centroid: _centroid,
+                bounds: _bounds,
+            },
+            options: {
+                knn: document.getElementById('knnSlider').value,
+                opacity: document.getElementById('points').value,
+            },
+            dataVoxelId: voxelId,
+        }
+
         Act.saveUserFile({
             instance: this.state.instance,
+            info: _info,
         })
     }
 
