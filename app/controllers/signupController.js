@@ -42,7 +42,9 @@ var signUpStrategy =
             if(verified) {
               return done(null, false, req.flash('signUpMessage',"Email is already in use."));
             } else {
+              console.log(" user is -----> : " + user.id);
               return done(null, false, req.flash('signUpMessage', "Please verify your email"));
+
             }
            }
            else{
@@ -58,7 +60,6 @@ var signUpStrategy =
             newUser.password = hash;
             newUser.verified = false;
             newUser.urlLink = id;
-            //console.log(newUser);
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
               mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);

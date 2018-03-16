@@ -10,32 +10,35 @@ block pageTitle
   script.
 
     
-  .container(style = "margin-top: 10px").spacing-large
+  .container.body-container
     .row.spacing-large
-        h1.center My Voxel Projects
+      .col-md-9
+        h1 My Voxel Projects
 
     if (voxelAlert)
       .alert.alert-danger(role='alert') #{voxelAlert}
 
-    .col-md-6(style="padding: 30px;").col-md-offset-3
+    .col-md-12.space-row
       if datavoxels.length != 0
-        .row.text-center
-          h3.spacing To open a voxel, first select it from the library below
+        .row
+            h4.spacing To open a voxel, first select it from the library below.
+        .row
+          form(method='post', action='/voxels')
+            .input-group-btn
+              .col-md-2
+                button.btn.btn-outline-primary(type='submit', name="layerButton", value="open", formaction="/voxels") Open Voxel
+              .col-md-2
+                button.btn.btn-outline-primary(type='submit', name="layerButton", value="delete", formaction="/voxels") Delete Voxel
+              input.form-control.hidden(style="width: 100%", name = "datavoxelIds" ,id="selectedLayers", type='hidden')
 
-        form(method='post', action='/voxels')
-          .input-group-btn.text-center
-            button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="open", formaction="/voxels") Open Voxel
-            button.btn.btn-gray.btn-jumbotron(type='submit', name="layerButton", value="delete", formaction="/voxels") Delete Voxel
-            input.form-control.hidden(style="width: 100%", name = "datavoxelIds" ,id="selectedLayers", type='hidden')
 
-
-    .row
-      if datavoxels.length == 0
-        p.text-center.spacing-large(role='alert' style = "margin-top:20px" ) No voxel projects found  &nbsp;
-        <br>
-        div.text-center
-          a(href = "/layers/{datavoxel.userId}")
-            btn.btn-gray.btn-jumbotron.strong(style="width: 210px; height: 210px; line-height: 210px;") Build a voxel project!
+    .spacing-large
+      .col-md-12
+        if datavoxels.length == 0
+          p(role='alert') No voxel projects found  &nbsp;
+          div
+            a(href = "/layers/{datavoxel.userId}")
+              btn.btn.btn-outline-primary Build a voxel project!
 
       for datavoxel in datavoxels
         if datavoxel.id

@@ -54,6 +54,7 @@ if ('development' == app.get('env')) {
                 colors: true,
             },
             historyApiFallback: true,
+            // logLevel: 'trace',
         })
     )
 

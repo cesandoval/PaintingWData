@@ -96,6 +96,15 @@
     right: 120px;
 }
 
+#zoomShow {
+    position: fixed;
+    /*bottom: 10px;*/
+    width:120px;
+    z-index: 100000;
+    right: 240px;
+    bottom: 0;
+}
+
 #mapStyleOptionsButton{
     width: 180px;
     position: absolute;
@@ -223,6 +232,10 @@
 
 .graphText{
     right: 0px;  
+}
+
+.zoomText{
+    right: 32px;  
 }
 
 .somText{

@@ -8,8 +8,8 @@
     "build": "gulp build",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
-    "lint:fix": "eslint . --color --fix --debug",
-    "lint:check": "eslint . --color --quiet"
+    "lint:fix": "eslint . --cache --color --fix --debug",
+    "lint:check": "eslint . --cache --color --quiet"
   },
   "dependencies": {
     "@turf/interpolate": "^5.1.5",
@@ -39,6 +39,7 @@
     "gdal": "^0.9.6",
     "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
+    "immutability-helper": "^2.6.4",
     "jade": "~1.11.0",
     "jquery": "^3.2.1",
     "jsonfile": "^2.2.3",
@@ -61,7 +62,7 @@
     "request": "^2.73.0",
     "rxjs": "^5.4.3",
     "s3": "^4.4.0",
-    "sequelize": "3.23.4",
+    "sequelize": "^3.23.4",
     "sequelize-cli": "^2.4.0",
     "serve-favicon": "~2.3.0",
     "shapefile": "^0.3.1",
