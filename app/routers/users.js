@@ -39,12 +39,7 @@ router.get('/facebook_oauth',
     failureFlash: true, 
   }),
   function(req, res) {
-    if (req.session.returnTo) {
-      res.redirect(req.session.returnTo);
-    }
-    else {
-      res.redirect('/');
-    }
+    res.redirect('/');
 });
 
 // Google (Gmail) OAUTH
@@ -55,12 +50,7 @@ router.get('/google_oauth',
     failureFlash: true, 
   }),
   function(req, res) {
-    if (req.session.returnTo) {
-      res.redirect(req.session.returnTo);
-    }
-    else {
-      res.redirect('/');
-    }
+    res.redirect('/');
 });
 
 

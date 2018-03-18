@@ -198,7 +198,7 @@ var googleStrategy = new GoogleStrategy({
   callbackURL: "http://localhost:3000/users/google_oauth",
 },
 function(req, accessToken, refreshToken, profile, done) {
-    console.log(profile);
+    // console.log(profile);
     User.findOne({
       where: {email: profile.emails[0].value}, //check if user with same email already exists
     }).then(function(user) {
@@ -213,7 +213,7 @@ function(req, accessToken, refreshToken, profile, done) {
         newUser.urlLink = uuid.v4();
         newUser.extraUserInfo = profile._json //store all the rest of the info from google into here
         newUser.save().then(function() {
-          console.log(newUser);
+          // console.log(newUser);
           return done(null, newUser)
         });
       }
