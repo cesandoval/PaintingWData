@@ -11,8 +11,9 @@ module.exports.show = function(req, res) {
 }
 
 module.exports.upload = function(req, res, next) {
-
+  console.log(req, res, 'woooooottttt')
   var form = new formidable.IncomingForm(); 
+  console.log(form, 1919191919119)
   var files = [];
   fs.mkdir(path.join(__dirname, `/tmp`), function(err){
     form.uploadDir = path.join(__dirname, '/tmp');

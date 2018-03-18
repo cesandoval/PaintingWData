@@ -8,6 +8,7 @@ $(function() {
   var $progress_bar = $('.progress-bar');
   var $filename_div = $('#file-name-display');
   $zip_file.on('change', prepareForUpload);
+  console.log($zip_file, 777777777)
 
   function prepareForUpload(event)
   {
@@ -24,10 +25,12 @@ $(function() {
 
 function upload(e)
 {
+    console.log(e, 000000000)
     e.stopPropagation(); 
     e.preventDefault(); 
 
     var data = new FormData();
+    console.log(data, 11111111111)
     $.each(files, function(key, value)
     {
         data.append(key, value);
@@ -36,6 +39,7 @@ function upload(e)
     var flashHandler = $('#flashes');
 
     flashHandler.on('flash', function(event, message){
+        console.log(event, message, 2222222222)
         var flash = $('<div class="flash">');
         flash.text(message);
         flash.on('click', function(){
@@ -51,6 +55,7 @@ function upload(e)
         $('.progress').removeClass('hidden');
         xhr.upload.addEventListener("progress", function (evt) {
             if (evt.lengthComputable) {
+                console.log(5555555555)
                 var percentComplete = (evt.loaded / evt.total)*100; 
                 $progress_bar.text(percentComplete + '%');
                 $progress_bar.width(percentComplete + '%');
@@ -58,6 +63,7 @@ function upload(e)
         }, false);
         xhr.addEventListener("progress", function (evt) {
             if (evt.lengthComputable) {
+                console.log(66666666)
                 var percentComplete = (evt.loaded / evt.total)*100; 
                 $progress_bar.text(percentComplete + '%');
                 $progress_bar.width(percentComplete + '%');
@@ -73,9 +79,10 @@ function upload(e)
         contentType: false, 
         success: function(data, textStatus, jqXHR)
         {
+            console.log(data, 33333333)
             if(typeof data.error === 'undefined')
             {
-                
+                console.log( data, 4444444444)
                 window.location.replace("/uploadViewer/"+data.id);
 
             }
@@ -89,9 +96,10 @@ function upload(e)
         {
             console.log("the errors happened here");
             console.log("55555555");
+            console.log(jqXHR, textStatus, errorThrown)
             console.log('ERRORS: ' + textStatus);
             // STOP LOADING SPINNER
-            window.location.replace("/upload");
+            // window.location.replace("/upload");
         }
     });
 }
