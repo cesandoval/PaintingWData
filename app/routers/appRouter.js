@@ -56,8 +56,6 @@ var passport = require('passport'),
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
-  router.post('/saveuserfile/', isAuthenticated, function(req, res){
-    console.log(isAuthenticated);
-  });
+  router.post('/saveuserfile/', isAuthenticated, saveUserfile.save);
 
 module.exports = router;

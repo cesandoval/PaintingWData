@@ -151,11 +151,11 @@ class MapCanvas extends React.Component {
         // this might be adding many meshes
         PaintGraph.Pixels.buildMapbox(this.props.map, this.props.bbox)
     }
-
+    //TODO: Pass in the appropriate parameters!
     saveFile() {
         //Gets the voxel ID.
         var temp = window.location.toString().split('/')
-        var voxelId = temp[temp.length - 1]
+        var voxelId = parseInt(temp[temp.length - 1])
         //This is horrible coding, copying from exportSVG... lolrip
         let _centroid = this.props.map.camera.position
         let bbox = this.props.bbox[0]
@@ -169,21 +169,35 @@ class MapCanvas extends React.Component {
         ]
         //Save everything in one JSON -- pass variable "info" to the request handler.
         var _info = {
-            //map: this.exportJSON(this.props.geometries),
             map: {
                 translation: _translation,
                 centroid: _centroid,
                 bounds: _bounds,
+
+                /*
+                instance: {
+                  // ThreeJS Graph Object
+                  renderFunc,
+                },
+                loaded: false,
+                geometries: {
+                  [layer$key]: {
+
+                  },
+                },
+                // layers: [], // ???
+                */
             },
             options: {
                 knn: document.getElementById('knnSlider').value,
                 opacity: document.getElementById('points').value,
+                bgStyle: 'dark', //to be replaced
             },
-            dataVoxelId: voxelId,
+            vpl: {},
         }
-
         Act.saveUserFile({
-            instance: this.state.instance,
+            userId: 5,
+            voxelId: voxelId,
             info: _info,
         })
     }

@@ -10,17 +10,28 @@ module.exports = {
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
     return queryInterface.createTable('Datauserfiles', {
-      map: {
-        type: Sequelize.JSON
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
       },
-      options: {
-        type: Sequelize.JSON
-      },
-      UPL: {
+      state: {
         type: Sequelize.JSON
       },
       datavoxelId: {
-        type: Sequelize.STRING//whatever the hash is. it's a string!
+        type: Sequelize.INTEGER//whatever the hash is. it's a string!
+      },
+      userId: {
+        type: Sequelize.INTEGER//whatever the hash is. it's a string!
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
       }
     });
   },

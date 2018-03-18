@@ -60,7 +60,9 @@ class Layers extends React.Component {
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
                 // TODO:CHECK: dataset's `layerKey` is `null`, should get the `layerKey` from database
-
+                console.log('DATA')
+                console.log(data)
+                console.log('DATA')
                 // const datasets = data
                 let datasets = data.map(dataset => {
                     const hashKey =

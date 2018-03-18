@@ -15,6 +15,7 @@ export default (state = initialOptionsState, action) => {
         }
 
         case t.MAP_SET_OPACITY: {
+            console.log(state)
             const { value } = action
             const opacity = { opacity: value }
             return Object.assign({}, state, opacity)

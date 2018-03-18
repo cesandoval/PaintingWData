@@ -3,6 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var Datauserfile = sequelize.define('Datauserfile', {
     //insert attributes here
     state: DataTypes.JSON, //the hash type!
+    userId: DataTypes.INTEGER,
+    datavoxelId: DataTypes.INTEGER,
   }, {
     classMethods: {
       associate: function(models) {
