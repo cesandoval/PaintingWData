@@ -41,6 +41,8 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
         getDistance,
         createDatavoxel,
         createRaster,
+        // TODO : write getDbf (parameters = outputs of createRaster, outputs = params of parseRasterGeoJSON)
+        // also add DBF object to the callback, then pass it all the way down (parm to next fxn)
         parseRasterGeoJSON,
         pushDatajson,
     ], function (err, result) {
@@ -247,6 +249,7 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
+            console.log(results);
             callback(results);
         })
 }
@@ -417,7 +420,7 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
                 allIndices[currIndex] = index;
                 currIndex +=1;
             }
-            voxel['properties'][layername] = currentResult.val;
+            voxel['properties'][layername] = currentResult.val; //TODO
             voxel['properties']['neighborhood'] = {
                 column: currentResult.y,
                 row: currentResult.x
