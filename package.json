@@ -28,6 +28,7 @@
     "dbgeo": "0.1.1",
     "debug": "~2.2.0",
     "es6-promise": "^3.2.1",
+    "estraverse": "^4.2.0",
     "express": "~4.13.4",
     "express-flash": "0.0.2",
     "express-mailer": "^0.3.1",

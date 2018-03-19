@@ -90,6 +90,7 @@ function getBbox(datalayerIds, req, callback) {
         " FROM public."+'"Datalayers"' + "AS p WHERE "
         +'"datafileId"'+" in ("+idsQuery+");";
 
+    console.log(connection)
     connection.query(distinctQuery).spread(function(results, metadata){
         var epsg = 4326;
         var bboxQuery = "SELECT ST_SetSRID(ST_Extent(p.bbox),"+
