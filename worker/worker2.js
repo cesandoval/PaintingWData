@@ -75,7 +75,6 @@ queue.process('computeVoxel', 3, (job, done) => {
   var data = job.data;
   var datalayerIds = data[0];
   var req = data[1];
-  console.log(job)
   
   proc(datalayerIds, req, function (message) {
     console.log(message);
