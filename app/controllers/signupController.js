@@ -2,6 +2,8 @@ var User = require('../models').User,
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),
+    FacebookStrategy = require('passport-facebook').Strategy,
+    GoogleStrategy = require('passport-google-oauth20').Strategy,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
@@ -107,6 +109,124 @@ var loginStrategy = new LocalStrategy({
 
   });
 
+/* Make Oauth call to facebook, retrieve information from facebook and store it in "profile" variable
+sample profile variable representation: 
+{ id: '119372979383927645',
+  username: undefined,
+  displayName: undefined,
+  name: { familyName: 'Anderson', givenName: 'Carl', middleName: undefined },
+  gender: undefined,
+  profileUrl: undefined,
+  emails: [ { value: 'carl@gmail.com' } ],
+  provider: 'facebook',
+  _raw: '{"id":"119372979383927645","email":"carl\\u0040gmail.com","last_name":"Anderson","first_name":"Carl"}',
+  _json: 
+   { id: '119372979383927645',
+     email: 'Carl@gmail.com',
+     last_name: 'Anderson',
+     first_name: 'Carl' } }
+
+*/
+var facebookStrategy = new FacebookStrategy({
+  passReqToCallback : true,
+  clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
+  clientSecret: process.env.FACEBOOKCLIENTSECRET, //Same as above
+  callbackURL: "http://localhost:3000/users/facebook_oauth",
+  profileFields: ['id', 'email', 'name'],
+},
+function(req, accessToken, refreshToken, profile, done) {
+    //console.log(profile);
+    User.findOne({
+      where: {email: profile._json.email}, //check if user with same email already exists
+    }).then(function(user) {
+      if (user) {
+        return done(null, user)
+      }
+      else {
+        var newUser = User.build();
+        newUser.email = profile._json.email; //use facebook email as the database's email
+        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
+        newUser.verified = true; //No need to verify when using oauth
+        newUser.urlLink = uuid.v4();
+        newUser.extraUserInfo = profile._json //store all the rest of the info from facebook into here
+        newUser.save().then(function() {
+          console.log(newUser);
+          return done(null, newUser)
+        });
+      }
+    }, function(error) {
+      console.log(error);
+      return done(null, false);
+    })
+
+});
+  
+/* Make Oauth call to Google, retrieve information from Google and store it in "profile" variable
+sample profile variable representation: 
+{ id: '37264174916476217098211',
+  displayName: 'Bob Bitdiddle',
+  name: { familyName: 'Bitdiddle', givenName: 'Bob' },
+  emails: [ { value: '57leonardo@gmail.com', type: 'account' } ],
+  photos: 
+   [ { value: 'https://lh4.googleusercontent.com/-SIJJeEjjxR9/ABAAIAAAA/AAAAAEDAER0/SGxdsghseDscDSgk/photo.jpg?sz=213' } ],
+  gender: 'male',
+  provider: 'google',
+  _raw: '{\n "kind": "plus#person",\n "etag": "\\"EhMivDE25UysA1ltNG8tqFM2v-A/Nx-MmR55geZoGSnoiFVwSZCCbPg\\"",\n "occupation": "Student",\n "gender": "male",\n "urls": [\n  {\n   "value": "http://sites.google.com/site/freefun57/",\n   "type": "other",\n   "label": "http://sites.google.com/site/freefun57/"\n  }\n ],\n "objectType": "person",\n "id": "110728992102719556814",\n "displayName": "Leon Cheng",\n "name": {\n  "familyName": "Cheng",\n  "givenName": "Leon"\n },\n "url": "https://plus.google.com/110728992102719556814",\n "image": {\n  "url": "https://lh4.googleusercontent.com/-YxPDEjjxRS4/AAAAAAAAAAI/AAAAAAAAER0/SGxJJWIlJgk/photo.jpg?sz=50",\n  "isDefault": false\n },\n "organizations": [\n  {\n   "title": "Student",\n   "type": "work",\n   "primary": true\n  }\n ],\n "placesLived": [\n  {\n   "value": "new york, new york"\n  },\n  {\n   "value": "Brooklyn"\n  }\n ],\n "isPlusUser": true,\n "language": "en",\n "verified": false\n}\n',
+  _json: 
+   { kind: 'plus#person',
+     etag: '"EhMivDE25UysA1ltNG8tqFM2v-A/Nx-MmR55geZoGSnoiFVwSZCCbPg"',
+     occupation: 'Student',
+     gender: 'male',
+     urls: [ [Object] ],
+     objectType: 'person',
+     id: '110728992102719556814',
+     displayName: 'Leon Cheng',
+     name: { familyName: 'Cheng', givenName: 'Leon' },
+     url: 'https://plus.google.com/110728992102719556814',
+     image: 
+      { url: 'https://lh4.googleusercontent.com/-YxPDEjjxRS4/AAAAAAAAAAI/AAAAAAAAER0/SGxJJWIlJgk/photo.jpg?sz=50',
+        isDefault: false },
+     organizations: [ [Object] ],
+     placesLived: [ [Object], [Object] ],
+     isPlusUser: true,
+     language: 'en',
+     verified: false } }
+*/
+var googleStrategy = new GoogleStrategy({
+  passReqToCallback : true,
+  clientID: process.env.GOOGLECLIENTID, // Get this from making google developer app
+  clientSecret: process.env.GOOGLECLIENTSECRET, //Same as above
+  callbackURL: "http://localhost:3000/users/google_oauth",
+},
+function(req, accessToken, refreshToken, profile, done) {
+    // console.log(profile);
+    User.findOne({
+      where: {email: profile.emails[0].value}, //check if user with same email already exists
+    }).then(function(user) {
+      if (user) {
+        return done(null, user)
+      }
+      else {
+        var newUser = User.build();
+        newUser.email = profile.emails[0].value; //use gmail email as the database's email
+        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
+        newUser.verified = true; //No need to verify when using oauth
+        newUser.urlLink = uuid.v4();
+        newUser.extraUserInfo = profile._json //store all the rest of the info from google into here
+        newUser.save().then(function() {
+          // console.log(newUser);
+          return done(null, newUser)
+        });
+      }
+    }, function(error) {
+      console.log(error);
+      return done(null, false);
+    })
+
+});
+
+
+
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()){
     return next();
@@ -119,5 +239,7 @@ var isAuthenticated = function (req, res, next) {
 module.exports = {
   LoginStrategy : loginStrategy,
   SignUpStrategy : signUpStrategy,
+  FacebookLoginStrategy : facebookStrategy,
+  GoogleLoginStrategy : googleStrategy, 
   isAuthenticated : isAuthenticated
 }
