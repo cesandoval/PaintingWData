@@ -1,6 +1,6 @@
 var Channel = require('./channel'),
     proc = require('./fileProcessor').processDatalayer,
-    pushTheShapes = require('./fileProcessor').pushShapes,
+    pushShapes = require('./fileProcessor').pushShapes,
     util = require('util');
 
 var redisConfig;  
@@ -38,6 +38,20 @@ if (process.env.NODE_ENV === 'production') {
 var kue = require('kue'), 
     queue = kue.createQueue(redisConfig);
 
+queue.watchStuckJobs(6000);
+
+queue.on('ready', () => {
+  // If you need to
+  console.info('Queue is ready!');
+});
+
+queue.on('error', (err) => {
+  // handle connection errors here
+  console.error('There was an error in the main queue!');
+  console.error(err);
+  console.error(err.stack);
+});
+
 //data -> datalayerIds, and req
 //done is callback
 function processVoxels(data, done) {  
@@ -57,7 +71,7 @@ function processVoxels(data, done) {
     });
 }
 
-queue.process('computeVoxel', (job, done) => {  
+queue.process('computeVoxel', 3, (job, done) => {  
   var data = job.data;
   var datalayerIds = data[0];
   var req = data[1];
@@ -71,9 +85,6 @@ queue.process('computeVoxel', (job, done) => {
 
 
 function processShapes(data, done) {
-  // console.log(data)
-  // data = util.inspect(data);
-  // console.log(data[0])
   queue.create('saveLayer', data)
     .priority('critical')
     .attempts(2)
@@ -81,7 +92,6 @@ function processShapes(data, done) {
     .removeOnComplete(true)
     .save((err) => {
       if (err) {
-        console.log(999999999)
         // console.log(util.inspect(data))
         // console.log(done)
         console.error(err);
@@ -93,14 +103,13 @@ function processShapes(data, done) {
     });
 }
 
-queue.process('saveLayer', (job, done) => { 
+queue.process('saveLayer', 5, (job, done) => { 
   var data = job.data;
   var req = data;
   // var res = data[1];
-  console.log(888888888888)
   // console.log(data)
   // console.log(JSON.parse(data))
-  pushTheShapes(req, function (message) {
+  pushShapes(req, function (message) {
     console.log(message);
   }); 
   done();
