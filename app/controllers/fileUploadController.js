@@ -11,9 +11,7 @@ module.exports.show = function(req, res) {
 }
 
 module.exports.upload = function(req, res, next) {
-  console.log(req, res, 'woooooottttt')
   var form = new formidable.IncomingForm(); 
-  console.log(form, 1919191919119)
   var files = [];
   fs.mkdir(path.join(__dirname, `/tmp`), function(err){
     form.uploadDir = path.join(__dirname, '/tmp');
@@ -21,7 +19,6 @@ module.exports.upload = function(req, res, next) {
     form.on('file', function(field, file) {
       files.push(file); 
     });
-    console.log(files, 7777777777)
     form.on('error', function(err) {
       console.log('Error while uploading file: \n' + err);
 
@@ -35,9 +32,7 @@ module.exports.upload = function(req, res, next) {
     form.on('end', function() {
       var file = files[0];
       var whitelist = [];
-      console.log(file, 111111)
       if("undefined" !== typeof file) {
-        console.log(file, 22222222)
         fs.rename(file.path, path.join(form.uploadDir, file.name), function(err){
         if(err){
           console.log("something went wrong! " + err);
@@ -49,7 +44,6 @@ module.exports.upload = function(req, res, next) {
         }
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
-          console.log(file, zipDir, 3333333)
           fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
             if(err){
               console.log("Error 1: ", err);
@@ -87,7 +81,6 @@ module.exports.upload = function(req, res, next) {
                           throw err; }
                         var size = (size / 1024 / 1024).toFixed(2);
                         var size = '' + size;
-                        console.log(targetPath, 66666666)
                         fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid, geomType){
                           var dataFile = Models.Datafile.build();
                           dataFile.userId = req.user.id;
