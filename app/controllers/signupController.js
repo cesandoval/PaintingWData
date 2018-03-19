@@ -208,7 +208,7 @@ function(req, accessToken, refreshToken, profile, done) {
       }
       else {
         var newUser = User.build();
-        newUser.email = profile.email[0].value; //use gmail email as the database's email
+        newUser.email = profile.emails[0].value; //use gmail email as the database's email
         newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
         newUser.verified = true; //No need to verify when using oauth
         newUser.urlLink = uuid.v4();
