@@ -429,6 +429,7 @@ class VPL extends React.Component {
         }
     }
 
+    // deprecated
     changeNodeFilter = (nodeKey, min, max) => {
         console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
 
@@ -1022,14 +1023,14 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
-                        changeFilter={(min, max) => {
-                            this.changeNodeFilter(nodeKey, min, max)
-                        }}
+                        // changeFilter={(min, max) => {
+                        //     this.changeNodeFilter(nodeKey, min, max)
+                        // }}
                     />
 
                     {/* NODE OPTIONS */
                     Object.entries(typeOptions).map(([attr, def], index) => {
-                        if (attr == 'filter') return
+                        // if (attr == 'filter') return
 
                         // 'attribute': 'default value'
                         const value = options[attr] || def

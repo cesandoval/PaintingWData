@@ -345,6 +345,13 @@ function mapGeometries(state) {
                         }
                         break
                     }
+                    case 'filter': {
+                        const { min, max } = value
+                        geo.material.uniforms.min.value = min
+                        geo.material.uniforms.max.value = max
+
+                        break
+                    }
                 }
                 return update(geometries, {
                     [key]: { $set: geo },

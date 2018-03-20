@@ -156,7 +156,15 @@ class Panel extends React.Component {
 
     changeFilter = ([min, max]) => {
         console.log(`changeFilter(${min}, ${max})`)
-        this.props.changeFilter(min, max)
+        // this.props.changeFilter(min, max)
+
+        const filter = { min, max }
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'filter',
+            value: filter,
+        })
     }
 
     render() {
