@@ -127,11 +127,14 @@ sample profile variable representation:
      first_name: 'Carl' } }
 
 */
+
+// The host is different in production
+var host = process.env === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
   clientSecret: process.env.FACEBOOKCLIENTSECRET, //Same as above
-  callbackURL: "http://localhost:3000/users/facebook_oauth",
+  callbackURL: host+"users/facebook_oauth",
   profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {
@@ -196,7 +199,7 @@ var googleStrategy = new GoogleStrategy({
   passReqToCallback : true,
   clientID: process.env.GOOGLECLIENTID, // Get this from making google developer app
   clientSecret: process.env.GOOGLECLIENTSECRET, //Same as above
-  callbackURL: "http://localhost:3000/users/google_oauth",
+  callbackURL: host+"users/google_oauth",
 },
 function(req, accessToken, refreshToken, profile, done) {
     // console.log(profile);
