@@ -131,6 +131,7 @@ module.exports.transformVoxels = function(req, res) {
 }
 
 //Helper function to generate a unique ID
+//This is a STRING
 function hash(){
     return (+new Date()).toString(32) + Math.floor(Math.random()*36).toString(36);
 }

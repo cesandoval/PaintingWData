@@ -380,6 +380,7 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             newDataJSON.epsg = 4326;
             newDataJSON.datavoxelId = objProps[key].datavoxelId;
             newDataJSON.geojson = dataJSONs[key];
+            newDataJSON.hashVoxelId = req.voxelID;
             newDataJSON.userId = req.user.id;
             newDataJSON.layerKey = hashKey;
             newDataJSON.save().then(function(){
