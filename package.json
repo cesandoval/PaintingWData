@@ -5,7 +5,7 @@
   "scripts": {
     "init:db": "cd app && sequelize db:migrate",
     "dev": "cross-env NODE_ENV=development node ./bin/www",
-    "build": "gulp build",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
     "lint:fix": "eslint . --cache --color --fix --debug",
