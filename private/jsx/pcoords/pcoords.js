@@ -170,14 +170,11 @@ class PCoords extends React.Component {
     }
 
     calcRanges() {
-        // console.log('calcRanges(data)', data)
         // review: what is the mean of radoms 'true'?
         this.pc.randoms = true
 
         const brushSelection = this.pc.brushExtents()
         const layerNames = Object.keys(brushSelection)
-        // console.log('brushSelection', brushSelection)
-        // console.log('layerNames', layerNames)
 
         // Calculate range of data
         let maxObjs = {}
@@ -197,7 +194,6 @@ class PCoords extends React.Component {
         const lowBnd = this.lowBnd
         const highBnd = this.highBnd
 
-        // const remap = function(selection, layerIndex, mins, maxs) {
         const remap = function(x, i, mins, maxs) {
             return (
                 (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) +
@@ -211,25 +207,26 @@ class PCoords extends React.Component {
             // review: replace minObjs to layerNames.length
             const layer = this.props.layers[i]
             const name = `${layer.userLayerName}_${layer.propertyName}`
-            let pixels = this.props.geometries[layer.layerKey]
+            // Checks if the layer has been filtered, if it has, changes the min and max values
+            if (layerNames.includes(name)) {
+                let pixels = this.props.geometries[layer.layerKey]
 
-            if (!(minObjs[name] && maxObjs[name])) continue
-
-            pixels.material.uniforms.min.value = remap(
-                minObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
-            pixels.material.uniforms.max.value = remap(
-                maxObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
-            // console.log('[PCoords] calcRanges', { minObjs, maxObjs })
+                // this was misbehaving
+                // if (!(minObjs[name] && maxObjs[name])) continue
+                pixels.material.uniforms.min.value = remap(
+                    minObjs[name],
+                    this.layerIndeces[name],
+                    this.minVal,
+                    this.maxVal
+                )
+                pixels.material.uniforms.max.value = remap(
+                    maxObjs[name],
+                    this.layerIndeces[name],
+                    this.minVal,
+                    this.maxVal
+                )
+            }
         }
-        // console.log('[PCoords] calcRanges', { props: this.props })
     }
     style() {
         return {
