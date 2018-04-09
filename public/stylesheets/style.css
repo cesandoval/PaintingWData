@@ -341,7 +341,7 @@ ul.dropdown-menu {
 
 .spacing-large {
     padding-top: 10vh;
-    padding-bottom: 5vh;
+    padding-bottom: 6vh;
 }
 
 .site-title {
@@ -934,4 +934,12 @@ p {
 .member_name_previous {
     margin-top: 15px;
     margin-bottom: 0px;
+}
+
+.iframe_post {
+    width: 100%;
+    max-width: 800px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }

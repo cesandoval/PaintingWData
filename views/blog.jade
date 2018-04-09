@@ -6,5 +6,32 @@ block pageTitle
     div.container
       .row.spacing-large
          h1.center Blog
+
+
+
+
+block content
+
+  div.section_content.row
+    div.container.ifwrapper
+      iframe(src="posts/test/index.html", id="post1", style="" class = "iframe_post")
+
+
+
+  script.
+
+
+    $("#post1").load(function () {
+      fixiframe("#post1");
+      expand_function("post1",);
+    });
+
+
+
+
+
+
+
+
 //- .row
 //-  p This has some useful documentation about Painting with Data. 
