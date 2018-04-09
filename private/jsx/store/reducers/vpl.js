@@ -41,6 +41,13 @@ export default (state = initialState, action) => {
     let links = _.cloneDeep(state.links)
 
     switch (action.type) {
+        case t.IMPORT_USERFILE: {
+            const { data } = action
+            const { vpl } = data
+
+            return Object.assign({}, state, vpl)
+        }
+
         case t.NODE_ADD: {
             const { nodeKey, node } = action
 
