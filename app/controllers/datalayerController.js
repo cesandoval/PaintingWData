@@ -13,12 +13,12 @@ var Model = require('../models'),
 module.exports.computeVoxels = function(req, res){
     if  (req.body.datalayerIds !== ''){
         var datalayerIds = [];
-        var datalayerIdString = req.body.datalayerIds;
-        req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-            if(datalayerId !== ""){
-                datalayerIds.push(datalayerId);
-            }
-        });
+
+        var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+        console.log(datalayerIdsAndRasterValsObject);
+        for (datalayerId in datalayerIdsAndRasterValsObject){
+            datalayerIds.push(datalayerId);
+        }
 
         if (req.body.layerButton == 'delete') {
             Model.Datafile.update({
@@ -46,11 +46,12 @@ module.exports.computeVoxels = function(req, res){
         } else {
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
             var datalayerIds = [];
-            req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-                if(datalayerId !== ""){
-                    datalayerIds.push(datalayerId);
-                    }
-                });
+            var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+            console.log(datalayerIdsAndRasterValsObject);
+            for (datalayerId in datalayerIdsAndRasterValsObject){
+                datalayerIds.push(datalayerId);
+            }
+    
 
             processVoxels([datalayerIds, req], function(){}); 
 
