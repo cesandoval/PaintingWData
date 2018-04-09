@@ -7,7 +7,9 @@ var User = require('../models').User,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
+    express = require('express');
 
+var app = express()
 
 module.exports.show = function(req, res) {
   res.render('users/signUp')
@@ -129,7 +131,8 @@ sample profile variable representation:
 */
 
 // The host is different in production
-var host = process.env === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
+var host = app.get('env') === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
+
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
