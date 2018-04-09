@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      datafileId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       datalayerId:{
           type: Sequelize.INTEGER,
           allowNull: false

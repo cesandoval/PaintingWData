@@ -6,10 +6,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     datalayerId:{
-        type:DataTypes.INTEGER,
-        allowNull: false
-    },
-    
+      type:DataTypes.INTEGER,
+      allowNull: false
+  },
+    datafileId:{
+      type:DataTypes.INTEGER,
+      allowNull: false
+  },
     properties: {
       type: DataTypes.JSON,
       allowNull: true
