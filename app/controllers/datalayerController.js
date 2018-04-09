@@ -71,9 +71,12 @@ module.exports.show = function(req, res) {
         },
         include: [{
             model: Model.Datalayer,
+            limit: 1},
+            {
+            model: Model.Datadbf,
             limit: 1}]
         }).then(function(datafiles){
-
+            
             res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
         });  
 }
@@ -92,6 +95,8 @@ module.exports.showVoxels= function(req, res) {
                 }]
             }]
         }).then(function(datavoxels){
+            // console.log("datavoxels: ", datavoxels);
+            console.log("datavoxels.datafiles: ", datavoxels.datafiles);
             console.log("------------------------------------------------");
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });
