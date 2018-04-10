@@ -260,24 +260,35 @@ script.
                     var widththis = +d3.select(this).style("width").split("px")[0];
                     //console.log($(document).width(),widththis);
 
-                    if($(document).width()<500){
-                        if(this.innerHTML.indexOf("Overview")!=-1){
-                            $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
-                            );
-                        }else{
-                            $(this).replaceWith( "<div class = 'content_right_full right_proj'>"+$(this).html()+"</div>"
-                            );
-                        }
 
+                    if(this.innerHTML.indexOf("Overview")!=-1){
+                        $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                        );
                     }else{
-                        if(this.innerHTML.indexOf("Overview")!=-1){
-                            $(this).replaceWith( "<div class = 'content_left'>"+$(this).html()+"</div>"
-                            );
-                        }else{
-                            $(this).replaceWith( "<div class = 'content_right'>"+$(this).html()+"</div>"
-                            );
-                        }
+                        $(this).replaceWith( "<div class = 'content_right_full right_proj' style = 'display:none;'>"+$(this).html()+"</div>"
+                        );
                     }
+
+                    //- if($(document).width()<500){
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right_full right_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+
+                    //- }
+                    
+                    //- else{
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_left'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+                    //- }
 
                     return true;
                 }
