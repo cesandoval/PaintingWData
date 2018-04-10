@@ -156,8 +156,20 @@ class Panel extends React.Component {
 
     changeFilter = ([min, max]) => {
         console.log(`changeFilter(${min}, ${max})`)
-        // this.props.changeFilter(min, max)
+        const currIndex = this.props.index
+        const highBnd = this.props.geometries[currIndex].highBnd
+        const lowBnd = this.props.geometries[currIndex].lowBnd
+        const valDiff = highBnd - lowBnd
+        const remap = function(x) {
+            if (x != 0) {
+                return valDiff * (x / 1) + lowBnd
+            } else {
+                return 0
+            }
+        }
 
+        min = remap(min)
+        max = remap(max)
         const filter = { min, max }
 
         Act.nodeUpdate({
