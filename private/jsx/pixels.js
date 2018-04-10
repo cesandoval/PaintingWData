@@ -485,6 +485,7 @@ export default class Pixels {
 
     initMaterial(lowBnd, highBnd) {
         console.log(`[Pixels] ${this.layerName}`, { lowBnd, highBnd })
+        console.log(`[Pixels] ${this.layerName}`, this.minVal, this.maxVal)
 
         let material = new THREE.RawShaderMaterial({
             uniforms: {
