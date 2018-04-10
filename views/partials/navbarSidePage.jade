@@ -8,15 +8,13 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
         span.icon-bar
         span.icon-bar
     //- img(src="/images/PwR_logo_test_1.svg", style="padding-left: 2vw; width: auto; height: 5vh;")
-    a(class='navbar-brand', href='#')
+    a(class='navbar-brand', href='/')
       img(alt="Brand" src="/images/icon.svg", style="height: 60px;")
 
 
     ul.nav.navbar-nav.navbar-left
       li
-        a(id='about') About
-      li
-        a(id='team') Team
+        a(href='/') Home
       li
         a(href='/documentation') Resources
       li
@@ -24,12 +22,9 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
       if userSignedIn
         li
           a(href='/voxels/#{user.id}') Application
-
       
     ul.nav.navbar-nav.navbar-right
       if userSignedIn
-       li
-        a(href='#').progress-tracker Progress Tracker
        li.dropdown
         a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
           <span class="caret"></span>

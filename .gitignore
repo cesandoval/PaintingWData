@@ -3,6 +3,8 @@
 **/.DS_Store
 *.DS_Store
 
+# random vsfiles 
+~/*
 
 # we dont want to add node modules to github
 /node_modules
