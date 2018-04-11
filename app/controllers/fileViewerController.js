@@ -42,6 +42,8 @@ module.exports.saveShapes = function(req, res) {
                 res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {
+            console.log('TESTING-----------------------')
+            console.log('The user has uploaded a total of ' + newUploadsSize + ' mbs')
             req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
             res.redirect('/uploadViewer/'+ req.body.datafileId + '$$' + req.body.size); 
         }
