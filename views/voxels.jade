@@ -64,6 +64,11 @@ block pageTitle
                       br
                       p.label-body File Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
+                        // WORK IN PROGRESS
+                        // needed a datavoxel.public field here to set checkbox state
+                        input#remember(type='checkbox', name='public')
+                        span Public
+                        // WORK IN PROGRESS
                       p.label-body User Layer Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].userLayerName}
 

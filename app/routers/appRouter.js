@@ -4,6 +4,7 @@ var passport = require('passport'),
     fileViewerController = require('../controllers/fileViewerController.js'),
     datalayerController = require('../controllers/datalayerController.js'),
     updateController = require('../controllers/updateController'),
+    voxelPrivacy = require('../controllers/voxelPrivacyController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -36,6 +37,7 @@ var passport = require('passport'),
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
+  router.post('/voxelPrivacy', isAuthenticated, voxelPrivacy.setVoxelPublicOrPrivate);
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
   router.get('/getThumbnailData/:id', isAuthenticated, fileViewerController.serveThumbnailData);
