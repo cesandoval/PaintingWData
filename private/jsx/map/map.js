@@ -13,7 +13,7 @@ class MapCanvas extends React.Component {
     constructor(props) {
         super(props)
         // this.state = { layersAdded: false }
-        this.state = { mapInited: false, instance: {} }
+        this.state = { mapInited: false, instance: {}, mapStarted: false }
     }
     componentDidMount() {
         const gElement = document.getElementById('mapCanvas')
@@ -36,6 +36,18 @@ class MapCanvas extends React.Component {
                 datasetsLayers: newProps.layers,
             })
             this.setState({ mapInited: true })
+        }
+
+        console.log('map componentWillReceiveProps()', { newProps })
+        // init the map options by default/userfile value from redux when map has started.
+        if (newProps.mapStarted && !this.state.mapStarted) {
+            const options = this.props.options
+
+            if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
+            if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
+            if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
+
+            this.setState({ mapStarted: true })
         }
 
         /*
@@ -285,6 +297,8 @@ class MapCanvas extends React.Component {
 export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
+    mapStarted: s.map.started,
+    options: s.options,
     panelShow: s.interactions.panelShow,
     geometries: s.map.geometries,
     bbox: s.map.bbox,

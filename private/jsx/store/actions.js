@@ -1,6 +1,13 @@
 import store from './store'
 import * as t from './types'
 
+// app
+export const importUserfile = payload =>
+    store.dispatch({
+        type: t.IMPORT_USERFILE,
+        ...payload,
+    })
+
 // datasets
 export const importDatasets = payload =>
     store.dispatch({

@@ -8,6 +8,13 @@ const initialOptionsState = {
 
 export default (state = initialOptionsState, action) => {
     switch (action.type) {
+        case t.IMPORT_USERFILE: {
+            const { data } = action
+            const { options } = data
+
+            return Object.assign({}, state, options)
+        }
+
         case t.MAP_SET_BGSTYLE: {
             const { value } = action
             const bgStyle = { bgStyle: value }

@@ -1,3 +1,6 @@
+// app
+export const IMPORT_USERFILE = 'IMPORT_USERFILE'
+
 // datasets
 export const IMPORT_DATASETS = 'IMPORT_DATASETS'
 
