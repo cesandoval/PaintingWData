@@ -66,10 +66,10 @@ block pageTitle
                         label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
                         
                       if datavoxel.public
-                        input#public(type='checkbox', name='public', checked=true)
+                        input(type='checkbox', class='public', id=datavoxel.id, checked=true)
                         span Public
                       else
-                        input#public(type='checkbox', name='public', checked=false)
+                        input(type='checkbox', class='public', id=datavoxel.id, checked=false)
                         span Public
 
                       p.label-body User Layer Name

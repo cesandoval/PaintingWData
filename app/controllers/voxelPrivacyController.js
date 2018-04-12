@@ -8,13 +8,12 @@ var Voxel = require('../models').Datavoxel,
 
 
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
-	if(req.body.id && req.body.public instanceof Boolean) {
+	if(req.body.id && req.body.public) {
 		var id = req.body.id;
 		var isPublic = req.body.public;
-
 		Voxel.findOne({
 			where: {id: id},
-		}).then(function(voxel)) {
+		}).then(function(voxel) {
 			voxel.public = isPublic;
 			voxel.save();
 		}, function(error){
