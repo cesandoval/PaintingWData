@@ -446,6 +446,7 @@ function progressWidgetInit() {
                                     this.state.completedJobs.push(complete);
 
                                 this._createFlash(input[1] + " has completed!");
+                                inArrs = true;
                             }
 
                             else {
@@ -464,7 +465,6 @@ function progressWidgetInit() {
                             this.state.completedJobs.push(input);
                             inArrs = true;
                             this._createFlash(input[1] + " has completed!");
-
                         }
                     }
                     if(!inArrs && this.state.currentJobs.length === 0){ // for loop doesn't fire if its tempty
@@ -473,7 +473,6 @@ function progressWidgetInit() {
                         this.recentlyDeleted.push(delId);
                         this.state.completedJobs.push(input);
                         this._createFlash(input[1] + " has completed!");
-
                     }
                 }
 
@@ -557,7 +556,7 @@ function progressWidgetInit() {
             this.state.pollType = (typeof queryIds[0] == "number") ? "shapes" : "voxels";
             var pollquery = this.state.pollType + "?" + this.state.pollType + "=" + queryIds.join("$$"); //FOR VOXELS, FORMAT IS "hash$$id1$$etc." while for SHAPES, it's "id1$$id2$$etc."
 
-            console.log(pollquery);
+            console.log("Pollquery: " + pollquery);
             if (this.ajaxInProgress && !this.request) {
                 this.request = this._createXhrRequest(pollquery);
                 // console.log('firing pollFunction: ' + pollquery);
@@ -600,12 +599,13 @@ function progressWidgetInit() {
                         progress = JSON.parse(xhr.response);
                         console.log(progress.toString());
                         this._updateJobs(progress.progress);
-
+                        console.log("Progress: " + progress.progress);
+                        console.log("Page reload: " + this.pageReload);
                         if (this.pageReload) {
                             setTimeout(function() {
                                 this.request.abort();
                                 window.location.href = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-                            }.bind(this), 1000);
+                            }.bind(this), 10000);
                             return;
                         }
                     } catch (e) {
