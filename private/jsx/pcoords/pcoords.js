@@ -21,6 +21,7 @@ class PCoords extends React.Component {
 
         this.state = {
             pc: null,
+            previousBrush: null,
         }
 
         this.build = this.build.bind(this)
@@ -29,8 +30,8 @@ class PCoords extends React.Component {
     componentWillReceiveProps(nprops) {
         // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
+
         if (!this.state.started && nprops.layers.length > 0) {
-            // console.log(nprops, 8484848484)
             this.setState({ started: true })
 
             const bounds = nprops.layers[0].bounds
@@ -130,8 +131,6 @@ class PCoords extends React.Component {
     }
 
     build(data) {
-        // console.log('build(data, dictBrush)', data, dictBrush)
-
         let minVal = this.minVal[0]
         let maxVal = this.maxVal[0]
 
@@ -142,7 +141,12 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        const pc = d3.parcoords()('#parcoords')
+        let tester = { test: [1, 2, 3] }
+        // console.log('tester', tester)
+
+        const pc = d3.parcoords({ previousBrush: this.state.previousBrush })(
+            '#parcoords'
+        )
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -155,8 +159,16 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode('1D-axes')
-        // if (this.brushed) {
-        //     pc.state.brushed = dictBrush;
+            .previousBrush(tester)
+
+        // if (pc.previousBrush) {
+        //     console.log('previous brush specs already present')
+        // } else {
+        //     console.log('else')
+        //     pc.state.previousBrush = {
+        //         Test1_MedHomeVal: [580791.6666666667, 0],
+        //     }
+        //     console.log('pc.state.previousBrush', pc.state.previousBrush)
         // }
 
         pc.on('brushend', this.calcRanges.bind(this))
@@ -165,28 +177,31 @@ class PCoords extends React.Component {
     }
 
     calcRanges() {
-        // console.log('calcRanges(data)', data)
         // review: what is the mean of radoms 'true'?
         this.pc.randoms = true
 
         const brushSelection = this.pc.brushExtents()
         const layerNames = Object.keys(brushSelection)
-        // console.log('brushSelection', brushSelection)
-        // console.log('layerNames', layerNames)
 
         // Calculate range of data
         let maxObjs = {}
         let minObjs = {}
+
+        let brushes = {}
         if (layerNames.length > 0) {
             // review: when is the layerNames.length less then 0?
             for (let i = 0; i < layerNames.length; i++) {
                 let selection = brushSelection[layerNames[i]]
                 minObjs[layerNames[i]] = selection[0]
                 maxObjs[layerNames[i]] = selection[1]
+                brushes[layerNames[i]] = [selection[0], selection[1]]
             }
         }
         this.minObjs = minObjs
         this.maxObjs = maxObjs
+
+        this.setState({ previousBrush: brushes })
+        // console.log(this.state.previousBrush)
 
         // Update Layers
         const lowBnd = this.lowBnd
