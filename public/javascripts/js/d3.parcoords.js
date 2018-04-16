@@ -1063,10 +1063,7 @@ var brush = {
 // @param newSelection - The new set of data items that is currently contained
 //                       by the brushes
 function brushUpdated(newSelection) {
-  console.log("brushUpdated called")
   __.brushed = newSelection;
-  console.log("newSelection", newSelection)
-  console.log("pc", pc)
   events.brush.call(pc,__.brushed);
   pc.renderBrushed();
 }
@@ -1264,13 +1261,15 @@ pc.brushMode = function(mode) {
   
   function brushFor(axis) {
     
-    // var brushSpecs = []
-    // if (__.previousBrush[axis]) {
-    //   brushSpecs = __.previousBrush[axis]
-    // }
-    // else {
-      brushSpecs = [100000, 0]
-    // }
+    var brushSpecs = []
+    if (__.previousBrush[axis]) {
+      brushSpecs = __.previousBrush[axis]
+    }
+    else {
+      brushSpecs = [0, 0]
+    }
+    console.log(axis)
+    console.log(__.previousBrush[axis])
 
     var brush = d3.svg.brush();
 
@@ -1278,18 +1277,15 @@ pc.brushMode = function(mode) {
       .y(__.dimensions[axis].yscale)
       .extent(brushSpecs)
       .on("brushstart", function() {
-        console.log("brushstart")
 				if(d3.event.sourceEvent !== null) {
 					events.brushstart.call(pc, __.brushed);
 					d3.event.sourceEvent.stopPropagation();
 				}
 			})
 			.on("brush", function() {
-        console.log("brush")
         brushUpdated(selected());
 			})
 			.on("brushend", function() {
-        console.log("brushend")
 				events.brushend.call(pc, __.brushed);
       });
 
