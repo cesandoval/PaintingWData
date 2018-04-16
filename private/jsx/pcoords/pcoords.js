@@ -134,6 +134,10 @@ class PCoords extends React.Component {
         }
     }
 
+    componentDidMount() {
+        console.log('YAASSSSS')
+    }
+
     build(data) {
         let minVal = this.minVal[0]
         let maxVal = this.maxVal[0]
@@ -145,12 +149,10 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        let tester = { test: [1, 2, 3] }
+        let tester = { 'astham rate_Rate': [200, 300] }
         // console.log('tester', tester)
-
-        const pc = d3.parcoords({ previousBrush: this.state.previousBrush })(
-            '#parcoords'
-        )
+        // const pc = d3.parcoords({ previousBrush: this.state.previousBrush })(
+        const pc = d3.parcoords({ previousBrush: tester })('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -203,6 +205,8 @@ class PCoords extends React.Component {
         }
         this.minObjs = minObjs
         this.maxObjs = maxObjs
+
+        console.log(brushes)
 
         this.setState({ previousBrush: brushes })
         // console.log(this.state.previousBrush)
