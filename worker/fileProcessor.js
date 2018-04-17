@@ -72,7 +72,6 @@ function startShapeWorker(req, callback) {
     var location = req.body.location;
     var layerName = req.body.layername;
     var description = req.body.description;
-    var dataProp = req.body.rasterProperty;
 
     async.waterfall([
         async.apply(fileViewerHelper.loadData, datafileId, req),
@@ -111,7 +110,7 @@ function startShapeWorker(req, callback) {
 // It returns a bounding box, and a list of properties of each Datafile associated with the Datalayer
 function getBbox(datalayerIds, req, callback) {
     var idsQuery = datalayerIds.toString();
-    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ ', p."rasterProperty"' + " FROM public."+'"Datalayers"' + "AS p WHERE " + '"datafileId"'+" in ("+idsQuery+");";
+    var distinctQuery = "SELECT DISTINCT "+'"datafileId", layername, epsg, "userLayerName"'+ " FROM public."+'"Datalayers"' + "AS p WHERE " + '"datafileId"'+" in ("+idsQuery+");";
 
      var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datavoxelbbox" (id serial primary key, rast raster, voxelid character varying(255));';
 
@@ -384,6 +383,8 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
 
     }, 1);
 
+    // TODO create rasterprops objects {datafileId : rasterProp}
+
     props.forEach(function(prop, index){
         cargo.push(prop, function(results){
             resultsObj[prop.datafileId] = results;
@@ -420,12 +421,13 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
                 allIndices[currIndex] = index;
                 currIndex +=1;
             }
-            voxel['properties'][layername] = currentResult.val; //TODO
+            // TODO: USE A DATADBF QUERY TO GET THE PROPERTIES AND DATALAERYIDS INFOMARTION 
+            voxel['properties'][layername] = currentResult.val; //TODO DATADBF.DATALAYYERID.PROPS.USERSELECTEDPROPERTY ex: ObjectId => 31
             voxel['properties']['neighborhood'] = {
                 column: currentResult.y,
                 row: currentResult.x
             };
-            voxel['properties']['property'] = objProps[key].rasterProperty;
+            voxel['properties']['property'] = objProps[key].rasterProperty; //TODO: change this to the rasterprop user selects
             voxel['properties']['pointIndex'] = index;
 
             // console.log("voxel: " + JSON.stringify(voxel, null, 4));

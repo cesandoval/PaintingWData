@@ -56,9 +56,9 @@ block pageTitle
                     .userlayername
                       label.layer-label User Layer Name
                       p(display='inline').label-body #{datafile.Datalayers[0].userLayerName}
-                    .property
-                      label.layer-label Data Property
-                      p.label-body #{datafile.Datalayers[0].rasterProperty}
+                    //- .property
+                      //- label.layer-label Data Property
+                      //- p.label-body #{datafile.Datalayers[0].rasterProperty}
                     if datafile.Datalayers[0].location.length > 0
                       .location
                         label.layer-label Layer Location
