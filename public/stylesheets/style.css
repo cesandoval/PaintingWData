@@ -956,3 +956,13 @@ p {
     transform: translateX(-50%);
     border: none;
 }
+
+.spacing-blog {
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.video-iframe {
+    height:500px;
+    width:800px;
+}
