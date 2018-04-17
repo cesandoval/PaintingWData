@@ -34,7 +34,7 @@ module.exports.saveShapes = function(req, res) {
             console.log(app.get('env'))
             newUploadsSize = 0;
         }
-        if (newUploadsSize <= 100) {
+        if (newUploadsSize <= 100 || user.paidUser) {
             user.update({
                 uploadsSize: uploadsSize + parseFloat(req.body.size)
             }).then(function() {
