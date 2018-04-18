@@ -53,8 +53,11 @@ var passport = require('passport'),
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app/:datavoxelId', isAuthenticated, appController.show);
-  router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
+  router.get('/app/public/:datavoxelId', appController.showPublic);
+  router.get('/datajson/all/:datavoxelId', appController.getDatajsons);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
+
+
 
 module.exports = router;

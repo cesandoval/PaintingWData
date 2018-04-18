@@ -1,4 +1,5 @@
 var User = require('../models').User,
+    Datavoxel = require('../models').Datavoxel,
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),

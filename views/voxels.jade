@@ -48,6 +48,7 @@ block pageTitle
               .caption.text-center
                 .layername
                   h3 #{datavoxel.voxelname}
+                
                   if (datavoxel.voxelname.length <= 0)
                     h3 Layer
                   div(style="border-top: 1px solid black; height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
@@ -64,13 +65,12 @@ block pageTitle
                       br
                       p.label-body File Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].layername}
-                        
-                      if datavoxel.public
-                        input(type='checkbox', class='public', id=datavoxel.id, checked=true)
-                        span Public
-                      else
-                        input(type='checkbox', class='public', id=datavoxel.id, checked=false)
-                        span Public
+                        if datavoxel.public
+                          input(type='checkbox', class='public', id=datavoxel.id, checked=true)
+                          span Public
+                        else
+                          input(type='checkbox', class='public', id=datavoxel.id, checked=false)
+                          span Public
 
                       p.label-body User Layer Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].userLayerName}
