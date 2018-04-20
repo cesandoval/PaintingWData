@@ -130,8 +130,9 @@ module.exports.transformVoxels = function(req, res) {
     }
 }
 
-//Helper function to generate a unique ID
-//This is a STRING
+/*
+A helper function to generate a voxel hash; an ID.
+*/
 function hash(){
     return (+new Date()).toString(32) + Math.floor(Math.random()*36).toString(36);
 }

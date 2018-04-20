@@ -215,15 +215,14 @@ function getById(req, res, id) {
 }
 
 
-//The main Progress Traker Function
-// queries the database by job id and returns an array of items in the form....
-//[id, jobname, progress, denominator] if the job is in progress or waiting (null null when the job has been deleted after completion)
-//[id, jobname, bool] bool == true if the job is done, false if the output is invalid
-// [id$$jobname$$Errormessage]
-// [~/~ Error message here]
-//takes query string of enpoint?shapes=id1$$id2$$id3
-//hope to add the param &voxels=ids
-function getLastIds(req, res, isVoxel=false) {
+/**
+* This function digs up info regarding the progress of jobs, for use in progressWidget.js.
+* As stated in the comments of that file, we've assembled the query into the form:
+* [id1$$id2$$...][hash1$numIds1$$hash2$numIds2$$...]
+* and then for each of these, we'll get the progress of that. In particular, we return an array of 5-length arrays
+* each of the form [id, jobName, num, den, type (either "shapes" or "voxels")]
+*/
+function getLastIds(req, res) {
     var output = [];
     var dataset = null;
     var gfile = null; // gdal file
@@ -233,18 +232,43 @@ function getLastIds(req, res, isVoxel=false) {
     var ids = []; // datafile and query id
     var denominators = [];
 
-    var query = isVoxel ? req.query.voxels : req.query.shapes;
-
-    console.log('Query: ' + query)
+    var query = req.query.shapes;
     if(query === '') {
-        // console.log('no ids')
-        res.send({progress: [[]]})
+        res.send({progress: []})
         return false; // don't query if there is no query object
     }
-
-    ids = query.split("$$");
-    //debugger;
-    // console.log(ids);
+    // Split by '$$', and further split by '$'; if it's a voxel job, this will have two elements.
+    // Put everything into the 'jobs' array.
+    jobIdentifiers = query.split("$$");
+    jobs = [];
+    for (var jI in jobIdentifiers) {
+        jobs.push(jI.split("$"));
+    }
+    // Loop over every job. If it has length 1, it's a layer. If it has length 2, it's a voxel.
+    for (var job in jobs){
+        if (job.length == 2) { // Voxel!
+            Model.Datavoxel.findOne({
+                where: {
+                    voxelId: job[0], // The hash
+                }
+            }).then(voxel => {
+                return Model.Datajson.count({where: {hashVoxelId: voxel.voxelId}});
+            }).then(numberProcessed => {
+                output.push([job[0], numberProcessed, job[1], "voxels"]); //TODO: 2nd entry should be jobName.
+            })
+        }
+        if (job.length == 1) { // Layer!
+            Model.Datafile.findOne({
+                where: {
+                    userId: req.user.id,
+                    id: job[0],
+                },
+                order: [['createdAt', 'DESC']]
+            }).then(files => {
+                
+            })
+        }
+    }
     if (isVoxel){
         //THIS BLOCK IS FOR VOXELS ONLY
         Model.Datavoxel.findAll({
@@ -351,7 +375,6 @@ function getLastIds(req, res, isVoxel=false) {
                                     console.log("Error cleaning local directory: ", dLocation);
                                     console.log(err, err.stack);
                                     success = false;
-                                    // callback(err);
                                     //return error object here to make srue this is removed
                                 }
                             })
@@ -362,8 +385,6 @@ function getLastIds(req, res, isVoxel=false) {
                     //add obj to response if its valid
                     else {
                         var outLayer = [id, jobName[0], response, totalLayers];
-                        // console.log("outlayer: " + outLayer)
-                        // console.log(outLayer);
                         if(outLayer[3] === null) {
                             output.push([id, jobName[0], null, null]);
                         }
@@ -374,11 +395,9 @@ function getLastIds(req, res, isVoxel=false) {
                         }
 
                         else {
-                            // console.log('outlayer pushed')
                             output.push(outLayer);
                         }
                     }
-                    // console.log(output)
                     res.send({ progress: output });
                     console.log("File progress output: " + output);
                     return output
@@ -403,21 +422,8 @@ module.exports.updateShape = function (req, res) {
 }
 
 module.exports.updateShapes = function (req, res) {
-    console.log('update shapes')
-    // console.log(req.user)
-    console.log("END USER ----------------- \n \n ")
-
-    // response = getLastIds(req, res);
-    // console.log(response);
     getLastIds(req, res);
 }
-
-module.exports.updateVoxels = function (req, res){
-    console.log('update voxels');
-    console.log("END USER ----------------- \n \n ");
-    getLastIds(req, res, true);
-}
-
 
 
 // for testing purposes. Does not make the progress tracker behave accurately.
