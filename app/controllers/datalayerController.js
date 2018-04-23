@@ -48,6 +48,7 @@ module.exports.computeVoxels = function(req, res){
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity, 'datalayerIdsAndProps': datalayerIdsAndRasterValsObject}};
             var datalayerIds = [];
             var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+            console.log("************************************HELO********************************************************");    
             console.log(datalayerIdsAndRasterValsObject);
             for (datalayerId in datalayerIdsAndRasterValsObject){
                 datalayerIds.push(datalayerId);
@@ -55,6 +56,7 @@ module.exports.computeVoxels = function(req, res){
     
 
             processVoxels([datalayerIds, req], function(){}); 
+            
 
             res.redirect('/voxels/'+ req.user.id);  
         }
