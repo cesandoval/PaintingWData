@@ -1,17 +1,19 @@
 /* global project */
 
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
+import Button from 'react-bootstrap/lib/Button'
 
 class MapCanvas extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { layersAdded: false }
+        // this.state = { layersAdded: false }
+        this.state = { mapInited: false, instance: {} }
     }
     componentDidMount() {
         const gElement = document.getElementById('mapCanvas')
@@ -19,14 +21,26 @@ class MapCanvas extends React.Component {
         const gWidth = gElement.clientWidth
         const G = new PaintGraph.Graph(gElement, gHeight, gWidth)
         G.start()
-        act.mapAddInstance(G)
+        this.setState({ instance: G })
+
+        // act.mapAddInstance(G)
     }
     componentWillReceiveProps(newProps) {
         // Get layers once they appear
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
-        if (newProps.layers.length > 0 && !this.state.layersAdded) {
+
+        if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
+            Act.mapInit({
+                instance: this.state.instance,
+                datasetsLayers: newProps.layers,
+            })
+            this.setState({ mapInited: true })
+        }
+
+        /*
+        if (!_.isEmpty(newProps.layers) && !this.state.layersAdded) {
             // Sets the camera to the voxels' bbox
             const bbox = newProps.layers[0].bbox
             const canvas = newProps.map
@@ -36,7 +50,7 @@ class MapCanvas extends React.Component {
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox)
 
-            this.setState({ layersAdded: true })
+            this.setState({ layersAdded: true, bbox: bbox, canvas: canvas })
 
             newProps.layers.map((layer, n) => {
                 // Defined geometry
@@ -68,12 +82,13 @@ class MapCanvas extends React.Component {
                 act.mapAddGeometry(layer.name, P)
             })
         }
+        */
     }
 
     exportSVG(geoms) {
-        let layer = this.props.layers[0]
+        // let layer = Object.values(this.props.layers)[0]
         let centroid = this.props.map.camera.position
-        let bbox = layer.bbox[0]
+        let bbox = this.props.bbox[0]
         let projectedMin = project([bbox[0][0], bbox[0][1]])
         let projectedMax = project([bbox[2][0], bbox[2][1]])
 
@@ -130,16 +145,24 @@ class MapCanvas extends React.Component {
             }
         }
     }
+
+    zoomMap() {
+        // console.log(this.props.geometries['key'].geometry.material.uniforms, 888888)
+        PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
+        // this might be adding many meshes
+        PaintGraph.Pixels.buildMapbox(this.props.map, this.props.bbox)
+    }
+
     render() {
-        const mapOptionShow = this.props.mapOptionShow
+        const panelShow = this.props.panelShow
         return (
             <div>
-                <div style={{ display: mapOptionShow == 'VPL' ? '' : 'none' }}>
+                <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
                 <div
                     style={{
-                        display: mapOptionShow == 'PCoords' ? '' : 'none',
+                        display: panelShow == 'PCoords' ? '' : 'none',
                     }}
                 >
                     <PCoords />
@@ -156,7 +179,7 @@ class MapCanvas extends React.Component {
                             position: 'absolute',
                             left: '40px',
                             top: '20px',
-                            display: mapOptionShow == 'VPL' ? 'none' : '',
+                            display: panelShow == 'VPL' ? 'none' : '',
                         }}
                         className="map-menu"
                     >
@@ -184,6 +207,14 @@ class MapCanvas extends React.Component {
                             </MenuItem>
                         </DropdownButton>
                     </div>
+                    <Button
+                        id="zoomShow"
+                        className="buttons zoomText btn buttonsText"
+                        onClick={() => this.zoomMap()}
+                    >
+                        {' '}
+                        Zoom to Map{' '}
+                    </Button>
                 </div>
                 <div className="map" id="mapCanvas" />
                 <div id="pivot" />
@@ -194,8 +225,9 @@ class MapCanvas extends React.Component {
 }
 
 export default connect(s => ({
-    layers: s.sidebar.layers,
+    layers: s.datasets.layers,
     map: s.map.instance,
-    mapOptionShow: s.map.optionShow,
+    panelShow: s.interactions.panelShow,
     geometries: s.map.geometries,
+    bbox: s.map.bbox,
 }))(MapCanvas)

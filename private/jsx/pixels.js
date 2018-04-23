@@ -107,7 +107,7 @@ export default class Pixels {
         thiscam.position.set(newPos.x, newPos.y, newPos.z)
     }
 
-    static buildMapbox(graph, canvas, bbox) {
+    static buildMapbox(canvas, bbox) {
         // TODO: fix eslint error `no-unused-vars`
         /* eslint-disable */
         var meshes = 0
@@ -133,7 +133,7 @@ export default class Pixels {
         var tilesToGet = 0
 
         function assembleUrl(img, coords) {
-            const mapboxStyle = window.mapboxStyle || 'mapbox.light'
+            const mapboxStyle = window.mapBgStyle || 'mapbox.light'
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
 
             if (mapboxStyle === 'empty') {
@@ -174,7 +174,7 @@ export default class Pixels {
         var plane = new THREE.Mesh(basePlane, mat)
         plane.rotation.x = -0.5 * Math.PI
         plane.opacity = 0
-        graph.scene.add(plane)
+        canvas.scene.add(plane)
 
         // calculates which tiles are in view to download
         var updater = new Worker('/javascripts/workers/updatetile.js')
@@ -320,7 +320,7 @@ export default class Pixels {
             var plane = new THREE.Mesh(geometry, material)
             plane.coords = slashify([z, x, y])
             plane.zoom = z
-            graph.scene.add(plane)
+            canvas.scene.add(plane)
             plane.visible = false
         }
 
@@ -331,15 +331,15 @@ export default class Pixels {
         function onWindowResize() {
             canvas.camera.aspect = window.innerWidth / window.innerHeight
             canvas.camera.updateProjectionMatrix()
-            graph.renderer.setSize(window.innerWidth, window.innerHeight)
+            canvas.renderer.setSize(window.innerWidth, window.innerHeight)
             updateTiles()
         }
 
         function updateTileVisibility() {
             var zoom = Math.floor(getZoom())
             //update tile visibility based on zoom
-            for (var s = 0; s < graph.scene.children.length; s++) {
-                var child = graph.scene.children[s]
+            for (var s = 0; s < canvas.scene.children.length; s++) {
+                var child = canvas.scene.children[s]
                 if (child.zoom === zoom || child.zoom === undefined)
                     child.visible = true
                 else child.visible = false
@@ -484,6 +484,9 @@ export default class Pixels {
     }
 
     initMaterial(lowBnd, highBnd) {
+        console.log(`[Pixels] ${this.layerName}`, { lowBnd, highBnd })
+        console.log(`[Pixels] ${this.layerName}`, this.minVal, this.maxVal)
+
         let material = new THREE.RawShaderMaterial({
             uniforms: {
                 show: {
@@ -492,11 +495,13 @@ export default class Pixels {
                 },
                 min: {
                     type: 'f',
-                    value: lowBnd,
+                    // value: lowBnd,
+                    value: this.minVal,
                 },
                 max: {
                     type: 'f',
-                    value: highBnd,
+                    // value: highBnd,
+                    value: this.maxVal,
                 },
                 transparency: {
                     type: 'f',

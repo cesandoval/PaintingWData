@@ -3,23 +3,29 @@ var nodemailer = require('nodemailer');
 var email = process.env.USEREMAIL;
 var password = process.env.EMAILPASSWORD; // Obtain the username and password somehow.
 
+console.log("email: " + email);
+
 var transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'email-smtp.us-east-1.amazonaws.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-        user: email,
-        pass: password
+        user: email, // generated ethereal user
+        pass: password  // generated ethereal password
     }
   });
 
 module.exports.sendVerificationEmail = function(email, verificationLink) {
-  
+  console.log(email)
   var mailOptions = {
-    from: '"Painting With Data Team" <' + email + '>',
+    from: '"Painting With Data Team" <support@paintingwithdata.com>',
     to: email,
     subject: 'Please confirm your account',
     html: 'Click the following link to confirm your account:</p><p>' + verificationLink + '</p>',
     text: 'Please confirm your account by clicking the following link: ${URL}'
   };
+
+  console.log(mailOptions);
 
   transporter.sendMail(mailOptions, function(error, info) {
     if(error) {
@@ -32,7 +38,7 @@ module.exports.sendVerificationEmail = function(email, verificationLink) {
 
 module.exports.sendVoxelEmail = function(email, userId) {
 	var mailOptions = {
-    	from: '"Painting With Data" <painting.with.data@gmail.com>', 
+    	from: '"Painting With Data" <support@paintingwithdata.com>', 
 		to: email, 
     	subject: 'Done Processing Voxels', 
     	text: 'Done Processing Voxels', 
@@ -49,7 +55,7 @@ module.exports.sendVoxelEmail = function(email, userId) {
 
 module.exports.sendResetPasswordEmail = function(email, passwordLink) {
   var mailOptions = {
-      from: '"Painting With Data" <painting.with.data@gmail.com>', 
+      from: '"Painting With Data" <support@paintingwithdata.com>', 
     to: email, 
       subject: 'Reset Password', 
       text: 'Reset Password', 
@@ -68,7 +74,7 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
 
 module.exports.sendLayerEmail = function(email, userId) {
   var mailOptions = {
-      from: '"Painting With Data" <painting.with.data@gmail.com>', 
+      from: '"Painting With Data" <support@paintingwithdata.com>', 
     to: email, 
       subject: 'Done Uploading Layer', 
       text: 'Done Uploading Layer', 

@@ -1,4 +1,4 @@
-import * as c from '../consts'
+// import * as c from '../consts'
 
 const initialSidebarState = {
     layers: [],
@@ -7,18 +7,23 @@ const initialSidebarState = {
 
 export default (state = initialSidebarState, action) => {
     switch (action.type) {
+        /*
         case c.SIDE_ADD_LAYER: {
             // Push new layer
             let newLayers = state.layers.slice()
             newLayers.push(action.layer)
             return Object.assign({}, state, { layers: newLayers })
         }
+        */
+
+        /* map reducer has the same 'SIDE_ADD_LAYERS' one too, so we can comment out this one
         case c.SIDE_ADD_LAYERS:
             // Push new layer
             //var newLayers = state.layers.slice();
             //newLayers = newLayers.concat(action.layers);
             return Object.assign({}, state, { layers: action.layers })
 
+        /*
         case c.SIDE_UPDATE_LAYER: {
             let newLayers = state.layers.slice()
             newLayers = newLayers.map(layer => {
@@ -33,6 +38,9 @@ export default (state = initialSidebarState, action) => {
             // console.log("Object: ", Object.assign({}, state, {layers: newLayers}));
             return Object.assign({}, state, { layers: newLayers })
         }
+        */
+
+        /*
         case c.SIDE_REMOVE_LAYER: // just fall through for now.
             // var newLayers = state.layers.map(layer => (
             //     // Remove layers with the same name
@@ -41,7 +49,9 @@ export default (state = initialSidebarState, action) => {
             // ));
 
             return state
+        */
 
+        /*
         case c.SIDE_CHANGE_OPACITY:
             console.assert(
                 Number.isFinite(action.opacity),
@@ -52,6 +62,7 @@ export default (state = initialSidebarState, action) => {
                 'requires 0 <= opacity <= 1.00'
             )
             return Object.assign({}, state, { opacity: action.opacity })
+        */
 
         default:
             return state

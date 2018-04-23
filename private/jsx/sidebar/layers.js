@@ -16,6 +16,7 @@ for (let i = color10.length; i; i--) {
     ;[color10[i - 1], color10[j]] = [color10[j], color10[i - 1]]
 }
 
+/*
 const createLayer = (
     name,
     propertyName,
@@ -43,12 +44,13 @@ const createLayer = (
     shaderText,
     userLayerName,
 })
+*/
 
 class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)
-        this.getLayers()
+        this.getLayers() // NEED REFACTORING
     }
     // Assumes that geojson will be nonzero size
     getLayers() {
@@ -57,6 +59,23 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                // TODO:CHECK: dataset's `layerKey` is `null`, should get the `layerKey` from database
+
+                // const datasets = data
+                let datasets = data.map(dataset => {
+                    const hashKey =
+                        (+new Date()).toString(32) +
+                        Math.floor(Math.random() * 36).toString(36)
+                    dataset.layerKey = hashKey
+
+                    return dataset
+                })
+
+                console.log({ datasets })
+
+                act.importDatasets({ datasets })
+
+                /*
                 act.sideAddLayers(
                     data.map((l, index) => {
                         const length = l.geojson.geojson.features.length
@@ -159,22 +178,24 @@ class Layers extends React.Component {
                         )
                     })
                 )
+                */
             })
             .catch(e => console.log('getLayers() error', e))
     }
     render() {
         return (
             <div className="layers">
-                {this.props.layers.map((layer, i) => (
+                {Object.entries(this.props.layers).map(([i, layer]) => (
                     <Layer
                         key={i}
+                        layerKey={i}
                         propName={layer.propertyName}
                         userPropName={layer.userLayerName}
                         name={layer.name}
                         visible={layer.visible}
                         showSidebar={layer.showSidebar}
-                        color1={layer.color1}
-                        color2={layer.color2}
+                        // color1={layer.color1}
+                        // color2={layer.color2}
                     />
                 ))}
             </div>
@@ -182,4 +203,4 @@ class Layers extends React.Component {
     }
 }
 
-export default connect(s => ({ layers: s.map.layers }))(Layers)
+export default connect(s => ({ layers: s.datasets.layers }))(Layers)

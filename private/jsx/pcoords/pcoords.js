@@ -32,14 +32,18 @@ class PCoords extends React.Component {
         /* eslint-disable */
         // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
-        console.log('LOADINGINGINGIGNING')
-        console.log(this.props)
-        debugger
-        if (!this.state.started && nprops.layers.length > 0) {
+
+        if (!this.state.started && !_.isEmpty(nprops.layers)) {
+            // console.log(nprops, 8484848484)
             this.setState({ started: true })
 
+            /*
             const bounds = nprops.layers[0].bounds
             const indicesArray = nprops.layers[0].allIndices
+            */
+            const bounds = nprops.datasets.bounds
+            const indicesArray = nprops.datasets.allIndices
+
             this.lowBnd = bounds[0]
             this.highBnd = bounds[1]
 
@@ -149,10 +153,13 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        let tester = { 'astham rate_Rate': [200, 300] }
+        // let tester = { 'astham rate_Rate': [200, 300] }
         // console.log('tester', tester)
         // const pc = d3.parcoords({ previousBrush: this.state.previousBrush })(
-        const pc = d3.parcoords({ previousBrush: tester })('#parcoords')
+        // const pc = d3.parcoords({ previousBrush: tester })('#parcoords')
+
+        const pc = d3
+            .parcoords()('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -215,7 +222,6 @@ class PCoords extends React.Component {
         const lowBnd = this.lowBnd
         const highBnd = this.highBnd
 
-        // const remap = function(selection, layerIndex, mins, maxs) {
         const remap = function(x, i, mins, maxs) {
             return (
                 (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) +
@@ -224,21 +230,30 @@ class PCoords extends React.Component {
         }
 
         // the range(min and max) of uniforms is 0 - 1
-        for (let name in minObjs) {
+        // for (let name in minObjs) {
+        for (let i in this.props.layers) {
             // review: replace minObjs to layerNames.length
-            let pixels = this.props.geometries[this.layersNameProperty[name]]
-            pixels.material.uniforms.min.value = remap(
-                minObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
-            pixels.material.uniforms.max.value = remap(
-                maxObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
+            const layer = this.props.layers[i]
+            const name = `${layer.userLayerName}_${layer.propertyName}`
+            // Checks if the layer has been filtered, if it has, changes the min and max values
+            if (layerNames.includes(name)) {
+                let pixels = this.props.geometries[layer.layerKey]
+
+                // this was misbehaving
+                // if (!(minObjs[name] && maxObjs[name])) continue
+                pixels.material.uniforms.min.value = remap(
+                    minObjs[name],
+                    this.layerIndeces[name],
+                    this.minVal,
+                    this.maxVal
+                )
+                pixels.material.uniforms.max.value = remap(
+                    maxObjs[name],
+                    this.layerIndeces[name],
+                    this.minVal,
+                    this.maxVal
+                )
+            }
         }
     }
     style() {
@@ -270,7 +285,8 @@ class PCoords extends React.Component {
 const mapStateToProps = state => {
     return {
         mapStarted: state.map.started,
-        layers: state.sidebar.layers,
+        datasets: state.datasets,
+        layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
     }
 }

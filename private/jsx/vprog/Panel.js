@@ -1,5 +1,5 @@
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
@@ -62,20 +62,17 @@ class Panel extends React.Component {
 
     componentDidMount() {
         // TODO: color1 to color
-        act.updateGeometry(
-            this.props.index,
-            'Color',
-            this.props.color,
-            'color1'
-        )
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'color',
+            value: this.props.color,
+        })
     }
 
     changeColor(e) {
         console.log('changeColor(e)', e.target.value)
 
-        // TODO: color1 to color
-        act.updateGeometry(this.props.index, 'Color', e.target.value, 'color1')
-        act.vlangUpdateNode({
+        Act.nodeUpdate({
             nodeKey: this.props.index,
             attr: 'color',
             value: e.target.value,
@@ -95,6 +92,7 @@ class Panel extends React.Component {
     toggleVisibility() {
         const visibility = !this.state.visible
 
+        /*
         act.updateGeometry(
             this.props.index,
             'Visibility',
@@ -106,11 +104,19 @@ class Panel extends React.Component {
             attr: 'visibility',
             value: visibility,
         })
+        */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'visibility',
+            value: visibility,
+        })
     }
 
     soloShow() {
         console.log('soloShow()', this.props.index)
 
+        /*
         act.vlangUpdateAllNode({
             attr: 'visibility',
             value: false,
@@ -120,6 +126,7 @@ class Panel extends React.Component {
             attr: 'visibility',
             value: true,
         })
+        */
 
         for (let index in this.props.geometries) {
             // Get geometry
@@ -127,10 +134,18 @@ class Panel extends React.Component {
 
             if (index === this.props.index) {
                 console.log(`set ${index} visiable`)
-                act.updateGeometry(index, 'Visibility', true, 'visible')
+                Act.nodeUpdate({
+                    nodeKey: index,
+                    attr: 'visibility',
+                    value: true,
+                })
             } else {
                 console.log(`set ${index} invisiable`)
-                act.updateGeometry(index, 'Visibility', false, 'visible')
+                Act.nodeUpdate({
+                    nodeKey: index,
+                    attr: 'visibility',
+                    value: false,
+                })
             }
         }
     }
@@ -141,7 +156,27 @@ class Panel extends React.Component {
 
     changeFilter = ([min, max]) => {
         console.log(`changeFilter(${min}, ${max})`)
-        this.props.changeFilter(min, max)
+        const currIndex = this.props.index
+        const highBnd = this.props.geometries[currIndex].highBnd
+        const lowBnd = this.props.geometries[currIndex].lowBnd
+        const valDiff = highBnd - lowBnd
+        const remap = function(x) {
+            if (x != 0) {
+                return valDiff * (x / 1) + lowBnd
+            } else {
+                return 0
+            }
+        }
+
+        min = remap(min)
+        max = remap(max)
+        const filter = { min, max }
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'filter',
+            value: filter,
+        })
     }
 
     render() {
@@ -233,7 +268,6 @@ const mapStateToProps = state => {
         nodes: state.vpl.nodes,
         links: state.vpl.links,
         map: state.map,
-        layers: state.sidebar.layers,
         geometries: state.map.geometries,
     }
 }

@@ -21,17 +21,23 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
+        alias: {
+            '@': path.resolve(__dirname, './private/jsx'),
+        },
     },
     module: {
         loaders: [
             // Process JS with Babel.
             {
                 test: /\.jsx?$/,
+                exclude: /node_modules/,
                 loader: 'eslint-loader',
                 enforce: 'pre',
                 options: {
                     fix: true,
                     cache: true,
+                    emitError: true,
+                    // failOnError: true,
                 },
             },
             {
@@ -51,6 +57,12 @@ module.exports = {
                                 [
                                     'import',
                                     { libraryName: 'antd', style: 'css' },
+                                ],
+                                [
+                                    'styled-jsx/babel',
+                                    {
+                                        plugins: ['styled-jsx-plugin-sass'],
+                                    },
                                 ],
                             ],
                             // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -109,6 +121,10 @@ module.exports = {
         // no reload page when any error (optional)
         new webpack.NoEmitOnErrorsPlugin(), // webpack.NoErrorsPlugin() is deprecated
         // new webpack.optimize.OccurenceOrderPlugin(), it is now enabled by default
+        new webpack.ProvidePlugin({
+            turf: '@turf/turf',
+            _: 'lodash',
+        }),
     ],
     performance: {
         hints: false,
@@ -120,21 +136,21 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"',
-      },
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false,
-      },
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-    }),
-  ])
+    module.exports.devtool = '#source-map'
+    module.exports.plugins = (module.exports.plugins || []).concat([
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"production"',
+            },
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
+            compress: {
+                warnings: false,
+            },
+        }),
+        new webpack.LoaderOptionsPlugin({
+            minimize: true,
+        }),
+    ])
 }

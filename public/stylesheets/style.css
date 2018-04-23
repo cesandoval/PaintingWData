@@ -340,8 +340,8 @@ ul.dropdown-menu {
 }
 
 .spacing-large {
-    padding-top: 20vh;
-    padding-bottom: 10vh;
+    padding-top: 10vh;
+    padding-bottom: 5vh;
 }
 
 .site-title {
@@ -549,6 +549,11 @@ body {
 
 .thumbnail .caption {
     color: black;
+}
+
+.caption {
+    max-height: 24.4vw;
+    overflow-y: auto;
 }
 
 .fa-spinner{
@@ -918,6 +923,11 @@ p {
     text-align: center;
 }*/
 
+.space-row {
+    margin-bottom: 6vw;
+}
 
-
+.body-container {
+    margin-top: 60px;
+}
 
