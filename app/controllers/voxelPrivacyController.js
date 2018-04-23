@@ -6,7 +6,6 @@ var Voxel = require('../models').Datavoxel,
     Channel = require('../../worker/channel');
     processVoxels = require('../../worker/worker2').processVoxels;
 
-
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
 	if(req.body.id && req.body.public) {
 		var id = req.body.id;
@@ -19,7 +18,6 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 		}, function(error){
             console.log(err);
         });
-		
 	} else {
 		res.status(400).send({
             message: 'Invalid voxel id or public field not a boolean'
