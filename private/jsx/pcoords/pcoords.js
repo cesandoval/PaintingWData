@@ -27,10 +27,14 @@ class PCoords extends React.Component {
         this.build = this.build.bind(this)
         this.calcRanges = this.calcRanges.bind(this)
     }
+
     componentWillReceiveProps(nprops) {
+        /* eslint-disable */
         // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
         console.log('LOADINGINGINGIGNING')
+        console.log(this.props)
+        debugger
         if (!this.state.started && nprops.layers.length > 0) {
             this.setState({ started: true })
 

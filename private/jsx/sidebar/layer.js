@@ -10,6 +10,8 @@ class Layer extends React.Component {
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
+        /* eslint-disable */
+        debugger
         act.updateGeometry(
             this.props.name,
             'Visibility',
