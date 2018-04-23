@@ -28,6 +28,15 @@ module.exports = function(sequelize, DataTypes) {
     uploadsSize:{
       type: DataTypes.DECIMAL,
       defaultValue: 0.0
+    },
+    use:{
+      type: DataTypes.TEXT,
+    },
+    industry:{
+      type: DataTypes.STRING,
+    }, 
+    referal:{
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {
