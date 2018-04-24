@@ -15,7 +15,6 @@ class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
 
-    // TODO EVERYTIME THE COLOR GETS UPDATED, THE PCOORDS GET RESTARTED, BUT THE MIN/MAX VALS DONT
     constructor(props) {
         super(props)
 
@@ -36,7 +35,22 @@ class PCoords extends React.Component {
             let nodeLayers = Object.values(nprops.vpl.nodes).filter(f => f.type == 'DATASET')
             let visibleNodes = nodeLayers.filter(l => l.visibility)
 
-            if (visibleNodes.length != this.state.visibleLayers) {
+            this.setState({visibleLayers: visibleNodes.length})
+            if (visibleNodes.length != this.state.visibleLayers && this.state.started) {
+                let visibleNames = {}
+                for (var key in this.layersNameProperty) {
+                    if (Object.values(visibleNodes).map(i => i.name).includes(this.layersNameProperty[key])) {
+                        visibleNames[key] = {}
+                    }
+                }
+                // TODO if the visible names are empty, destroy de dimensions.....
+                console.log(visibleNames)
+                this.pc.dimensions(visibleNames)
+                    .render()
+                    .updateAxes()
+            }
+            if (!this.state.started) {
+                this.setState({started:true})
                 let sidebarLayers = nprops.layers.filter(l => l.visible)
                 // get the max length of Voxels of layers(?)
                 var maxVoxels = 0
@@ -89,9 +103,9 @@ class PCoords extends React.Component {
 
                 this.setState({visibleLayers: visibleNodes.length})
                 
-                var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
-                let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
-                let numLayers = visibleLayers.length
+                // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
+                // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
+                let numLayers = visibleNodes.length
                 // TODO: should be reuse, so rename numLayer to visibleLayersLength
 
                 let dictBuild = Array(maxVoxels)
@@ -101,22 +115,22 @@ class PCoords extends React.Component {
                             dictBuild[i] = {}
                         }
                         if (
-                            indicesArray[i] in visibleLayers[j].geojson.hashedData
+                            indicesArray[i] in nprops.layers[j].geojson.hashedData
                         ) {
                             dictBuild[i][
-                                visibleLayers[j].userLayerName +
+                                nprops.layers[j].userLayerName +
                                     '_' +
-                                    visibleLayers[j].propertyName
+                                    nprops.layers[j].propertyName
                             ] =
-                                visibleLayers[j].geojson.hashedData[
+                            nprops.layers[j].geojson.hashedData[
                                     indicesArray[i]
                                 ][3]
                             // review: [3] ?
                         } else {
                             dictBuild[i][
-                                visibleLayers[j].userLayerName +
+                                nprops.layers[j].userLayerName +
                                     '_' +
-                                    visibleLayers[j].propertyName
+                                    nprops.layers[j].propertyName
                             ] = 0
                         }
                     }
@@ -124,6 +138,7 @@ class PCoords extends React.Component {
                 
                 this.build(dictBuild)
                 this.layerIndeces = layerIndeces
+                this.layersNameProperty = layersNameProperty
             }
 
         }
@@ -131,6 +146,7 @@ class PCoords extends React.Component {
     
 
     build(data) {
+
         let minVal = this.minVal[0]
         let maxVal = this.maxVal[0]
 
@@ -155,11 +171,13 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode('1D-axes')
+            // .interactive()
 
         pc.on('brushend', this.calcRanges.bind(this))
         this.pc = pc
         this.setState({ pc: pc })
-        debugger
+
+
     }
 
     calcRanges() {
