@@ -1,228 +1,278 @@
 var Model = require('../models'),
-    async = require('async'),
+    _async = require('async'),
     path = require('path'),
     request = require('request'),
     app = require('../../app'),
-    gdal = require('gdal')
+    gdal = require('gdal'),
+    Promise = require('bluebird');
 Channel = require('../../worker/channel');
 processVoxels = require('../../worker/worker2').processVoxels;
-// const Op = Sequelize.Op;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 var numCalls = 0;
-
-// deprecated, see getByIds
-function getLastId(req, res) {
-    var output = [];
-    var dataset = null;
-    var gfile = null; // gdal file
-    var jobName = []; // name, ext
-    var totalLayers = 0; // progress denominator
-    var id = null; // datafile and query id
-
-    Model.Datafile.findOne({
-        where: {
-            userId: req.user.id,
-        },
-        order: [['createdAt', 'DESC']]
-    }).then(function (dfile) {
-        // console.log("Break ----------------- \n \n ");
-
-        jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
-        jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
-        id = dfile.id
-
-        try {
-            gfile = gdal.open(dfile.location);
-        }
-        catch (e) {
-            console.log('error opening file. Current location: ' + dfile.location);
-            output.push(['~/~ Error opening file. Current location: ' + dfile.location]);
-
-            console.log(e);
-            output.push([dfile.id + "$$" + dfile.location + "$$" + e.toString()]);
-            res.send({progress: output});
-            return false
-        }
-
-        dataset = gfile.layers.get(0);
-
-        totalLayers = dataset.features.count();
-        // console.log('totalLayers = ' + totalLayers);
-
-        //progress
-        Model.Datalayer.count({// count geometries loaded
-            where: {
-                userId: req.user.id,
-                datafileId: id
-            }
-        }).then(function (response) {
-            if (response == totalLayers) {
-                output.push([id, jobName[0], true])
-                var success = true;
-
-                //try deleting obj
-                try{
-                    fs_extra.remove(gfile.location, err => {
-                        if (err) {
-                            console.log("Error cleaning local directory: ", gfile.location);
-                            // return gfile.location + "$$" + e.toString();
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                        }
-                    })
-                }
-                catch(e) {
-                    console.log('File Location Error: ' + e);
-                    console.log('RETRYING')
-                    fs_extra.remove(dfile.location, err => {
-                        success = true;
-                        if (err) {
-                            console.log("Error cleaning local directory: ", dfile.location);
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                            //return error object here to make srue this is removed
-                        }
-                    })
-                }
-                if (!success)
-                    output.push(["~/~ Error cleaning local directory: " +  gfile.location]);
-            }
-            //add obj to response if its valid
-            else {
-                var outLayer = [id, jobName[0], response, totalLayers]
-                // console.log("outlayer: " + outLayer)
-                console.log(outLayer)
-                if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
-                    //put in error flag
-                    output.push([id, jobName[0], false])
-                }
-                else {
-
-                    output.push(outLayer)
-                }
-            }
-            // console.log(output)
-            res.send({ progress: output })
-            return output
-        });
-    });
-}
-
-
-// deprecated, see getByIds
-function getById(req, res, id) {
-    var output = [];
-    var dataset = null;
-    var gfile = null; // gdal file
-    var jobName = []; // name, ext
-    var totalLayers = 0; // progress denominator
-
-    Model.Datafile.findOne({
-        where: {
-            userId: req.user.id,
-            id: id
-        },
-    }).then(function (dfile) {
-        // console.log("Break ----------------- \n \n ");
-
-        jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
-        jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
-        if (id != dfile.id) {
-            output.push(['ID Lookup error! Dfile id: ' + dfile.id + ", query id: " + id]);
-            res.send({progress: output});
-            return false
-            //@carlos I'm just goign to return nothign here but let me know if i should handle it differentyly
-        }
-
-
-        try {
-            gfile = gdal.open(dfile.location);
-        }
-        catch (e) {
-            console.log('Error opening file. Current location: ' + dfile.location);
-            output.push(['~/~ Error opening file. Current location: ' + dfile.location]);
-
-            console.log(e);
-            output.push([file.id + "$$" + dfile.location + "$$" + e.toString()]);
-            res.send({progress: output});
-            return false
-        }
-
-        dataset = gfile.layers.get(0);
-        totalLayers = dataset.features.count();
-        console.log('totalLayers = ' + totalLayers);
-
-        //progress
-        Model.Datalayer.count({// count geometries loaded
-            where: {
-                userId: req.user.id,
-                datafileId: id
-            }
-        }).then(function (response) {
-            if (response == totalLayers) {
-                output.push([id, jobName[0], true])
-                var success = true;
-
-                //try deleting obj
-                try{
-                    fs_extra.remove(gfile.location, err => {
-                        if (err) {
-                            console.log("Error cleaning local directory: ", gfile.location);
-                            // return gfile.location + "$$" + e.toString();
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                        }
-                    })
-                }
-                catch(e) {
-                    console.log('File Location Error: ' + e);
-                    console.log('RETRYING')
-                    fs_extra.remove(dfile.location, err => {
-                        success = true;
-                        if (err) {
-                            console.log("Error cleaning local directory: ", dfile.location);
-                            console.log(err, err.stack);
-                            success = false;
-                            // callback(err);
-                            //return error object here to make srue this is removed
-                        }
-                    })
-                }
-                if (!success)
-                    output.push(["Error cleaning local directory: " + gfile.location]);
-            }
-            //add obj to response if its valid
-            else {
-                var outLayer = [id, jobName[0], response, totalLayers]
-                // console.log("outlayer: " + outLayer)
-                console.log(outLayer)
-                if (!outLayer[1] || !(outLayer[2] <= outLayer[3])) { // check if the output is valid
-                    //put in an aerror flag
-                    output.push([id, jobName[0], false])
-                }
-                else {
-                    output.push(outLayer)
-                }
-            }
-            // console.log(output)
-            res.send({ progress: output })
-            return output
-        });
-    });
-}
-
-
 /**
 * This function digs up info regarding the progress of jobs, for use in progressWidget.js.
 * As stated in the comments of that file, we've assembled the query into the form:
 * [id1$$id2$$...][hash1$numIds1$$hash2$numIds2$$...]
-* and then for each of these, we'll get the progress of that. In particular, we return an array of 5-length arrays
-* each of the form [id, jobName, num, den, type (either "shapes" or "voxels")]
+* and then for each of these, we'll get the progress of that. In particular, we return an array of 6-length arrays
+* each of the form [id, jobName, num, den, type (either "shapes" or "voxels"), copmleted (true or false)]
 */
 function getLastIds(req, res) {
+    var output = []; // the eventual array of 6-length arrays to return.
+    // Everything that has to do with shapes!
+    var dataset = null;
+    var gfile = null; // gdal file
+    var locations = [];
+    var jobNames = []; // [[name, file extension]]
+    var totalLayers = 0; // progress denominator
+    var ids = []; // datafile and query id
+    var denominators = [];
+    // Everything that has to do with voxels!
+    var currVoxels = [];
+    // First step: parse the url
+    var query = req.query.shapes;
+    if(query === '') {
+        res.send({progress: []})
+        return false; // don't query if there is no query object
+    }
+    // Split by '$$', and further split by '$'; if it's a voxel job, this will have two elements.
+    // Put everything into the 'jobs' array.
+    var jobIdentifiers = query.split("$$");
+    var shapeJobs = [];
+    var voxelJobs = {};
+    var currVoxel = null;
+    for (var i in jobIdentifiers) {
+        var jI = jobIdentifiers[i];
+        var temp = jI.split("$");
+        if (temp.length == 1)
+            shapeJobs.push(parseInt(temp[0]));
+        if (temp.length == 2)
+            voxelJobs[temp[0]] = parseInt(temp[1]); // Keys are voxelIds; values are number of datalayerIds
+                               // associated with the voxelId.
+    }
+    // First, find all the data voxel progresses and push to output.
+    Model.Datavoxel.findAll({
+        where: {
+            userId: req.user.id,
+            voxelId: Object.keys(voxelJobs)
+        }
+    }).then(voxels => {
+        return Promise.mapSeries(voxels, function(voxel) {
+            var currVoxel = voxel.get();
+            currVoxels.push(currVoxel);
+            return Model.Datajson.count({
+                where: {
+                    hashVoxelId: currVoxel.voxelId
+                }
+            });
+        })
+    }).spread(function (...numProcessed){
+        for (var i = 0; i < numProcessed.length; i++){
+            output.push([currVoxels[i].voxelId, currVoxels[i].voxelname, numProcessed[i], voxelJobs[currVoxels[i].voxelId], "voxels", false]);
+        }
+    }).then(function(){ //Next, query all the data files and push to output.
+        console.log(output);
+        return Model.Datafile.findAll({
+            where: {
+                userId: req.user.id,
+                id: shapeJobs
+            },
+            order: [['createdAt', 'DESC']]
+        });
+    }).then(files => {
+        return Promise.mapSeries(files, function(dfile){
+            var jobName = []
+            jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+            jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+            ids.push(dfile.id);
+            jobNames.push(jobName);
+
+            try {
+                gfile = gdal.open(dfile.location);
+                dataset = gfile.layers.get(0);
+                console.log(dataset.features.count());
+                totalLayers = dataset.features.count();
+                denominators.push(totalLayers);
+                locations.push([gfile.location, dfile.location]);
+            }
+            catch (e) {
+                console.log('error opening file. Current location: ' + dfile.location)
+                console.log(e);
+                denominators.push(null);
+                locations.push(["no glocation found", dfile.location]);
+            }
+            return Model.Datalayer.count({// count geometries loaded
+                where: {
+                    userId: req.user.id,
+                    datafileId: dfile.id
+                }
+            })
+        })
+    }).spread(function (...numProcessed){
+        for (var i = 0; i < numProcessed.length; i++){
+            output.push([ids[i], jobNames[i][0], numProcessed[i], denominators[i], "shapes", false]);
+        }
+        console.log("Chris Xu's final output: " + output);
+        for (var i=0; i< output.length; i++){
+            console.log("Element " + i + " is: " + output[i]);
+        }
+        res.send({ progress: output });
+    })
+}
+    /*
+        files.forEach((dfile, i) => {
+            var jobName = []
+            jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+            jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+            ids.push(dfile.id);
+            jobNames.push(jobName);
+
+            try {
+                gfile = gdal.open(dfile.location);
+                dataset = gfile.layers.get(0);
+                console.log(dataset.features.count());
+                totalLayers = dataset.features.count();
+                denominators.push(totalLayers);
+                locations.push([gfile.location, dfile.location]);
+            }
+            catch (e) {
+                console.log('error opening file. Current location: ' + dfile.location)
+                console.log(e);
+                denominators.push(null);
+                locations.push(["no glocation found", dfile.location]);
+            }
+        })
+        console.log("Chris Xu's files are: " + ids);
+        //progress
+        for (var i = 0; i < ids.length; ids++) {
+            jobName = jobNames[i]
+            totalLayers = denominators[i]
+            var id = ids[i]
+            var gLocation = locations[i][0]
+            var dLocation = locations[i][1]
+            console.log("We're trying to find all geometries where userID = " + req.user.id + " and datafileId = " + id);
+            Model.Datalayer.count({// count geometries loaded
+                where: {
+                    userId: req.user.id,
+                    datafileId: id
+                }
+            }).then(function (response) {
+                console.log("Chris's response was " + response);
+                console.log(totalLayers);
+                console.log([id, jobName[0], response, totalLayers, "shapes"]);
+                output.push([id, jobName[0], response, totalLayers, "shapes"]);
+            })
+        }
+    })*/
+
+    // Next, find all the shape progresses and push to output.
+    /*Model.Datafile.findAll({
+        where: {
+            userId: req.user.id,
+            id: shapeJobs
+        },
+        order: [['createdAt', 'DESC']]
+    }).then(function (files) {
+
+        files.forEach((dfile, i) => {
+            var jobName = []
+            jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
+            jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
+            ids.push(dfile.id);
+            jobNames.push(jobName);
+
+            try {
+                gfile = gdal.open(dfile.location);
+                dataset = gfile.layers.get(0);
+                console.log(dataset.features.count());
+                totalLayers = dataset.features.count();
+                denominators.push(totalLayers);
+                locations.push([gfile.location, dfile.location]);
+            }
+            catch (e) {
+                console.log('error opening file. Current location: ' + dfile.location)
+                console.log(e);
+                denominators.push(null);
+                locations.push(["no glocation found", dfile.location]);
+            }
+        })
+        console.log("Chris Xu's files are: " + ids);
+        //progress
+        for (var i = 0; i < ids.length; ids++) {
+            jobName = jobNames[i]
+            totalLayers = denominators[i]
+            var id = ids[i]
+            var gLocation = locations[i][0]
+            var dLocation = locations[i][1]
+            console.log("We're trying to find all geometries where userID = " + req.user.id + " and datafileId = " + id);
+            Model.Datalayer.count({// count geometries loaded
+                where: {
+                    userId: req.user.id,
+                    datafileId: id
+                }
+            }).then(function (response) {
+                console.log("Chris's response was " + response);
+                console.log(totalLayers);
+                console.log([id, jobName[0], response, totalLayers, "shapes"]);
+                output.push([id, jobName[0], response, totalLayers, "shapes"]);
+                /*
+                if (response == totalLayers && totalLayers !== null) {
+                    console.log("resp: " + response + "  tlayers: " + totalLayers + "\n");
+                    output.push([id, jobName[0], true])
+                    var success = true;
+                    // try deleting obj
+                    try{
+                        fs_extra.remove(gLocation, err => {
+                            if (err) {
+                                console.log("Error cleaning local directory: ", gLocation);
+                                // return gLocation + "$$" + e.toString();
+                                console.log(err, err.stack);
+                                success = false;
+                                // callback(err);
+                            }
+                        })
+                    }
+                    catch(e) {
+                        console.log('File Location Error: ' + e);
+                        console.log('RETRYING')
+                        fs_extra.remove(dLocation, err => {
+                            success = true;
+                            if (err) {
+                                console.log("Error cleaning local directory: ", dLocation);
+                                console.log(err, err.stack);
+                                success = false;
+                                //return error object here to make srue this is removed
+                            }
+                        })
+                    }
+                    if (!success)
+                        output.push(["Error cleaning local directory: " + gLocation]);
+                }
+                //add obj to response if its valid
+                else {
+                    var outLayer = [id, jobName[0], response, totalLayers];
+                    if(outLayer[3] === null) {
+                        output.push([id, jobName[0], null, null]);
+                    }
+                    else if(!outLayer[1] || !(outLayer[2] <= outLayer[3])){ // check if the output is valid
+                        //put in an aerror flag
+                        console.log("Invalid format error - numerator: " + outLayer[2] + " denom: " + outLayer[3])
+                        output.push([id, jobName[0], false]);
+                    }
+
+                    else {
+                        output.push(outLayer);
+                    }
+                }
+                res.send({ progress: output });
+                console.log("File progress output: " + output);
+                return output
+            });
+        }
+    }); */
+    //res.send({ progress: output });
+    /*
     var output = [];
     var dataset = null;
     var gfile = null; // gdal file
@@ -232,24 +282,34 @@ function getLastIds(req, res) {
     var ids = []; // datafile and query id
     var denominators = [];
 
-    var query = req.query.shapes;
-    if(query === '') {
-        res.send({progress: []})
-        return false; // don't query if there is no query object
-    }
-    // Split by '$$', and further split by '$'; if it's a voxel job, this will have two elements.
-    // Put everything into the 'jobs' array.
-    jobIdentifiers = query.split("$$");
-    jobs = [];
-    for (var jI in jobIdentifiers) {
-        jobs.push(jI.split("$"));
-    }
-    // Loop over every job. If it has length 1, it's a layer. If it has length 2, it's a voxel.
+
+    console.log("Keys: " + Object.keys(voxelJobs));
+    // Then, find all datavoxels for a user with voxelId in the voxels to query.
+    Model.Datavoxel.findAll({
+        where: {
+            userId: req.user.id,
+            voxelId: {
+                [Op.or]: Object.keys(voxelJobs),
+            }
+        }
+    }).then(voxel => {
+        console.log("Voxel: " + voxel);
+        return [voxel, Model.Datajson.count({where: {hashVoxelId: voxel.voxelId}})];
+    }).then(voxel_and_num_processed => {
+        voxel = voxel_and_num_processed[0];
+        numberProcessed = voxel_and_num_processed[1];
+        output.push([voxel.voxelId, voxel.voxelname, numberProcessed, voxelJobs[voxel.voxelId], "voxels"]);
+        res.send({ progress: output });
+        return 0;
+    });
+
+    // Loop over every job. If it has length 1, it's a layer [id]. If it has length 2, it's a voxel [id, #datalayers].
+    /*
     for (var job in jobs){
         if (job.length == 2) { // Voxel!
             Model.Datavoxel.findOne({
                 where: {
-                    voxelId: job[0], // The hash
+                    voxelId: job[0], // The hash/id
                 }
             }).then(voxel => {
                 return Model.Datajson.count({where: {hashVoxelId: voxel.voxelId}});
@@ -265,7 +325,7 @@ function getLastIds(req, res) {
                 },
                 order: [['createdAt', 'DESC']]
             }).then(files => {
-                
+
             })
         }
     }
@@ -297,129 +357,8 @@ function getLastIds(req, res) {
         //END BLOCK FOR VOXELS ONLY
     }
     else {
-        Model.Datafile.findAll({
-            where: {
-                userId: req.user.id,
-                id: ids
-            },
-            order: [['createdAt', 'DESC']]
-
-        }).then(function (files) {
-            // console.log("Break ----------------- \n \n ");
-            files.forEach((dfile, i) => {
-                var jobName = []
-                jobName.push(dfile.filename.substring(0, dfile.filename.lastIndexOf(".")));
-                jobName.push(dfile.filename.substring(dfile.filename.lastIndexOf(".") + 1));
-                ids.push(dfile.id);
-                jobNames.push(jobName);
-
-                try {
-                    gfile = gdal.open(dfile.location);
-                    dataset = gfile.layers.get(0);
-                    console.log(dataset.features.count());
-                    totalLayers = dataset.features.count();
-                    denominators.push(totalLayers);
-                    locations.push([gfile.location, dfile.location]);
-                }
-                catch (e) {
-                    console.log('error opening file. Current location: ' + dfile.location)
-                    console.log(e);
-
-                    // output.push(['~/~ Error opening file. Current location: ' + dfile.location]);
-                    // output.push([dfile.id + "$$" + dfile.location + "$$" + e.toString()]);
-
-                    denominators.push(null);
-                    locations.push(["no glocation found", dfile.location]);
-                }
-            })
-
-            //progress
-            for (var i = 0; i < ids.length; ids++) {
-                jobName = jobNames[i]
-                totalLayers = denominators[i]
-                var id = ids[i]
-                var gLocation = locations[i][0]
-                var dLocation = locations[i][1]
-                console.log("We're trying to find all geometries where userID = " + req.user.id + " and datafileId = " + id);
-                Model.Datalayer.count({// count geometries loaded
-                    where: {
-                        userId: req.user.id,
-                        datafileId: id
-                    }
-                }).then(function (response) {
-                    if (response == totalLayers && totalLayers !== null) {
-
-
-                        console.log("resp: " + response + "  tlayers: " + totalLayers + "\n");
-                        output.push([id, jobName[0], true])
-                        var success = true;
-
-                        // try deleting obj
-                        try{
-                            fs_extra.remove(gLocation, err => {
-                                if (err) {
-                                    console.log("Error cleaning local directory: ", gLocation);
-                                    // return gLocation + "$$" + e.toString();
-                                    console.log(err, err.stack);
-                                    success = false;
-                                    // callback(err);
-                                }
-                            })
-                        }
-                        catch(e) {
-                            console.log('File Location Error: ' + e);
-                            console.log('RETRYING')
-                            fs_extra.remove(dLocation, err => {
-                                success = true;
-                                if (err) {
-                                    console.log("Error cleaning local directory: ", dLocation);
-                                    console.log(err, err.stack);
-                                    success = false;
-                                    //return error object here to make srue this is removed
-                                }
-                            })
-                        }
-                        if (!success)
-                            output.push(["Error cleaning local directory: " + gLocation]);
-                    }
-                    //add obj to response if its valid
-                    else {
-                        var outLayer = [id, jobName[0], response, totalLayers];
-                        if(outLayer[3] === null) {
-                            output.push([id, jobName[0], null, null]);
-                        }
-                        else if(!outLayer[1] || !(outLayer[2] <= outLayer[3])){ // check if the output is valid
-                            //put in an aerror flag
-                            console.log("Invalid format error - numerator: " + outLayer[2] + " denom: " + outLayer[3])
-                            output.push([id, jobName[0], false]);
-                        }
-
-                        else {
-                            output.push(outLayer);
-                        }
-                    }
-                    res.send({ progress: output });
-                    console.log("File progress output: " + output);
-                    return output
-                });
-            }
-        });
     }
-}
-
-module.exports.updateShape = function (req, res) {
-    console.log('update shape')
-    console.log(req.user)
-    console.log("END USER ----------------- \n \n ")
-
-    if (req.query.id) {
-        response = getLastId(req, res, id);
-    }
-    else {
-        response = getLastId(req, res);
-    }
-    console.log(response);
-}
+    */
 
 module.exports.updateShapes = function (req, res) {
     getLastIds(req, res);
