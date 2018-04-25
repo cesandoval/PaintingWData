@@ -129,7 +129,7 @@ function progressWidgetInit(){
             widgetMenu.text = widgetCaption;
             // Adds the job display to the widgetMenu, if there are any.
             if (this.state.jobs.length > 0) {
-                this.state.jobs.forEach(job => {
+                this.state.jobs.slice().reverse().forEach(job => {
                     htmlBuilder = createProgressBar(...job);
                     var temp = $.parseHTML(htmlBuilder);
                     widgetMenu.find('#jobList').append(temp);
@@ -267,7 +267,6 @@ function progressWidgetInit(){
         /**
         * Helper method for _bindUIActions.
         * When an "x" button is clicked, a job is closed out.
-        * TODO: decide whether or not the commented out code should be included.
         */
         _closeItem: function(e) {
             e.preventDefault();
@@ -297,7 +296,7 @@ function progressWidgetInit(){
         },
 
         /**
-        * TODO: given a set of ID's to query (both voxels and shapes), query the controller for the status of said items.
+        * Queries the controller for the specified voxels and IDs.
         */
         _queryController: function(){
             // This assembles all of the queries from queryIds to a string:
@@ -317,7 +316,7 @@ function progressWidgetInit(){
         },
 
         /**
-        *
+        * Creates a request. (see app/controller/updateController.js)
         */
         _createXhrRequest: function (pollquery) {
             var xhr = new XMLHttpRequest();
@@ -345,7 +344,6 @@ function progressWidgetInit(){
 
         /**
         * Given the results from _queryController, we update the arrays.
-        * TODO: update updateController.js to fit our parameters.
         */
         _updateArrays: function(){
             // First, update this.state.jobs with info from this.progress.
@@ -396,7 +394,6 @@ function progressWidgetInit(){
 
         /**
         * Updates the widget menu based on what happened to the arrays.
-        * TODO (minor): on job complete, the text should change!
         */
         _updateWidgetMenu: function(){
             this.state.jobs.forEach(job => {
