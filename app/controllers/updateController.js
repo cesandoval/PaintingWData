@@ -18,7 +18,7 @@ var numCalls = 0;
 * and then for each of these, we'll get the progress of that. In particular, we return an array of 6-length arrays
 * each of the form [id, jobName, num, den, type (either "shapes" or "voxels"), copmleted (true or false)]
 */
-function getLastIds(req, res) {
+module.exports.updateShapes = function (req, res) {
     var output = []; // the eventual array of 6-length arrays to return.
     // Everything that has to do with shapes!
     var dataset = null;
@@ -113,10 +113,12 @@ function getLastIds(req, res) {
         for (var i = 0; i < numProcessed.length; i++){
             output.push([ids[i], jobNames[i][0], numProcessed[i], denominators[i], "shapes", false]);
         }
+        /*
         console.log("Chris Xu's final output: " + output);
         for (var i=0; i< output.length; i++){
             console.log("Element " + i + " is: " + output[i]);
         }
+        */
         res.send({ progress: output });
     })
 }
@@ -359,11 +361,6 @@ function getLastIds(req, res) {
     else {
     }
     */
-
-module.exports.updateShapes = function (req, res) {
-    getLastIds(req, res);
-}
-
 
 // for testing purposes. Does not make the progress tracker behave accurately.
 function testTracker(req, res) {
