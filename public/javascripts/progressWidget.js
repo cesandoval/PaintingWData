@@ -374,6 +374,7 @@ function progressWidgetInit(){
                 if (job[2] >= job[3] && !job[5]){
                     job[5] = true;
                     this._createFlash(job[1] + " has completed!");
+                    // TODO: refresh the page once the job has completed and if you're on the page that displays the voxels.
                     this._removeFromQueryIds(job);
                 }
             }
