@@ -29,8 +29,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DECIMAL,
       defaultValue: 0.0
     },
-    extraUserInfo:{
-      type: DataTypes.JSON,
+    use:{
+      type: DataTypes.TEXT,
+    },
+    industry:{
+      type: DataTypes.STRING,
+    }, 
+    referal:{
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {

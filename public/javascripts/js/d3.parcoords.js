@@ -24,9 +24,10 @@ d3.parcoords = function(config) {
     hideAxis : [],
     flipAxes: [],
     animationTime: 1100, // How long it takes to flip the axis when you double click
-    rotateLabels: false
+    rotateLabels: false,
+    previousBrush: {},
   };
-
+  
   extend(__, config);
 
   if (config && config.dimensionTitles) {
@@ -53,7 +54,7 @@ var pc = function(selection) {
       .append("canvas")
       .attr("class", layer)[0][0];
     ctx[layer] = canvas[layer].getContext("2d");
-  });
+});
 
   // svg tick and brush layers
   pc.svg = selection
@@ -140,7 +141,11 @@ var side_effects = d3.dispatch.apply(this,d3.keys(__))
         });
         pc.updateAxes(0);
     }
+  })
+  .on("previousBrush", function(d) {
+    __.previousBrush = d.value;
   });
+
 
 // expose the state of the chart
 pc.state = __;
@@ -176,6 +181,7 @@ function extend(target, source) {
   for (var key in source) {
     target[key] = source[key];
   }
+  
   return target;
 };
 
@@ -1057,7 +1063,10 @@ var brush = {
 // @param newSelection - The new set of data items that is currently contained
 //                       by the brushes
 function brushUpdated(newSelection) {
+  console.log("brushUpdated called")
   __.brushed = newSelection;
+  console.log("newSelection", newSelection)
+  console.log("pc", pc)
   events.brush.call(pc,__.brushed);
   pc.renderBrushed();
 }
@@ -1173,28 +1182,54 @@ pc.brushMode = function(mode) {
       });
   };
 
-  function brushExtents(extents) {
+  function initBrush(extents, testMin, testMax) {
+    console.log("initBrush called")
     if(typeof(extents) === 'undefined')
 		{
 			var extents = {};
 			d3.keys(__.dimensions).forEach(function(d) {
-				var brush = brushes[d];
+        var brush = brushes[d];
 				if (brush !== undefined && !brush.empty()) {
-					var extent = brush.extent();
+          var extent = [testMin, testMax];
 					extent.sort(d3.ascending);
-					extents[d] = extent;
+          extents[d] = extent;
 				}
-			});
+      });
+      // console.log("extents inside if: ", extents);
+			return extents;
+		}
+  }
+
+  // INPUT = object of layernames - what is this?
+  // output = extents ={layer1: [....], layer2:[.....]} - just add min/max?
+
+  function brushExtents(extents) {
+    // console.log("brushExtents called");
+    if(typeof(extents) === 'undefined')
+		{
+			var extents = {};
+			d3.keys(__.dimensions).forEach(function(d) {
+        var brush = brushes[d];
+        // console.log("brushes[d: ", brushes[d]);
+				if (brush !== undefined && !brush.empty()) {
+          var extent = brush.extent();
+          // console.log("extent after function is called: ", extent);
+					extent.sort(d3.ascending);
+          extents[d] = extent;
+          // console.log("final extents: ", extents);
+				}
+      });
+      // console.log("extents inside if: ", extents);
 			return extents;
 		}
 		else
 		{
+      // console.log("extents in else: ", extents);
 			//first get all the brush selections
 			var brushSelections = {};
 			g.selectAll('.brush')
 				.each(function(d) {
 					brushSelections[d] = d3.select(this);
-
 			});
 
 			// loop over each dimension and update appropriately (if it was passed in through extents)
@@ -1226,23 +1261,37 @@ pc.brushMode = function(mode) {
 		}
   }
 
+  
   function brushFor(axis) {
+    
+    // var brushSpecs = []
+    // if (__.previousBrush[axis]) {
+    //   brushSpecs = __.previousBrush[axis]
+    // }
+    // else {
+      brushSpecs = [100000, 0]
+    // }
+
     var brush = d3.svg.brush();
 
     brush
       .y(__.dimensions[axis].yscale)
+      .extent(brushSpecs)
       .on("brushstart", function() {
+        console.log("brushstart")
 				if(d3.event.sourceEvent !== null) {
 					events.brushstart.call(pc, __.brushed);
 					d3.event.sourceEvent.stopPropagation();
 				}
 			})
 			.on("brush", function() {
-				brushUpdated(selected());
+        console.log("brush")
+        brushUpdated(selected());
 			})
 			.on("brushend", function() {
+        console.log("brushend")
 				events.brushend.call(pc, __.brushed);
-			});
+      });
 
 		brushes[axis] = brush;
 		return brush;
@@ -1280,13 +1329,14 @@ pc.brushMode = function(mode) {
 	};
 
 	function install() {
-		if (!g) pc.createAxes();
+    if (!g) pc.createAxes();
 
 		// Add and store a brush for each axis.
 		var brush = g.append("svg:g")
 			.attr("class", "brush")
 			.each(function(d) {
-				d3.select(this).call(brushFor(d));
+        d3.select(this).call(brushFor(d));
+        // console.log("this", this)
 			});
 
 		brush.selectAll("rect")
@@ -1303,7 +1353,8 @@ pc.brushMode = function(mode) {
 
 		brush.selectAll(".resize rect")
 				.style("fill", "rgba(0,0,0,0.1)");
-
+    
+    pc.initBrush = initBrush;
 		pc.brushExtents = brushExtents;
 		pc.brushReset = brushReset;
 		return pc;
@@ -1313,7 +1364,8 @@ pc.brushMode = function(mode) {
 		install: install,
 		uninstall: function() {
 			g.selectAll(".brush").remove();
-			brushes = {};
+      brushes = {};
+      delete pc.initBrush;
 			delete pc.brushExtents;
 			delete pc.brushReset;
 		},
@@ -1835,6 +1887,7 @@ pc.brushMode = function(mode) {
 
   function install() {
     if (!g) pc.createAxes();
+    
 
     // Add and store a brush for each axis.
     var brush = g.append("svg:g")
@@ -2459,6 +2512,8 @@ pc.version = "0.7.0";
   pc.toString = function() { return "Parallel Coordinates: " + d3.keys(__.dimensions).length + " dimensions (" + d3.keys(__.data[0]).length + " total) , " + __.data.length + " rows"; };
 
   return pc;
+
+
 };
 
 d3.renderQueue = (function(func) {
