@@ -1,14 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import * as Act from '../store/actions'
 
 // TODO List
 
 // 1.
-// When the layer is turned off, and on,
-// the parallel coordinates widget loses the `brushed` property.
-// Keep track of the property so it does not restart.
-
-// 2.
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
 class PCoords extends React.Component {
@@ -54,20 +50,13 @@ class PCoords extends React.Component {
                     }
                 }
                 // TODO if the visible names are empty, destroy de dimensions.....
-                console.log(visibleNames)
-                console.log(this.pc.state)
                 this.pc
                     .dimensions(visibleNames)
                     .render()
                     .updateAxes()
-                if (
-                    Object.keys(this.state.previousBrush).length !== 0 &&
-                    this.state.previousBrush.constructor === Object
-                ) {
-                    console.log(this.state.previousBrush)
-                    this.pc.brushExtents(this.state.previousBrush)
+                if (nprops.options.pcoordsValue != 'undefined') {
+                    this.pc.brushExtents(nprops.options.pcoordsValue)
                 }
-                // this.pc.brushExtents({'astham rate_Rate':[206.78030303030303, 497.4431818181818]})
             }
             if (!this.state.started) {
                 this.setState({ started: true })
@@ -174,9 +163,7 @@ class PCoords extends React.Component {
             .interpolate(d3.interpolateLab)
 
         const pc = d3
-            .parcoords({ previousBrush: this.state.previousBrush })(
-                '#parcoords'
-            )
+            .parcoords()('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -189,7 +176,6 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode('1D-axes')
-        // .interactive()
 
         pc.on('brushend', this.calcRanges.bind(this))
         this.pc = pc
@@ -207,7 +193,6 @@ class PCoords extends React.Component {
         let maxObjs = {}
         let minObjs = {}
 
-        // This might be restarting all the brushes instead of just adding new ones. What i need is the intersection.....
         let brushes = {}
         if (layerNames.length > 0) {
             // review: when is the layerNames.length less then 0?
@@ -221,7 +206,9 @@ class PCoords extends React.Component {
         this.minObjs = minObjs
         this.maxObjs = maxObjs
 
-        this.setState({ previousBrush: brushes })
+        Act.mapSetPCoords({
+            value: Object.assign({}, this.props.options.pcoordsValue, brushes),
+        })
 
         // Update Layers
         const lowBnd = this.lowBnd
@@ -295,6 +282,7 @@ const mapStateToProps = state => {
         layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
         vpl: state.vpl,
+        options: state.options,
     }
 }
 

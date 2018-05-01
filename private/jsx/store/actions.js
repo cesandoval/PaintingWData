@@ -34,6 +34,12 @@ export const mapSetKNN = payload =>
         ...payload,
     })
 
+export const mapSetPCoords = payload =>
+    store.dispatch({
+        type: t.MAP_SET_PCOORDS,
+        ...payload,
+    })
+
 // vpl
 export const nodeAdd = payload =>
     store.dispatch({
