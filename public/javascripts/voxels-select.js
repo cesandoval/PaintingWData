@@ -1,6 +1,7 @@
 var $datavoxel = $('.datavoxel');
 var $openVoxel = $('#openVoxel');
 var $selectedLayers = $('#selectedLayers');
+var $voxelPrivacy = $('.public');
 
 var currentSelectedId = 0 ;
 
@@ -18,4 +19,15 @@ $datavoxel.click(function(){
 
 		$selectedLayers.val(selectedVoxelId);
 	}
+});
+
+$voxelPrivacy.click(function(){
+	var id = $(this).context.id;
+	var isPublic = $(this).context.checked;
+	var request = {id: id, public: isPublic};
+	$.ajax({
+		url : "/voxelPrivacy/",
+		type: 'POST',
+		data: request
+	});
 });

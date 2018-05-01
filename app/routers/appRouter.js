@@ -4,7 +4,9 @@ var passport = require('passport'),
     fileViewerController = require('../controllers/fileViewerController.js'),
     datalayerController = require('../controllers/datalayerController.js'),
     updateController = require('../controllers/updateController'),
+    voxelPrivacy = require('../controllers/voxelPrivacyController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
+    isAuthenticatedOrPublicVoxel = require('../controllers/signupController').isAuthenticatedOrPublicVoxel,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
@@ -36,6 +38,7 @@ var passport = require('passport'),
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
+  router.post('/voxelPrivacy', isAuthenticated, voxelPrivacy.setVoxelPublicOrPrivate);
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
   router.get('/getThumbnailData/:id', isAuthenticated, fileViewerController.serveThumbnailData);
@@ -50,9 +53,11 @@ var passport = require('passport'),
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
-  router.get('/app/:datavoxelId', isAuthenticated, appController.show);
-  router.get('/datajson/all/:datavoxelId', isAuthenticated, appController.getDatajsons)
+  router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
+
+
 
 module.exports = router;
