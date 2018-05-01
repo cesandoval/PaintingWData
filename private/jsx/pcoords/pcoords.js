@@ -27,30 +27,50 @@ class PCoords extends React.Component {
         this.calcRanges = this.calcRanges.bind(this)
     }
     componentWillReceiveProps(nprops) {
-        /* eslint-disable */
-
         this.props = nprops
 
-        if (Object.keys(this.props.geometries).length !== 0 && this.props.geometries.constructor === Object) {
-            let nodeLayers = Object.values(nprops.vpl.nodes).filter(f => f.type == 'DATASET')
+        if (
+            Object.keys(this.props.geometries).length !== 0 &&
+            this.props.geometries.constructor === Object
+        ) {
+            let nodeLayers = Object.values(nprops.vpl.nodes).filter(
+                f => f.type == 'DATASET'
+            )
             let visibleNodes = nodeLayers.filter(l => l.visibility)
 
-            this.setState({visibleLayers: visibleNodes.length})
-            if (visibleNodes.length != this.state.visibleLayers && this.state.started) {
+            this.setState({ visibleLayers: visibleNodes.length })
+            if (
+                visibleNodes.length != this.state.visibleLayers &&
+                this.state.started
+            ) {
                 let visibleNames = {}
                 for (var key in this.layersNameProperty) {
-                    if (Object.values(visibleNodes).map(i => i.name).includes(this.layersNameProperty[key])) {
+                    if (
+                        Object.values(visibleNodes)
+                            .map(i => i.name)
+                            .includes(this.layersNameProperty[key])
+                    ) {
                         visibleNames[key] = {}
                     }
                 }
                 // TODO if the visible names are empty, destroy de dimensions.....
                 console.log(visibleNames)
-                this.pc.dimensions(visibleNames)
+                console.log(this.pc.state)
+                this.pc
+                    .dimensions(visibleNames)
                     .render()
                     .updateAxes()
+                if (
+                    Object.keys(this.state.previousBrush).length !== 0 &&
+                    this.state.previousBrush.constructor === Object
+                ) {
+                    console.log(this.state.previousBrush)
+                    this.pc.brushExtents(this.state.previousBrush)
+                }
+                // this.pc.brushExtents({'astham rate_Rate':[206.78030303030303, 497.4431818181818]})
             }
             if (!this.state.started) {
-                this.setState({started:true})
+                this.setState({ started: true })
                 let sidebarLayers = nprops.layers.filter(l => l.visible)
                 // get the max length of Voxels of layers(?)
                 var maxVoxels = 0
@@ -73,9 +93,7 @@ class PCoords extends React.Component {
                 const layersNameProperty = {}
 
                 for (let i = 0; i < nprops.layers.length; i++) {
-                    layerIndeces[
-                        nprops.layers[i].name
-                    ] = i
+                    layerIndeces[nprops.layers[i].name] = i
                     layersNameProperty[
                         nprops.layers[i].userLayerName +
                             '_' +
@@ -101,8 +119,8 @@ class PCoords extends React.Component {
                     pcContainer.removeChild(pcContainer.firstChild)
                 }
 
-                this.setState({visibleLayers: visibleNodes.length})
-                
+                this.setState({ visibleLayers: visibleNodes.length })
+
                 // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
                 // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
                 let numLayers = visibleNodes.length
@@ -115,14 +133,15 @@ class PCoords extends React.Component {
                             dictBuild[i] = {}
                         }
                         if (
-                            indicesArray[i] in nprops.layers[j].geojson.hashedData
+                            indicesArray[i] in
+                            nprops.layers[j].geojson.hashedData
                         ) {
                             dictBuild[i][
                                 nprops.layers[j].userLayerName +
                                     '_' +
                                     nprops.layers[j].propertyName
                             ] =
-                            nprops.layers[j].geojson.hashedData[
+                                nprops.layers[j].geojson.hashedData[
                                     indicesArray[i]
                                 ][3]
                             // review: [3] ?
@@ -135,18 +154,15 @@ class PCoords extends React.Component {
                         }
                     }
                 }
-                
+
                 this.build(dictBuild)
                 this.layerIndeces = layerIndeces
                 this.layersNameProperty = layersNameProperty
             }
-
         }
     }
-    
 
     build(data) {
-
         let minVal = this.minVal[0]
         let maxVal = this.maxVal[0]
 
@@ -158,7 +174,9 @@ class PCoords extends React.Component {
             .interpolate(d3.interpolateLab)
 
         const pc = d3
-            .parcoords({ previousBrush: this.state.previousBrush })('#parcoords')
+            .parcoords({ previousBrush: this.state.previousBrush })(
+                '#parcoords'
+            )
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -171,13 +189,11 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode('1D-axes')
-            // .interactive()
+        // .interactive()
 
         pc.on('brushend', this.calcRanges.bind(this))
         this.pc = pc
         this.setState({ pc: pc })
-
-
     }
 
     calcRanges() {
@@ -191,6 +207,7 @@ class PCoords extends React.Component {
         let maxObjs = {}
         let minObjs = {}
 
+        // This might be restarting all the brushes instead of just adding new ones. What i need is the intersection.....
         let brushes = {}
         if (layerNames.length > 0) {
             // review: when is the layerNames.length less then 0?
@@ -204,10 +221,7 @@ class PCoords extends React.Component {
         this.minObjs = minObjs
         this.maxObjs = maxObjs
 
-        console.log(brushes)
-
         this.setState({ previousBrush: brushes })
-        // console.log(this.state.previousBrush)
 
         // Update Layers
         const lowBnd = this.lowBnd
@@ -280,7 +294,7 @@ const mapStateToProps = state => {
         datasets: state.datasets,
         layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
-        vpl: state.vpl
+        vpl: state.vpl,
     }
 }
 

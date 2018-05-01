@@ -1222,7 +1222,7 @@ pc.brushMode = function(mode) {
 		else
 		{
       // console.log("extents in else: ", extents);
-			//first get all the brush selections
+      //first get all the brush selections
 			var brushSelections = {};
 			g.selectAll('.brush')
 				.each(function(d) {
@@ -1235,7 +1235,7 @@ pc.brushMode = function(mode) {
 					return;
 				}
 
-				var brush = brushes[d];
+        var brush = brushes[d];
 				if (brush !== undefined) {
 					//update the extent
 					brush.extent(extents[d]);
@@ -1253,7 +1253,6 @@ pc.brushMode = function(mode) {
 
 			//redraw the chart
 			pc.renderBrushed();
-
 			return pc;
 		}
   }
@@ -1268,8 +1267,6 @@ pc.brushMode = function(mode) {
     else {
       brushSpecs = [0, 0]
     }
-    console.log(axis)
-    console.log(__.previousBrush[axis])
 
     var brush = d3.svg.brush();
 
