@@ -125,7 +125,7 @@ function getBbox(datalayerIds, req, callback) {
             var bbox = results[0].st_setsrid;
             rowsCols = getBboxRC(bbox, req);
 
-            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), '` + voxelId + `');` 
+            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), '` + voxelId + `');`
             console.log("bbox query: \n \n " + bboxInsert);
             req.voxelRandomId = voxelId;
 
@@ -181,6 +181,7 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.userId = req.user.id;
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
+    newDatavoxel.public = false;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;

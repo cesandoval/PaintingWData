@@ -1,4 +1,5 @@
 var User = require('../models').User,
+    Datavoxel = require('../models').Datavoxel,
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt-nodejs'),
     passport = require('passport'),
@@ -228,8 +229,6 @@ function(req, accessToken, refreshToken, profile, done) {
 
 });
 
-
-
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()){
     return next();
@@ -239,10 +238,31 @@ var isAuthenticated = function (req, res, next) {
   res.redirect('/users/login');
 }
 
+var isAuthenticatedOrPublicVoxel = function (req, res, next) {
+  if (req.isAuthenticated()){
+    return next();
+  } else {
+    Datavoxel.findOne({
+      where: {id: req.params.datavoxelId}
+    }).then(function(voxel) {
+      if(voxel) {
+        if(voxel.public === false || voxel.public === null) {
+          res.redirect("/users/login");
+        } else {
+          return next();
+        }
+      } else {
+
+      }
+    });
+  }
+}
+
 module.exports = {
   LoginStrategy : loginStrategy,
   SignUpStrategy : signUpStrategy,
   FacebookLoginStrategy : facebookStrategy,
   GoogleLoginStrategy : googleStrategy, 
-  isAuthenticated : isAuthenticated
+  isAuthenticated : isAuthenticated,
+  isAuthenticatedOrPublicVoxel : isAuthenticatedOrPublicVoxel
 }
