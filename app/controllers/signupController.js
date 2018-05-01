@@ -246,7 +246,7 @@ var isAuthenticatedOrPublicVoxel = function (req, res, next) {
       where: {id: req.params.datavoxelId}
     }).then(function(voxel) {
       if(voxel) {
-        if(voxel.public === false) {
+        if(voxel.public === false || voxel.public === null) {
           res.redirect("/users/login");
         } else {
           return next();
