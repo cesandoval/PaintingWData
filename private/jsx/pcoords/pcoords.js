@@ -16,7 +16,6 @@ class PCoords extends React.Component {
 
         this.state = {
             pc: null,
-            previousBrush: {},
         }
 
         this.build = this.build.bind(this)
@@ -29,7 +28,7 @@ class PCoords extends React.Component {
             Object.keys(this.props.geometries).length !== 0 &&
             this.props.geometries.constructor === Object
         ) {
-            let nodeLayers = Object.values(nprops.vpl.nodes).filter(
+            let nodeLayers = Object.values(nprops.nodes).filter(
                 f => f.type == 'DATASET'
             )
             let visibleNodes = nodeLayers.filter(l => l.visibility)
@@ -50,12 +49,27 @@ class PCoords extends React.Component {
                     }
                 }
                 // TODO if the visible names are empty, destroy de dimensions.....
-                this.pc
-                    .dimensions(visibleNames)
-                    .render()
-                    .updateAxes()
-                if (nprops.options.pcoordsValue != 'undefined') {
-                    this.pc.brushExtents(nprops.options.pcoordsValue)
+                if (
+                    Object.keys(visibleNames).length === 0 &&
+                    visibleNames.constructor === Object
+                ) {
+                    // This is supposed to destroy the dimensions, but it is not....
+                    // this.pc
+                    //     .dimensions({})
+                    //     .render()
+                    //     .removeAxes()
+                    // console.log(this.pc.state)
+                    Act.setPanelShow({ value: '' })
+                } else {
+                    this.pc
+                        .dimensions(visibleNames)
+                        .render()
+                        .updateAxes()
+                    // Only update if the previous state was not showing pcoords?
+                    Act.setPanelShow({ value: 'PCoords' })
+                }
+                if (nprops.pcoordsValue != 'undefined') {
+                    this.pc.brushExtents(nprops.pcoordsValue)
                 }
             }
             if (!this.state.started) {
@@ -178,6 +192,9 @@ class PCoords extends React.Component {
             .brushMode('1D-axes')
 
         pc.on('brushend', this.calcRanges.bind(this))
+        if (this.props.pcoordsValue != 'undefined') {
+            pc.brushExtents(this.props.pcoordsValue)
+        }
         this.pc = pc
         this.setState({ pc: pc })
     }
@@ -207,7 +224,7 @@ class PCoords extends React.Component {
         this.maxObjs = maxObjs
 
         Act.mapSetPCoords({
-            value: Object.assign({}, this.props.options.pcoordsValue, brushes),
+            value: Object.assign({}, this.props.pcoordsValue, brushes),
         })
 
         // Update Layers
@@ -281,8 +298,9 @@ const mapStateToProps = state => {
         datasets: state.datasets,
         layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
-        vpl: state.vpl,
-        options: state.options,
+        nodes: state.vpl.nodes,
+        pcoordsValue: state.options.pcoordsValue,
+        panelShow: state.interactions.panelShow,
     }
 }
 
