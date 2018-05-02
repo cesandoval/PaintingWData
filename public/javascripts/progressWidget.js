@@ -373,6 +373,12 @@ function progressWidgetInit(){
                 var job = this.state.jobs[i];
                 if (job[2] >= job[3] && !job[5]){
                     job[5] = true;
+                    var urlString = window.location.pathname;
+                    var isLayerUrl = contains(urlString, '/layers'),
+                        isVoxelUrl = contains(urlString, '/voxels');
+                    if (isLayerUrl || isVoxelUrl){
+                        location.reload();
+                    }
                     this._createFlash(job[1] + " has completed!");
                     // TODO: refresh the page once the job has completed and if you're on the page that displays the voxels.
                     this._removeFromQueryIds(job);
