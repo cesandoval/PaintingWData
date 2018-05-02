@@ -1,4 +1,5 @@
 /* global project */
+/* global datavoxelId */
 
 import React from 'react'
 import * as Act from '../store/actions'
@@ -200,16 +201,12 @@ class MapCanvas extends React.Component {
                 // layers: [], // ???
                 */
             },
-            options: {
-                knn: document.getElementById('knnSlider').value,
-                opacity: document.getElementById('points').value,
-                bgStyle: 'dark', //to be replaced
-            },
-            vpl: {},
+            options: this.props.options,
+            vpl: this.props.vpl,
         }
         Act.saveUserFile({
-            userId: 5,
-            voxelId: voxelId,
+            userId: 1, //replace with user Id
+            voxelId: datavoxelId,
             info: _info,
         })
     }
@@ -302,4 +299,5 @@ export default connect(s => ({
     panelShow: s.interactions.panelShow,
     geometries: s.map.geometries,
     bbox: s.map.bbox,
+    vpl: s.vpl,
 }))(MapCanvas)

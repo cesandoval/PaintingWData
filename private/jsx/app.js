@@ -1,3 +1,5 @@
+/*global datavoxelId*/
+
 import React from 'react'
 
 import * as Act from './store/actions.js'
@@ -7,31 +9,30 @@ import Options from './options/options'
 import Map from './map/map'
 
 export default class App extends React.Component {
+    // TODO: when the user closes out, save the userFile
     componentDidMount() {
-        /* // TODO: update the fetch $path and $options.
-        fetch(`/getuserfile/${userId}/${datavoxelId}`, {
+        fetch(`/importuserfile/${datavoxelId}`, {
             method: 'POST',
             credentials: 'include',
         })
-            .then(({ data }) => {
-                this.importUserfile({ data })
+            .then(data => {
+                console.log(data)
+                Act.importUserfile({data.options})
             })
-            .catch(e => console.log('getuserfile() error', e))
-
-				*/
-
-        //-- Test Block Start --: test importUserfile.
-        const data = {
-            options: {
-                opacity: 10, // 0 ~ 100
-                knnValue: 1, // 0 ~ 8
-                bgStyle: 'mapbox.dark',
-            },
-        }
-
-        Act.importUserfile({ data })
-        //--- Test Block End ---: test importUserfile.
+            .catch(e => console.log('importUserfile() error', e))
     }
+    //    TODO: this is called if the data is empty
+    //     //-- Test Block Start --: test importUserfile.
+    //     const data = {
+    //         options: {
+    //             opacity: 10, // 0 ~ 100
+    //             knnValue: 1, // 0 ~ 8
+    //             bgStyle: 'mapbox.dark',
+    //         },
+    //     }
+    //     Act.importUserfile({ data })
+    //     //--- Test Block End ---: test importUserfile.
+    // }
 
     render() {
         return (

@@ -19,10 +19,11 @@ module.exports.save = function(req, res){
 */
 module.exports.import = function(req, res){
     Model.Datauserfile.findOne({
-        userId: req.body.userId,
-        datavoxelId: req.body.voxelId,
-    }).then(duf => {
-        var _state = duf.get().state;
+        // userId: req.body.userId,
+        datavoxelId: req.params.datavoxelId,
+    }).then(dataUserFile => {
+        // returns as an array ?!
+        var _state = dataUserFile[0].state;
         res.send({ state: _state })
     })
 }
