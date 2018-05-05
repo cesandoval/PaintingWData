@@ -446,7 +446,7 @@ function clearHTML() { // helper method that returns cleared inner html section
     return progressList
 }
 
-function noJobs() {// return div with default message for no currnet jobs
+function noJobs() {// return div with default message for no current jobs
     return `<div id="no-jobs" class="menu-item" style="">
     <div> There are no current jobs </div>
     </div>`
@@ -475,7 +475,8 @@ function createProgressBar(id, jobName, numerator, denominator, type) { //clear 
     return html
 }
 
-function escapeHTML(unsafe_str) { // make sure strings are XXS Safe
+// make sure strings are XXS Safe
+function escapeHTML(unsafe_str) { 
     return unsafe_str
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -485,6 +486,7 @@ function escapeHTML(unsafe_str) { // make sure strings are XXS Safe
         .replace(/\//g, '&#x2F;')
 }
 
+// tooltip logic from https://codepen.io/LawrenceScafuri/pen/mRrYqM
 function toolTiper(effect) {
     $('.tooltiper').each(function (i, j) {
         var toolTip = $(this);

@@ -12,8 +12,9 @@ block pageTitle
   
   .container(style = "margin-top: 10px; margin-left: 0; width: 100vw;").spacing-large
     .container
-      .row.col-md-9.spacing
-        h1 Layers
+      .row.spacing
+        .col-md-9
+          h1 Layers
 
       if (layerAlert)
         .alert.alert-danger(role='alert') #{layerAlert}
@@ -37,7 +38,7 @@ block pageTitle
               a(href = "/upload")
                 btn.btn.btn-outline-primary Upload a layer
 
-  .container.spacing-large
+  .container
       .row
       for datafile in datafiles
         if datafile.Datalayers[0]

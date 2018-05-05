@@ -77,7 +77,9 @@ module.exports.upload = function(req, res, next) {
                     }
                     else{
                       getSize(targetPath, function(err, size) {
-                        if (err) { throw err; }
+                        if (err) { 
+                          console.log('File Sie Error:', err)
+                          throw err; }
                         var size = (size / 1024 / 1024).toFixed(2);
                         var size = '' + size;
                         fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid, geomType){

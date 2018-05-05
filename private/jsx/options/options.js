@@ -35,6 +35,7 @@ class Options extends React.Component {
     }
 
     getScreenShot() {
+        //IMPORTANT: figure out what this means
         window.getScreenShot()
     }
 

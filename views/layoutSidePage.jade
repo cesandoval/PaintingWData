@@ -1,15 +1,6 @@
 doctype html
 html
   head
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118514810-1"></script>
-    script.
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-118514810-1');
-
     meta(charset="utf-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     title= 'Painting with Data'
@@ -34,11 +25,7 @@ html
 
     //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //- //on our web server and will be delivered faster to the client than our own server.
-    //- script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')		
-
-    
-    script(src='http://code.jquery.com/jquery-1.9.1.js')
-    script(src="http://code.jquery.com/ui/1.10.2/jquery-ui.js")
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
 
@@ -86,7 +73,7 @@ html
 
   body
     block navBar
-      include ./partials/navbar
+      include ./partials/navbarSidePage
 
     block pageTitle
     block content
@@ -94,7 +81,7 @@ html
     hr
 
     div.footer
-      p &copy; Painting with Data 2018. Patent Pending.
+      p &copy; Painting with Data 2017.
 
 script.
   $('.dropdown').on('show.bs.dropdown', function() {
@@ -142,6 +129,7 @@ script.
 
 
   $(".pop_team").click(function () {
+      //console.log($(this).attr("bio1"));
 
       d3.select("body").append("div")
           .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
@@ -234,4 +222,102 @@ script.
   });
 
 
-script(src="/javascripts/progressWidget.js", type="text/javascript")
+    var fixiframe = function(myid){
+        $(myid).contents().find("head")
+            .append($("<style type='text/css'>  *{background-color:rgba(0,0,0,0)!important; overflow:hidden;}  .content_left{width:65%;float:left;} .content_right{width:33%;float:left;} .content_right_full{width:100%;float:right;}</style>"));
+        $(myid).contents().find("a")
+            .attr("target","_blank")
+            .attr("href", function(d,dd){
+                //console.log(d,dd);
+                if(dd){
+                    var out = dd;
+                    if(out.indexOf("?q=")>-1)
+                        out = dd.split("?q=")[1];
+                    if(out.indexOf("&sa=D&ust=")>-1)
+                    out = out.split("&sa=D&ust=")[0];
+                    return out;
+                }
+            })
+            ;
+        $(myid).contents().find("img")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("span")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("body")
+            .css("padding","0 0 0 0");
+
+
+
+        $(myid).contents().find("span")
+            .filter(function(){
+                return this.innerHTML.indexOf("&lt;iframe")!=-1;
+            }).html(function(){
+                return this.innerHTML.replace("&lt;","<").replace("&gt;",">");
+            });
+        $(myid).contents().find("td")
+            .filter(function(){
+                if($(this).attr("colspan") == "1" && $(this).attr("rowspan") == "1"){
+                    var widththis = +d3.select(this).style("width").split("px")[0];
+                    //console.log($(document).width(),widththis);
+
+
+                    if(this.innerHTML.indexOf("Overview")!=-1){
+                        $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                        );
+                    }else{
+                        $(this).replaceWith( "<div class = 'content_right_full right_proj' style = 'display:none;'>"+$(this).html()+"</div>"
+                        );
+                    }
+
+                    //- if($(document).width()<500){
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right_full right_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+
+                    //- }
+                    
+                    //- else{
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_left'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+                    //- }
+
+                    return true;
+                }
+            });
+            
+            $(myid).contents().find("div")
+            .filter(function(){
+                //console.log($(this).attr("class"));
+                if($(this).attr("class"))
+                return $(this).attr("class").indexOf("left_proj")>-1;
+            }).insertAfter(
+                $(myid).contents().find("div")
+                .filter(function(){
+                    if($(this).attr("class"))
+                    return $(this).attr("class").indexOf("right_proj")>-1;
+                })
+            )
+    };
+
+    var expand_function = function(myid){
+        var iFrame = document.getElementById( myid );
+        this.resizeIFrameToFitContent( iFrame );
+        iFrame.parentElement.style.height = $("#"+myid).height()+20 + "px";
+    }
+
+    var resizeIFrameToFitContent = function( obj ) {
+        if(obj)
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+
+        console.log(obj.contentWindow.document.body.scrollHeight);
+    };
+
