@@ -95,8 +95,10 @@ module.exports.showVoxels= function(req, res) {
             include: [{
                 model: Model.Datafile, include: [{
                     model: Model.Datalayer,
-                    limit: 1
-                }]
+                    limit: 1},
+                {
+                    model: Model.Datadbf,
+                    limit: 1}]                        
             }]
         }).then(function(datavoxels){
             // console.log("datavoxels: ", datavoxels);
