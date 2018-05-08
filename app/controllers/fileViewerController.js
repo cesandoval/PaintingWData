@@ -10,7 +10,7 @@ var Model = require('../models'),
 
 module.exports.saveShapes = function(req, res) {
     var newReq = {
-        body: { 
+        body: {
             rasterProperty: req.body.rasterProperty,
             datafileId : req.body.datafileId,
             layername: req.body.layername,
@@ -74,13 +74,13 @@ module.exports.serveMapData = function(req, res) {
         fileViewerHelper.getGeoJSON,
     ], function (err, result) {
         res.send({
-            bBox : result[0], 
+            bBox : result[0],
             geoJSON: result[1],
             centroid: result[2],
             fields : result[3],
             epsg: result[4]
         })
-    });  
+    });
 }
 
 module.exports.serveThumbnailData = function(req, res) {
@@ -90,9 +90,9 @@ module.exports.serveThumbnailData = function(req, res) {
         res.send({
             geoJSON: result[0],
             centroid: result[2],
-            bBox : result[1], 
+            bBox : result[1],
             // fields : result[3],
             // epsg: result[4]
         })
-    });  
+    });
 }

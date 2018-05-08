@@ -3,7 +3,7 @@ console.log(host)
 var Sequelize = require('sequelize'),
     sequelize = new Sequelize('PaintingWithData_Riyadh', 'postgres', 'postgrespass', {
         logging: false,
-        host: host,
+        host: 'localhost', /*host,*/
         dialect: 'postgres'
     })
 
