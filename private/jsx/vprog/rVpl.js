@@ -836,17 +836,8 @@ class VPL extends React.Component {
         const firstLayer = Object.values(this.newProps.layers)[0]
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
-        // const { min = 0, max = 1 } = node.filter
-        // let minMax = this.newProps.datasets.minMax
-        const minMax = [0, 1]
-        if (node.filter) {
-            minMax[0] = node.filter.min || 0
-            minMax[1] = node.filter.max || 0
-        }
-
         let geometry = {
-            // minMax: this.newProps.datasets.minMax,
-            minMax,
+            minMax: this.newProps.datasets.minMax,
             addressArray: firstGeometry.addresses,
             // addressArray: this.newProps.map.geometries[
             //     Object.keys(this.newProps.map.geometries)[0]
