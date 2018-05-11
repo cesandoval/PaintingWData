@@ -763,17 +763,17 @@ class VPL extends React.Component {
         let sizeArray = mathFunction(geomArray, options)
 
         // new: filter feature (2017 Nov. )
-        if (node.options.filter) {
-            let { min, max } = node.options.filter
+        if (node.filter) {
+            let { min, max } = node.filter
             const dataMax = math.max(sizeArray)
             const dataMin = math.min(sizeArray)
             const range = dataMax - dataMin
 
-            console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+            // console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
             min = dataMin + min * range
             max = dataMin + max * range
             sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-            console.log('[filter] After', { min, max }, sizeArray)
+            // console.log('[filter] After', { min, max }, sizeArray)
         }
 
         /*
