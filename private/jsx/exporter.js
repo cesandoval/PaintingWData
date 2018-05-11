@@ -1,3 +1,5 @@
+var shpwrite = require('shp-write')
+
 export default class Exporter {
     // pixels will be a Three.js geometry
     constructor(geometries) {
@@ -127,5 +129,57 @@ export default class Exporter {
             )
         }
         return JSON.stringify(allJSON)
+    }
+
+    static exportSHP(geometries) {
+        let layers = Object.keys(geometries)
+
+        let allJSON = { type: 'FeatureCollection' }
+        allJSON.features = []
+        for (let i in layers) {
+            allJSON.features = allJSON.features.concat(
+                this.parseGeometries(geometries[layers[i]], layers[i])
+            )
+        }
+        console.log(allJSON)
+        // (optional) set names for feature types and zipped folder
+        var options = {
+            folder: 'voxelExport',
+            types: {
+                point: 'voxelLayer',
+            },
+        }
+        // a GeoJSON bridge for features
+        shpwrite.download(
+            {
+                type: 'FeatureCollection',
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [0, 0],
+                        },
+                        properties: {
+                            name: 'Foo',
+                        },
+                    },
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: [0, 10],
+                        },
+                        properties: {
+                            name: 'Bar',
+                        },
+                    },
+                ],
+            },
+            options
+        )
+        // triggers a download of a zip file with shapefiles contained within.
+
+        return '</svg>'
     }
 }

@@ -126,6 +126,10 @@ class MapCanvas extends React.Component {
         return PaintGraph.Exporter.exportJSON(geoms)
     }
 
+    exportSHP(geoms) {
+        return PaintGraph.Exporter.exportSHP(geoms)
+    }
+
     exportMap(type) {
         console.log(`exportMap(${type})`)
 
@@ -140,6 +144,12 @@ class MapCanvas extends React.Component {
             case 'GeoJSON': {
                 let jsonExport = this.exportJSON(geoms)
                 this.triggerDownload(jsonExport, 'json')
+
+                break
+            }
+            case 'SHP': {
+                this.exportSHP(geoms)
+                // this.triggerDownload(jsonExport, 'json')
 
                 break
             }
@@ -203,7 +213,7 @@ class MapCanvas extends React.Component {
                                     this.exportMap('SHP')
                                 }}
                             >
-                                SHP (coming soon)
+                                SHP
                             </MenuItem>
                         </DropdownButton>
                     </div>
