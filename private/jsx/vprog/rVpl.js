@@ -1023,6 +1023,9 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
+                        updateFilter={() => {
+                            this.refreshVoxels = true
+                        }}
                         // changeFilter={(min, max) => {
                         //     this.changeNodeFilter(nodeKey, min, max)
                         // }}

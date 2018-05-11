@@ -177,6 +177,8 @@ class Panel extends React.Component {
             attr: 'filter',
             value: filter,
         })
+
+        this.props.updateFilter()
     }
 
     render() {
