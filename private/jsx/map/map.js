@@ -32,6 +32,7 @@ class MapCanvas extends React.Component {
             const bbox = newProps.layers[0].bbox
             const canvas = newProps.map
 
+            console.log(newProps.layers)
             // Set the camera
             PaintGraph.Pixels.zoomExtent(canvas, bbox)
             // Add the map to the canvas
@@ -50,6 +51,7 @@ class MapCanvas extends React.Component {
                     Math.floor(Math.random() * 36).toString(36)
 
                 // Creates the Pixels object
+                console.log(out, 44444)
                 const P = new PaintGraph.Pixels(
                     nodeHashKey,
                     this.props.map,

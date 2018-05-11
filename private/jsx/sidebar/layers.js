@@ -91,13 +91,17 @@ class Layers extends React.Component {
                             /1.5/g,
                             parseFloat(1 / ptDistance)
                         )
-
+                        console.log(l)
                         const mappedGeojson = l.geojson.geojson.features.map(
                             g => {
                                 // Shouldn't need to parse
                                 //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
                                 const coords = g.geometry.coordinates
                                 // const id = parseFloat(g.id);
+                                // console.log(
+                                //     g.properties[l.layername],
+                                //     g.properties
+                                // )
                                 const weight = parseFloat(
                                     g.properties[l.layername]
                                 )
@@ -116,6 +120,7 @@ class Layers extends React.Component {
                                 ])
                             }
                         )
+                        console.log(mappedGeojson)
                         // mappedGeojson.sort();
                         // for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
                         //     let j = i * 200;
