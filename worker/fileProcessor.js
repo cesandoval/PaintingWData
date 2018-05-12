@@ -248,7 +248,6 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
-            console.log(results);
             callback(results);
         })
 }
@@ -383,10 +382,6 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
 
     }, 1);
 
-    // TODO create rasterprops objects {datafileId : rasterProp}
-    console.log("**************************************AH******************************************************");
-    console.log(req);
-
     props.forEach(function(prop, index){
         cargo.push(prop, function(results){
             resultsObj[prop.datafileId] = results;
@@ -400,13 +395,11 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
 }
 
 function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
-
+    // All indices might not be upating everytime, since it might not be recurssively passed to async.cargo
     var allIndices = [];
     var currIndex = 0;
-
     var newDataJsons = {};
     var _keys = Object.keys(results);
-
     var maxLength = 1,
     processedProps = 0;
 
@@ -414,8 +407,8 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
-            findRaster(tasks[i], results, objProps, req, rowsCols, ptDistance, function(newDataJSON) {
-                callback(newDataJSON);
+            findRaster(tasks[i], results, objProps, req, rowsCols, ptDistance, allIndices, function(result) {
+                callback(result);
             });
         }
     }, maxLength);
@@ -425,21 +418,11 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
         var keyAndIndex = {};
         keyAndIndex.key = key;
         keyAndIndex.index = index;
-        cargo.push(keyAndIndex, function(newDataJSON){
-            newDataJsons[key] = newDataJSON;
-
-            if (allIndices.indexOf(index) === -1) {
-                allIndices[currIndex] = index;
-                currIndex +=1;
-            }
-
-            console.log("processedProps: ", processedProps)
-            console.log("_keys.length: ", _keys.length)
+        cargo.push(keyAndIndex, function(currLayerResult){
+            newDataJsons[key] = currLayerResult.newDataJSON;
 
             if (processedProps == _keys.length){
                 allIndices.sort(function(a, b){return parseInt(a)-parseInt(b)});    
-                console.log('*****tesssssssssssssssssssssssssssst*******')
-                console.log(newDataJsons)
                 callback(null, newDataJsons, objProps, req, rowsCols, allIndices, ptDistance);    
             }
         })
@@ -448,13 +431,13 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
 
 )}
 
-function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, callback){
+function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, allIndices, callback){
     var key = keyAndIndex.key;
-    var index = keyAndIndex.index;
 
     var layername = objProps[key].layername;
     var currGeojson = results[key];
     var features = [];
+    var currIndex = 0;
 
     Model.Datadbf.findAll({
         where : {
@@ -471,8 +454,6 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, c
             dataDbfObject[datalayerId] = propertyValue;
         }
 
-        console.log(dataDbfObject)
-
         for (i = 0; i <currGeojson.length; i++){
             var currentResult = currGeojson[i],
                 voxel = {
@@ -480,8 +461,11 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, c
                     geometry: currentResult.geom,
                     properties: { }
                 };
-
             var index = currentResult.x + rowsCols.rows * currentResult.y;
+            if (allIndices.indexOf(index) === -1) {
+                allIndices[currIndex] = index;
+                currIndex +=1;
+            }
 
             // voxel['properties'][layername] = currentResult.val; //OLD vrsion
             voxel['properties'][layername] = dataDbfObject[currentResult.val]; //DATADBF.DATALAYYERID.PROPS.USERSELECTEDPROPERTY ex: ObjectId => 31
@@ -498,7 +482,6 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, c
             voxel['properties']['pointIndex'] = index;
 
             // console.log("voxel: " + JSON.stringify(voxel, null, 4));
-
             features.push(voxel);
 
             
@@ -516,18 +499,13 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, c
             epsg: 4326,
             geojson: geoJSON,
         }
-        console.log("newDataJSON:");
-        console.log(newDataJSON)
-        callback(newDataJSON);
+        callback({newDataJSON: newDataJSON, allIndices:allIndices});
      });
 
 }
 
 
 function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
-    for (var i; i<2000; i++){
-        console.log(i, '++++++++++++++++++')
-    }
     var allIndices = [];
     var currIndex = 0;
 
@@ -555,8 +533,6 @@ function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
             voxel['properties']['property'] = currentResult.rasterProperty;
             voxel['properties']['pointIndex'] = currentResult.voxelIndex;
 
-            // console.log("voxel: " + JSON.stringify(voxel, null, 4));
-
             features.push(voxel);
         }
 
@@ -582,7 +558,6 @@ function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
 function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance, callback) {
     var keys = Object.keys(objProps);
     var voxelId
-    console.log(dataJSONs)
     async.each(keys, function(key, callback) {
             var newDataJSON = Model.Datajson.build();
             const hashKey = (+new Date()).toString(32) + Math.floor(Math.random() * 36).toString(36)
@@ -593,20 +568,10 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             newDataJSON.geojson = dataJSONs[key];
             newDataJSON.userId = req.user.id;
             newDataJSON.layerKey = hashKey;
-            console.log(newDataJSON)
             newDataJSON.save().then(function(){
                 callback(null, 'STOPPPPPPPP');
             });
             voxelId = objProps[key].datavoxelId;
-
-           /* 
-            console.log("voxel: " + JSON.stringify(newDataJSON, null, 4));
-            console.log("datafileId: " + newDataJSON.datafileId);
-            console.log("datavoxelId: " + newDataJSON.datavoxelId);
-            console.log("layername: " + newDataJSON.layername);
-            console.log("voxelId: " + voxelId);
-            console.log("ptDistance: " + ptDistance);
-            */
         },
         function(){
             callback(null, [voxelId, rowsCols, allIndices, ptDistance, req]);

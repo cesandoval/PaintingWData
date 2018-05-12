@@ -50,7 +50,6 @@ export default class Pixels {
                 console.error(
                     'Wrong sized data array passed to Pixels constructor!'
                 )
-            console.log(dataArray, 8888888)
             this.numElements = dataArray.length / this.ELEMENTS_PER_ITEM
             this.initTransValsAttrs(
                 this.geometry,
@@ -473,8 +472,6 @@ export default class Pixels {
             values.setX(currIndex, remap(dataArray[i + 2]))
             originalValues.setX(currIndex, remap(dataArray[i + 2]))
         }
-        console.log(values)
-        console.log(dataArray)
         this.setAttributes(geometry, translations, values, originalValues)
     }
 

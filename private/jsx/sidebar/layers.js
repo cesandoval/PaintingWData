@@ -91,7 +91,6 @@ class Layers extends React.Component {
                             /1.5/g,
                             parseFloat(1 / ptDistance)
                         )
-                        console.log(l)
                         const mappedGeojson = l.geojson.geojson.features.map(
                             g => {
                                 // Shouldn't need to parse
@@ -120,7 +119,6 @@ class Layers extends React.Component {
                                 ])
                             }
                         )
-                        console.log(mappedGeojson)
                         // mappedGeojson.sort();
                         // for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
                         //     let j = i * 200;
