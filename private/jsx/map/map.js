@@ -142,14 +142,13 @@ class MapCanvas extends React.Component {
                 break
             }
             case 'GeoJSON': {
-                let jsonExport = this.exportJSON(geoms)
+                let jsonExport = this.exportJSON(this.props.layers)
                 this.triggerDownload(jsonExport, 'json')
 
                 break
             }
             case 'SHP': {
                 this.exportSHP(this.props.layers)
-                // this.triggerDownload(jsonExport, 'json')
 
                 break
             }

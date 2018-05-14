@@ -1,4 +1,4 @@
-var shpwrite = require('shp-write')
+var zip = require('shp-write').zip
 var FileSaver = require('file-saver')
 
 export default class Exporter {
@@ -13,7 +13,6 @@ export default class Exporter {
         remap = false,
         translation = false
     ) {
-        console.log(pixels)
         let geomSize = pixels.geometry.attributes.size.array
         let geomTranslation = pixels.geometry.attributes.translation.array
         let geomMin = pixels.material.uniforms.min.value
@@ -86,25 +85,32 @@ export default class Exporter {
         }
     }
 
-    static parseLayer(layer) {
-        let geomsJSON = []
-        const otherData = layer.geojson.otherdata
-        const layerName = layer.name
-        for (let i = 0; i < otherData.length; i++) {
-            var currPoint = {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [otherData[i][0], otherData[i][1]],
-                },
-                properties: {
-                    [layerName]: otherData[i][3],
-                    // layerName: layer.name,
-                },
+    static parseLayer(layer, featuresObject) {
+        const hashedData = layer.geojson.hashedData
+        const layerProperty = layer.propertyName
+        for (var index in hashedData) {
+            if (!(index in featuresObject)) {
+                var currPoint = {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            hashedData[index][0],
+                            hashedData[index][1],
+                        ],
+                    },
+                    properties: {
+                        [layerProperty]: hashedData[index][3],
+                        id: index,
+                    },
+                }
+                featuresObject[index] = currPoint
+            } else {
+                featuresObject[index].properties[[layerProperty]] =
+                    hashedData[index][3]
             }
-            geomsJSON.push(currPoint)
         }
-        return geomsJSON
+        return featuresObject
     }
 
     // Zoom Extent based on geo's bbox
@@ -140,31 +146,42 @@ export default class Exporter {
         return allSVG
     }
 
-    static exportJSON(geometries) {
-        let layers = Object.keys(geometries)
-
+    static exportJSON(mapLayers) {
+        let layers = Object.keys(mapLayers)
         let allJSON = { type: 'FeatureCollection' }
-        allJSON.features = []
+        let featuresObject = {}
         for (let i in layers) {
-            allJSON.features = allJSON.features.concat(
-                this.parseGeometries(geometries[layers[i]], layers[i])
+            let newFeatures = this.parseLayer(
+                mapLayers[layers[i]],
+                featuresObject
             )
+            featuresObject = newFeatures
         }
+        allJSON.features = Object.values(featuresObject)
         return JSON.stringify(allJSON)
     }
 
     static exportSHP(mapLayers) {
         let layers = Object.keys(mapLayers)
-
         let allJSON = { type: 'FeatureCollection' }
-        allJSON.features = []
+        let featuresObject = {}
         for (let i in layers) {
-            allJSON.features = allJSON.features.concat(
-                this.parseLayer(mapLayers[layers[i]])
+            let newFeatures = this.parseLayer(
+                mapLayers[layers[i]],
+                featuresObject
             )
+            featuresObject = newFeatures
         }
-        // layer.name
-        let test = shpwrite.zip(allJSON)
-        FileSaver.saveAs(test, 'voxel_shp_export.zip')
+        var options = {
+            folder: 'myshapes',
+            types: {
+                point: 'mypoints',
+                polygon: 'mypolygons',
+                line: 'mylines',
+            },
+        }
+        allJSON.features = Object.values(featuresObject)
+        let blob = zip(allJSON)
+        FileSaver.saveAs(blob, 'voxel_shp_export.zip', options)
     }
 }
