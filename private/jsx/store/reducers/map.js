@@ -20,10 +20,7 @@ export default (state = initialMapState, action) => {
             // Sets the camera to the voxels' bbox
             // const bbox = datasetsLayers[0].bbox
             const bbox = state.bbox
-            const canvas = instance
 
-            // Set the camera
-            PaintGraph.Pixels.zoomExtent(canvas, bbox)
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox)
 

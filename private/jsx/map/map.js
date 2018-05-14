@@ -156,10 +156,9 @@ class MapCanvas extends React.Component {
     }
 
     zoomMap() {
-        // console.log(this.props.geometries['key'].geometry.material.uniforms, 888888)
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
-        // this might be adding many meshes
-        PaintGraph.Pixels.buildMapbox(this.props.map, this.props.bbox)
+        window.refreshTiles()
+        window.updateTiles()
     }
 
     render() {
