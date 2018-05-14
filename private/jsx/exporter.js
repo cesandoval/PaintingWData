@@ -1,4 +1,5 @@
 var shpwrite = require('shp-write')
+var FileSaver = require('file-saver')
 
 export default class Exporter {
     // pixels will be a Three.js geometry
@@ -85,6 +86,27 @@ export default class Exporter {
         }
     }
 
+    static parseLayer(layer) {
+        let geomsJSON = []
+        const otherData = layer.geojson.otherdata
+        const layerName = layer.name
+        for (let i = 0; i < otherData.length; i++) {
+            var currPoint = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [otherData[i][0], otherData[i][1]],
+                },
+                properties: {
+                    [layerName]: otherData[i][3],
+                    // layerName: layer.name,
+                },
+            }
+            geomsJSON.push(currPoint)
+        }
+        return geomsJSON
+    }
+
     // Zoom Extent based on geo's bbox
     static exportSVG(geometries, translation, centroid, bounds) {
         const remap = x => 255 * ((x - 0) / (1 - 0)) + 0
@@ -131,55 +153,18 @@ export default class Exporter {
         return JSON.stringify(allJSON)
     }
 
-    static exportSHP(geometries) {
-        let layers = Object.keys(geometries)
+    static exportSHP(mapLayers) {
+        let layers = Object.keys(mapLayers)
 
         let allJSON = { type: 'FeatureCollection' }
         allJSON.features = []
         for (let i in layers) {
             allJSON.features = allJSON.features.concat(
-                this.parseGeometries(geometries[layers[i]], layers[i])
+                this.parseLayer(mapLayers[layers[i]])
             )
         }
-        console.log(allJSON)
-        // (optional) set names for feature types and zipped folder
-        var options = {
-            folder: 'voxelExport',
-            types: {
-                point: 'voxelLayer',
-            },
-        }
-        // a GeoJSON bridge for features
-        shpwrite.download(
-            {
-                type: 'FeatureCollection',
-                features: [
-                    {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [0, 0],
-                        },
-                        properties: {
-                            name: 'Foo',
-                        },
-                    },
-                    {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [0, 10],
-                        },
-                        properties: {
-                            name: 'Bar',
-                        },
-                    },
-                ],
-            },
-            options
-        )
-        // triggers a download of a zip file with shapefiles contained within.
-
-        return '</svg>'
+        // layer.name
+        let test = shpwrite.zip(allJSON)
+        FileSaver.saveAs(test, 'voxel_shp_export.zip')
     }
 }
