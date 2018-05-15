@@ -760,20 +760,27 @@ class VPL extends React.Component {
         )
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
+
+        const geomMax = math.max(geomArray)
+        const geomMin = math.min(geomArray)
+        console.log('[before MathFunction]', { geomMax, geomMin, geomArray })
+
         let sizeArray = mathFunction(geomArray, options)
 
         // new: filter feature (2017 Nov. )
         if (node.filter) {
             let { min, max } = node.filter
+            console.log('[filter]', { min, max })
+
             const dataMax = math.max(sizeArray)
             const dataMin = math.min(sizeArray)
             const range = dataMax - dataMin
 
-            // console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+            console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
             min = dataMin + min * range
             max = dataMin + max * range
             sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-            // console.log('[filter] After', { min, max }, sizeArray)
+            console.log('[filter] After', { min, max }, sizeArray)
         }
 
         /*
@@ -805,6 +812,7 @@ class VPL extends React.Component {
             }
         }
 
+        /*
         let min = math.min(Array.from(sizeArray))
         let max
 
@@ -828,8 +836,11 @@ class VPL extends React.Component {
         }
 
         let remapOriginalSize = sizeArray.map(remap)
+        */
+
         let props = {
-            size: remapOriginalSize,
+            // size: remapOriginalSize,
+            size: sizeArray,
             translation: translationArray,
         }
 
