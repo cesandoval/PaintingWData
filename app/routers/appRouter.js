@@ -57,6 +57,7 @@ var passport = require('passport'),
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
   router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
+  router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
