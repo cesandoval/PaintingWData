@@ -60,7 +60,7 @@ export default class Graph {
 
         window.getScreenShot = () => {
             // We might turn it directly into a blob instead...
-            const img = renderer.domElement.toDataURL('image/jpeg')
+            const img = renderer.domElement.toDataURL('image/png')
             // This opens up a new tab with the screenshot
             // const w = window.open('about:blank', 'PaintingWithData Screenshot')
             // w.document.write(
@@ -94,7 +94,7 @@ export default class Graph {
             let textFile = window.URL.createObjectURL(data)
 
             let link = document.createElement('a')
-            link.setAttribute('download', 'voxelExport.'.concat('jpg'))
+            link.setAttribute('download', 'voxelExport.'.concat('png'))
             link.href = textFile
             document.body.appendChild(link)
             link.click()
