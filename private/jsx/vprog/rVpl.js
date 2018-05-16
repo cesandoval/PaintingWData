@@ -776,6 +776,11 @@ class VPL extends React.Component {
             console.log('[filter] After', { min, max }, sizeArray)
         }
 
+        if (NodeType[node.type].class == 'logic') {
+            const trueValue = this.props.datasets.bounds[1]
+            sizeArray = sizeArray.map(x => (x ? trueValue : x))
+        }
+
         /*
         const translationArray = new Float32Array(arraySize*3);
         for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
