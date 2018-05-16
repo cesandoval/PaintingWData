@@ -131,7 +131,6 @@ class VPL extends React.Component {
             name: type,
             type: type,
             options: {},
-            category: NodeType[type].category,
             position: {
                 x: init.x + step.x,
                 y: init.y + step.y,
