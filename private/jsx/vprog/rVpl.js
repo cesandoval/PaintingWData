@@ -127,11 +127,11 @@ class VPL extends React.Component {
                 y: 0,
             }
         }
-
         const newNode = {
             name: type,
             type: type,
             options: {},
+            category: NodeType[type].category,
             position: {
                 x: init.x + step.x,
                 y: init.y + step.y,
@@ -739,8 +739,6 @@ class VPL extends React.Component {
 
     // TODO: refactoring this function.
     evalArithmeticNode = (node, mathFunction, options, geometries) => {
-        // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
-        // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.datasets.allIndices
@@ -761,19 +759,15 @@ class VPL extends React.Component {
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
 
-        const geomMax = math.max(geomArray)
-        const geomMin = math.min(geomArray)
-        console.log('[before MathFunction]', { geomMax, geomMin, geomArray })
-
         let sizeArray = mathFunction(geomArray, options)
+        const dataMax = math.max(sizeArray)
+        const dataMin = math.min(sizeArray)
+        const newBounds = [dataMin, dataMax]
 
         // new: filter feature (2017 Nov. )
         if (node.filter) {
             let { min, max } = node.filter
             console.log('[filter]', { min, max })
-
-            const dataMax = math.max(sizeArray)
-            const dataMin = math.min(sizeArray)
             const range = dataMax - dataMin
 
             console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
@@ -860,7 +854,7 @@ class VPL extends React.Component {
             // shaderText: this.newProps.layers[0].shaderText,
             cols: firstLayer.rowsCols.cols,
             rows: firstLayer.rowsCols.rows,
-            bounds: firstLayer.bounds,
+            bounds: newBounds,
             shaderText: firstLayer.shaderText,
             // n: this.newProps.layers.length + 1,
             n: _.size(this.newProps.layers) + 1,
@@ -1090,7 +1084,6 @@ class VPL extends React.Component {
         const nodeHashKey =
             (+new Date()).toString(32) +
             Math.floor(Math.random() * 36).toString(36)
-
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
