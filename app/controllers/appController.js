@@ -1,6 +1,5 @@
 var Model = require('../models');
 var s3 = require('../../lib/awsFs');
-var screenshot = require('desktop-screenshot');
  
 module.exports.show = function(req, res) {
   if(req.isAuthenticated()) {
@@ -20,12 +19,8 @@ module.exports.show = function(req, res) {
 
 //add route here to accept blob from frontend and save it to s3 database
 module.exports.uploadScreenshot = function(req, res) {
-  
-
+  console.log(req.body);
 }
-
-
-    
             
 module.exports.getDatajsons = function(req, res){
   // add toggle in first datajson indicating if we should screenshot this page
@@ -38,10 +33,11 @@ module.exports.getDatajsons = function(req, res){
       }).then(function(voxel) {
         if (voxel.Datavoxelimage === null) {
           //screenshot needed
-          datajsons.push({screenshot: true});
+          //datajsons.push({screenshot: true});
           res.json(datajsons);
         } else {
-          datajsons.push({screenshot: false});
+          //screenshot not needed
+          //datajsons.push({screenshot: false});
           res.json(datajsons);
         }  
     });
