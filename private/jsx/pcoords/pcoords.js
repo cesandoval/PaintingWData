@@ -48,25 +48,16 @@ class PCoords extends React.Component {
                         visibleNames[key] = {}
                     }
                 }
-                // TODO if the visible names are empty, destroy de dimensions.....
                 if (
-                    Object.keys(visibleNames).length === 0 &&
-                    visibleNames.constructor === Object
+                    !(
+                        Object.keys(visibleNames).length === 0 &&
+                        visibleNames.constructor === Object
+                    )
                 ) {
-                    // This is supposed to destroy the dimensions, but it is not....
-                    // this.pc
-                    //     .dimensions({})
-                    //     .render()
-                    //     .removeAxes()
-                    // console.log(this.pc.state)
-                    Act.setPanelShow({ value: '' })
-                } else {
                     this.pc
                         .dimensions(visibleNames)
                         .render()
                         .updateAxes()
-                    // Only update if the previous state was not showing pcoords?
-                    Act.setPanelShow({ value: 'PCoords' })
                 }
                 if (nprops.pcoordsValue != 'undefined') {
                     this.pc.brushExtents(nprops.pcoordsValue)
@@ -281,13 +272,38 @@ class PCoords extends React.Component {
     }
     render() {
         let pcoordsRef = parcoords => (this.pcoordsRef = parcoords)
+        const hasVisibleLayers = this.state.visibleLayers ? true : false
+
         return (
             <div
                 id="parcoords"
                 className="parcoords"
                 ref={pcoordsRef}
                 style={this.style()}
-            />
+            >
+                <style jsx>{`
+                    #parcoords {
+                        &::after {
+                            content: 'No Visible Dataset Layers';
+                            visibility: ${hasVisibleLayers ? 'hidden' : ''};
+                            position: absolute;
+                            margin: auto;
+                            top: 139px;
+                            left: 0;
+                            right: 0;
+                            text-align: center;
+                            font-size: 18px;
+                            width: 320px;
+                            letter-spacing: 1px;
+                            font-weight: 500;
+                        }
+
+                        :global(svg) {
+                            visibility: ${hasVisibleLayers ? '' : 'hidden'};
+                        }
+                    }
+                `}</style>
+            </div>
         )
     }
 }
