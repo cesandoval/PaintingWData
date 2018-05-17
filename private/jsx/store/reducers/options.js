@@ -9,9 +9,10 @@ const initialOptionsState = {
 export default (state = initialOptionsState, action) => {
     switch (action.type) {
         case t.IMPORT_USERFILE: {
-            const { data } = action
-            const { options } = data
+            const newState = action
+            const { options } = newState
 
+            // Merges the options' properties together. The later arguments' properties take precedence.
             return Object.assign({}, state, options)
         }
 

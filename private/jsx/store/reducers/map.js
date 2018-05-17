@@ -14,6 +14,20 @@ const initialMapState = {
 
 export default (state = initialMapState, action) => {
     switch (action.type) {
+        case t.IMPORT_USERFILE: {
+            /*eslint-disable*/
+            debugger;
+            const {saveMap} = action;
+
+            let newState = {}
+            newState.bbox = saveMap
+
+
+
+
+            return Object.assign({}, state)
+        }
+
         case t.MAP_INIT: {
             const { instance, datasetsLayers } = action
 

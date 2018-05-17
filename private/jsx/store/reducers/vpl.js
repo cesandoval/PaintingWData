@@ -42,9 +42,10 @@ export default (state = initialState, action) => {
 
     switch (action.type) {
         case t.IMPORT_USERFILE: {
-            const { data } = action
-            const { vpl } = data
+            const newState = action
+            const { vpl } = newState
 
+            // Merges the options' properties together. The later arguments' properties take precedence.
             return Object.assign({}, state, vpl)
         }
 

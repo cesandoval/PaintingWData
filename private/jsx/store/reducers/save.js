@@ -15,6 +15,7 @@ export default (state = initialMapState, action) => {
     switch (action.type) {
         case t.SAVE_USERFILE: {
             //const { instance, info } = action
+
             fetch('/saveuserfile/', {
                 //Important: I don't know why this isn't authenticating, but I'll ask Carlos...
                 method: 'POST',

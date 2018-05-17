@@ -11,13 +11,15 @@ import Map from './map/map'
 export default class App extends React.Component {
     // TODO: when the user closes out, save the userFile
     componentDidMount() {
+        /*eslint-disable*/
         fetch(`/importuserfile/${datavoxelId}`, {
-            method: 'POST',
+            method: 'GET',
             credentials: 'include',
         })
-            .then(data => {
-                console.log(data)
-                Act.importUserfile({data.options})
+            .then(data => data.json())
+            .then(newState => {
+                debugger;
+                Act.importUserfile(newState);
             })
             .catch(e => console.log('importUserfile() error', e))
     }

@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     state: DataTypes.JSON, //the hash type!
     userId: DataTypes.INTEGER,
     datavoxelId: DataTypes.INTEGER,
+    voxelId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
