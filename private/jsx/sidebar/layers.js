@@ -63,7 +63,8 @@ class Layers extends React.Component {
                     const hashKey =
                         (+new Date()).toString(32) +
                         Math.floor(Math.random() * 36).toString(36)
-                    if (dataset.layerKey == 'undefined') {
+
+                    if (!dataset.layerKey) {
                         dataset.layerKey = hashKey
                     }
                     return dataset
