@@ -153,7 +153,7 @@ export const ADD = {
 
 export const MIN = {
     fullName: 'MIN',
-    class: 'assembly',
+    class: 'set',
     desc: `
         MIN
     `,
@@ -170,7 +170,7 @@ export const MIN = {
 
 export const MAX = {
     fullName: 'MAX',
-    class: 'assembly',
+    class: 'set',
     desc: `
         MAX
     `,
