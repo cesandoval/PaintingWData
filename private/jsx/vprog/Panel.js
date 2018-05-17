@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
 
+import * as NodeType from './nodeTypes'
+
 class Panel extends React.Component {
     constructor(props) {
         super(props)
@@ -156,20 +158,6 @@ class Panel extends React.Component {
 
     changeFilter = ([min, max]) => {
         console.log(`changeFilter(${min}, ${max})`)
-        const currIndex = this.props.index
-        const highBnd = this.props.geometries[currIndex].highBnd
-        const lowBnd = this.props.geometries[currIndex].lowBnd
-        const valDiff = highBnd - lowBnd
-        const remap = function(x) {
-            if (x != 0) {
-                return valDiff * (x / 1) + lowBnd
-            } else {
-                return 0
-            }
-        }
-
-        min = remap(min)
-        max = remap(max)
         const filter = { min, max }
 
         Act.nodeUpdate({
@@ -177,6 +165,8 @@ class Panel extends React.Component {
             attr: 'filter',
             value: filter,
         })
+
+        this.props.updateFilter()
     }
 
     render() {
@@ -191,6 +181,8 @@ class Panel extends React.Component {
                 onAfterChange={this.changeFilter}
             />
         )
+        const type = this.props.type
+        const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
 
         return (
             <g>
@@ -233,7 +225,7 @@ class Panel extends React.Component {
                             style={margin0px}
                             src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0OTAgNDkwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA0OTAgNDkwOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTI2Mi43LDc2LjZWMThjMC4xLTkuOS03LjktMTgtMTcuOS0xOGMtOS45LDAtMTgsOC4xLTE4LDE4djQzLjRjLTQ4LjQsNC43LTkzLDI4LjMtMTI0LjMsNjYuMmMtNi4zLDcuNy01LjIsMTksMi40LDI1LjMgICAgYzMuNCwyLjgsNy40LDQuMSwxMS40LDQuMWM1LjIsMCwxMC4zLTIuMiwxMy45LTYuNWMyNC41LTI5LjcsNTguOS00OC40LDk2LjUtNTN2NDEuNGMwLDkuOSw4LjEsMTgsMTgsMThzMTgtOC4xLDE4LTE4VjgwLjIgICAgYzAuMS0wLjYsMC4xLTEuMiwwLjEtMS44QzI2Mi44LDc3LjgsMjYyLjgsNzcuMiwyNjIuNyw3Ni42eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTM4NC45LDMzNy4xYy03LjctNi4zLTE5LTUuMi0yNS4zLDIuNGMtMjQuNSwyOS43LTU5LDQ4LjQtOTYuNiw1M3YtNDEuN2MwLTkuOS04LjEtMTgtMTgtMThjLTkuOSwwLTE4LDguMS0xOCwxOFY0NzIgICAgYy0wLjEsOS45LDgsMTgsMTcuOSwxOGM5LjksMCwxOC04LjEsMTgtMTh2LTQzLjNjNDguNC00LjcsOTMtMjguMywxMjQuNC02Ni4zQzM5My42LDM1NC43LDM5Mi41LDM0My40LDM4NC45LDMzNy4xeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE1MC41LDM1OS43Yy0yOS43LTI0LjUtNDguNS01OS4xLTUzLTk2LjhoNDEuNGM5LjksMCwxOC04LjEsMTgtMThjMC05LjktOC4xLTE4LTE4LTE4SDE4LjFjLTkuOSwwLTE4LDguMS0xOCwxOCAgICBjMCw5LjksOCwxOCwxOCwxOGg0My4yYzQuNyw0OC41LDI4LjMsOTMuMiw2Ni4zLDEyNC42YzMuNCwyLjgsNy40LDQuMSwxMS40LDQuMWM1LjIsMCwxMC4zLTIuMiwxMy45LTYuNiAgICBDMTU5LjIsMzc3LjMsMTU4LjEsMzY2LDE1MC41LDM1OS43eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTQ3MS45LDIyNi45aC00My40Yy00LjctNDguNS0yOC40LTkzLjItNjYuNS0xMjQuNWMtNy43LTYuMy0xOS01LjItMjUuMywyLjVjLTYuMyw3LjctNS4yLDE5LDIuNSwyNS4zICAgIGMyOS44LDI0LjUsNDguNiw1OSw1My4yLDk2LjdoLTQxLjVjLTkuOSwwLTE4LDguMS0xOCwxOGMwLDkuOSw4LjEsMTgsMTgsMThoNTguN2MwLjYsMC4xLDEuMiwwLjEsMS44LDAuMWMwLjYsMCwxLjMsMCwxLjktMC4xICAgIGg1OC42YzkuOSwwLDE4LTguMSwxOC0xOEM0ODkuOSwyMzUsNDgxLjgsMjI2LjksNDcxLjksMjI2Ljl6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8Y2lyY2xlIGN4PSIyNDUiIGN5PSIyNDUiIHI9IjE5LjkiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
                         />
-                        {this.props.type !== 'DATASET' && (
+                        {hasFilter && (
                             <Popover
                                 placement="bottom"
                                 title="Filter"

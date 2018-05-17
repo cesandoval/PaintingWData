@@ -127,7 +127,6 @@ class VPL extends React.Component {
                 y: 0,
             }
         }
-
         const newNode = {
             name: type,
             type: type,
@@ -739,8 +738,6 @@ class VPL extends React.Component {
 
     // TODO: refactoring this function.
     evalArithmeticNode = (node, mathFunction, options, geometries) => {
-        // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
-        // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.datasets.allIndices
@@ -760,13 +757,16 @@ class VPL extends React.Component {
         )
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
+
         let sizeArray = mathFunction(geomArray, options)
+        const dataMax = math.max(sizeArray)
+        const dataMin = math.min(sizeArray)
+        const newBounds = [dataMin, dataMax]
 
         // new: filter feature (2017 Nov. )
-        if (node.options.filter) {
-            let { min, max } = node.options.filter
-            const dataMax = math.max(sizeArray)
-            const dataMin = math.min(sizeArray)
+        if (node.filter) {
+            let { min, max } = node.filter
+            console.log('[filter]', { min, max })
             const range = dataMax - dataMin
 
             console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
@@ -774,6 +774,11 @@ class VPL extends React.Component {
             max = dataMin + max * range
             sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
             console.log('[filter] After', { min, max }, sizeArray)
+        }
+
+        if (NodeType[node.type].class == 'logic') {
+            const trueValue = this.props.datasets.bounds[1]
+            sizeArray = sizeArray.map(x => (x ? trueValue : x))
         }
 
         /*
@@ -805,6 +810,7 @@ class VPL extends React.Component {
             }
         }
 
+        /*
         let min = math.min(Array.from(sizeArray))
         let max
 
@@ -828,25 +834,19 @@ class VPL extends React.Component {
         }
 
         let remapOriginalSize = sizeArray.map(remap)
+        */
+
         let props = {
-            size: remapOriginalSize,
+            // size: remapOriginalSize,
+            size: sizeArray,
             translation: translationArray,
         }
 
         const firstLayer = Object.values(this.newProps.layers)[0]
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
-        // const { min = 0, max = 1 } = node.filter
-        // let minMax = this.newProps.datasets.minMax
-        const minMax = [0, 1]
-        if (node.filter) {
-            minMax[0] = node.filter.min || 0
-            minMax[1] = node.filter.max || 0
-        }
-
         let geometry = {
-            // minMax: this.newProps.datasets.minMax,
-            minMax,
+            minMax: this.newProps.datasets.minMax,
             addressArray: firstGeometry.addresses,
             // addressArray: this.newProps.map.geometries[
             //     Object.keys(this.newProps.map.geometries)[0]
@@ -858,7 +858,7 @@ class VPL extends React.Component {
             // shaderText: this.newProps.layers[0].shaderText,
             cols: firstLayer.rowsCols.cols,
             rows: firstLayer.rowsCols.rows,
-            bounds: firstLayer.bounds,
+            bounds: newBounds,
             shaderText: firstLayer.shaderText,
             // n: this.newProps.layers.length + 1,
             n: _.size(this.newProps.layers) + 1,
@@ -1032,6 +1032,9 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
+                        updateFilter={() => {
+                            this.refreshVoxels = true
+                        }}
                         // changeFilter={(min, max) => {
                         //     this.changeNodeFilter(nodeKey, min, max)
                         // }}
@@ -1085,7 +1088,6 @@ class VPL extends React.Component {
         const nodeHashKey =
             (+new Date()).toString(32) +
             Math.floor(Math.random() * 36).toString(36)
-
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
