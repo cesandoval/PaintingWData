@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
+import PieChart from '../charts/charts'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
 
@@ -165,6 +166,21 @@ class MapCanvas extends React.Component {
         const panelShow = this.props.panelShow
         return (
             <div>
+                <div
+                    style={{
+                        display: panelShow == 'PCoords' ? '' : 'none',
+                        width: '80vw',
+                        height: '300px',
+                        position: 'fixed',
+                        overflow: 'hidden',
+                        bottom: '30px',
+                        right: '0',
+                        zIndex: '100',
+                        opacity: 0.5,
+                    }}
+                >
+                    <PieChart />
+                </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
