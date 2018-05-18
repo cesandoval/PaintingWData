@@ -759,12 +759,43 @@ class VPL extends React.Component {
         // let sizeArray = mathFunction(geomArray1, geomArray2);
 
         let sizeArray = mathFunction(geomArray, options)
-        const dataMax = math.max(sizeArray)
-        const dataMin = math.min(sizeArray)
-        const newBounds = [dataMin, dataMax]
+
+        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+
+        const originDataMax = math.max(sizeArray)
+        const originDataMin = math.min(sizeArray)
+        const newBounds = [originDataMin, originDataMax]
+
+        // console.log(node.type, { originDataMax, originDataMin })
+
+        Act.nodeUpdate({
+            nodeKey: node.nodeKey,
+            attr: 'max',
+            value: originDataMax,
+        })
+
+        if (node.remap) {
+            const dataMax = math.max(sizeArray)
+            // const dataMin = math.min(sizeArray)
+            const dataMin = 0
+            const originScale = dataMax - dataMin
+            const newScale = node.remap.max - dataMin
+
+            const remap = x => (x ? x * newScale / originScale + dataMin : 0)
+            // if (x != 0) {
+            //     return valDiff * ((x - min) / (max - min)) + dataMin
+            // } else {
+            //     return 0
+            // }
+
+            if (originScale > 0) sizeArray = sizeArray.map(remap)
+        }
 
         // new: filter feature (2017 Nov. )
         if (node.filter) {
+            const dataMax = math.max(sizeArray)
+            const dataMin = math.min(sizeArray)
+
             let { min, max } = node.filter
             console.log('[filter]', { min, max })
             const range = dataMax - dataMin
@@ -1032,7 +1063,7 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
-                        updateFilter={() => {
+                        updated={() => {
                             this.refreshVoxels = true
                         }}
                         // changeFilter={(min, max) => {

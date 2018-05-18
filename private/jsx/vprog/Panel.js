@@ -12,9 +12,8 @@ class Panel extends React.Component {
         this.props = props
 
         this.state = {
+            node: {},
             visible: true,
-            // color1: '#000000',
-            // color2: '#000000',
             color: this.props.color,
         }
 
@@ -47,6 +46,7 @@ class Panel extends React.Component {
         }
 
         this.setState({
+            node,
             visible: node.visibility,
             color: node.color,
         })
@@ -166,20 +166,56 @@ class Panel extends React.Component {
             value: filter,
         })
 
-        this.props.updateFilter()
+        this.props.updated()
+    }
+
+    changeRemapMax = remapMax => {
+        console.log(`changeRemapMax(${remapMax})`)
+        const remap = { min: 0, max: remapMax }
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'remap',
+            value: remap,
+        })
+
+        this.props.updated()
     }
 
     render() {
         const margin0px = { margin: '0px' }
+
+        const node = this.state.node
+        const filterMax = node.filter ? node.filter.max : 1
+        const filterMin = node.filter ? node.filter.min : 0
+        const filterDefault = [filterMin, filterMax]
+
+        const regularMax = this.props.regularMax
+        const dataMax = node.max || regularMax
+        const remapMax = node.remap && node.remap.max ? node.remap.max : dataMax
+
         const filter = (
-            <Slider
-                range
-                defaultValue={[0, 1]}
-                min={0}
-                max={1}
-                step={0.01}
-                onAfterChange={this.changeFilter}
-            />
+            <div>
+                <span>Filter</span>
+                <Slider
+                    range
+                    defaultValue={filterDefault}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    onAfterChange={this.changeFilter}
+                />
+                <hr />
+                <br />
+                <span>Remap</span>
+                <Slider
+                    marks={{ [regularMax]: 'Regular', [dataMax]: 'Max' }}
+                    defaultValue={remapMax}
+                    max={dataMax}
+                    step={0.01}
+                    onAfterChange={this.changeRemapMax}
+                />
+            </div>
         )
         const type = this.props.type
         const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
@@ -228,7 +264,7 @@ class Panel extends React.Component {
                         {hasFilter && (
                             <Popover
                                 placement="bottom"
-                                title="Filter"
+                                title="Transformations"
                                 content={filter}
                                 trigger="click"
                             >
@@ -261,6 +297,7 @@ const mapStateToProps = state => {
         links: state.vpl.links,
         map: state.map,
         geometries: state.map.geometries,
+        regularMax: state.datasets.bounds[1],
     }
 }
 
