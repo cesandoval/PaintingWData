@@ -5,6 +5,7 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet", href="/stylesheets/layers.css")
   link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
+  link(rel="stylesheet", href="/stylesheets/dropdown-checklist.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/layers.js")
   script(src="/javascripts/js/bootstrap-slider.js")
@@ -14,6 +15,12 @@ block pageTitle
     .container
       .row.col-md-9.spacing
         h1 Layers
+
+        //- select#dropdown(multiple='multiple')
+        //-   option Low
+        //-   option Medium
+        //-   option High
+
 
       if (layerAlert)
         .alert.alert-danger(role='alert') #{layerAlert}
@@ -76,7 +83,20 @@ block pageTitle
                         
                         br
                         br
-              
+
+
+                    div(data-role='fieldcontain')
+                      fieldset(data-role='controlgroup')
+                        label.w3-label(for="location").
+                          Something Something
+                        select#dropdown(multiple='multiple')
+                          for value, key in JSON.parse(datafile.Datadbfs[0].properties)
+                            if typeof(value) == "number"
+                              option #{key}  
+
+
+
+
                 p.label-body.text-center
                   a.modal-button.btn(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
 
@@ -149,4 +169,5 @@ block pageTitle
   script(src="/javascripts/map_thumbnail_viewer.js")
   script(src="/javascripts/user_layer.js")
   // script(src="/javascripts/layer_viewer.js") 
+  script(src="/javascripts/dropdown-checklist.js")  
     

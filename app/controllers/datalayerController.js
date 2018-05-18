@@ -16,10 +16,14 @@ module.exports.computeVoxels = function(req, res){
 
         var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
         // only using the keys of the object right now, should also use the (raster) values?
-        console.log(datalayerIdsAndRasterValsObject);
+        console.log(".datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
+
+
         for (datalayerId in datalayerIdsAndRasterValsObject){
             datalayerIds.push(datalayerId);
         }
+
+        console.log("datalayerIds: ", datalayerIds);
 
         if (req.body.layerButton == 'delete') {
             Model.Datafile.update({
@@ -48,7 +52,8 @@ module.exports.computeVoxels = function(req, res){
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity, 'datalayerIdsAndProps': datalayerIdsAndRasterValsObject}};
             var datalayerIds = [];
             var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
-            console.log(datalayerIdsAndRasterValsObject);
+            console.log("datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
+            
             for (datalayerId in datalayerIdsAndRasterValsObject){
                 datalayerIds.push(datalayerId);
             }
