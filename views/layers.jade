@@ -71,24 +71,24 @@ block pageTitle
                         label.layer-label Layer Location
                         p.label-body #{datafile.Datalayers[0].location}
 
+                    //- div(data-role='fieldcontain')
+                    //-   fieldset(data-role='controlgroup')
+                    //-     label.w3-label(for="location").
+                    //-       Selected Data Property
+                    //-     //- Get all the possible properties
+                    //-     select.form-control(id='rasterProperty', name='rasterProperty')
+                    //-       for value, key in JSON.parse(datafile.Datadbfs[0].properties)
+                    //-         if typeof(value) == "number"
+                    //-           option #{key}  
+                        
+                    //-     br
+                    //-     br
+
+
                     div(data-role='fieldcontain')
                       fieldset(data-role='controlgroup')
                         label.w3-label(for="location").
                           Selected Data Property
-                        //- Get all the possible properties
-                        select.form-control(id='rasterProperty', name='rasterProperty')
-                          for value, key in JSON.parse(datafile.Datadbfs[0].properties)
-                            if typeof(value) == "number"
-                              option #{key}  
-                        
-                        br
-                        br
-
-
-                    div(data-role='fieldcontain')
-                      fieldset(data-role='controlgroup')
-                        label.w3-label(for="location").
-                          Something Something
                         select#dropdown(multiple='multiple')
                           for value, key in JSON.parse(datafile.Datadbfs[0].properties)
                             if typeof(value) == "number"

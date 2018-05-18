@@ -6,12 +6,18 @@ var maps = [];
 var $datalayers = $('.datalayer');
 var $selectedLayers = $('#selectedLayers');
 var selectedLayerIds = {}
+var dropdownSelectedLayerIds = {}
 
 function getDatafileId(leafletMap){
     return leafletMap.attr('id').split("_")[1];
 }
 
 function updataSelectedLayersValueString(selectedLayerIds){
+    for (var id in selectedLayerIds) {
+        if (selectedLayerIds[id] == ""){
+            delete selectedLayerIds[id];
+        }
+    }
     $selectedLayers.val("");
     var valueString = "";
     valueString = JSON.stringify(selectedLayerIds);
@@ -30,7 +36,8 @@ $datalayers.click(function(){
     if(!($datalayer.hasClass("selected_layer"))){
         $datalayer.addClass('selected_layer');
         var id = getDatafileId($($datalayer.find(".leafletMap")));
-        var rasterProperty = $($datalayer.find("#rasterProperty")).val(); //use jquery to grab property selected from form
+        // var rasterProperty = $($datalayer.find("#rasterProperty")).val(); //use jquery to grab property selected from form
+        var rasterProperty = dropdownSelectedLayerIds[id];
         selectedLayerIds[id] = rasterProperty;
         updataSelectedLayersValueString(selectedLayerIds)
         console.log($selectedLayers.val());

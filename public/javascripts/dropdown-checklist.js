@@ -2,6 +2,37 @@
 
 
 
+// document.querySelectorAll("#dropdown").forEach(function(element) {
+//     $(element).dropdownchecklist({ emptyText: "Please select ...", width: 150 });
+// })
+
+
 document.querySelectorAll("#dropdown").forEach(function(element) {
-    $(element).dropdownchecklist({ emptyText: "Please select ...", width: 150 });
-})
+    $(element).dropdownchecklist( { forceMultiple: true
+        , onComplete: function(selector) {
+            var values = "";
+            for( i=0; i < selector.options.length; i++ ) {
+                if (selector.options[i].selected && (selector.options[i].value != "")) {
+                    if ( values != "" ) values += ";";
+                    values += selector.options[i].value;
+                }
+            }
+            // Get the values the user selected
+            var id = getDatafileId($(element).parent().parent().parent().parent().parent() .find(".leafletMap") ) ;
+            dropdownSelectedLayerIds[id] = values;
+              
+            if ($(element).parent().parent().parent().parent().parent() .find('.selected_layer').length ) {
+                // console.log("this layer has been selected already");
+                var rasterProperty = dropdownSelectedLayerIds[id];
+                selectedLayerIds[id] = rasterProperty;
+                updataSelectedLayersValueString(selectedLayerIds)
+                console.log($selectedLayers.val());                        
+            }
+        } 
+        , onItemClick: function(checkbox, selector){
+            // var justChecked = checkbox.prop("checked");
+            // console.log(checkbox);
+        }
+            });
+     })
+
