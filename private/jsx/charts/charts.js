@@ -2,19 +2,15 @@ import React from 'react'
 import { connect } from 'react-redux'
 // import * as Act from '../store/actions'
 import { VictoryLine, VictoryGroup, VictoryChart, VictoryStack } from 'victory'
+var kernel = require('kernel-smooth')
 // var science = require('science')
 
 class Charts extends React.Component {
-    // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
-    // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
-
     constructor(props) {
         super(props)
 
-        this.state = { densityData: [] }
+        this.state = { densityData: [], layerColor: [] }
     }
-
-    componentDidMount() {}
 
     componentWillReceiveProps(newProps) {
         if (
@@ -27,70 +23,43 @@ class Charts extends React.Component {
             this.setState({ started: true })
             this.props = newProps
             this.setState({ densityData: this.getDensityData() })
+            // color1
         }
     }
 
     getDensityData() {
-        // var margin = { top: 20, right: 30, bottom: 30, left: 40 }
-
-        // var x = d3.scale
-        //     .linear()
-        //     .domain([30, 110])
-        //     .range([margin.left, 960 - margin.right])
-
-        let layersVals = {}
+        let layersVals = []
         for (var index in this.props.layers) {
             let currLayer = this.props.layers[index]
+
             let vals = []
             for (var currPoint in currLayer.geojson.otherdata) {
-                vals.push(currLayer.geojson.otherdata[currPoint][3])
+                let currVal = currLayer.geojson.otherdata[currPoint][3]
+                if (currVal != 0) {
+                    vals.push(currVal)
+                }
             }
-            layersVals[index] = vals
-            // let density = this.kernelDensityEstimator(
-            //     this.kernelEpanechnikov(7),
-            //     x.ticks(40)
-            // )(vals)
-            // console.log(density)
-            /* eslint-disable */
-            var kde = science.stats.kde().sample(vals)
-            console.log(kde.bandwidth(500)(d3.range(0, 100, 1)))
+
+            let density = kernel.density(vals, kernel.fun.gaussian, 0.5)
+            let max = math.max(vals)
+            let stepSize = max / 512
+            let xRange = d3.range(0, max, stepSize)
+            let currDensityData = []
+            for (let i in xRange) {
+                currDensityData.push({ x: i, y: density(xRange[i]) })
+            }
+            layersVals.push(currDensityData)
+
+            let currColors = this.state.layerColor
+            currColors.push(currLayer.color1)
+            this.setState({ layerColor: currColors })
         }
 
-        console.log(layersVals)
-        return _.range(7).map(() => {
-            return [
-                { x: 1, y: _.random(1, 5) },
-                { x: 2, y: _.random(1, 10) },
-                { x: 3, y: _.random(2, 10) },
-                { x: 4, y: _.random(2, 10) },
-                { x: 5, y: _.random(2, 15) },
-            ]
-        })
-    }
-
-    kernelDensityEstimator(kernel, X) {
-        return function(V) {
-            return X.map(function(x) {
-                return [
-                    x,
-                    d3.mean(V, function(v) {
-                        return kernel(x - v)
-                    }),
-                ]
-            })
-        }
-    }
-
-    kernelEpanechnikov(k) {
-        return function(v) {
-            return Math.abs((v /= k)) <= 1 ? 0.75 * (1 - v * v) / k : 0
-        }
+        return layersVals
     }
 
     render() {
-        // let chartsRef = charts => (this.pcoordsRef = charts)
-        // width: '80vw',
-        // height: '300px',
+        console.log(this.state)
         return (
             <VictoryChart width={1010} height={500}>
                 <VictoryGroup
@@ -103,7 +72,9 @@ class Charts extends React.Component {
                             return (
                                 <VictoryLine
                                     style={{
-                                        data: { stroke: 'cyan' },
+                                        data: {
+                                            stroke: this.state.layerColor[i],
+                                        },
                                     }}
                                     key={i}
                                     data={data}

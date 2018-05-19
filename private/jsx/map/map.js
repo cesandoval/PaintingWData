@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
-import PieChart from '../charts/charts'
+import DensityChart from '../charts/charts'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
 
@@ -176,10 +176,10 @@ class MapCanvas extends React.Component {
                         bottom: '30px',
                         right: '0',
                         zIndex: '100',
-                        opacity: 0.5,
+                        opacity: 0.6,
                     }}
                 >
-                    <PieChart />
+                    <DensityChart />
                 </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
