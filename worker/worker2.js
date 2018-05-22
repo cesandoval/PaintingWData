@@ -3,13 +3,13 @@ var Channel = require('./channel'),
     pushShapes = require('./fileProcessor').pushShapes,
     util = require('util');
 
-var redisConfig;  
+var redisConfig;
 
 var RedisServer = require('redis-server');
 
 // Simply pass the port that you want a Redis server to listen on.
 var server = new RedisServer(6379);
- 
+
 server.open((err) => {
   if (err === null) {
     console.log("redis server connected")
@@ -19,7 +19,7 @@ server.open((err) => {
 });
 
 
-if (process.env.NODE_ENV === 'production') {  
+if (process.env.NODE_ENV === 'production') {
   redisConfig = {
     redis: {
       port: process.env.REDIS_PORT,
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
   };
 }
 
-var kue = require('kue'), 
+var kue = require('kue'),
     queue = kue.createQueue(redisConfig);
 
 queue.watchStuckJobs(6000);
@@ -54,7 +54,7 @@ queue.on('error', (err) => {
 
 //data -> datalayerIds, and req
 //done is callback
-function processVoxels(data, done) {  
+function processVoxels(data, done) {
   queue.create('computeVoxel', data)
     .priority('critical')
     .attempts(2)
@@ -75,10 +75,10 @@ queue.process('computeVoxel', 3, (job, done) => {
   var data = job.data;
   var datalayerIds = data[0];
   var req = data[1];
-  
+
   proc(datalayerIds, req, function (message) {
     console.log(message);
-  }); 
+  });
   done();
 });
 
@@ -110,7 +110,7 @@ queue.process('saveLayer', 5, (job, done) => {
   // console.log(JSON.parse(data))
   pushShapes(req, function (message) {
     console.log(message);
-  }); 
+  });
   done();
 });
 

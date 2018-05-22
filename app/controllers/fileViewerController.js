@@ -5,11 +5,12 @@ var fileViewerHelper = require('../../lib/fileViewerHelper'),
     var User = require('../models').User;
 
 var Model = require('../models'),
-    async = require('async');
+    async = require('async'),
+    express = require('express');
 
 module.exports.saveShapes = function(req, res) {
     var newReq = {
-        body: { 
+        body: {
             rasterProperty: req.body.rasterProperty,
             datafileId : req.body.datafileId,
             layername: req.body.layername,
@@ -21,9 +22,30 @@ module.exports.saveShapes = function(req, res) {
             id: req.user.id
         }
     }
+    var app = express()
 
-    processShapes(newReq, function(){});
-    res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
+    Model.User.findById(req.user.id).then(function(user) {
+        //send user an email
+        var uploadsSize = parseFloat(user.uploadsSize);
+        var newUploadsSize = uploadsSize + parseFloat(req.body.size);
+        console.log('The user has uploaded a total of ' + newUploadsSize + ' mbs')
+
+        if (app.get('env') !== 'production') {
+            console.log(app.get('env'))
+            newUploadsSize = 0;
+        }
+        if (newUploadsSize <= 100 || user.paidUser) {
+            user.update({
+                uploadsSize: uploadsSize + parseFloat(req.body.size)
+            }).then(function() {
+                processShapes(newReq, function(){});
+                res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
+            })
+        } else {
+            req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
+            res.redirect('/uploadViewer/'+ req.body.datafileId + '$$' + req.body.size); 
+        }
+    })
 }
 
 module.exports.getDatalayers = function(req, res){
@@ -50,13 +72,13 @@ module.exports.serveMapData = function(req, res) {
         fileViewerHelper.getGeoJSON,
     ], function (err, result) {
         res.send({
-            bBox : result[0], 
+            bBox : result[0],
             geoJSON: result[1],
             centroid: result[2],
             fields : result[3],
             epsg: result[4]
         })
-    });  
+    });
 }
 
 module.exports.serveThumbnailData = function(req, res) {
@@ -66,9 +88,9 @@ module.exports.serveThumbnailData = function(req, res) {
         res.send({
             geoJSON: result[0],
             centroid: result[2],
-            bBox : result[1], 
+            bBox : result[1],
             // fields : result[3],
             // epsg: result[4]
         })
-    });  
+    });
 }
