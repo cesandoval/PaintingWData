@@ -1,6 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as Act from '../store/actions'
+
+// TODO: clean and rafctor knn algorithm
+
 class KnnSlider extends React.Component {
     constructor(props) {
         super(props)
@@ -14,20 +18,31 @@ class KnnSlider extends React.Component {
     }
 
     componentWillReceiveProps(nprops) {
-        this.layers = nprops.layers
         this.geometries = nprops.geometries
 
         const layersNeighbors = {}
+
+        /* use `Object.entries` to replace `for in`
         for (var key in this.geometries) {
             if (this.geometries.hasOwnProperty(key)) {
                 layersNeighbors[key] = this.neighborsOf(this.geometries[key])
             }
         }
+        */
+        Object.entries(this.geometries).map(([key, geometry]) => {
+            layersNeighbors[key] = this.neighborsOf(geometry)
+        })
+
         this.layersNeighbors = layersNeighbors
     }
 
-    handleSlide() {
-        let numberOfNeighbors = document.getElementById('knnSlider').value
+    handleSlide = e => {
+        // let numberOfNeighbors = document.getElementById('knnSlider').value
+        let numberOfNeighbors = e.target.value
+
+        Act.mapSetKNN({ value: e.target.value })
+
+        /* use `Object.entries` to replace `for in`
         for (var key in this.geometries) {
             if (this.geometries.hasOwnProperty(key)) {
                 this.getKNN(
@@ -38,6 +53,16 @@ class KnnSlider extends React.Component {
                 )
             }
         }
+        */
+
+        Object.entries(this.props.geometries).map(([key, geometry]) => {
+            this.getKNN(
+                geometry,
+                key,
+                this.layersNeighbors[key],
+                numberOfNeighbors
+            )
+        })
 
         if (window.renderSec) window.renderSec(0.2, 'KnnSlider')
     }
@@ -153,6 +178,7 @@ class KnnSlider extends React.Component {
         pixels.geometry.attributes.size.array = newSizes
     }
 
+    /*
     changeKNN(e) {
         // TODO: is this function useless?
 
@@ -162,6 +188,7 @@ class KnnSlider extends React.Component {
         //     geometry.material.uniforms.transparency.value = parseFloat(e.target.value) / 100.0;
         // }
     }
+    */
 
     render() {
         return (
@@ -178,7 +205,8 @@ class KnnSlider extends React.Component {
                             className="slider"
                             id="knnSlider"
                             type="range"
-                            onChange={() => this.handleSlide()}
+                            onChange={this.handleSlide}
+                            value={this.props.knn}
                             min="0"
                             max="8"
                             defaultValue="0"
@@ -196,8 +224,8 @@ class KnnSlider extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layers: state.sidebar.layers,
         geometries: state.map.geometries,
+        knn: state.options.knnValue,
     }
 }
 

@@ -29,12 +29,17 @@ class PCoords extends React.Component {
     componentWillReceiveProps(nprops) {
         // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
         // if(true && nprops.layers.length > 0){
-        if (!this.state.started && nprops.layers.length > 0) {
+        if (!this.state.started && !_.isEmpty(nprops.layers)) {
             // console.log(nprops, 8484848484)
             this.setState({ started: true })
 
+            /*
             const bounds = nprops.layers[0].bounds
             const indicesArray = nprops.layers[0].allIndices
+            */
+            const bounds = nprops.datasets.bounds
+            const indicesArray = nprops.datasets.allIndices
+
             this.lowBnd = bounds[0]
             this.highBnd = bounds[1]
 
@@ -142,7 +147,8 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        const pc = d3.parcoords()('#parcoords')
+        const pc = d3
+            .parcoords()('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -201,9 +207,12 @@ class PCoords extends React.Component {
         }
 
         // the range(min and max) of uniforms is 0 - 1
-        for (let name in minObjs) {
+        // for (let name in minObjs) {
+        for (let i in this.props.layers) {
             // review: replace minObjs to layerNames.length
-            let pixels = this.props.geometries[this.layersNameProperty[name]]
+            const layer = this.props.layers[i]
+            const name = `${layer.userLayerName}_${layer.propertyName}`
+            let pixels = this.props.geometries[layer.layerKey]
             pixels.material.uniforms.min.value = remap(
                 minObjs[name],
                 this.layerIndeces[name],
@@ -247,7 +256,8 @@ class PCoords extends React.Component {
 const mapStateToProps = state => {
     return {
         mapStarted: state.map.started,
-        layers: state.sidebar.layers,
+        datasets: state.datasets,
+        layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
     }
 }

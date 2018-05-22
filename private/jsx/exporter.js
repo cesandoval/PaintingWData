@@ -10,8 +10,11 @@ export default class Exporter {
         remap = false,
         translation = false
     ) {
+        console.log(pixels)
         let geomSize = pixels.geometry.attributes.size.array
         let geomTranslation = pixels.geometry.attributes.translation.array
+        let geomMin = pixels.material.uniforms.min.value
+        let geomMax = pixels.material.uniforms.max.value
 
         if (remap != false && translation != false) {
             var color = pixels.endColor
@@ -37,38 +40,39 @@ export default class Exporter {
             let y = geomTranslation[i + 2]
             if (x != 0 && y != 0) {
                 let size = geomSize[j]
+                if (size >= geomMin && size <= geomMax) {
+                    if (remap != false && translation != false) {
+                        var currCircle = [
+                            '<circle id="',
+                            j,
+                            '" r="',
+                            size,
+                            '" cx="',
+                            x + translation[0],
+                            '" cy="',
+                            y + translation[1],
+                            '" fill="',
+                            rgbColor,
+                            '" fill-opacity="',
+                            opacity,
+                            '" stroke-width="0"></circle>',
+                        ].join('')
 
-                if (remap != false && translation != false) {
-                    var currCircle = [
-                        '<circle id="',
-                        j,
-                        '" r="',
-                        size,
-                        '" cx="',
-                        x + translation[0],
-                        '" cy="',
-                        y + translation[1],
-                        '" fill="',
-                        rgbColor,
-                        '" fill-opacity="',
-                        opacity,
-                        '" stroke-width="0"></circle>',
-                    ].join('')
-
-                    allGeometries = allGeometries.concat(currCircle)
-                } else {
-                    var currPoint = {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [x, y],
-                        },
-                        properties: {
-                            value: size,
-                            layerName: layerName,
-                        },
+                        allGeometries = allGeometries.concat(currCircle)
+                    } else {
+                        var currPoint = {
+                            type: 'Feature',
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [x, y],
+                            },
+                            properties: {
+                                value: size,
+                                layerName: layerName,
+                            },
+                        }
+                        geomsJSON.push(currPoint)
                     }
-                    geomsJSON.push(currPoint)
                 }
             }
         }
