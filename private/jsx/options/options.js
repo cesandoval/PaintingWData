@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 
 import * as act from '../store/actions'
 
-import OptionsForm from './optionsForm'
 import OptionsMapStyle from './optionsMapStyle'
 import Button from 'react-bootstrap/lib/Button'
 
@@ -51,7 +50,6 @@ class Options extends React.Component {
     render() {
         return (
             <div className="options--react">
-                <OptionsForm />
                 <div
                     id="mapStyleOptions"
                     style={{
