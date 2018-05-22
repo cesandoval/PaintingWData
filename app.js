@@ -102,7 +102,6 @@ passport.use('login', Strategies.LoginStrategy)
 passport.use('facebookLogin', Strategies.FacebookLoginStrategy)
 passport.use('googleLogin', Strategies.GoogleLoginStrategy)
 
-
 app.use(express.static(path.join(__dirname, 'public')))
 
 // Routes
