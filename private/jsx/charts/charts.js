@@ -77,43 +77,53 @@ class Charts extends React.Component {
     }
 
     render() {
-        console.log(this.state, 'changgeeeee')
-        // this.state.fields.map(({ field, name, show }
+        const chartLength = this.state.densityData.length
+
         return (
-            <div>
-                {/* <VictoryGroup
-                    style={{
-                        densityData: { strokeWidth: 6 },
-                    }}
-                > */}
+            <div id="layer-charts">
                 {this.state.densityData.map((data, i) => {
                     return (
-                        <VictoryChart
-                            width={600}
-                            height={300}
-                            key={i}
-                            style={{
-                                parent: {
-                                    position: 'fixed',
-                                    height: '300px',
-                                    width: '80vw',
-                                },
-                            }}
-                        >
-                            <VictoryLine
+                        <span className="layer-chart" key={i}>
+                            <VictoryChart
                                 style={{
-                                    data: {
-                                        stroke: this.state.layerColor[i],
+                                    parent: {
+                                        height: '300px',
+                                        width:
+                                            chartLength <= 3
+                                                ? `calc(80vw / ${chartLength})`
+                                                : 'calc(80vw / 3)',
+                                        margin: 'auto',
                                     },
                                 }}
-                                key={i}
-                                data={data}
-                                interpolation={'natural'}
-                            />
-                        </VictoryChart>
+                            >
+                                <VictoryLine
+                                    style={{
+                                        data: {
+                                            stroke: this.state.layerColor[i],
+                                        },
+                                    }}
+                                    key={i}
+                                    data={data}
+                                    interpolation={'natural'}
+                                />
+                            </VictoryChart>
+                        </span>
                     )
                 })}
-                {/* </VictoryGroup> */}
+                <style jsx>{`
+                    #layer-charts {
+                        display: flex;
+                        overflow-x: scroll;
+                        overflow-y: hidden;
+                        cursor: ${chartLength <= 3 ? '' : 'ew-resize'};
+                    }
+
+                    .layer-chart {
+                        flex: 1;
+                        display: flex;
+                        text-align: center;
+                    }
+                `}</style>
             </div>
         )
     }
