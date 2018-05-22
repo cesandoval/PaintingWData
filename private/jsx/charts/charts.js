@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 // import * as Act from '../store/actions'
-import { VictoryLine, VictoryChart } from 'victory'
+import { VictoryLine, VictoryChart, VictoryLabel } from 'victory'
 var kernel = require('kernel-smooth')
 // var science = require('science')
 
@@ -48,6 +48,7 @@ class Charts extends React.Component {
 
     render() {
         const chartLength = this.state.densityData.length
+        const chartType = 'line'
 
         return (
             <div id="layer-charts">
@@ -66,19 +67,57 @@ class Charts extends React.Component {
                                     },
                                 }}
                             >
-                                <VictoryLine
+                                <VictoryLabel
+                                    textAnchor="start"
+                                    x={150}
+                                    y={25}
+                                    text={
+                                        this.props.nodes[key]
+                                            ? this.props.nodes[key].name
+                                            : ''
+                                    }
                                     style={{
-                                        data: {
-                                            stroke: this.props.nodes[key]
-                                                ? this.props.nodes[key].color
-                                                : 'gray',
-                                        },
+                                        fontSize: 14,
+                                        fontFamily: 'sans-serif',
+                                        fontStyle: 'normal',
+                                        fontVariant: 'normal',
+                                        fontWeight: 'normal',
+                                        fontStretch: 'normal',
+                                        lineHeight: 'normal',
                                     }}
-                                    key={key}
-                                    data={data}
-                                    interpolation={'natural'}
                                 />
-                            </VictoryChart>
+                                {chartType == 'line' && (
+                                    <VictoryLine
+                                        style={{
+                                            data: {
+                                                stroke: this.props.nodes[key]
+                                                    ? this.props.nodes[key]
+                                                          .color
+                                                    : '',
+                                            },
+                                        }}
+                                        key={key}
+                                        data={data}
+                                        interpolation={'natural'}
+                                    />
+                                )}
+
+                                {chartType == 'gg' && (
+                                    <VictoryLine
+                                        style={{
+                                            data: {
+                                                stroke: this.props.nodes[key]
+                                                    ? this.props.nodes[key]
+                                                          .color
+                                                    : 'gray',
+                                            },
+                                        }}
+                                        key={key}
+                                        data={data}
+                                        interpolation={'natural'}
+                                    />
+                                )}
+                            </VictoryChart>)
                         </span>
                     )
                 })}
