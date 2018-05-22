@@ -9,44 +9,19 @@ class Charts extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = { densityData: [], layerColor: [] }
+        this.state = { densityData: [] }
     }
 
     componentWillReceiveProps(newProps) {
-        if (
-            Object.keys(this.props.geometries).length !== 0 &&
-            this.props.geometries.constructor === Object
-        ) {
-            console.log('LOADING CHARTTTTTT')
-            let nodeLayers = Object.values(newProps.nodes).filter(
-                f => f.type == 'DATASET'
-            )
-            let visibleNodes = nodeLayers.filter(l => l.visibility)
-            console.log(visibleNodes, newProps.nodes, nodeLayers)
-            // newProps.nodes.map(({ name }) => {
-            //     console.log(name)
-            // })
-            // this.state.fields.map(({ field, name, show }) => (
-            //     <SurroundBox
-            //         key={name}
-            //         child={field}
-            //         name={name}
-            //         show={show}
-            //         onClick={this.onClick}
-            //     />
-            // ))
-            // this.state.node.color
-        }
         if (!this.state.started) {
             this.setState({ started: true })
             this.props = newProps
             this.setState({ densityData: this.getDensityData() })
-            // color1
         }
     }
 
     getDensityData() {
-        let layersVals = []
+        const layers = {}
         for (var index in this.props.layers) {
             let currLayer = this.props.layers[index]
 
@@ -66,14 +41,9 @@ class Charts extends React.Component {
             for (let i in xRange) {
                 currDensityData.push({ x: xRange[i], y: density(xRange[i]) })
             }
-            layersVals.push(currDensityData)
-
-            let currColors = this.state.layerColor
-            currColors.push(currLayer.color1)
-            this.setState({ layerColor: currColors })
+            layers[currLayer.layerKey] = currDensityData
         }
-
-        return layersVals
+        return layers
     }
 
     render() {
@@ -81,9 +51,9 @@ class Charts extends React.Component {
 
         return (
             <div id="layer-charts">
-                {this.state.densityData.map((data, i) => {
+                {Object.entries(this.state.densityData).map(([key, data]) => {
                     return (
-                        <span className="layer-chart" key={i}>
+                        <span className="layer-chart" key={key}>
                             <VictoryChart
                                 style={{
                                     parent: {
@@ -99,10 +69,12 @@ class Charts extends React.Component {
                                 <VictoryLine
                                     style={{
                                         data: {
-                                            stroke: this.state.layerColor[i],
+                                            stroke: this.props.nodes[key]
+                                                ? this.props.nodes[key].color
+                                                : 'gray',
                                         },
                                     }}
-                                    key={i}
+                                    key={key}
                                     data={data}
                                     interpolation={'natural'}
                                 />
