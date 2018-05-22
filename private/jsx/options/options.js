@@ -13,29 +13,38 @@ class Options extends React.Component {
         this.state = {}
         this.state.optionsMapStyleShow = true
 
+        /*
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(
             this
         )
+        */
     }
     componentDidMount() {
         // console.log(gElement);
     }
+    /*
     toggleOptionShow(option) {
         console.log(`toggleOptionShow(${option})`)
         if (this.props.map.optionShow == option) act.setOptionShow('')
         else act.setOptionShow(option)
     }
+    */
+    togglePanelShow = panelName => {
+        console.log(`togglePanelShow(${panelName})`)
+        if (this.props.panelShow == panelName) act.setPanelShow({ value: '' })
+        else act.setPanelShow({ value: panelName })
+    }
 
-    toggleOptionsMapStyleShow() {
+    toggleOptionsMapStyleShow = () => {
         console.log(
             'toggleOptionsMapStyleShow',
             !this.state.optionsMapStyleShow
         )
+
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow })
     }
 
     getScreenShot() {
-        //IMPORTANT: figure out what this means
         window.getScreenShot()
     }
 
@@ -50,7 +59,6 @@ class Options extends React.Component {
                     }}
                 >
                     <OptionsMapStyle
-                        mapStyle="mapbox.light"
                         show={this.state.optionsMapStyleShow}
                         onHide={() => {
                             this.setState({ optionsMapStyleShow: false })
@@ -88,7 +96,7 @@ class Options extends React.Component {
                 <Button
                     id="dataShow"
                     className="buttons dataText btn buttonsText"
-                    onClick={() => this.toggleOptionShow('PCoords')}
+                    onClick={() => this.togglePanelShow('PCoords')}
                 >
                     {' '}
                     Query Data{' '}
@@ -96,7 +104,7 @@ class Options extends React.Component {
                 <Button
                     id="graphShow"
                     className="buttons graphText btn buttonsText"
-                    onClick={() => this.toggleOptionShow('VPL')}
+                    onClick={() => this.togglePanelShow('VPL')}
                 >
                     {' '}
                     Compute Data{' '}
@@ -106,4 +114,7 @@ class Options extends React.Component {
     }
 }
 
-export default connect(s => ({ map: s.map, layers: s.sidebar.layers }))(Options)
+export default connect(s => ({
+    map: s.map,
+    panelShow: s.interactions.panelShow,
+}))(Options)

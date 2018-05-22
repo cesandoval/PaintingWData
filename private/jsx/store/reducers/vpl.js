@@ -1,4 +1,7 @@
-import * as consts from '../consts'
+import _ from 'lodash'
+import update from 'immutability-helper'
+
+import * as t from '../types'
 
 const initialState = {
     nodes: {},
@@ -6,29 +9,111 @@ const initialState = {
         inputs: {},
         outputs: {},
     },
-    // links: {
-    //     inputs: {
-    //         [toNode]: {
-    //             [toInput]: srcNode,
-    //         },
-    //     },
-    //     outputs: {
-    //         [srcNode]: {
-    //             [toNode]: toInput,
-    //         },
-    //     },
-    // },
 }
+/* data schema
+    nodes: {
+        [node$key]: {
+        color: #112233,
+        visibility: true,
+        filter: [0.2, 0.9],
+        options: {
+            [optionAttr]: [optionValue],
+        }
+        outputs: { dataArray }
+        }
+    },
+    links: {
+        inputs: {
+            [toNode]: {
+                [toInput]: srcNode,
+            },
+        },
+        outputs: {
+            [srcNode]: {
+                [toNode]: toInput,
+            },
+        },
+    },
+*/
 
 export default (state = initialState, action) => {
-    let nodes = Object.assign({}, state.nodes)
-    let links = Object.assign({}, state.links)
+    let nodes = _.cloneDeep(state.nodes)
+    let links = _.cloneDeep(state.links)
 
     switch (action.type) {
-        case consts.VLANG_ADD_LINK: {
-            const srcNode = action.srcNode
-            const toNode = action.toNode
-            const toInput = action.toInput
+        case t.NODE_ADD: {
+            const { nodeKey, node } = action
+
+            return update(state, {
+                nodes: {
+                    [nodeKey]: { $set: node },
+                },
+            })
+        }
+        case t.NODE_REMOVE: {
+            const { nodeKey } = action
+
+            // prevent to delete dataset node.
+            if (state.nodes[nodeKey].type == 'DATASET') {
+                console.warn('deleteNode(): can not delete dataset node.')
+                return state
+            }
+
+            delete nodes[nodeKey]
+
+            const toNode = nodeKey
+            const srcNodes = Object.values(links.inputs[toNode] || {})
+            srcNodes.map(srcNode => {
+                delete links.outputs[srcNode][toNode]
+            })
+            delete links.inputs[toNode]
+
+            const srcNode = nodeKey
+            const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
+            toNodesToPlugs.map(([toNode, toPlug]) => {
+                delete links.inputs[toNode][toPlug]
+            })
+
+            delete links.outputs[srcNode]
+
+            return update(state, {
+                nodes: {
+                    $set: nodes,
+                },
+                links: {
+                    $set: links,
+                },
+            })
+        }
+        case t.NODE_UPDATE: {
+            const { nodeKey, attr, value } = action
+            return update(state, {
+                nodes: {
+                    [nodeKey]: {
+                        [attr]: {
+                            $set: value,
+                        },
+                    },
+                },
+            })
+        }
+        case t.NODE_OPTION_UPDATE: {
+            const { nodeKey, attr, value } = action
+
+            return update(state, {
+                nodes: {
+                    [nodeKey]: {
+                        options: {
+                            [attr]: {
+                                $set: value,
+                            },
+                        },
+                    },
+                },
+            })
+        }
+        case t.LINK_ADD: {
+            const { srcNode, toNode, toInput } = action
 
             // limitation of link
             if (srcNode == toNode) {
@@ -64,12 +149,12 @@ export default (state = initialState, action) => {
             // inputs
             if (links.inputs[toNode]) {
                 // delete the others same srcNode
-                Object.entries(
-                    links.inputs[toNode]
-                ).map(([_toInput, _srcNode]) => {
-                    if (srcNode == _srcNode)
-                        delete links.inputs[toNode][_toInput]
-                })
+                Object.entries(links.inputs[toNode]).map(
+                    ([_toInput, _srcNode]) => {
+                        if (srcNode == _srcNode)
+                            delete links.inputs[toNode][_toInput]
+                    }
+                )
 
                 links.inputs[toNode][toInput] = srcNode
             } else
@@ -84,102 +169,40 @@ export default (state = initialState, action) => {
                     [toNode]: toInput,
                 }
 
-            return {
-                links,
-                nodes: state.nodes,
-            }
+            return update(state, {
+                links: {
+                    $set: links,
+                },
+            })
         }
-        case consts.VLANG_REMOVE_LINK: {
-            const srcNode = action.srcNode
-            const toNode = action.toNode
+        case t.LINK_REMOVE: {
+            const { srcNode, toNode } = action
 
             const toPlug = links.outputs[srcNode][toNode]
 
             delete links.outputs[srcNode][toNode]
             delete links.inputs[toNode][toPlug]
 
-            return {
-                links,
-                nodes: state.nodes,
-            }
-        }
-
-        case consts.VLANG_ADD_NODE: {
-            const nodeKey = action.nodeKey
-
-            nodes[nodeKey] = action.node
-
-            return {
-                nodes,
-                links: state.links,
-            }
-        }
-        case consts.VLANG_REMOVE_NODE: {
-            const nodeKey = action.nodeKey
-
-            // prevent to delete dataset node.
-            if (nodes[nodeKey].type == 'DATASET') {
-                console.warn('deleteNode(): can not delete dataset node.')
-                return state
-            }
-
-            delete nodes[nodeKey]
-
-            const toNode = nodeKey
-            const srcNodes = Object.values(links.inputs[toNode] || {})
-            srcNodes.map(srcNode => {
-                delete links.outputs[srcNode][toNode]
+            return update(state, {
+                links: {
+                    $set: links,
+                },
             })
-            delete links.inputs[toNode]
+        }
 
-            const srcNode = nodeKey
-            const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
-            toNodesToPlugs.map(([toNode, toPlug]) => {
-                delete links.inputs[toNode][toPlug]
+        case t.MAP_SET_OPACITY: {
+            let { value } = action
+            value = parseFloat(value) / 100.0
+
+            Object.keys(nodes).map(key => {
+                nodes = update(nodes, { [key]: { opacity: { $set: value } } })
             })
 
-            delete links.outputs[srcNode]
-
-            return { nodes, links }
-        }
-        case consts.VLANG_UPDATE_NODE: {
-            const nodes = Object.assign({}, state.nodes)
-
-            const nodeKey = action.nodeKey
-
-            nodes[nodeKey][action.attr] = action.value
-
-            return {
-                nodes,
-                links: state.links,
-            }
-        }
-        case consts.VLANG_UPDATE_NODE_OPTIONS: {
-            const nodes = Object.assign({}, state.nodes)
-
-            const nodeKey = action.nodeKey
-
-            nodes[nodeKey].options[action.attr] = action.value
-
-            return {
-                nodes,
-                links: state.links,
-            }
+            console.log('VPL t.MAP_SET_OPACITY', { nodes })
+            return update(state, { nodes: { $set: nodes } })
         }
 
-        case consts.VLANG_UPDATE_ALL_NODE: {
-            for (let index in nodes) {
-                nodes[index][action.attr] = action.value
-            }
-
-            return {
-                nodes,
-                links: state.links,
-            }
-        }
-
-        default: {
+        default:
             return state
-        }
     }
 }
