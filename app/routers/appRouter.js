@@ -5,6 +5,7 @@ var passport = require('passport'),
     datalayerController = require('../controllers/datalayerController.js'),
     updateController = require('../controllers/updateController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
+    saveUserfile = require('../controllers/userFileController');
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
@@ -27,12 +28,12 @@ var passport = require('passport'),
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
-  
+
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     var stringParse = req.params.id
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
     var size = stringParse.substr(stringParse.indexOf('$$')+2, stringParse.length);
-    
+
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
@@ -42,10 +43,10 @@ var passport = require('passport'),
 
   router.get('/layers/:id', isAuthenticated, datalayerController.show);
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
-  router.post('/layers', isAuthenticated, datalayerController.computeVoxels);  
+  router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
-  router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);  
+  router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
@@ -55,4 +56,7 @@ var passport = require('passport'),
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
+  // These are save/load files for a map's state, i.e. how the user exited it.
+  router.post('/saveuserfile/', isAuthenticated, saveUserfile.save);
+  router.get('/importuserfile/:datavoxelId', isAuthenticated, saveUserfile.import);
 module.exports = router;

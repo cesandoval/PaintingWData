@@ -2,7 +2,7 @@
 const NodeType = {
   [name]: { // e.g. 'layer', 'add', 'sub', 'log'
     fullname: '', // e.g. 'Subraction', 'Multiplication', 'Division', 'Logarithm'
-    desc: `', // some 
+    desc: `', // some
         descripti
     `n
     inputs: {
@@ -25,7 +25,7 @@ import _ from 'lodash'
 export const DATASET = {
     fullName: 'Dataset',
     desc: `
-        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes. 
+        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes.
     `,
     inputs: {
         // no input
@@ -212,7 +212,7 @@ export const OR = {
 export const XOR = {
     fullName: 'XOR',
     desc: `
-        Returns the voxels that contain a visible voxel in one, and only one of the input datasets. 
+        Returns the voxels that contain a visible voxel in one, and only one of the input datasets.
     `,
     inputs: {
         Input1: 'I',

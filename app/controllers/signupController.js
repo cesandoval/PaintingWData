@@ -14,7 +14,7 @@ module.exports.show = function(req, res) {
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
- 
+
 passport.deserializeUser(function(id, done) {
   User.findById(id).then(
     function(user){
@@ -26,16 +26,16 @@ passport.deserializeUser(function(id, done) {
     );
 });
 
-var signUpStrategy = 
+var signUpStrategy =
   new LocalStrategy({
       passReqToCallback : true
     },
-    function(req, email, password, done) { 
+    function(req, email, password, done) {
         User.findOne({
            where: {email: email},
-      
+
         }).then(function(user) {
-          
+
            if(user){
             //check if user email is verified
             var verified = user.verified;
@@ -54,7 +54,7 @@ var signUpStrategy =
             // generate hash by doing 10 rounds of salt. Is blocking.
             var salt = bcrypt.genSaltSync(10);
             var id = uuid.v4();
-            var hash = bcrypt.hashSync(req.body.password, salt); 
+            var hash = bcrypt.hashSync(req.body.password, salt);
             newUser.password = hash;
             newUser.verified = false;
             newUser.urlLink = id;
@@ -63,26 +63,26 @@ var signUpStrategy =
               //If testing locally change url to:  http://localhost:3000/users/verify/'
               mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
               return done(null, false, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account."));
-            });   
+            });
            }
            }, function(error){
             return done(null, false, req.flash('signUpMessage', "User registration failed."));
             console.log(err);
         });
-        
+
     });
 
 
 var loginStrategy = new LocalStrategy({
     passReqToCallback : true
   },
-  function(req, email, password, done) { 
-    
+  function(req, email, password, done) {
+
     User.findOne({
       where: {email: email},
-      
+
     }).then(function(user) {
-       if(user){  
+       if(user){
          if (user.verified){
           if(bcrypt.compareSync(password, user.password)) {
             return done(null, user, req.flash('loginMessage', "user successfully logged in"));
@@ -98,11 +98,11 @@ var loginStrategy = new LocalStrategy({
        else{
           return done(null, false, req.flash('loginMessage', "invalid email"));
         }
-       },  // do the above if succeeded 
+       },  // do the above if succeeded
        function(error){
         return done(null, false, req.flash('loginMessage', "login failed"));
        }// do this if failed.
-    ); 
+    );
 
   });
 
