@@ -2,7 +2,7 @@ import * as t from '../types'
 
 const initialInteractionsState = {
     loading: true,
-    panelShow: 'PCoords', // 'VPL' or 'PCoords' or Null.
+    panelShow: 'PCoords', // 'VPL' or 'PCoords' or Null or 'Chart:Density or 'Chart:Bar' or 'Chart:Scatter.
     activeNode: '',
 }
 
