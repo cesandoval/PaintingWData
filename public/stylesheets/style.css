@@ -209,15 +209,15 @@ ul.dropdown-menu {
 
 .brand-title {
     margin: 0;
-    background-image: url(/images/blue_circles_1.svg);
+    background-image: url(/images/bg.svg);
     background-repeat: no-repeat;
     background-attachment: fixed;
     /*background-size: 100vw auto;*/
     background-position: 0vw 0vh;
 
     stroke: 8px;
-  background-size: 145vw auto;
-  background-position: -10vw -10vh;
+    background-size: 250vw auto;
+    background-position: -120vw -70vh;
   
     height: 100vh;
 
@@ -239,8 +239,8 @@ ul.dropdown-menu {
 }
 
 .brand-title:hover {
-    background-size: 160vw auto;
-    background-position: -10vw -10vh;
+    background-size: 400vw auto;
+    background-position: -200vw -150vh;
 }
 
 .options--react{
@@ -341,7 +341,7 @@ ul.dropdown-menu {
 
 .spacing-large {
     padding-top: 10vh;
-    padding-bottom: 5vh;
+    padding-bottom: 6vh;
 }
 
 .site-title {
@@ -364,8 +364,14 @@ h1.site-title2 {
 }
 
 p.title-txt {
-    font-size: 16pt;
-    padding-top: 40px;
+
+    font-size: 14pt;
+    padding: 20px;
+    padding-top: 15px;
+    text-align: justify;
+    text-justify: initial;
+    border-top: 4px solid black;
+    background-color: rgba(255,255,255,0.7);
 }
 
 .application-txt {
@@ -395,13 +401,19 @@ div.title-frame {
 
     position: absolute;
     background-color: rgba(255,255,255,0);
-    top: 35vh;
+    top: 30vh;
     padding: 40px;
     padding-top: 30px;
     padding-bottom: 30px;
-    width: 70vw;
-    left: 5vw;
+    /* left: 5vw; */
+    left: 50%;
+    transform: translateX(-50%);
+}
 
+
+.title_image {
+    width:25%;
+    padding-left: 13px;
 }
 
 /*body*/
@@ -931,3 +943,26 @@ p {
     margin-top: 60px;
 }
 
+.member_name_previous {
+    margin-top: 15px;
+    margin-bottom: 0px;
+}
+
+.iframe_post {
+    width: 100%;
+    max-width: 800px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+}
+
+.spacing-blog {
+    margin-bottom: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.video-iframe {
+    height:500px;
+    width:800px;
+}

@@ -11,6 +11,7 @@ export const MAP_INIT = 'MAP_INIT'
 export const MAP_SET_BGSTYLE = 'MAP_SET_BGSTYLE'
 export const MAP_SET_OPACITY = 'MAP_SET_OPACITY'
 export const MAP_SET_KNN = 'MAP_SET_KNN'
+export const MAP_SET_PCOORDS = 'MAP_SET_PCOORDS'
 
 // vpl
 export const NODE_ADD = 'NODE_ADD'

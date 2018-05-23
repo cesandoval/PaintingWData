@@ -11,8 +11,12 @@ block pageTitle
 
   .container(style="width: 70vw")
 
-    .row.col-md-9.spacing-large
-        h1.center Create Layer
+    .row.spacing-large
+      .col-md-9
+        h1 Create Layer
+
+    if (accountAlert)
+      .alert.alert-danger(role='alert') #{accountAlert}
 
     .row
       .col-md-6.map-holder
@@ -23,6 +27,7 @@ block pageTitle
           div(class= 'hidden' data-role='fieldcontain')
             fieldset(data-role='controlgroup')
               input(type="hidden", id="layername", class="hidden form-control input-sm chat-input", name="datafileId" value = "#{id}")
+              input(type="hidden", id="size", class="hidden form-control input-sm chat-input", name="size" value = "#{size}")
               br
           div(data-role='fieldcontain')
             fieldset(data-role='controlgroup')

@@ -133,7 +133,7 @@ export default class Pixels {
         var tilesToGet = 0
 
         function assembleUrl(img, coords) {
-            const mapboxStyle = window.mapboxStyle || 'mapbox.light'
+            const mapboxStyle = window.mapBgStyle || 'mapbox.light'
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
 
             if (mapboxStyle === 'empty') {
@@ -248,7 +248,7 @@ export default class Pixels {
 
         // given a list of elevation and imagery tiles, download
         function getTiles([tiles, elevation]) {
-            document.querySelector('#progress').style.opacity = 1
+            // document.querySelector('#progress').style.opacity = 1
 
             tiles = tiles.map(function(tile) {
                 return slashify(tile)
@@ -334,6 +334,8 @@ export default class Pixels {
             canvas.renderer.setSize(window.innerWidth, window.innerHeight)
             updateTiles()
         }
+
+        this.onWindowResize = onWindowResize
 
         function updateTileVisibility() {
             var zoom = Math.floor(getZoom())
@@ -484,6 +486,8 @@ export default class Pixels {
     }
 
     initMaterial(lowBnd, highBnd) {
+        console.log(`[Pixels] ${this.layerName}`, { lowBnd, highBnd })
+
         let material = new THREE.RawShaderMaterial({
             uniforms: {
                 show: {

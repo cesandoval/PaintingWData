@@ -1,11 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import $ from 'jquery'
 import * as Act from '../store/actions'
+
+import { Slider as ASlider } from 'antd'
 
 class Slider extends React.Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            value: 0.5,
+            nodeKey: this.props.index,
+        }
+
+        /*
         this.dp = {
             cX: 0,
             sX: 0,
@@ -16,13 +24,17 @@ class Slider extends React.Component {
         this.containerMouseMove = this.containerMouseMove.bind(this)
         this.containerMouseUp = this.containerMouseUp.bind(this)
         this.containerMouseDown = this.containerMouseDown.bind(this)
+        */
     }
 
-    // componentWillReceiveProps(newProps){
-    //     this.newProps = newProps;
-    //     console.log(newProps, 6666666)
-    // }
+    componentWillReceiveProps(props) {
+        const nodeKey = this.state.nodeKey
+        this.setState({
+            value: props.nodes[nodeKey].opacity,
+        })
+    }
 
+    /*
     circleHandleMouseDown(event) {
         event.stopPropagation()
         this.dp.held = true
@@ -78,8 +90,17 @@ class Slider extends React.Component {
                 )
         }
     }
+    */
+    changeOpacity = value => {
+        Act.nodeUpdate({
+            nodeKey: this.state.nodeKey,
+            attr: 'opacity',
+            value,
+        })
+    }
 
     render() {
+        /*
         return (
             <g
                 onMouseDown={this.containerMouseDown}
@@ -88,10 +109,6 @@ class Slider extends React.Component {
                 className={'sliderContainer'}
                 transform={`translate(20, 76)`}
             >
-                {/*
-                <rect width={160} height={"5px"} x = {this.props.position.x + 20} y ={this.props.position.y + 70}/>
-                <circle onMouseDown = {this.circleHandleMouseDown} className = {"sliderHandle"} cx = {this.props.position.x + 20} cy ={this.props.position.y + 73} r = {"8"} transform ={"translate(85, 0)"}/>
-                */}
                 <rect width={160} height={'5px'} />
                 <circle
                     onMouseDown={this.circleHandleMouseDown}
@@ -103,14 +120,41 @@ class Slider extends React.Component {
                 />
             </g>
         )
+           */
+        return (
+            <foreignObject x={20} y={65}>
+                <div style={{ position: 'fixed', width: '157px' }}>
+                    <ASlider
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={this.state.value}
+                        onChange={this.changeOpacity}
+                    />
+                    <style jsx>{`
+                        :global(.ant-slider) {
+                            &,
+                            &:hover {
+                                :global(.ant-slider-track) {
+                                    background-color: #b5b5b5;
+                                }
+                                :global(.ant-slider-handle) {
+                                    border-color: #757575;
+                                }
+                            }
+                        }
+                    `}</style>
+                </div>
+            </foreignObject>
+        )
     }
 }
 
 const mapStateToProps = state => {
     return {
         nodes: state.vpl.nodes,
-        links: state.vpl.links,
-        geometries: state.map.geometries,
+        // links: state.vpl.links,
+        // geometries: state.map.geometries,
     }
 }
 

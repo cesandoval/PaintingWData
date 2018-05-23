@@ -1,10 +1,24 @@
-extends layout
+extends layoutSidePage
 
 
 block pageTitle
-  div.container.spacing-large
+  div.container.spacing-large.spacing-blog
     div.container
-      .row.spacing-large
+      .row.spacing-large.spacing-blog
          h1.center Blog
-//- .row
-//-  p This has some useful documentation about Painting with Data. 
+
+
+
+
+block content
+  div.section_content.row
+    div.container.ifwrapper
+      iframe(src="posts/post1/index.html", id="post1", style="" class = "iframe_post")
+
+
+
+  script.
+    $("#post1").load(function () {
+      fixiframe("#post1");
+      expand_function("post1",);
+    });

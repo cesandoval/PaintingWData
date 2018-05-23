@@ -59,21 +59,16 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
-                // TODO:CHECK: dataset's `layerKey` is `null`, should get the `layerKey` from database
-                console.log('DATA')
-                console.log(data)
-                console.log('DATA')
-                // const datasets = data
                 let datasets = data.map(dataset => {
                     const hashKey =
                         (+new Date()).toString(32) +
                         Math.floor(Math.random() * 36).toString(36)
-                    dataset.layerKey = hashKey
 
+                    if (!dataset.layerKey) {
+                        dataset.layerKey = hashKey
+                    }
                     return dataset
                 })
-
-                console.log({ datasets })
 
                 act.importDatasets({ datasets })
 

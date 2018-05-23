@@ -1,0 +1,323 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    title= 'Painting with Data'
+
+    //indicate that our site is mobile optimized
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+
+    meta(name="description", content="")
+    meta(name="author", content="")
+    link(rel="icon", href="/images/pwd_logo.png")
+    link(rel='stylesheet', href='http://www.w3schools.com/lib/w3.css')
+    style
+      body { margin:0; padding:0; }
+      .map { position:absolute; top:0; bottom:0; width:100%; }
+
+    link(rel='apple-touch-icon', sizes='180x180', href='/apple-touch-icon.png')
+    link(rel='icon', type='image/png', sizes='32x32', href='/favicon-32x32.png')
+    link(rel='icon', type='image/png', sizes='16x16', href='/favicon-16x16.png')
+    link(rel='manifest', href='/manifest.json')
+    link(rel='mask-icon', href='/safari-pinned-tab.svg', color='#5bbad5')
+    meta(name='theme-color', content='#ffffff')
+
+    //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
+    //- //on our web server and will be delivered faster to the client than our own server.
+    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+    script(type='text/javascript', src="/javascripts/js/tether.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
+
+    //- link(href='https://www.mapbox.com/base/latest/base.css', rel='stylesheet')
+    link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
+
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
+    //- //reference our site-specific css
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/vprog.css')
+    link(rel='stylesheet', href='/stylesheets/awesome-bootstrap-checkbox.css')
+    link(rel='stylesheet', href='/stylesheets/build.css')
+    link(rel='stylesheet', href='/stylesheets/login.css')
+
+    //- link(rel='stylesheet', href='/stylesheets/mystyle.css')
+
+
+
+
+    //- // Mapbox Libraries
+    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
+
+    //- // D3 libs
+    script(type='text/javascript', src="/javascripts/js/d3.js")
+    
+    //- // Parallel Coords UI libs
+    script(type='text/javascript', src="/javascripts/js/d3.parcoords.js")
+    link(rel="stylesheet", type="text/css", href="/stylesheets/d3.parcoords.css")
+    
+    //- // THREEjs libs
+    script(type='text/javascript', src="/javascripts/js/three.js")
+    //- script(type='text/javascript', src="/javascripts/libs/OrbitControls.js")
+    script(type='text/javascript', src="/javascripts/js/THREEx.KeyboardState.js")
+    //- script(type='text/javascript', src="/javascripts/js/THREEx.FullScreen.js")
+    script(type='text/javascript', src="/javascripts/js/THREEx.WindowResize.js")
+
+
+    // PaintingWithData CSS
+    link(rel='stylesheet', href='/stylesheets/base.css')
+
+    // Bootstrap JS libs
+    script(type='text/javascript', src="/javascripts/js/bootstrap.min.js")    
+
+  body
+    block navBar
+      include ./partials/navbarSidePage
+
+    block pageTitle
+    block content
+
+    hr
+
+    div.footer
+      p &copy; Painting with Data 2018. Patent Pending.
+
+script.
+  $('.dropdown').on('show.bs.dropdown', function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+  });
+
+  $('.dropdown').on('hide.bs.dropdown', function() {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+  });
+
+  jQuery('ul.nav li.dropdown').hover(function() {
+    jQuery(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+    }, function() {
+      jQuery(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+      });
+
+   $(document).ready(function() {
+    var height = $(".navbar").height();
+    //- $(".dropdown-menu").top(height);
+  });
+
+script.
+  d3.selectAll(".tm_wrapper .icon_over").on("mouseover", function () {
+    d3.select(this).style("opacity", 0.6);
+  }).on("mouseout", function () {
+    d3.select(this).style("opacity", 0);
+  });
+
+  $("#explore").click(() => {
+    $('html, body').animate({
+        scrollTop: $("#app").offset().top-80
+    }, 2000);
+  });
+  $("#about").click(() => {
+    $('html, body').animate({
+        scrollTop: $("#about_section").offset().top-80
+    }, 2000);
+  });
+  $("#team").click(() => {
+    $('html, body').animate({
+        scrollTop: $("#team_section").offset().top-80
+    }, 2000);
+  });
+
+
+
+  $(".pop_team").click(function () {
+      //console.log($(this).attr("bio1"));
+
+      d3.select("body").append("div")
+          .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
+          ;
+
+      var thisholder = d3.select("body").append("div")
+          .attr("class", "pop_team_box").style("top", $(document).scrollTop() + window.innerHeight * 0.2 + "px");
+
+      thisholder
+          .append("img").attr("src", "images/thex.png").attr("class", "close_expanded");
+
+      var left_panel = thisholder.append("div").attr("class","col-sm-5 box_column");
+      var right_panel = thisholder.append("div").attr("class","col-sm-7 box_column left_mark");
+
+      left_panel.append("img").attr("class","member_box_img").attr("src",$(this).attr("img_url"));
+      left_panel.append("p").attr("class","member_box_title").text($(this).attr("name"));
+      left_panel.append("p").attr("class","member_box_email").text($(this).attr("email"));
+
+      var r1_1_0 = left_panel.append("div").attr("class", "icon_links_box");
+
+      if ($(this).attr("home_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("home_url") + '" target="_blank"><img src="images/homepage.png" class="icon_link_img mybtn"></a>');
+      }
+
+      else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/homepage.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("twitter_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("twitter_url") + '" target="_blank"><img src="images/twitter.png" class="icon_link_img mybtn"></a>');
+      }
+      else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/twitter.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("linkedin_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("linkedin_url") + '" target="_blank"><img src="images/linkedin.png" class="icon_link_img mybtn"></a>');
+      } else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/linkedin.png" class="icon_link_img mybtn">');
+      }
+
+      if ($(this).attr("github_url")) {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<a href="' + $(this).attr("github_url") + '" target="_blank"><img src="images/github.png" class="icon_link_img mybtn"></a>');
+      } else {
+          r1_1_0.append("div")
+              .attr("class", "icon_25")
+              .attr("style", "padding:0px;")
+              .html('<img src="images/github.png" class="icon_link_img mybtn">');
+      }
+
+      right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio1"));
+      if($(this).attr("bio2")){
+          right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio2"));
+      }
+      if($(this).attr("bio3")){
+          right_panel.append("p").attr("class","member_box_bio").text($(this).attr("bio3"));
+      }
+
+      $(".pop_team_box .close_expanded").click(function () {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
+
+      $(".pop_team_box_back").click(function () {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
+      
+  });
+
+
+    var fixiframe = function(myid){
+        $(myid).contents().find("head")
+            .append($("<style type='text/css'>  *{background-color:rgba(0,0,0,0)!important; overflow:hidden;}  .content_left{width:65%;float:left;} .content_right{width:33%;float:left;} .content_right_full{width:100%;float:right;}</style>"));
+        $(myid).contents().find("a")
+            .attr("target","_blank")
+            .attr("href", function(d,dd){
+                //console.log(d,dd);
+                if(dd){
+                    var out = dd;
+                    if(out.indexOf("?q=")>-1)
+                        out = dd.split("?q=")[1];
+                    if(out.indexOf("&sa=D&ust=")>-1)
+                    out = out.split("&sa=D&ust=")[0];
+                    return out;
+                }
+            })
+            ;
+        $(myid).contents().find("img")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("span")
+            .css("width","100%").css("height","auto");
+        $(myid).contents().find("body")
+            .css("padding","0 0 0 0");
+
+
+
+        $(myid).contents().find("span")
+            .filter(function(){
+                return this.innerHTML.indexOf("&lt;iframe")!=-1;
+            }).html(function(){
+                return this.innerHTML.replace("&lt;","<").replace("&gt;",">");
+            });
+        $(myid).contents().find("td")
+            .filter(function(){
+                if($(this).attr("colspan") == "1" && $(this).attr("rowspan") == "1"){
+                    var widththis = +d3.select(this).style("width").split("px")[0];
+                    //console.log($(document).width(),widththis);
+
+
+                    if(this.innerHTML.indexOf("Overview")!=-1){
+                        $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                        );
+                    }else{
+                        $(this).replaceWith( "<div class = 'content_right_full right_proj' style = 'display:none;'>"+$(this).html()+"</div>"
+                        );
+                    }
+
+                    //- if($(document).width()<500){
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right_full right_proj'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+
+                    //- }
+                    
+                    //- else{
+                    //-     if(this.innerHTML.indexOf("Overview")!=-1){
+                    //-         $(this).replaceWith( "<div class = 'content_left'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }else{
+                    //-         $(this).replaceWith( "<div class = 'content_right'>"+$(this).html()+"</div>"
+                    //-         );
+                    //-     }
+                    //- }
+
+                    return true;
+                }
+            });
+            
+            $(myid).contents().find("div")
+            .filter(function(){
+                //console.log($(this).attr("class"));
+                if($(this).attr("class"))
+                return $(this).attr("class").indexOf("left_proj")>-1;
+            }).insertAfter(
+                $(myid).contents().find("div")
+                .filter(function(){
+                    if($(this).attr("class"))
+                    return $(this).attr("class").indexOf("right_proj")>-1;
+                })
+            )
+    };
+
+    var expand_function = function(myid){
+        var iFrame = document.getElementById( myid );
+        this.resizeIFrameToFitContent( iFrame );
+        iFrame.parentElement.style.height = $("#"+myid).height()+20 + "px";
+    }
+
+    var resizeIFrameToFitContent = function( obj ) {
+        if(obj)
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+
+        console.log(obj.contentWindow.document.body.scrollHeight);
+    };
+

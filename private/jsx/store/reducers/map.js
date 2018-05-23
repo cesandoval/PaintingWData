@@ -31,10 +31,7 @@ export default (state = initialMapState, action) => {
             // Sets the camera to the voxels' bbox
             // const bbox = datasetsLayers[0].bbox
             const bbox = state.bbox
-            const canvas = instance
 
-            // Set the camera
-            PaintGraph.Pixels.zoomExtent(canvas, bbox)
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox)
 
@@ -46,13 +43,9 @@ export default (state = initialMapState, action) => {
                 // Parses the layer
                 const out = PaintGraph.Pixels.parseDataJSON(layer)
 
-                const nodeHashKey =
-                    (+new Date()).toString(32) +
-                    Math.floor(Math.random() * 36).toString(36)
-
                 // Creates the Pixels object
                 const P = new PaintGraph.Pixels(
-                    nodeHashKey,
+                    layer.layerKey,
                     instance, // this.props.map,
                     circle,
                     out.otherArray,
@@ -354,6 +347,13 @@ function mapGeometries(state) {
                         } else {
                             geo.material.uniforms.show.value = 1.0
                         }
+                        break
+                    }
+                    case 'filter': {
+                        const { min, max } = value
+                        geo.material.uniforms.min.value = min
+                        geo.material.uniforms.max.value = max
+
                         break
                     }
                 }

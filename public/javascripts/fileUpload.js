@@ -24,8 +24,8 @@ $(function() {
 
 function upload(e)
 {
-    e.stopPropagation(); 
-    e.preventDefault(); 
+    e.stopPropagation();
+    e.preventDefault();
 
     var data = new FormData();
     $.each(files, function(key, value)
@@ -43,39 +43,39 @@ function upload(e)
             });
         $(this).append(flash);
     });
-
+  
     $.ajax({
         url: '/upload',
         xhr: function () {
-        var xhr = new window.XMLHttpRequest();
-        $('.progress').removeClass('hidden');
-        xhr.upload.addEventListener("progress", function (evt) {
-            if (evt.lengthComputable) {
-                var percentComplete = (evt.loaded / evt.total)*100; 
-                $progress_bar.text(percentComplete + '%');
-                $progress_bar.width(percentComplete + '%');
-            }
-        }, false);
-        xhr.addEventListener("progress", function (evt) {
-            if (evt.lengthComputable) {
-                var percentComplete = (evt.loaded / evt.total)*100; 
-                $progress_bar.text(percentComplete + '%');
-                $progress_bar.width(percentComplete + '%');
-            }
-        }, false);
-       
-        return xhr;
-    },
+            var xhr = new window.XMLHttpRequest();
+            $('.progress').removeClass('hidden');
+            xhr.upload.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total)*100;
+                    $progress_bar.text(percentComplete + '%');
+                    $progress_bar.width(percentComplete + '%');
+                }
+            }, false);
+            xhr.addEventListener("progress", function (evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total)*100;
+                    $progress_bar.text(percentComplete + '%');
+                    $progress_bar.width(percentComplete + '%');
+                }
+            }, false);
+
+            return xhr;
+        },
         type: 'POST',
         data: data,
         cache: false,
-        processData: false, 
-        contentType: false, 
+        processData: false,
+        contentType: false,
         success: function(data, textStatus, jqXHR)
         {
             if(typeof data.error === 'undefined')
             {
-                
+
                 window.location.replace("/uploadViewer/"+data.id);
 
             }

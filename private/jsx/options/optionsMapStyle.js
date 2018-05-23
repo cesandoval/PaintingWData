@@ -29,7 +29,7 @@ class OptionsMapStyle extends React.Component {
             }, 1500)
     }
     updateMapStyle(style) {
-        window.mapboxStyle = style
+        window.mapBgStyle = style
 
         const started = window.refreshTiles && window.updateTiles && true
         // console.log(`updateMapStyle(${style})`, started)
