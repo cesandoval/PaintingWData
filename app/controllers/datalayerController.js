@@ -14,8 +14,19 @@ module.exports.computeVoxels = function(req, res){
     if  (req.body.datalayerIds !== ''){
         var datalayerIds = [];
 
-        var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
-        // only using the keys of the object right now, should also use the (raster) values?
+        var datalayerIdsAndRasterValsObject = {};
+        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
+        // Add a hash to each object property
+        for (var key in unparsed) {
+            var timestampHash = 0;
+            var properties = unparsed[key].split(";");
+            console.log("properties: ", properties);
+            for (var i = 0; i < properties.length; i++) {
+                datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
+                // datalayerIdsAndRasterValsObject[ key ] = properties[i];
+                timestampHash += 1;
+            } 
+        }
         console.log(".datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
 
 
@@ -51,7 +62,20 @@ module.exports.computeVoxels = function(req, res){
         } else {
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity, 'datalayerIdsAndProps': datalayerIdsAndRasterValsObject}};
             var datalayerIds = [];
-            var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+            // var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+            var datalayerIdsAndRasterValsObject = {};
+            var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
+            // Add a hash to each object property
+            for (var key in unparsed) {
+                var timestampHash = 0;
+                var properties = unparsed[key].split(";");
+                console.log("properties: ", properties);
+                for (var i = 0; i < properties.length; i++) {
+                    datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
+                    // datalayerIdsAndRasterValsObject[ key ] = properties[i];
+                    timestampHash += 1;
+                } 
+            }    
             console.log("datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
             
             for (datalayerId in datalayerIdsAndRasterValsObject){
