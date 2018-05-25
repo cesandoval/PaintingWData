@@ -19,7 +19,25 @@ module.exports.show = function(req, res) {
   }
 }
 
+module.exports.getPublicVoxelScreenshots = function(req, res) {
+  // Model.Datavoxelimage.findAll({
+  //   limit: 10,
+  //   order:[['createdAt', 'ASC']],
+  //   where: {deleted: 0}
+  // }).then(function(screenshotLinks) {
+  //   var images = [];
+  //   screenshotLinks.forEach(function(screenshotLink) {
+  //     images.push(screenshotLink.image);
+  //   });
+  //   var response = {screenshots: images};
+  //   res.send(response);
+  // });
+  res.render('index', {userSignedIn: req.isAuthenticated(), user: req.user, screenshots: ["https://s3.amazonaws.com/data-voxel-images/23466317216_b99485ba14_o-panorama.jpg"] });
+}
+
+//TODO: Fix blob issue
 module.exports.uploadScreenshot = function(req, res) {
+  //Update react state so we know if this user has opened this voxel before
   var img = req.body.data;
   var datavoxelId = req.body.id;
   //console.log(img);
@@ -41,10 +59,10 @@ module.exports.uploadScreenshot = function(req, res) {
     ia[i] = byteString.charCodeAt(i);
   }
 
-  var data = blobUtil.blobUtil.createBlob([ab], { type: mimeString });
-  var imgURL = s3.uploadBlobToBucket(data, 'data-voxel-images', function(imgName) {
-      console.log(imgName);
-      //Add imagename and datavoxelId to database
+  var data = blobUtil.createBlob([ab], { type: mimeString });
+  var imgURL = s3.uploadBlobToBucket(data, 'data-voxel-images', function(imageLink) {
+      console.log(imageLink);
+      //Add imagename (the link) and datavoxelId to database
     });
 }
 
