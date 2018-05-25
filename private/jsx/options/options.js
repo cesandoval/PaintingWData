@@ -56,11 +56,9 @@ class Options extends React.Component {
                     <span> TABLE </span>
                 </Menu.Item>
                 <Menu.SubMenu title="CHARTS">
-                    <Menu.Item key="Chart:Density">Chart:Density</Menu.Item>
-                    <Menu.Item key="Chart:Bar">Chart:Bar</Menu.Item>
-                    <Menu.Item key="Chart:Scatter">
-                        Chart:Scatter Plot
-                    </Menu.Item>
+                    <Menu.Item key="Chart:Density">Density Plot</Menu.Item>
+                    <Menu.Item key="Chart:Histogram">Histogram</Menu.Item>
+                    <Menu.Item key="Chart:Scatter">Scatter Plot</Menu.Item>
                 </Menu.SubMenu>
                 <Menu.Item key="PCoords">
                     <span> PCOORDS </span>

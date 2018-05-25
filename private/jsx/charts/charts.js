@@ -1,7 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 // import * as Act from '../store/actions'
-import { VictoryLine, VictoryChart, VictoryLabel } from 'victory'
+import {
+    VictoryLine,
+    VictoryChart,
+    VictoryLabel,
+    VictoryScatter,
+} from 'victory'
 var kernel = require('kernel-smooth')
 // var science = require('science')
 
@@ -101,19 +106,25 @@ class Charts extends React.Component {
                                     />
                                 )}
 
-                                {this.props.panelShow == 'Chart:Test' && (
-                                    <VictoryLine
+                                {this.props.panelShow == 'Chart:Scatter' && (
+                                    <VictoryScatter
                                         style={{
                                             data: {
-                                                stroke: this.props.nodes[key]
+                                                fill: this.props.nodes[key]
                                                     ? this.props.nodes[key]
                                                           .color
                                                     : 'gray',
                                             },
                                         }}
                                         key={key}
-                                        data={data}
-                                        interpolation={'natural'}
+                                        size={7}
+                                        data={[
+                                            { x: 1, y: 2 },
+                                            { x: 2, y: 3 },
+                                            { x: 3, y: 5 },
+                                            { x: 4, y: 4 },
+                                            { x: 5, y: 7 },
+                                        ]}
                                     />
                                 )}
                             </VictoryChart>)
