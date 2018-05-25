@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 
 import * as act from '../store/actions'
 
-import OptionsForm from './optionsForm'
 import OptionsMapStyle from './optionsMapStyle'
 import Button from 'react-bootstrap/lib/Button'
+
+import { Menu, Dropdown } from 'antd'
 
 class Options extends React.Component {
     constructor(props) {
@@ -30,7 +31,7 @@ class Options extends React.Component {
     }
     */
     togglePanelShow = panelName => {
-        console.log(`togglePanelShow(${panelName})`)
+        console.log(`togglePanelShow(${panelName})`, { panelName })
         if (this.props.panelShow == panelName) act.setPanelShow({ value: '' })
         else act.setPanelShow({ value: panelName })
     }
@@ -49,9 +50,26 @@ class Options extends React.Component {
     }
 
     render() {
+        const DataMenu = (
+            <Menu onClick={({ key }) => this.togglePanelShow(key)}>
+                <Menu.Item key="TABLE">
+                    <span> TABLE </span>
+                </Menu.Item>
+                <Menu.SubMenu title="CHARTS">
+                    <Menu.Item key="Chart:Density">Chart:Density</Menu.Item>
+                    <Menu.Item key="Chart:Bar">Chart:Bar</Menu.Item>
+                    <Menu.Item key="Chart:Scatter">
+                        Chart:Scatter Plot
+                    </Menu.Item>
+                </Menu.SubMenu>
+                <Menu.Item key="PCoords">
+                    <span> PCOORDS </span>
+                </Menu.Item>
+            </Menu>
+        )
+
         return (
             <div className="options--react">
-                <OptionsForm />
                 <div
                     id="mapStyleOptions"
                     style={{
@@ -109,6 +127,20 @@ class Options extends React.Component {
                     {' '}
                     Compute Data{' '}
                 </Button>
+                <Dropdown overlay={DataMenu} placement="topRight">
+                    <span id="dataMenu">DATA</span>
+                </Dropdown>
+                <style jsx>{`
+                    :global(#dataMenu) {
+                        position: absolute;
+                        left: 20px;
+                        top: -50px;
+                        padding: 3px 40px;
+                        background-color: #d34031;
+                        border-radius: 5px;
+                        color: white;
+                    }
+                `}</style>
             </div>
         )
     }
