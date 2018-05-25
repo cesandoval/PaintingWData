@@ -168,7 +168,7 @@ class MapCanvas extends React.Component {
             <div>
                 <div
                     style={{
-                        display: panelShow == 'PCoords' ? '' : 'none',
+                        backgroundColor: 'white',
                         width: '80vw',
                         height: '300px',
                         position: 'fixed',
@@ -176,7 +176,8 @@ class MapCanvas extends React.Component {
                         bottom: '30px',
                         right: '0',
                         zIndex: '100',
-                        opacity: 0.6,
+                        opacity: 0.5,
+                        display: panelShow.includes('Chart') ? '' : 'none',
                     }}
                 >
                     <DensityChart />

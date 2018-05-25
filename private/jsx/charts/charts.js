@@ -48,7 +48,6 @@ class Charts extends React.Component {
 
     render() {
         const chartLength = this.state.densityData.length
-        const chartType = 'line'
 
         return (
             <div id="layer-charts">
@@ -86,7 +85,7 @@ class Charts extends React.Component {
                                         lineHeight: 'normal',
                                     }}
                                 />
-                                {chartType == 'line' && (
+                                {this.props.panelShow == 'Chart:Density' && (
                                     <VictoryLine
                                         style={{
                                             data: {
@@ -102,7 +101,7 @@ class Charts extends React.Component {
                                     />
                                 )}
 
-                                {chartType == 'gg' && (
+                                {this.props.panelShow == 'Chart:Test' && (
                                     <VictoryLine
                                         style={{
                                             data: {

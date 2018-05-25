@@ -58,7 +58,9 @@ class Options extends React.Component {
                 <Menu.SubMenu title="CHARTS">
                     <Menu.Item key="Chart:Density">Chart:Density</Menu.Item>
                     <Menu.Item key="Chart:Bar">Chart:Bar</Menu.Item>
-                    <Menu.Item key="Chart:Scatter">Chart:Scatter</Menu.Item>
+                    <Menu.Item key="Chart:Scatter">
+                        Chart:Scatter Plot
+                    </Menu.Item>
                 </Menu.SubMenu>
                 <Menu.Item key="PCoords">
                     <span> PCOORDS </span>
