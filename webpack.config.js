@@ -21,6 +21,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.json', '.jsx'],
+        alias: {
+            '@': path.resolve(__dirname, './private/jsx'),
+        },
     },
     module: {
         loaders: [
@@ -54,6 +57,12 @@ module.exports = {
                                 [
                                     'import',
                                     { libraryName: 'antd', style: 'css' },
+                                ],
+                                [
+                                    'styled-jsx/babel',
+                                    {
+                                        plugins: ['styled-jsx-plugin-sass'],
+                                    },
                                 ],
                             ],
                             // This is a feature of `babel-loader` for webpack (not Babel itself).

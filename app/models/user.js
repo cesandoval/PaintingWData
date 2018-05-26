@@ -28,6 +28,9 @@ module.exports = function(sequelize, DataTypes) {
     uploadsSize:{
       type: DataTypes.DECIMAL,
       defaultValue: 0.0
+    },
+    extraUserInfo:{
+      type: DataTypes.JSON,
     }
   }, {
     classMethods: {

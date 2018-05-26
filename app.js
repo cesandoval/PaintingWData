@@ -50,7 +50,6 @@ if ('development' == app.get('env')) {
                 colors: true,
             },
             historyApiFallback: true,
-            // logLevel: 'trace',
         })
     )
 
@@ -100,6 +99,8 @@ app.use(function(req, res, next) {
 var Strategies = require('./app/controllers/signupController')
 passport.use('signup', Strategies.SignUpStrategy)
 passport.use('login', Strategies.LoginStrategy)
+passport.use('facebookLogin', Strategies.FacebookLoginStrategy)
+passport.use('googleLogin', Strategies.GoogleLoginStrategy)
 
 app.use(express.static(path.join(__dirname, 'public')))
 

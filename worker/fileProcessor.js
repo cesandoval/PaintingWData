@@ -136,7 +136,7 @@ function getBbox(datalayerIds, req, callback) {
             var bbox = results[0].st_setsrid;
             rowsCols = getBboxRC(bbox, req);
 
-            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), '` + voxelId + `');` 
+            var bboxInsert = `INSERT INTO public."Datavoxelbbox" (rast, voxelid) VALUES(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON('` + JSON.stringify(bbox) + `'), ` + rowsCols.rows + `, ` +  rowsCols.cols + `, '32BF'), ` + epsg + `), '` + voxelId + `');`
             console.log("bbox query: \n \n " + bboxInsert);
             req.voxelRandomId = voxelId;
 
@@ -192,6 +192,8 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.userId = req.user.id;
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
+    newDatavoxel.voxelId = req.voxelID;
+    newDatavoxel.public = false;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
@@ -271,7 +273,7 @@ function getNet(bbox, props, req, callback) {
     var coords = bbox.coordinates[0],
         length = Math.abs(coords[3][0]-coords[0][0])*1000000,
         width = Math.abs(coords[2][1]-coords[0][1])*1000000,
-        area = length*width; 
+        area = length*width;
     var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
 
     var columns = Math.floor(length/stepSize),
@@ -280,12 +282,12 @@ function getNet(bbox, props, req, callback) {
     var netFunctionQuery = `
 CREATE OR REPLACE FUNCTION st_polygrid(geometry, integer) RETURNS geometry AS
 $$
-SELECT 
-    ST_Collect(st_setsrid(ST_POINT(x/1000000::float,y/1000000::float),st_srid($1))) 
-FROM 
+SELECT
+    ST_Collect(st_setsrid(ST_POINT(x/1000000::float,y/1000000::float),st_srid($1)))
+FROM
   generate_series(floor(st_xmin($1)*1000000)::int, ceiling(st_xmax($1)*1000000)::int,$2) as x,
-  generate_series(floor(st_ymin($1)*1000000)::int, ceiling(st_ymax($1)*1000000)::int,$2) as y 
-WHERE 
+  generate_series(floor(st_ymin($1)*1000000)::int, ceiling(st_ymax($1)*1000000)::int,$2) as y
+WHERE
     st_intersects($1,ST_SetSRID(ST_POINT(x/1000000::float,y/1000000::float),ST_SRID($1)))
 $$
 LANGUAGE sql VOLATILE;
@@ -350,7 +352,7 @@ function pushDataNet(pointNet, props, req, columns, rows, callback) {
             neighborhood: {
                 column: Math.floor(i/rows),
                 row: i%rows
-            }, 
+            },
             voxelIndex: i
         }
 
@@ -531,7 +533,6 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, a
 
 }
 
-
 // function parseGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
 //     var allIndices = [];
 //     var currIndex = 0;
@@ -598,6 +599,7 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             newDataJSON.epsg = 4326;
             newDataJSON.datavoxelId = objProps[keyWithouHash].datavoxelId;
             newDataJSON.geojson = dataJSONs[key];
+            newDataJSON.hashVoxelId = req.voxelID;
             newDataJSON.userId = req.user.id;
             newDataJSON.layerKey = hashKey;
             newDataJSON.save().then(function(){
