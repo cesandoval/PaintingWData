@@ -37,6 +37,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         User.hasMany(models.Datafile, {foreignKey: 'userId'});
         User.hasMany(models.Datalayer, {foreignKey: 'userId'});
+        User.hasMany(models.Datadbf, {foreignKey: 'userId'});
       }
     }
   });

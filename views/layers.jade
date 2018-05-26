@@ -5,6 +5,7 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet", href="/stylesheets/layers.css")
   link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
+  link(rel="stylesheet", href="/stylesheets/dropdown-checklist.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/layers.js")
   script(src="/javascripts/js/bootstrap-slider.js")
@@ -15,6 +16,12 @@ block pageTitle
       .row.spacing
         .col-md-9
           h1 Layers
+
+        //- select#dropdown(multiple='multiple')
+        //-   option Low
+        //-   option Medium
+        //-   option High
+
 
       if (layerAlert)
         .alert.alert-danger(role='alert') #{layerAlert}
@@ -38,61 +45,88 @@ block pageTitle
               a(href = "/upload")
                 btn.btn.btn-outline-primary Upload a layer
 
-  .container
-      .row
-      for datafile in datafiles
-        if datafile.Datalayers[0]
-          .col-sm-6.col-md-4
-            .thumbnail.datalayer(selected = "false", style="z-index: 1;")
-              .caption
-                div(style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
-              div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
-              .caption(style="padding-left: 5%;")
-                  .layername
-                    h3(style="font-weight: 700;") #{datafile.Datalayers[0].userLayerName}
-                    br
-                    label.layer-label Layer Name
-                    p(display='inline').label-body #{datafile.Datalayers[0].layername}
-                  .userlayername
-                    label.layer-label User Layer Name
-                    p(display='inline').label-body #{datafile.Datalayers[0].userLayerName}
-                  .property
-                    label.layer-label Data Property
-                    p.label-body #{datafile.Datalayers[0].rasterProperty}
-                  if datafile.Datalayers[0].location.length > 0
-                    .location
-                      label.layer-label Layer Location
-                      p.label-body #{datafile.Datalayers[0].location}
 
-              p.label-body.text-center
-                a.modal-button.btn(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
-
-          div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
-            div.modal-dialog.modal-lg(role="document")
-              div.modal-content(style="z-index: 10000!important;")
-                div.modal-header
-                  button(type="button" class="close" data-dismiss="modal" data-map-id="#{datafile.id}" aria-label="Close")<span aria-hidden="true">&times;</span></button>
-                  .row.spacing
-                    h1.center #{datafile.Datalayers[0].userLayerName}
-                div.modal-body
-                  .row
-                    .col-md-6
-                      script.
-                        var id = #{datafile.id};
-                        //- var size = #{size};
-                      div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing
-                    .col-md-6
+    .container
+        .row
+        for datafile in datafiles
+          if datafile.Datalayers[0]
+            .col-sm-6.col-md-4
+              .thumbnail.datalayer(selected = "false", style="z-index: 1;")
+                .caption
+                  div(style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
+                div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
+                .caption(style="padding-left: 5%;")
+                    .layername
+                      h3(style="font-weight: 700;") #{datafile.Datalayers[0].userLayerName}
+                      br
                       label.layer-label Layer Name
-                        p(display='inline').label-body #{datafile.Datalayers[0].layername}
-                      .property
-                        label.layer-label EPSG Code
-                          p.label-body #{datafile.Datalayers[0].epsg}
-                      if datafile.Datalayers[0].description.length > 0
-                        .description
-                          label.layer-label Layer Description
-                          p.label-body #{datafile.Datalayers[0].description}
-                      label.layer-label Uploaded On
-                        p.label-body #{datafile.Datalayers[0].createdAt.toUTCString()}
+                      p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                    .userlayername
+                      label.layer-label User Layer Name
+                      p(display='inline').label-body #{datafile.Datalayers[0].userLayerName}
+                    //- .property
+                      //- label.layer-label Data Property
+                      //- p.label-body #{datafile.Datalayers[0].rasterProperty}
+                    if datafile.Datalayers[0].location.length > 0
+                      .location
+                        label.layer-label Layer Location
+                        p.label-body #{datafile.Datalayers[0].location}
+
+                    //- div(data-role='fieldcontain')
+                    //-   fieldset(data-role='controlgroup')
+                    //-     label.w3-label(for="location").
+                    //-       Selected Data Property
+                    //-     //- Get all the possible properties
+                    //-     select.form-control(id='rasterProperty', name='rasterProperty')
+                    //-       for value, key in JSON.parse(datafile.Datadbfs[0].properties)
+                    //-         if typeof(value) == "number"
+                    //-           option #{key}  
+                        
+                    //-     br
+                    //-     br
+
+
+                    div(data-role='fieldcontain')
+                      fieldset(data-role='controlgroup')
+                        label.w3-label(for="location").
+                          Selected Data Property
+                        select#dropdown(multiple='multiple')
+                          for value, key in JSON.parse(datafile.Datadbfs[0].properties)
+                            if typeof(value) == "number"
+                              option #{key}  
+
+
+
+
+                p.label-body.text-center
+                  a.modal-button.btn(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
+
+            div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
+              div.modal-dialog.modal-lg(role="document")
+                div.modal-content(style="z-index: 10000!important;")
+                  div.modal-header
+                    button(type="button" class="close" data-dismiss="modal" data-map-id="#{datafile.id}" aria-label="Close")<span aria-hidden="true">&times;</span></button>
+                    .row.spacing
+                      h1.center #{datafile.Datalayers[0].userLayerName}
+                  div.modal-body
+                    .row
+                      .col-md-6
+                        script.
+                          var id = #{datafile.id};
+                          //- var size = #{size};
+                        div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing
+                      .col-md-6
+                        label.layer-label Layer Name
+                          p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                        .property
+                          label.layer-label EPSG Code
+                            p.label-body #{datafile.Datalayers[0].epsg}
+                        if datafile.Datalayers[0].description.length > 0
+                          .description
+                            label.layer-label Layer Description
+                            p.label-body #{datafile.Datalayers[0].description}
+                        label.layer-label Uploaded On
+                          p.label-body #{datafile.Datalayers[0].createdAt.toUTCString()}
 
     if datafiles.length != 0
       .container.spacing-large
@@ -136,4 +170,5 @@ block pageTitle
   script(src="/javascripts/map_thumbnail_viewer.js")
   script(src="/javascripts/user_layer.js")
   // script(src="/javascripts/layer_viewer.js") 
+  script(src="/javascripts/dropdown-checklist.js")  
     
