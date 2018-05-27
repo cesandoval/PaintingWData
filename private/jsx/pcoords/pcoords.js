@@ -8,7 +8,7 @@ import * as Act from '../store/actions'
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
 class PCoords extends React.Component {
-    // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
+    // TODO: ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
 
     constructor(props) {
@@ -39,13 +39,13 @@ class PCoords extends React.Component {
                 this.state.started
             ) {
                 let visibleNames = {}
-                for (var key in this.layersNameProperty) {
+                for (var key in this.layersHashProperty) {
                     if (
                         Object.values(visibleNodes)
-                            .map(i => i.name)
-                            .includes(this.layersNameProperty[key])
+                            .map(i => i.nodeKey)
+                            .includes(key)
                     ) {
-                        visibleNames[key] = {}
+                        visibleNames[this.layersHashProperty[key]] = {}
                     }
                 }
                 if (
@@ -83,24 +83,28 @@ class PCoords extends React.Component {
                 // Sets the mins and maxs values of every layer
                 const mins = Array(nprops.layers.length)
                 const maxs = Array(nprops.layers.length)
-                var layerIndeces = {}
-                const layersNameProperty = {}
-
+                const hashedMins = {}
+                const hashedMaxs = {}
+                const layersHashProperty = {}
                 for (let i = 0; i < nprops.layers.length; i++) {
-                    layerIndeces[nprops.layers[i].name] = i
-                    layersNameProperty[
-                        nprops.layers[i].userLayerName +
-                            '_' +
-                            nprops.layers[i].propertyName
-                    ] =
-                        nprops.layers[i].name
                     mins[i] = nprops.layers[i].geojson.minMax[0]
                     maxs[i] = nprops.layers[i].geojson.minMax[1]
+
+                    layersHashProperty[nprops.layers[i].layerKey] =
+                        nprops.layers[i].userLayerName +
+                        '_' +
+                        nprops.layers[i].propertyName
+                    hashedMins[nprops.layers[i].layerKey] =
+                        nprops.layers[i].geojson.minMax[0]
+                    hashedMaxs[nprops.layers[i].layerKey] =
+                        nprops.layers[i].geojson.minMax[1]
                 }
                 this.minVal = mins
                 this.maxVal = maxs
-                this.layersNameProperty = layersNameProperty
-                // this.brushed = false;
+
+                this.hashedMins = hashedMins
+                this.hashedMaxs = hashedMaxs
+                this.layersHashProperty = layersHashProperty
 
                 // TODO: Assumes that each layer has different length.
                 // Assumes that all of the layers have the same length
@@ -115,8 +119,6 @@ class PCoords extends React.Component {
 
                 this.setState({ visibleLayers: visibleNodes.length })
 
-                // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
-                // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
                 let numLayers = visibleNodes.length
                 // TODO: should be reuse, so rename numLayer to visibleLayersLength
 
@@ -150,8 +152,6 @@ class PCoords extends React.Component {
                 }
 
                 this.build(dictBuild)
-                this.layerIndeces = layerIndeces
-                this.layersNameProperty = layersNameProperty
             }
         }
     }
@@ -211,8 +211,6 @@ class PCoords extends React.Component {
                 brushes[layerNames[i]] = [selection[0], selection[1]]
             }
         }
-        this.minObjs = minObjs
-        this.maxObjs = maxObjs
 
         Act.mapSetPCoords({
             value: Object.assign({}, this.props.pcoordsValue, brushes),
@@ -222,9 +220,10 @@ class PCoords extends React.Component {
         const lowBnd = this.lowBnd
         const highBnd = this.highBnd
 
-        const remap = function(x, i, mins, maxs) {
+        const remap = function(x, layerKey, mins, maxs) {
             return (
-                (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) +
+                (highBnd - lowBnd) *
+                    ((x - mins[layerKey]) / (maxs[layerKey] - mins[layerKey])) +
                 lowBnd
             )
         }
@@ -235,24 +234,21 @@ class PCoords extends React.Component {
             // review: replace minObjs to layerNames.length
             const layer = this.props.layers[i]
             const name = `${layer.userLayerName}_${layer.propertyName}`
-            const dictName = layer.name
             // Checks if the layer has been filtered, if it has, changes the min and max values
             if (layerNames.includes(name)) {
                 let pixels = this.props.geometries[layer.layerKey]
 
-                // this was misbehaving
-                // if (!(minObjs[name] && maxObjs[name])) continue
                 pixels.material.uniforms.min.value = remap(
                     minObjs[name],
-                    this.layerIndeces[dictName],
-                    this.minVal,
-                    this.maxVal
+                    layer.layerKey,
+                    this.hashedMins,
+                    this.hashedMaxs
                 )
                 pixels.material.uniforms.max.value = remap(
                     maxObjs[name],
-                    this.layerIndeces[dictName],
-                    this.minVal,
-                    this.maxVal
+                    layer.layerKey,
+                    this.hashedMins,
+                    this.hashedMaxs
                 )
             }
         }
