@@ -39,29 +39,13 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 module.exports.uploadScreenshot = function(req, res) {
   //Update react state so we know if this user has opened this voxel before
   var img = req.body.data;
+
   var datavoxelId = req.body.id;
-  //console.log(img);
+  var data = img.replace(/^data:image\/\w+;base64,/, "");
+  var buf = new Buffer(data, 'base64');
 
-  var byteString = atob(img.split(',')[1]);
-  // separate out the mime component
-  var mimeString = img
-                .split(',')[0]
-                .split(':')[1]
-                .split(';')[0]
-  // write the bytes of the string to an ArrayBuffer
-  var ab = new ArrayBuffer(byteString.length);
-
-  // create a view into the buffer
-  var ia = new Uint8Array(ab);
-
-  // set the bytes of the buffer to the correct values
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-
-  var data = blobUtil.createBlob([ab], { type: mimeString });
-  var imgURL = s3.uploadBlobToBucket(data, 'data-voxel-images', function(imageLink) {
-      console.log(imageLink);
+  var imgURL = s3.uploadBlobToBucket(buf, 'data-voxel-images', function(imageLink) {
+      console.log('This is the link', imageLink);
       //Add imagename (the link) and datavoxelId to database
     });
 }

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default class Graph {
     constructor(canvasElement, height, width) {
         // Initialize a Canvas for Three.js
@@ -64,6 +66,29 @@ export default class Graph {
             w.document.write(
                 "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
             )
+        }
+
+        window.screenshotToS3 = () => {
+            // renderer.setPixelRatio(window.devicePixelRatio)
+            // renderer.setSize(width, height)
+            // renderer.setClearColor(new THREE.Color('white'))
+
+            var img = renderer.domElement.toDataURL()
+            var request = { id: 0, data: img }
+
+            axios({
+                method: 'post',
+                url: '/screenshot',
+                data: request,
+            })
+                .then(function(response) {
+                    //handle success
+                    console.log(response)
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                })
         }
 
         return renderer

@@ -36,6 +36,7 @@ class Options extends React.Component {
 
     getScreenShot() {
         window.getScreenShot()
+        window.screenshotToS3()
     }
 
     render() {
