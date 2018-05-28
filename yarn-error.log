@@ -1,14 +1,14 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js run dev
+  /usr/local/bin/node /usr/local/Cellar/yarn/0.27.5_1/libexec/bin/yarn.js remove atob blob-util
 
 PATH: 
-  /Library/Frameworks/Python.framework/Versions/3.5/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
+  /Users/csandova/anaconda/bin:/Users/csandova/anaconda/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
 
 Yarn version: 
-  1.5.1
+  0.27.5
 
 Node version: 
-  8.9.1
+  6.11.0
 
 Platform: 
   darwin x64
@@ -34,9 +34,7 @@ npm manifest:
       "amqplib": "^0.5.1",
       "antd": "^2.13.8",
       "async": "^2.6.0",
-      "atob": "^2.1.1",
       "bcrypt-nodejs": "0.0.3",
-      "blob-util": "^1.3.0",
       "bluebird": "^3.5.1",
       "body-parser": "^1.15.2",
       "bootstrap-slider": "^9.7.0",
@@ -10060,17 +10058,5 @@ Lockfile:
       fd-slicer "~1.0.1"
 
 Trace: 
-  Error: Command failed.
-  Exit code: 1
-  Command: sh
-  Arguments: -c cross-env NODE_ENV=development node ./bin/www
-  Directory: /Users/YoealEfrem/Desktop/Projects/PaintingWithData_Riyadh
-  Output:
-  
-      at ProcessTermError.MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
-      at new ProcessTermError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:226:113)
-      at ChildProcess.<anonymous> (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:30281:17)
-      at emitTwo (events.js:126:13)
-      at ChildProcess.emit (events.js:214:7)
-      at maybeClose (internal/child_process.js:925:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
+  Error: EACCES: permission denied, open '/Users/csandova/Documents/Github/PaintingWithData_Riyadh/node_modules/ms/readme.md'
+      at Error (native)

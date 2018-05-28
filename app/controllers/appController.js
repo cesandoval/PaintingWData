@@ -1,7 +1,5 @@
 var Model = require('../models');
 var s3 = require('../../lib/awsFs');
-var blobUtil = require("blob-util");
-var atob = require('atob');
  
 module.exports.show = function(req, res) {
   if(req.isAuthenticated()) {
