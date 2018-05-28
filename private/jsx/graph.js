@@ -1,3 +1,4 @@
+/*global datavoxelId*/
 import axios from 'axios'
 
 export default class Graph {
@@ -69,12 +70,24 @@ export default class Graph {
         }
 
         window.screenshotToS3 = () => {
-            // renderer.setPixelRatio(window.devicePixelRatio)
-            // renderer.setSize(width, height)
-            // renderer.setClearColor(new THREE.Color('white'))
+            let resizedCanvas = document.createElement('canvas')
+            let resizedContext = resizedCanvas.getContext('2d')
+            let newHeight = 550
+            let ratio = height / newHeight
+            let newWidth = width / ratio
 
-            var img = renderer.domElement.toDataURL()
-            var request = { id: 0, data: img }
+            resizedCanvas.height = newHeight.toString()
+            resizedCanvas.width = newWidth.toString()
+            resizedContext.drawImage(
+                renderer.domElement,
+                0,
+                0,
+                newWidth,
+                newHeight
+            )
+
+            let img = resizedCanvas.toDataURL()
+            let request = { id: datavoxelId, data: img }
 
             axios({
                 method: 'post',

@@ -44,7 +44,7 @@ module.exports.uploadScreenshot = function(req, res) {
   var data = img.replace(/^data:image\/\w+;base64,/, "");
   var buf = new Buffer(data, 'base64');
 
-  var imgURL = s3.uploadBlobToBucket(buf, 'data-voxel-images', function(imageLink) {
+  var imgURL = s3.uploadBlobToBucket(buf, datavoxelId, 'data-voxel-images', function(imageLink) {
       console.log('This is the link', imageLink);
       //Add imagename (the link) and datavoxelId to database
     });
