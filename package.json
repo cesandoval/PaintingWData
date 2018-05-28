@@ -73,7 +73,8 @@
     "srs": "^1.2.0",
     "supervisor": "0.11.0",
     "turf": "^3.0.14",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "yallist": "^3.0.2"
   },
   "devDependencies": {
     "axios": "^0.15.2",

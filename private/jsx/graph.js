@@ -1,4 +1,3 @@
-/*global datavoxelId*/
 import axios from 'axios'
 
 export default class Graph {
@@ -69,7 +68,7 @@ export default class Graph {
             )
         }
 
-        window.screenshotToS3 = () => {
+        window.screenshotToS3 = datavoxelId => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
             let newHeight = 550
