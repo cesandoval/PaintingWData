@@ -85,7 +85,7 @@ module.exports.getDatajsons = function(req, res){
       Model.Datavoxel.findOne({
           where: {id: req.params.datavoxelId }, include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
-        if (voxel.Datavoxelimage === null) {
+        if (voxel.Datavoxelimage === null && voxel.public == true) {
           //screenshot needed
           datajsons[0].dataValues.screenshots = true
           res.json(datajsons);
