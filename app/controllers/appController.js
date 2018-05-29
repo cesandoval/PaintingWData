@@ -87,11 +87,11 @@ module.exports.getDatajsons = function(req, res){
       }).then(function(voxel) {
         if (voxel.Datavoxelimage === null) {
           //screenshot needed
-          //datajsons.push({screenshot: true});
+          datajsons[0].dataValues.screenshots = true
           res.json(datajsons);
         } else {
           //screenshot not needed
-          //datajsons.push({screenshot: false});
+          datajsons[0].dataValues.screenshots = false
           res.json(datajsons);
         }  
     });
