@@ -155,6 +155,7 @@ class Charts extends React.Component {
                                         key={key}
                                         alignment="start"
                                         data={this.state.histogramData[key]}
+                                        barRatio={0.999}
                                     />
                                 )}
                             </VictoryChart>)
