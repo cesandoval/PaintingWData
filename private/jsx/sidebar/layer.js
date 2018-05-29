@@ -1,15 +1,24 @@
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 class Layer extends React.Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            node: {
+                color: '#AFAFAF',
+                visibility: true,
+            },
+        }
+
         this.changeVisibility = this.changeVisibility.bind(this)
         this.changeColor = this.changeColor.bind(this)
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
+        /*
         act.updateGeometry(
             this.props.name,
             'Visibility',
@@ -21,6 +30,14 @@ class Layer extends React.Component {
             attr: 'visibility',
             value: e.target.checked,
         })
+        */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.layerKey,
+            attr: 'visibility',
+            value: e.target.checked,
+        })
+
         // act.sideRemoveLayer(this.props.name) // deprecated
     }
     handleCheckedEvent(e) {
@@ -28,10 +45,25 @@ class Layer extends React.Component {
         // var layerName = this.props.name;
         // act.sideRemoveLayer(layerName);
     }
+    componentWillReceiveProps(props) {
+        console.log('layer props', this.props.name, { props })
+
+        const node = props.nodes[props.layerKey]
+
+        if (node) this.setState({ node })
+    }
     changeColor(e) {
+        /*
         act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
         act.vlangUpdateNode({
             nodeKey: this.props.name,
+            attr: 'color',
+            value: e.target.value,
+        })
+        */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.layerKey,
             attr: 'color',
             value: e.target.value,
         })
@@ -59,7 +91,7 @@ class Layer extends React.Component {
                             <div className="text-right">
                                 <input
                                     type="checkbox"
-                                    checked={this.props.visible}
+                                    checked={this.state.node.visibility}
                                     onChange={this.handleCheckedEvent}
                                     name={this.props.name}
                                     style={{
@@ -71,8 +103,8 @@ class Layer extends React.Component {
                                 />
                                 <input
                                     type="color"
-                                    name="color1"
-                                    value={this.props.color1}
+                                    name="color"
+                                    value={this.state.node.color}
                                     onChange={this.changeColor}
                                 />
                                 {/* <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} /> */}
@@ -87,8 +119,7 @@ class Layer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layers: state.map.layers,
-        geometries: state.map.geometries,
+        nodes: state.vpl.nodes,
     }
 }
 export default connect(mapStateToProps)(Layer)

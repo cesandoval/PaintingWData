@@ -61,11 +61,45 @@ export default class Graph {
         window.render = () => renderer.render(this.scene, this.camera)
 
         window.getScreenShot = () => {
-            const img = renderer.domElement.toDataURL('image/jpeg')
-            const w = window.open('about:blank', 'PaintingWithData Screenshot')
-            w.document.write(
-                "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
-            )
+            // We might turn it directly into a blob instead...
+            const img = renderer.domElement.toDataURL('image/png')
+            // This opens up a new tab with the screenshot
+            // const w = window.open('about:blank', 'PaintingWithData Screenshot')
+            // w.document.write(
+            //     "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
+            // )
+
+            var byteString = atob(img.split(',')[1])
+
+            // separate out the mime component
+            var mimeString = img
+                .split(',')[0]
+                .split(':')[1]
+                .split(';')[0]
+
+            // write the bytes of the string to an ArrayBuffer
+            var ab = new ArrayBuffer(byteString.length)
+
+            // create a view into the buffer
+            var ia = new Uint8Array(ab)
+
+            // set the bytes of the buffer to the correct values
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i)
+            }
+            var data = new Blob([ab], { type: mimeString })
+
+            if (textFile !== null) {
+                window.URL.revokeObjectURL(textFile)
+            }
+
+            let textFile = window.URL.createObjectURL(data)
+
+            let link = document.createElement('a')
+            link.setAttribute('download', 'voxelExport.'.concat('png'))
+            link.href = textFile
+            document.body.appendChild(link)
+            link.click()
         }
 
         window.screenshotToS3 = datavoxelId => {
