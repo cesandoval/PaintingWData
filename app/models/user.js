@@ -31,6 +31,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     extraUserInfo:{
       type: DataTypes.JSON,
+    },
+    use:{
+      type: DataTypes.TEXT,
+    },
+    industry:{
+      type: DataTypes.STRING,
+    }, 
+    referal:{
+      type: DataTypes.STRING,
     }
   }, {
     classMethods: {
