@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default class Graph {
     constructor(canvasElement, height, width) {
         // Initialize a Canvas for Three.js
@@ -98,6 +100,41 @@ export default class Graph {
             link.href = textFile
             document.body.appendChild(link)
             link.click()
+        }
+
+        window.screenshotToS3 = datavoxelId => {
+            let resizedCanvas = document.createElement('canvas')
+            let resizedContext = resizedCanvas.getContext('2d')
+            let newHeight = 550
+            let ratio = height / newHeight
+            let newWidth = width / ratio
+
+            resizedCanvas.height = newHeight.toString()
+            resizedCanvas.width = newWidth.toString()
+            resizedContext.drawImage(
+                renderer.domElement,
+                0,
+                0,
+                newWidth,
+                newHeight
+            )
+
+            let img = resizedCanvas.toDataURL()
+            let request = { id: datavoxelId, data: img }
+
+            axios({
+                method: 'post',
+                url: '/screenshot',
+                data: request,
+            })
+                .then(function(response) {
+                    //handle success
+                    console.log(response)
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                })
         }
 
         return renderer

@@ -1,3 +1,4 @@
+/*global datavoxelId*/
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -6,6 +7,8 @@ import * as act from '../store/actions'
 import OptionsForm from './optionsForm'
 import OptionsMapStyle from './optionsMapStyle'
 import Button from 'react-bootstrap/lib/Button'
+
+import axios from 'axios'
 
 class Options extends React.Component {
     constructor(props) {
@@ -17,6 +20,7 @@ class Options extends React.Component {
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(
             this
         )
+        this.s3Screenshot = this.s3Screenshot.bind(this)
         */
     }
     componentDidMount() {
@@ -42,6 +46,32 @@ class Options extends React.Component {
         )
 
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow })
+        console.log(this)
+
+        this.s3Screenshot()
+    }
+
+    s3Screenshot() {
+        // this is being triggered twice.........
+        let request = { datavoxelId: datavoxelId }
+        axios({
+            method: 'post',
+            url: '/checkScreenshot',
+            data: request,
+        })
+            .then(function(response) {
+                //handle success
+                if (!response.data.screenshot) {
+                    console.log('Getting Public Screenshot')
+                    window.screenshotToS3(datavoxelId)
+                } else {
+                    console.log('Screenshot not Neededddd~!!!')
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            })
     }
 
     getScreenShot() {
