@@ -6,6 +6,7 @@ import {
     VictoryChart,
     VictoryLabel,
     VictoryScatter,
+    VictoryBar,
 } from 'victory'
 var kernel = require('kernel-smooth')
 // var science = require('science')
@@ -14,19 +15,24 @@ class Charts extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = { densityData: [] }
+        this.state = { densityData: [], histogramData: [] }
     }
 
     componentWillReceiveProps(newProps) {
         if (!this.state.started) {
             this.setState({ started: true })
             this.props = newProps
-            this.setState({ densityData: this.getDensityData() })
+            const chartData = this.getDensityData()
+            this.setState({
+                densityData: chartData.densityData,
+                histogramData: chartData.histogramData,
+            })
         }
     }
 
     getDensityData() {
-        const layers = {}
+        const layersDensity = {}
+        const layersHistogram = {}
         for (var index in this.props.layers) {
             let currLayer = this.props.layers[index]
 
@@ -42,13 +48,21 @@ class Charts extends React.Component {
             let max = math.max(vals)
             let stepSize = max / 512
             let xRange = d3.range(0, max, stepSize)
+
+            var bins = d3.layout.histogram().bins(20)(vals)
+            let currHistogramData = []
+            for (let bin in bins) {
+                currHistogramData.push({ x: bins[bin].x, y: bins[bin].y })
+            }
+
             let currDensityData = []
             for (let i in xRange) {
                 currDensityData.push({ x: xRange[i], y: density(xRange[i]) })
             }
-            layers[currLayer.layerKey] = currDensityData
+            layersDensity[currLayer.layerKey] = currDensityData
+            layersHistogram[currLayer.layerKey] = currHistogramData
         }
-        return layers
+        return { densityData: layersDensity, histogramData: layersHistogram }
     }
 
     render() {
@@ -125,6 +139,21 @@ class Charts extends React.Component {
                                             { x: 4, y: 4 },
                                             { x: 5, y: 7 },
                                         ]}
+                                    />
+                                )}
+
+                                {this.props.panelShow == 'Chart:Histogram' && (
+                                    <VictoryBar
+                                        style={{
+                                            data: {
+                                                fill: this.props.nodes[key]
+                                                    ? this.props.nodes[key]
+                                                          .color
+                                                    : 'gray',
+                                            },
+                                        }}
+                                        key={key}
+                                        alignment="start"
                                     />
                                 )}
                             </VictoryChart>)
