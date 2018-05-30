@@ -1,4 +1,5 @@
-/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project */
+/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project, datavoxelId */
+import axios from 'axios'
 
 // import '../../public/javascripts/libs/utilities.js'
 export default class Pixels {
@@ -114,6 +115,7 @@ export default class Pixels {
         var parserRequests = 0
         var updaterRequests = 0
         var finished = 0
+        var totalTilesToLoad = 0
         /* eslint-enable */
 
         //compass functionality
@@ -256,6 +258,7 @@ export default class Pixels {
 
             tilesToGet += tiles.length
             updaterRequests += tiles.length
+            totalTilesToLoad = tilesToGet
 
             elevation.forEach(function(coords) {
                 //download the elevation image
@@ -300,6 +303,15 @@ export default class Pixels {
                     if (tilesToGet === 0) {
                         document.querySelector('#progress').style.opacity = 0
                         updateTileVisibility()
+                    }
+                    if (finished == totalTilesToLoad) {
+                        setTimeout(function() {
+                            console.log(
+                                'Taking Screenshot for voxel',
+                                datavoxelId
+                            )
+                            window.screenshotToS3(datavoxelId)
+                        }, 3000)
                     }
                 }
             )
@@ -347,6 +359,29 @@ export default class Pixels {
                 else child.visible = false
             }
         }
+    }
+
+    s3Screenshot() {
+        // this is being triggered twice.........
+        let request = { datavoxelId: datavoxelId }
+        axios({
+            method: 'post',
+            url: '/checkScreenshot',
+            data: request,
+        })
+            .then(function(response) {
+                //handle success
+                if (!response.data.screenshot) {
+                    console.log('Getting Public Screenshot')
+                    window.screenshotToS3(datavoxelId)
+                } else {
+                    console.log('Screenshot not Neededddd~!!!')
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            })
     }
 
     // Create a InstancedBufferGeometry Object

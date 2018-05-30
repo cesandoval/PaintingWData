@@ -69,7 +69,6 @@ class Layers extends React.Component {
                     }
                     return dataset
                 })
-
                 act.importDatasets({ datasets })
 
                 /*

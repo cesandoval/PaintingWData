@@ -48,14 +48,20 @@ module.exports.uploadScreenshot = function(req, res) {
   var buf = new Buffer(data, 'base64');
   var bucket = 'data-voxel-images'
 
-  var imgURL = s3Lib.uploadBlobToBucket(buf, datavoxelId, bucket, function(imageLink) {
-      var dataVoxelImage = Datavoxelimage.build();
-      dataVoxelImage.DatavoxelId = datavoxelId
-      dataVoxelImage.image =  'https://s3.amazonaws.com/data-voxel-images/' + imageLink
-      dataVoxelImage.save().then(function(){
-        console.log('DatavoxelImage has been created', imageLink)
-      });   
-    });
+  Model.Datavoxelimage.findOne({
+    where: {DatavoxelId: datavoxelId}
+  }).then(function(dataVoxelImage) {
+    if (dataVoxelImage == null) {
+      var imgURL = s3Lib.uploadBlobToBucket(buf, datavoxelId, bucket, function(imageLink) {
+        var dataVoxelImage = Datavoxelimage.build();
+        dataVoxelImage.DatavoxelId = datavoxelId
+        dataVoxelImage.image =  'https://s3.amazonaws.com/data-voxel-images/' + imageLink
+        dataVoxelImage.save().then(function(){
+          console.log('DatavoxelImage has been created', imageLink)
+        });   
+      });
+    }
+  })
 }
 
 module.exports.checkScreenshot = function(req, res) {
