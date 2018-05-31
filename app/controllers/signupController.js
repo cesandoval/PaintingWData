@@ -255,7 +255,7 @@ var isAuthenticatedOrPublicVoxel = function (req, res, next) {
           return next();
         }
       } else {
-
+        res.redirect("users/login");
       }
     });
   }

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default class Graph {
     constructor(canvasElement, height, width) {
         // Initialize a Canvas for Three.js
@@ -59,11 +61,80 @@ export default class Graph {
         window.render = () => renderer.render(this.scene, this.camera)
 
         window.getScreenShot = () => {
-            const img = renderer.domElement.toDataURL('image/jpeg')
-            const w = window.open('about:blank', 'PaintingWithData Screenshot')
-            w.document.write(
-                "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
+            // We might turn it directly into a blob instead...
+            const img = renderer.domElement.toDataURL('image/png')
+            // This opens up a new tab with the screenshot
+            // const w = window.open('about:blank', 'PaintingWithData Screenshot')
+            // w.document.write(
+            //     "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
+            // )
+
+            var byteString = atob(img.split(',')[1])
+
+            // separate out the mime component
+            var mimeString = img
+                .split(',')[0]
+                .split(':')[1]
+                .split(';')[0]
+
+            // write the bytes of the string to an ArrayBuffer
+            var ab = new ArrayBuffer(byteString.length)
+
+            // create a view into the buffer
+            var ia = new Uint8Array(ab)
+
+            // set the bytes of the buffer to the correct values
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i)
+            }
+            var data = new Blob([ab], { type: mimeString })
+
+            if (textFile !== null) {
+                window.URL.revokeObjectURL(textFile)
+            }
+
+            let textFile = window.URL.createObjectURL(data)
+
+            let link = document.createElement('a')
+            link.setAttribute('download', 'voxelExport.'.concat('png'))
+            link.href = textFile
+            document.body.appendChild(link)
+            link.click()
+        }
+
+        window.screenshotToS3 = datavoxelId => {
+            let resizedCanvas = document.createElement('canvas')
+            let resizedContext = resizedCanvas.getContext('2d')
+            let newHeight = 550
+            let ratio = height / newHeight
+            let newWidth = width / ratio
+
+            resizedCanvas.height = newHeight.toString()
+            resizedCanvas.width = newWidth.toString()
+            resizedContext.drawImage(
+                renderer.domElement,
+                0,
+                0,
+                newWidth,
+                newHeight
             )
+
+            let img = resizedCanvas.toDataURL()
+            let request = { id: datavoxelId, data: img }
+
+            axios({
+                method: 'post',
+                url: '/screenshot',
+                data: request,
+            })
+                .then(function(response) {
+                    //handle success
+                    console.log(response)
+                })
+                .catch(function(response) {
+                    //handle error
+                    console.log(response)
+                })
         }
 
         return renderer

@@ -1,51 +1,141 @@
-import * as consts from '../consts';
+import _ from 'lodash'
+import update from 'immutability-helper'
+
+import * as t from '../types'
 
 const initialState = {
-    nodes: [],
-    links: []
-    // nodes: [node1, node2, node3, node4],
-    // links: [link1, link2, link3]
+    nodes: {},
+    links: {
+        inputs: {},
+        outputs: {},
+    },
 }
+/* data schema
+    nodes: {
+        [node$key]: {
+        color: #112233,
+        visibility: true,
+        filter: [0.2, 0.9],
+        options: {
+            [optionAttr]: [optionValue],
+        }
+        outputs: { dataArray }
+        }
+    },
+    links: {
+        inputs: {
+            [toNode]: {
+                [toInput]: srcNode,
+            },
+        },
+        outputs: {
+            [srcNode]: {
+                [toNode]: toInput,
+            },
+        },
+    },
+*/
 
-
-export default (state=initialState, action) => {
+export default (state = initialState, action) => {
+    let nodes = _.cloneDeep(state.nodes)
+    let links = _.cloneDeep(state.links)
 
     switch (action.type) {
-        case consts.VLANG_ADD_LINK:
-            return {               
-                nodes: [...state.nodes],
-                links: [
-                    ...state.links,
-                    action.link
-                ]    
-            };
-        case consts.VLANG_REMOVE_LINK:
-            
-            var newState = {               
-                nodes: [...state.nodes],
-                links: [
-                    ...state.links.slice(0, action.index),
-                    ...state.links.slice(action.index+1),
-                ]    
-            };
-            return newState;
-            
-        case consts.VLANG_ADD_NODE:
-            return {               
-                    nodes: [
-                        ...state.nodes,
-                        action.node
-                    ],
-                    links: [
-                        ...state.links,
-                    ]    
-                };
-        case consts.VLANG_REMOVE_NODE: {
-            let newLinks = [] 
-            state.links.map((link) => {
-                if(!(link.sourceNode.ref === state.nodes[action.index].ref || 
-                   link.targetNode.ref === state.nodes[action.index].ref)){
-                    newLinks.push(link);
+        case t.NODE_ADD: {
+            const { nodeKey, node } = action
+
+            return update(state, {
+                nodes: {
+                    [nodeKey]: { $set: node },
+                },
+            })
+        }
+        case t.NODE_REMOVE: {
+            const { nodeKey } = action
+
+            // prevent to delete dataset node.
+            if (state.nodes[nodeKey].type == 'DATASET') {
+                console.warn('deleteNode(): can not delete dataset node.')
+                return state
+            }
+
+            delete nodes[nodeKey]
+
+            const toNode = nodeKey
+            const srcNodes = Object.values(links.inputs[toNode] || {})
+            srcNodes.map(srcNode => {
+                delete links.outputs[srcNode][toNode]
+            })
+            delete links.inputs[toNode]
+
+            const srcNode = nodeKey
+            const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
+            toNodesToPlugs.map(([toNode, toPlug]) => {
+                delete links.inputs[toNode][toPlug]
+            })
+
+            delete links.outputs[srcNode]
+
+            return update(state, {
+                nodes: {
+                    $set: nodes,
+                },
+                links: {
+                    $set: links,
+                },
+            })
+        }
+        case t.NODE_UPDATE: {
+            const { nodeKey, attr, value } = action
+            return update(state, {
+                nodes: {
+                    [nodeKey]: {
+                        [attr]: {
+                            $set: value,
+                        },
+                    },
+                },
+            })
+        }
+        case t.NODE_OPTION_UPDATE: {
+            const { nodeKey, attr, value } = action
+
+            return update(state, {
+                nodes: {
+                    [nodeKey]: {
+                        options: {
+                            [attr]: {
+                                $set: value,
+                            },
+                        },
+                    },
+                },
+            })
+        }
+        case t.LINK_ADD: {
+            const { srcNode, toNode, toInput } = action
+
+            // limitation of link
+            if (srcNode == toNode) {
+                console.warn('linkNode(): link same node')
+                return state
+            }
+
+            if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
+                console.warn('linkNode(): one input only allow one link')
+                delete links.outputs[links.inputs[toNode][toInput]][toNode]
+            }
+
+            for (
+                let checkNodes = new Set(
+                    Object.keys(links.outputs[toNode] || [])
+                );
+                checkNodes.size != 0;
+
+            ) {
+                if ([...checkNodes].find(f => f === srcNode)) {
+                    console.warn('linkNode(): checking link loop error.')
+                    return state
                 }
                
             })
@@ -60,38 +150,64 @@ export default (state=initialState, action) => {
         case consts.VLANG_UPDATE_NODE_POSITION: {
             let newNode = state.nodes[action.index];
 
-            newNode.translate = action.position
-            newNode.name = action.props[action.index].name
-            newNode.userLayerName = action.props[action.index].userLayerName
-            newNode.property = action.props[action.index].property
+            // inputs
+            if (links.inputs[toNode]) {
+                // delete the others same srcNode
+                Object.entries(links.inputs[toNode]).map(
+                    ([_toInput, _srcNode]) => {
+                        if (srcNode == _srcNode)
+                            delete links.inputs[toNode][_toInput]
+                    }
+                )
 
-            return  {
-                 nodes: [
-                       ...state.nodes.slice(0, action.index),
-                       newNode,
-                       ...state.nodes.slice(action.index+1),
-                    ],
-                    links: [
-                        ...state.links,
-                    ]    
-            };
-        }
-        case consts.VLANG_ADD_LAYERS: {
-            let allNodes = []
-            action.layers.map((layer, index) => {
-                let nodeIndex = "node_"+parseInt(parseInt(index)+1);
-                let currNode = { ref: nodeIndex, type: consts.LAYER_NODE, position: {x:100, y:100+150*index}, translate: {x: 0, y: 0}, name:layer.name, userLayerName:layer.userLayerName, property:layer.property};
-                allNodes[index] = currNode;
+                links.inputs[toNode][toInput] = srcNode
+            } else
+                links.inputs[toNode] = {
+                    [toInput]: srcNode,
+                }
+
+            // outputs
+            if (links.outputs[srcNode]) links.outputs[srcNode][toNode] = toInput
+            else
+                links.outputs[srcNode] = {
+                    [toNode]: toInput,
+                }
+
+            return update(state, {
+                links: {
+                    $set: links,
+                },
             })
-            return {
-                nodes: allNodes,
-                links: []
-            }
+        }
+        case t.LINK_REMOVE: {
+            const { srcNode, toNode } = action
+
+            const toPlug = links.outputs[srcNode][toNode]
+
+            delete links.outputs[srcNode][toNode]
+            delete links.inputs[toNode][toPlug]
+
+            return update(state, {
+                links: {
+                    $set: links,
+                },
+            })
         }
 
-        default: {
-            return state;
+        case t.MAP_SET_OPACITY: {
+            let { value } = action
+            value = parseFloat(value) / 100.0
+
+            Object.keys(nodes).map(key => {
+                nodes = update(nodes, { [key]: { opacity: { $set: value } } })
+            })
+
+            console.log('VPL t.MAP_SET_OPACITY', { nodes })
+            return update(state, { nodes: { $set: nodes } })
         }
+
+        default:
+            return state
     }
 }
 

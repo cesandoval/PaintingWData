@@ -1,15 +1,24 @@
 import React from 'react'
-import * as act from '../store/actions'
+import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 class Layer extends React.Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            node: {
+                color: '#AFAFAF',
+                visibility: true,
+            },
+        }
+
         this.changeVisibility = this.changeVisibility.bind(this)
         this.changeColor = this.changeColor.bind(this)
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
     changeVisibility(e) {
+        /*
         act.updateGeometry(
             this.props.name,
             'Visibility',
@@ -21,6 +30,14 @@ class Layer extends React.Component {
             attr: 'visibility',
             value: e.target.checked,
         })
+        */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.layerKey,
+            attr: 'visibility',
+            value: e.target.checked,
+        })
+
         // act.sideRemoveLayer(this.props.name) // deprecated
     }
     handleCheckedEvent(e) {
@@ -28,27 +45,28 @@ class Layer extends React.Component {
         // var layerName = this.props.name;
         // act.sideRemoveLayer(layerName);
     }
+    componentWillReceiveProps(props) {
+        console.log('layer props', this.props.name, { props })
+
+        const node = props.nodes[props.layerKey]
+
+        if (node) this.setState({ node })
+    }
     changeColor(e) {
+        /*
         act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
         act.vlangUpdateNode({
             nodeKey: this.props.name,
             attr: 'color',
             value: e.target.value,
         })
-
-        // Get geometry
-        let pixels = this.props.geometries[this.props.name]
-
-        pixels.material.uniforms.startColor.value.set(e.target.value)
-        pixels.material.uniforms.endColor.value.set(e.target.value)
-
-        /* // using two color options for each layer
-        if (e.target.name == 'color1'){
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-        } else {
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
         */
+
+        Act.nodeUpdate({
+            nodeKey: this.props.layerKey,
+            attr: 'color',
+            value: e.target.value,
+        })
 
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
@@ -88,6 +106,29 @@ class Layer extends React.Component {
                             />
                             {/* <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} /> */}
                         </div>
+                        <div className="col-md-6">
+                            <div className="text-right">
+                                <input
+                                    type="checkbox"
+                                    checked={this.state.node.visibility}
+                                    onChange={this.handleCheckedEvent}
+                                    name={this.props.name}
+                                    style={{
+                                        '-webkit-appearance': 'checkbox',
+                                        height: '17px',
+                                        width: '16px',
+                                        margin: '0px 5px',
+                                    }}
+                                />
+                                <input
+                                    type="color"
+                                    name="color"
+                                    value={this.state.node.color}
+                                    onChange={this.changeColor}
+                                />
+                                {/* <input type="color" name="color2" value={this.props.color2} onChange={this.changeColor} /> */}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -97,8 +138,7 @@ class Layer extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        layers: state.sidebar.layers,
-        geometries: state.map.geometries,
+        nodes: state.vpl.nodes,
     }
 }
 export default connect(mapStateToProps)(Layer)

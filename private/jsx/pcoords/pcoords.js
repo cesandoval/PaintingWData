@@ -1,21 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import * as Act from '../store/actions'
 
 // TODO List
 
 // 1.
-// When the layer is turned off, and on,
-// the parallel coordinates widget loses the `brushed` property.
-// Keep track of the property so it does not restart.
-
-// 2.
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
 class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
 
-    // TODO EVERYTIME THE COLOR GETS UPDATED, THE PCOORDS GET RESTARTED, BUT THE MIN/MAX VALS DONT
     constructor(props) {
         super(props)
 
@@ -27,111 +22,141 @@ class PCoords extends React.Component {
         this.calcRanges = this.calcRanges.bind(this)
     }
     componentWillReceiveProps(nprops) {
-        // console.log(`pcoords.js componentWillReceiveProps(${nprops})`, nprops)
-        // if(true && nprops.layers.length > 0){
-        if (!this.state.started && nprops.layers.length > 0) {
-            // console.log(nprops, 8484848484)
-            this.setState({ started: true })
+        this.props = nprops
 
-            const bounds = nprops.layers[0].bounds
-            const indicesArray = nprops.layers[0].allIndices
-            this.lowBnd = bounds[0]
-            this.highBnd = bounds[1]
+        if (
+            Object.keys(this.props.geometries).length !== 0 &&
+            this.props.geometries.constructor === Object
+        ) {
+            let nodeLayers = Object.values(nprops.nodes).filter(
+                f => f.type == 'DATASET'
+            )
+            let visibleNodes = nodeLayers.filter(l => l.visibility)
 
-            // Sets the mins and maxs values of every layer
-            const mins = Array(nprops.layers.length)
-            const maxs = Array(nprops.layers.length)
-            const layerIndeces = {}
-            const layersNameProperty = {}
-
-            for (let i = 0; i < nprops.layers.length; i++) {
-                layerIndeces[
-                    nprops.layers[i].userLayerName +
-                        '_' +
-                        nprops.layers[i].propertyName
-                ] = i
-                layersNameProperty[
-                    nprops.layers[i].userLayerName +
-                        '_' +
-                        nprops.layers[i].propertyName
-                ] =
-                    nprops.layers[i].name
-                mins[i] = nprops.layers[i].geojson.minMax[0]
-                maxs[i] = nprops.layers[i].geojson.minMax[1]
-            }
-            this.minVal = mins
-            this.maxVal = maxs
-            this.layersNameProperty = layersNameProperty
-            // this.brushed = false;
-
-            // TODO: Assumes that each layer has different length.
-            // Assumes that all of the layers have the same length
-            // and also that the data matches up
-            // ie. indexes == same location
-
-            //clean the container first
-            let pcContainer = document.getElementById('parcoords')
-            while (pcContainer.firstChild) {
-                pcContainer.removeChild(pcContainer.firstChild)
-            }
-
-            // and recalculate parcoords
-            let visibleLayers = nprops.layers.filter(l => l.visible)
-            let numLayers = visibleLayers.length
-            // TODO: should be reuse, so rename numLayer to visibleLayersLength
-
-            // get the max length of Voxels of layers(?)
-            let maxVoxels = 0
-            for (let i = 0; i < visibleLayers.length; i++) {
-                let currVoxels = visibleLayers[i].geojson.length
-                if (currVoxels > maxVoxels) {
-                    maxVoxels = currVoxels
-                }
-            }
-
-            let dictBuild = Array(maxVoxels)
-            // var brushedLayers;
-            // if (typeof this.minObjs != 'undefined') {
-            //     brushedLayers = Object.keys(this.minObjs);
-            // }
-            // console.log(visibleLayers)
-            // console.log(nprops.layers)
-
-            for (let j = 0; j < numLayers; j++) {
-                for (let i = 0; i < maxVoxels; i++) {
-                    if (dictBuild[i] == undefined) {
-                        dictBuild[i] = {}
-                    }
+            this.setState({ visibleLayers: visibleNodes.length })
+            if (
+                visibleNodes.length != this.state.visibleLayers &&
+                this.state.started
+            ) {
+                let visibleNames = {}
+                for (var key in this.layersNameProperty) {
                     if (
-                        indicesArray[i] in visibleLayers[j].geojson.hashedData
+                        Object.values(visibleNodes)
+                            .map(i => i.name)
+                            .includes(this.layersNameProperty[key])
                     ) {
-                        dictBuild[i][
-                            visibleLayers[j].userLayerName +
-                                '_' +
-                                visibleLayers[j].propertyName
-                        ] =
-                            visibleLayers[j].geojson.hashedData[
-                                indicesArray[i]
-                            ][3]
-                        // review: [3] ?
-                    } else {
-                        dictBuild[i][
-                            visibleLayers[j].userLayerName +
-                                '_' +
-                                visibleLayers[j].propertyName
-                        ] = 0
+                        visibleNames[key] = {}
                     }
                 }
+                if (
+                    !(
+                        Object.keys(visibleNames).length === 0 &&
+                        visibleNames.constructor === Object
+                    )
+                ) {
+                    this.pc
+                        .dimensions(visibleNames)
+                        .render()
+                        .updateAxes()
+                }
+                if (nprops.pcoordsValue != 'undefined') {
+                    this.pc.brushExtents(nprops.pcoordsValue)
+                }
             }
+            if (!this.state.started) {
+                this.setState({ started: true })
+                let sidebarLayers = nprops.layers.filter(l => l.visible)
+                // get the max length of Voxels of layers(?)
+                var maxVoxels = 0
+                for (let i = 0; i < sidebarLayers.length; i++) {
+                    let currVoxels = sidebarLayers[i].geojson.length
+                    if (currVoxels > maxVoxels) {
+                        maxVoxels = currVoxels
+                    }
+                }
+                const bounds = nprops.datasets.bounds
+                var indicesArray = nprops.datasets.allIndices
 
-            this.build(dictBuild)
-            this.layerIndeces = layerIndeces
+                this.lowBnd = bounds[0]
+                this.highBnd = bounds[1]
+
+                // Sets the mins and maxs values of every layer
+                const mins = Array(nprops.layers.length)
+                const maxs = Array(nprops.layers.length)
+                var layerIndeces = {}
+                const layersNameProperty = {}
+
+                for (let i = 0; i < nprops.layers.length; i++) {
+                    layerIndeces[nprops.layers[i].name] = i
+                    layersNameProperty[
+                        nprops.layers[i].userLayerName +
+                            '_' +
+                            nprops.layers[i].propertyName
+                    ] =
+                        nprops.layers[i].name
+                    mins[i] = nprops.layers[i].geojson.minMax[0]
+                    maxs[i] = nprops.layers[i].geojson.minMax[1]
+                }
+                this.minVal = mins
+                this.maxVal = maxs
+                this.layersNameProperty = layersNameProperty
+                // this.brushed = false;
+
+                // TODO: Assumes that each layer has different length.
+                // Assumes that all of the layers have the same length
+                // and also that the data matches up
+                // ie. indexes == same location
+
+                //clean the container first
+                let pcContainer = document.getElementById('parcoords')
+                while (pcContainer.firstChild) {
+                    pcContainer.removeChild(pcContainer.firstChild)
+                }
+
+                this.setState({ visibleLayers: visibleNodes.length })
+
+                // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
+                // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
+                let numLayers = visibleNodes.length
+                // TODO: should be reuse, so rename numLayer to visibleLayersLength
+
+                let dictBuild = Array(maxVoxels)
+                for (let j = 0; j < numLayers; j++) {
+                    for (let i = 0; i < maxVoxels; i++) {
+                        if (dictBuild[i] == undefined) {
+                            dictBuild[i] = {}
+                        }
+                        if (
+                            indicesArray[i] in
+                            nprops.layers[j].geojson.hashedData
+                        ) {
+                            dictBuild[i][
+                                nprops.layers[j].userLayerName +
+                                    '_' +
+                                    nprops.layers[j].propertyName
+                            ] =
+                                nprops.layers[j].geojson.hashedData[
+                                    indicesArray[i]
+                                ][3]
+                            // review: [3] ?
+                        } else {
+                            dictBuild[i][
+                                nprops.layers[j].userLayerName +
+                                    '_' +
+                                    nprops.layers[j].propertyName
+                            ] = 0
+                        }
+                    }
+                }
+
+                this.build(dictBuild)
+                this.layerIndeces = layerIndeces
+                this.layersNameProperty = layersNameProperty
+            }
         }
     }
 
     build(data) {
-        // console.log('build(data, dictBrush)', data, dictBrush)
-
         let minVal = this.minVal[0]
         let maxVal = this.maxVal[0]
 
@@ -142,7 +167,8 @@ class PCoords extends React.Component {
             .range([d3.rgb(245, 165, 3), d3.rgb(74, 217, 217)])
             .interpolate(d3.interpolateLab)
 
-        const pc = d3.parcoords()('#parcoords')
+        const pc = d3
+            .parcoords()('#parcoords')
             .mode('queue')
             .data(data)
             .composite('darken')
@@ -155,44 +181,47 @@ class PCoords extends React.Component {
             .createAxes()
             .reorderable()
             .brushMode('1D-axes')
-        // if (this.brushed) {
-        //     pc.state.brushed = dictBrush;
-        // }
 
         pc.on('brushend', this.calcRanges.bind(this))
+        if (this.props.pcoordsValue != 'undefined') {
+            pc.brushExtents(this.props.pcoordsValue)
+        }
         this.pc = pc
         this.setState({ pc: pc })
     }
 
     calcRanges() {
-        // console.log('calcRanges(data)', data)
         // review: what is the mean of radoms 'true'?
         this.pc.randoms = true
 
         const brushSelection = this.pc.brushExtents()
         const layerNames = Object.keys(brushSelection)
-        // console.log('brushSelection', brushSelection)
-        // console.log('layerNames', layerNames)
 
         // Calculate range of data
         let maxObjs = {}
         let minObjs = {}
+
+        let brushes = {}
         if (layerNames.length > 0) {
             // review: when is the layerNames.length less then 0?
             for (let i = 0; i < layerNames.length; i++) {
                 let selection = brushSelection[layerNames[i]]
                 minObjs[layerNames[i]] = selection[0]
                 maxObjs[layerNames[i]] = selection[1]
+                brushes[layerNames[i]] = [selection[0], selection[1]]
             }
         }
         this.minObjs = minObjs
         this.maxObjs = maxObjs
 
+        Act.mapSetPCoords({
+            value: Object.assign({}, this.props.pcoordsValue, brushes),
+        })
+
         // Update Layers
         const lowBnd = this.lowBnd
         const highBnd = this.highBnd
 
-        // const remap = function(selection, layerIndex, mins, maxs) {
         const remap = function(x, i, mins, maxs) {
             return (
                 (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) +
@@ -201,21 +230,31 @@ class PCoords extends React.Component {
         }
 
         // the range(min and max) of uniforms is 0 - 1
-        for (let name in minObjs) {
+        // for (let name in minObjs) {
+        for (let i in this.props.layers) {
             // review: replace minObjs to layerNames.length
-            let pixels = this.props.geometries[this.layersNameProperty[name]]
-            pixels.material.uniforms.min.value = remap(
-                minObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
-            pixels.material.uniforms.max.value = remap(
-                maxObjs[name],
-                this.layerIndeces[name],
-                this.minVal,
-                this.maxVal
-            )
+            const layer = this.props.layers[i]
+            const name = `${layer.userLayerName}_${layer.propertyName}`
+            const dictName = layer.name
+            // Checks if the layer has been filtered, if it has, changes the min and max values
+            if (layerNames.includes(name)) {
+                let pixels = this.props.geometries[layer.layerKey]
+
+                // this was misbehaving
+                // if (!(minObjs[name] && maxObjs[name])) continue
+                pixels.material.uniforms.min.value = remap(
+                    minObjs[name],
+                    this.layerIndeces[dictName],
+                    this.minVal,
+                    this.maxVal
+                )
+                pixels.material.uniforms.max.value = remap(
+                    maxObjs[name],
+                    this.layerIndeces[dictName],
+                    this.minVal,
+                    this.maxVal
+                )
+            }
         }
     }
     style() {
@@ -233,13 +272,38 @@ class PCoords extends React.Component {
     }
     render() {
         let pcoordsRef = parcoords => (this.pcoordsRef = parcoords)
+        const hasVisibleLayers = this.state.visibleLayers ? true : false
+
         return (
             <div
                 id="parcoords"
                 className="parcoords"
                 ref={pcoordsRef}
                 style={this.style()}
-            />
+            >
+                <style jsx>{`
+                    #parcoords {
+                        &::after {
+                            content: 'No Visible Dataset Layers';
+                            visibility: ${hasVisibleLayers ? 'hidden' : ''};
+                            position: absolute;
+                            margin: auto;
+                            top: 139px;
+                            left: 0;
+                            right: 0;
+                            text-align: center;
+                            font-size: 18px;
+                            width: 320px;
+                            letter-spacing: 1px;
+                            font-weight: 500;
+                        }
+
+                        :global(svg) {
+                            visibility: ${hasVisibleLayers ? '' : 'hidden'};
+                        }
+                    }
+                `}</style>
+            </div>
         )
     }
 }
@@ -247,8 +311,12 @@ class PCoords extends React.Component {
 const mapStateToProps = state => {
     return {
         mapStarted: state.map.started,
-        layers: state.sidebar.layers,
+        datasets: state.datasets,
+        layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
+        nodes: state.vpl.nodes,
+        pcoordsValue: state.options.pcoordsValue,
+        panelShow: state.interactions.panelShow,
     }
 }
 

@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import Rx from 'rxjs/Rx'
 import _ from 'lodash'
 
-import * as Action from '../store/actions.js'
-// import * as consts  from '../store/consts.js';
+import * as Act from '../store/actions.js'
 
 import Slider from './Slider.js'
 import Panel from './Panel.js'
@@ -81,17 +80,19 @@ class VPL extends React.Component {
         this.checked = {
             datasetNode: false,
         }
+
+        this.geometries = {}
     }
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
         // TODO: should get dataset layers from props.
-        const datasets = this.props.layers
-        const nodes = this.state.Nodes
-        console.log('initDatasetNode()', datasets)
 
-        datasets.map((dataset, index) => {
-            // console.log('dataset', dataset)
+        const layers = this.props.layers
+        console.log('initDatasetNode()', layers, this.props.nodes)
+
+        Object.entries(layers).map(([key, layer], index) => {
+            // console.log(index, { layer })
 
             // TODO: generate hash key for datasets.
             if (!nodes[dataset.name]) {
@@ -105,11 +106,17 @@ class VPL extends React.Component {
 
                 nodes[dataset.name] = datasetNode
             }
+            datasetNode.name = layer.name
+            datasetNode.color = layer.color1
+
+            // TODO: use layerKey as nodeKey of layers node
+            Act.nodeAdd({
+                nodeKey: key,
+                node: datasetNode,
+            })
         })
 
-        this.setState({ Nodes: nodes })
-
-        return datasets.length > 0
+        return !_.isEmpty(layers)
     }
 
     newNodeObj = type => {
@@ -136,7 +143,6 @@ class VPL extends React.Component {
                 y: 0,
             }
         }
-
         const newNode = {
             name: type,
             type: type,
@@ -155,10 +161,17 @@ class VPL extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
-        // console.log(this.newProps)
+        this.geometries = Object.assign({}, newProps.map.geometries)
 
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.refreshVoxels) {
+            this.refreshVoxels = false
+            this.computeNodes()
         }
     }
 
@@ -308,7 +321,7 @@ class VPL extends React.Component {
                 }
             })
             .do(() => {
-                this.linkThenComputeNode()
+                this.refreshVoxels = true // this.computeNodes()
             })
             .subscribe(observer('linkNode$'))
 
@@ -338,11 +351,10 @@ class VPL extends React.Component {
             })
             .subscribe(observer('panVpl$'))
 
-        this.shiftKeyEvent$ = Rx.Observable
-            .merge(
-                Rx.Observable.fromEvent(window, 'keydown'),
-                Rx.Observable.fromEvent(window, 'keyup')
-            )
+        this.shiftKeyEvent$ = Rx.Observable.merge(
+            Rx.Observable.fromEvent(window, 'keydown'),
+            Rx.Observable.fromEvent(window, 'keyup')
+        )
             .filter(f => f.key == 'Shift')
             .map(m => m.type == 'keydown')
             .do(d => {
@@ -361,6 +373,7 @@ class VPL extends React.Component {
             .distinctUntilChanged()
             .do(nodeKey => {
                 this.setState({ hover: nodeKey })
+                Act.setActiveNode({ value: nodeKey })
                 console.log('mouseHover', nodeKey)
             })
             .subscribe(observer('mouseHover$'))
@@ -375,11 +388,6 @@ class VPL extends React.Component {
         this.mouseHover$.unsubscribe()
     }
 
-    componentDidUpdate() {
-        // componentDidUpdate(nextProps){
-        // console.log('props changed ...', nextProps)
-    }
-
     panning = ({ x, y }) => {
         // console.log('panning()', { x, y })
         const panning = { x, y }
@@ -392,47 +400,21 @@ class VPL extends React.Component {
         const nodes = this.state.Nodes
         nodes[nodeKey].position = newPosition
 
-        this.setState({ Nodes: nodes })
+        Act.nodeUpdate({ nodeKey, attr: 'position', value: newPosition })
     }
 
     deleteNode = nodeKey => {
         console.log(`deleteNode(${nodeKey})`)
 
-        const nodes = this.state.Nodes
-
-        // prevent to delete dataset node.
-        if (nodes[nodeKey].type == 'DATASET') {
-            console.warn('deleteNode(): can not delete dataset node.')
-            return false
-        }
-
-        delete nodes[nodeKey]
-
-        const links = this.state.Links
-
-        const toNode = nodeKey
-        const srcNodes = Object.values(links.inputs[toNode] || {})
-        srcNodes.map(srcNode => {
-            delete links.outputs[srcNode][toNode]
-        })
-        delete links.inputs[toNode]
-
-        const srcNode = nodeKey
-        const toNodesToPlugs = Object.entries(links.outputs[srcNode] || {})
-        toNodesToPlugs.map(([toNode, toPlug]) => {
-            delete links.inputs[toNode][toPlug]
-        })
-
-        delete links.outputs[srcNode]
-
-        this.setState({
-            Nodes: nodes,
-            Links: links,
-        })
-
+        /*
+        Action.vlangRemoveNode(nodeKey)
         // force remove the node geometry on the map.
         Action.mapRemoveGeometry(nodeKey)
-        this.linkThenComputeNode()
+        */
+
+        Act.nodeRemove({ nodeKey })
+
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
@@ -449,54 +431,7 @@ class VPL extends React.Component {
         //   },
         // }
 
-        const links = this.state.Links
-
-        // limitation of link
-        if (srcNode == toNode) return console.warn('linkNode(): link same node')
-
-        if (links.inputs[toNode] && links.inputs[toNode][toInput]) {
-            console.warn('linkNode(): one input only allow one link')
-            delete links.outputs[links.inputs[toNode][toInput]][toNode]
-        }
-
-        for (
-            let checkNodes = new Set(Object.keys(links.outputs[toNode] || []));
-            checkNodes.size != 0;
-
-        ) {
-            if ([...checkNodes].find(f => f === srcNode)) {
-                return console.warn('linkNode(): checking link loop error.')
-            }
-
-            ;[...checkNodes].map(node => {
-                Object.keys(links.outputs[node] || {}).map(toNode => {
-                    checkNodes.add(toNode)
-                })
-                checkNodes.delete(node)
-            })
-        }
-
-        // inputs
-        if (links.inputs[toNode]) {
-            // delete the others same srcNode
-            Object.entries(links.inputs[toNode]).map(([_toInput, _srcNode]) => {
-                if (srcNode == _srcNode) delete links.inputs[toNode][_toInput]
-            })
-
-            links.inputs[toNode][toInput] = srcNode
-        } else
-            links.inputs[toNode] = {
-                [toInput]: srcNode,
-            }
-
-        // outputs
-        if (links.outputs[srcNode]) links.outputs[srcNode][toNode] = toInput
-        else
-            links.outputs[srcNode] = {
-                [toNode]: toInput,
-            }
-
-        this.setState({ Links: links })
+        Act.linkAdd({ srcNode, toNode, toInput })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
@@ -508,20 +443,33 @@ class VPL extends React.Component {
                 `updated the ${value} => ${newValue} for '${attr}' of ${nodeKey}`
             )
 
-            nodes[nodeKey].options[attr] = newValue
-            this.setState({ Nodes: nodes })
-            this.linkThenComputeNode()
+            Act.nodeOptionUpdate({ nodeKey, attr, value: newValue })
+
+            this.refreshVoxels = true // this.computeNodes()
         }
     }
 
+    // deprecated
     changeNodeFilter = (nodeKey, min, max) => {
         console.log(`changeFilter(${nodeKey}, ${min}, ${max})`)
 
         const nodes = this.state.Nodes
         nodes[nodeKey].options.filter = { min, max }
 
-        this.setState({ Nodes: nodes })
-        this.linkThenComputeNode()
+        /*
+        Act.vlangUpdateNodeOptions({
+            nodeKey,
+            attr: 'filter',
+            value: filter,
+        })
+        */
+        Act.nodeOptionUpdate({
+            nodeKey,
+            attr: 'filter',
+            value: filter,
+        })
+
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     createTempLink = () => {
@@ -577,15 +525,9 @@ class VPL extends React.Component {
         const srcNode = linkDOM.getAttribute('data-src-node')
         const toNode = linkDOM.getAttribute('data-to-node')
 
-        const links = this.state.Links
+        Act.linkRemove({ srcNode, toNode })
 
-        const toPlug = links.outputs[srcNode][toNode]
-
-        delete links.outputs[srcNode][toNode]
-        delete links.inputs[toNode][toPlug]
-
-        this.setState({ Links: links })
-        this.linkThenComputeNode()
+        this.refreshVoxels = true // this.computeNodes()
     }
 
     createLinks = () => {
@@ -632,7 +574,7 @@ class VPL extends React.Component {
         })
     }
 
-    linkThenComputeNode = () => {
+    computeNodes = () => {
         /*
         inputs: { // for arithmetic iterate
           // [toNode]: {
@@ -667,8 +609,11 @@ class VPL extends React.Component {
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
-        const outputs = _.cloneDeep(this.state.Links.outputs)
-        const inputs = _.cloneDeep(this.state.Links.inputs)
+        // const outputs = _.cloneDeep(this.props.links.outputs)
+        // const inputs = _.cloneDeep(this.props.links.inputs)
+
+        const outputs = this.props.links.outputs
+        const inputs = this.props.links.inputs
 
         // collect node inputs if inputs enough like node type setting
         const nodeInputsFromNode = {}
@@ -696,7 +641,7 @@ class VPL extends React.Component {
         const getOutputToNode = output => {
             Object.keys(output).map(toNodeKey => {
                 if (outputs[toNodeKey]) {
-                    output[toNodeKey] = outputs[toNodeKey]
+                    output[toNodeKey] = _.clone(outputs[toNodeKey])
                     getOutputToNode(output[toNodeKey])
                 } else output[toNodeKey] = true
             })
@@ -704,7 +649,8 @@ class VPL extends React.Component {
 
         datasetNodes.map(datasetNodeKey => {
             if (outputs[datasetNodeKey]) {
-                nodeOutputTree[datasetNodeKey] = outputs[datasetNodeKey]
+                const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
+                nodeOutputTree[datasetNodeKey] = datasetNodeOutput
                 getOutputToNode(nodeOutputTree[datasetNodeKey])
             }
         })
@@ -741,7 +687,7 @@ class VPL extends React.Component {
 
         // TODO: save computed data to this state
         const computeNodeThenAddVoxel = (node, inputNodes) => {
-            const mapGeometries = this.newProps.map.geometries
+            const mapGeometries = this.geometries
             const mathFunction = NodeType[node.type].arithmetic
             const options = Object.assign(
                 NodeType[node.type].options,
@@ -760,7 +706,8 @@ class VPL extends React.Component {
         }
 
         Object.entries(nodes).map(([nodeKey, node]) => {
-            if (node.type != 'DATASET') Action.mapRemoveGeometry(nodeKey)
+            if (node.type != 'DATASET')
+                this.nodeOutput({ nodeKey, geometry: null })
         })
 
         outputOrder.map(nodeKey => {
@@ -815,11 +762,9 @@ class VPL extends React.Component {
 
     // TODO: refactoring this function.
     evalArithmeticNode = (node, mathFunction, options, geometries) => {
-        // evalArithmeticNode(geometry1, geometry2, node, mathFunction, names) {
-        // console.log(`evalArithmeticNode()`, { node, mathFunction, geometries })
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
-        const allIndices = this.newProps.layers[0].allIndices
+        const allIndices = this.newProps.datasets.allIndices
 
         const amplifier = 3
 
@@ -836,13 +781,47 @@ class VPL extends React.Component {
         )
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
+
         let sizeArray = mathFunction(geomArray, options)
 
+        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+
+        const originDataMax = math.max(sizeArray)
+        const originDataMin = math.min(sizeArray)
+        const newBounds = [originDataMin, originDataMax]
+
+        // console.log(node.type, { originDataMax, originDataMin })
+
+        Act.nodeUpdate({
+            nodeKey: node.nodeKey,
+            attr: 'max',
+            value: originDataMax,
+        })
+
+        if (node.remap) {
+            const dataMax = math.max(sizeArray)
+            // const dataMin = math.min(sizeArray)
+            const dataMin = 0
+            const originScale = dataMax - dataMin
+            const newScale = node.remap.max - dataMin
+
+            const remap = x => (x ? x * newScale / originScale + dataMin : 0)
+            // if (x != 0) {
+            //     return valDiff * ((x - min) / (max - min)) + dataMin
+            // } else {
+            //     return 0
+            // }
+
+            if (originScale > 0) sizeArray = sizeArray.map(remap)
+        }
+
         // new: filter feature (2017 Nov. )
-        if (node.options.filter) {
-            let { min, max } = node.options.filter
+        if (node.filter) {
             const dataMax = math.max(sizeArray)
             const dataMin = math.min(sizeArray)
+
+            let { min, max } = node.filter
+            console.log('[filter]', { min, max })
             const range = dataMax - dataMin
 
             console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
@@ -850,6 +829,11 @@ class VPL extends React.Component {
             max = dataMin + max * range
             sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
             console.log('[filter] After', { min, max }, sizeArray)
+        }
+
+        if (NodeType[node.type].class == 'logic') {
+            const trueValue = this.props.datasets.bounds[1]
+            sizeArray = sizeArray.map(x => (x ? trueValue : x))
         }
 
         /*
@@ -881,6 +865,7 @@ class VPL extends React.Component {
             }
         }
 
+        /*
         let min = math.min(Array.from(sizeArray))
         let max
 
@@ -904,22 +889,34 @@ class VPL extends React.Component {
         }
 
         let remapOriginalSize = sizeArray.map(remap)
+        */
+
         let props = {
-            size: remapOriginalSize,
+            // size: remapOriginalSize,
+            size: sizeArray,
             translation: translationArray,
         }
 
+        const firstLayer = Object.values(this.newProps.layers)[0]
+        const firstGeometry = Object.values(this.newProps.map.geometries)[0]
+
         let geometry = {
-            minMax: this.newProps.layers[0].geojson.minMax,
-            addressArray: this.newProps.map.geometries[
-                Object.keys(this.newProps.map.geometries)[0]
-            ].addresses,
+            minMax: this.newProps.datasets.minMax,
+            addressArray: firstGeometry.addresses,
+            // addressArray: this.newProps.map.geometries[
+            //     Object.keys(this.newProps.map.geometries)[0]
+            // ].addresses,
             properties: props,
-            cols: this.newProps.layers[0].rowsCols.cols,
-            rows: this.newProps.layers[0].rowsCols.rows,
-            bounds: this.newProps.layers[0].bounds,
-            shaderText: this.newProps.layers[0].shaderText,
-            n: this.newProps.layers.length + 1,
+            // cols: this.newProps.layers[0].rowsCols.cols,
+            // rows: this.newProps.layers[0].rowsCols.rows,
+            // bounds: this.newProps.layers[0].bounds,
+            // shaderText: this.newProps.layers[0].shaderText,
+            cols: firstLayer.rowsCols.cols,
+            rows: firstLayer.rowsCols.rows,
+            bounds: newBounds,
+            shaderText: firstLayer.shaderText,
+            // n: this.newProps.layers.length + 1,
+            n: _.size(this.newProps.layers) + 1,
             name: node.name,
             type: node.type,
             layerName: node.nodeKey,
@@ -993,7 +990,8 @@ class VPL extends React.Component {
                     <g
                         key={`${nodeKey}_plug_input_${input}`}
                         ref={ref =>
-                            (this[`${nodeKey}_plug_input_${input}`] = ref)}
+                            (this[`${nodeKey}_plug_input_${input}`] = ref)
+                        }
                         className="plug"
                         data-node-key={nodeKey}
                         data-plug="true"
@@ -1091,14 +1089,17 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
-                        changeFilter={(min, max) => {
-                            this.changeNodeFilter(nodeKey, min, max)
+                        updated={() => {
+                            this.refreshVoxels = true
                         }}
+                        // changeFilter={(min, max) => {
+                        //     this.changeNodeFilter(nodeKey, min, max)
+                        // }}
                     />
 
                     {/* NODE OPTIONS */
                     Object.entries(typeOptions).map(([attr, def], index) => {
-                        if (attr == 'filter') return
+                        // if (attr == 'filter') return
 
                         // 'attribute': 'default value'
                         const value = options[attr] || def
@@ -1145,9 +1146,10 @@ class VPL extends React.Component {
         const nodeHashKey =
             (+new Date()).toString(32) +
             Math.floor(Math.random() * 36).toString(36)
-        nodes[nodeHashKey] = this.newNodeObj(type)
-
-        this.setState({ Nodes: nodes })
+        Act.nodeAdd({
+            nodeKey: nodeHashKey,
+            node: this.newNodeObj(type),
+        })
     }
 
     linkMarker() {
@@ -1197,7 +1199,37 @@ class VPL extends React.Component {
             true,
             geometry.properties
         )
+
+        /* may be need keep some property for dataset state
+        const layer = {
+            allIndices: '',
+            bbox: '',
+            bounds: geometry.bounds,
+            color1: color1,
+            color2: color2,
+            geojson: '',
+            name: geometry.layerName,
+            propertyName: '',
+            rowsCols: '',
+            shaderText: geometry.shaderText,
+            userLayerName: '',
+            visible: true,
+            showSidebar: false,
+        }
+
         Action.mapAddGeometry(geometry.layerName, P)
+        // Here I should also add the geometry to the layers
+        Action.mapAddLayer(layer)
+        */
+
+        this.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
+    }
+
+    nodeOutput = ({ nodeKey, geometry }) => {
+        if (geometry) this.geometries[nodeKey] = geometry
+        else delete this.geometries[nodeKey]
+
+        Act.nodeOutput({ nodeKey, geometry })
     }
 
     render() {
@@ -1239,8 +1271,9 @@ class VPL extends React.Component {
                         ref={ref => (this.mainSvgElement = ref)}
                         width="3000"
                         height="3000"
-                        viewBox={`${this.state.panning.x} ${this.state.panning
-                            .y} 3000 3000`}
+                        viewBox={`${this.state.panning.x} ${
+                            this.state.panning.y
+                        } 3000 3000`}
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         {this.linkMarker()}
@@ -1254,8 +1287,9 @@ class VPL extends React.Component {
                         })}
 
                         <g
-                            transform={`translate(${this.state.panning.x},${this
-                                .state.panning.y})`}
+                            transform={`translate(${this.state.panning.x},${
+                                this.state.panning.y
+                            })`}
                         >
                             {// do not display temp link when its `from` and `to` is the same
                             // (this.state.tempLink.from.x == this.tempLink.tempLink.to.x && this.state.tempLink.from.y == this.tempLink.tempLink.to.y)
@@ -1277,7 +1311,8 @@ const mapStateToProps = state => {
         nodes: state.vpl.nodes,
         links: state.vpl.links,
         map: state.map,
-        layers: state.sidebar.layers,
+        layers: state.datasets.layers,
+        datasets: state.datasets,
     }
 }
 

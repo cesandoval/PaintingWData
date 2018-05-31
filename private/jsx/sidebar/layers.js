@@ -16,6 +16,7 @@ for (let i = color10.length; i; i--) {
     ;[color10[i - 1], color10[j]] = [color10[j], color10[i - 1]]
 }
 
+/*
 const createLayer = (
     name,
     propertyName,
@@ -43,12 +44,13 @@ const createLayer = (
     shaderText,
     userLayerName,
 })
+*/
 
 class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)
-        this.getLayers()
+        this.getLayers() // NEED REFACTORING
     }
     // Assumes that geojson will be nonzero size
     getLayers() {
@@ -57,21 +59,26 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
-                act.vlangAddLayers(
-                    data.map(l => {
-                        let property =
-                            l.geojson.geojson.features[0].properties.property
-                        return {
-                            userLayerName:
-                                l.Datafile.Datalayers[0].userLayerName,
-                            name: l.geojson.layername,
-                            property: property,
-                        }
-                    })
-                )
+                let datasets = data.map(dataset => {
+                    const hashKey =
+                        (+new Date()).toString(32) +
+                        Math.floor(Math.random() * 36).toString(36)
+
+                    if (!dataset.layerKey) {
+                        dataset.layerKey = hashKey
+                    }
+                    return dataset
+                })
+
+                act.importDatasets({ datasets })
+
+                /*
                 act.sideAddLayers(
                     data.map((l, index) => {
                         const length = l.geojson.geojson.features.length
+                        //TODO: Use shouldScreenshot to update react state to only screenshot when
+                        //neccessary
+                        //const shouldScreenshot = l.screenshot
                         const propertyName =
                             l.geojson.geojson.features[0].properties.property
 
@@ -171,20 +178,23 @@ class Layers extends React.Component {
                         )
                     })
                 )
+                */
             })
     }
     render() {
         return (
             <div className="layers">
-                {this.props.layers.map((layer, i) => (
+                {Object.entries(this.props.layers).map(([i, layer]) => (
                     <Layer
                         key={i}
+                        layerKey={i}
                         propName={layer.propertyName}
                         userPropName={layer.userLayerName}
                         name={layer.name}
                         visible={layer.visible}
-                        color1={layer.color1}
-                        color2={layer.color2}
+                        showSidebar={layer.showSidebar}
+                        // color1={layer.color1}
+                        // color2={layer.color2}
                     />
                 ))}
             </div>
@@ -192,4 +202,4 @@ class Layers extends React.Component {
     }
 }
 
-export default connect(s => ({ layers: s.sidebar.layers }))(Layers)
+export default connect(s => ({ layers: s.datasets.layers }))(Layers)
