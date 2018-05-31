@@ -75,10 +75,9 @@ block pageTitle
                       p.label-body User Layer Name
                         label.layer-label.voxel-label #{datafile.Datalayers[0].userLayerName}
 
-                      p.label-body Layer Data Property
-                        label.layer-label.voxel-label Hello
-                        label.layer-label.voxel-label #{datafile.Datadbfs[0].properties}
-                        label.layer-label.voxel-label #{datafile}
+                      p.label-body Layer Data Properties
+                        label.layer-label.voxel-label #{JSON.parse(datavoxel.Datajsons[0].rasterProperty)}                        
+
                       p.label-body.text-right
                         a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
 

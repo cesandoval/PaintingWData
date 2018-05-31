@@ -120,18 +120,33 @@ module.exports.showVoxels= function(req, res) {
                 processed : true,
                 deleted: {$not: true}
             },
-            include: [{
-                model: Model.Datafile, include: [{
-                    model: Model.Datalayer,
-                    limit: 1},
+            include: [
                 {
-                    model: Model.Datadbf,
-                    limit: 1}]                        
-            }]
+                model: Model.Datafile, 
+                include: [
+                    {
+                        model: Model.Datalayer,
+                        limit: 1
+                    },
+                    {
+                        model: Model.Datadbf,
+                        limit: 1
+                    },
+                ]                        
+                },
+                {
+                    model: Model.Datajson,
+                    attributes: ["rasterProperty"] 
+                }
+            ]
         }).then(function(datavoxels){
             // console.log("datavoxels: ", datavoxels);
-            console.log("datavoxels.datafiles: ", datavoxels.datafiles);
-            console.log("------------------------------------------------");
+            // for (var key in datavoxels) {
+            //     var datavoxel = datavoxels[key];
+            //     console.log("datavoxel.Datajsons: ", datavoxel.Datajsons);
+            //     // console.log("datavoxel.Datajsons[0].rasterProperty: ", datavoxel.Datajsons[0].rasterProperty);
+            // }
+            // console.log("------------------------------------------------");
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });
 }

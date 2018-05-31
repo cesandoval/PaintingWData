@@ -602,10 +602,23 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             newDataJSON.hashVoxelId = req.voxelID;
             newDataJSON.userId = req.user.id;
             newDataJSON.layerKey = hashKey;
+
+            console.log("req.body.datalayerIdsAndProps: ", req.body.datalayerIdsAndProps);
+            var rasterProps = [];
+            var idsAndProps = req.body.datalayerIdsAndProps;
+            for (var key in idsAndProps) {
+                var prop = idsAndProps[key];
+                rasterProps.push(prop);
+            }
+            var propsString = JSON.stringify(rasterProps);
+            console.log("propsString: ", propsString);
+            newDataJSON.rasterProperty = propsString;
+            
             newDataJSON.save().then(function(){
                 callback(null, 'STOPPPPPPPP');
             });
-            console.log("newDataJSON: ", newDataJSON);
+            // console.log("newDataJSON: ", newDataJSON);
+            console.log("newDataJSON created");
             voxelId = objProps[keyWithouHash].datavoxelId;
         },
         function(){
