@@ -966,3 +966,34 @@ p {
     height:500px;
     width:800px;
 }
+
+.surveyBack {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 100;
+    background: rgba(0,0,0,0.3);
+}
+
+.surveyBox {
+    position: absolute;
+    z-index: 101;
+    background: white;
+    width: 75%;
+    height: 66%;
+    min-width: 350px;
+    min-height: 350px;
+    overflow-y: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.delete_surveybox {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
