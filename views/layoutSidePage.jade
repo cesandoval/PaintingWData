@@ -224,6 +224,22 @@ script.
       
   });
 
+  $("#trigger_survey").click(function(){
+      d3.select(".surveyBack").remove();
+      d3.select(".surveyBox").remove();
+
+      let surveyBack = d3.select("body").append("div").classed("surveyBack",true).on("click",function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+      });
+      let surveyBox = d3.select("body").append("div").classed("surveyBox",true);
+      surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+      });
+
+  });
+
 
     var fixiframe = function(myid){
         $(myid).contents().find("head")

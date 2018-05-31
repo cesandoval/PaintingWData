@@ -36,7 +36,6 @@ var signUpStrategy =
     function(req, email, password, done) { 
         User.findOne({
            where: {email: email},
-      
         }).then(function(user) {
           
            if(user){
@@ -107,7 +106,6 @@ var loginStrategy = new LocalStrategy({
         return done(null, false, req.flash('loginMessage', "login failed"));
        }// do this if failed.
     ); 
-
   });
 
 /* Make Oauth call to facebook, retrieve information from facebook and store it in "profile" variable
