@@ -108,7 +108,7 @@ export default class Pixels {
         thiscam.position.set(newPos.x, newPos.y, newPos.z)
     }
 
-    static buildMapbox(canvas, bbox) {
+    static buildMapbox(canvas, bbox, screenshot) {
         // TODO: fix eslint error `no-unused-vars`
         /* eslint-disable */
         var meshes = 0
@@ -304,7 +304,7 @@ export default class Pixels {
                         document.querySelector('#progress').style.opacity = 0
                         updateTileVisibility()
                     }
-                    if (finished == totalTilesToLoad) {
+                    if (finished == totalTilesToLoad && screenshot) {
                         setTimeout(function() {
                             console.log(
                                 'Taking Screenshot for voxel',

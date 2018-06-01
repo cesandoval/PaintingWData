@@ -101,9 +101,3 @@ export const setPanelShow = payload =>
         type: t.SET_PANELSHOW,
         ...payload,
     })
-
-export const getScreenshot = payload =>
-    store.dispatch({
-        type: t.GET_SCREENSHOT,
-        ...payload,
-    })

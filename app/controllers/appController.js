@@ -38,7 +38,6 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 
 }
 
-//TODO: Fix blob issue
 module.exports.uploadScreenshot = function(req, res) {
   //Update react state so we know if this user has opened this voxel before
   var img = req.body.data;
@@ -60,6 +59,8 @@ module.exports.uploadScreenshot = function(req, res) {
           console.log('DatavoxelImage has been created', imageLink)
         });   
       });
+    } else {
+      console.log('DatavoxelImage already exists')
     }
   })
 }
@@ -93,11 +94,11 @@ module.exports.getDatajsons = function(req, res){
       }).then(function(voxel) {
         if (voxel.Datavoxelimage === null && voxel.public == true) {
           //screenshot needed
-          datajsons[0].dataValues.screenshots = true
+          datajsons[0].dataValues.screenshot = true
           res.json(datajsons);
         } else {
           //screenshot not needed
-          datajsons[0].dataValues.screenshots = false
+          datajsons[0].dataValues.screenshot = false
           res.json(datajsons);
         }  
     });
