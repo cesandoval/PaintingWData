@@ -59,6 +59,7 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                console.log(data)
                 let datasets = data.map(dataset => {
                     const hashKey =
                         (+new Date()).toString(32) +
@@ -70,6 +71,8 @@ class Layers extends React.Component {
                     return dataset
                 })
                 act.importDatasets({ datasets })
+                act.getScreenshot({ test: data[0].screenshots })
+                console.log(data[0].screenshots, { datasets })
 
                 /*
                 act.sideAddLayers(

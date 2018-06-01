@@ -23,6 +23,13 @@ export default (state = initialInteractionsState, action) => {
             const activeNode = { activeNode: value }
             return Object.assign({}, state, activeNode)
         }
+        case t.GET_SCREENSHOT: {
+            console.log(action, value)
+            const { value } = action
+            console.log({ value }, value)
+            const activeNode = { getScreenshot: value }
+            return Object.assign({}, state, activeNode)
+        }
         default:
             return state
     }
