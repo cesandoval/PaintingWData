@@ -312,6 +312,8 @@ export default class Pixels {
                             )
                             window.screenshotToS3(datavoxelId)
                         }, 3000)
+                    } else if (finished == totalTilesToLoad) {
+                        console.log('Screenshot not needed!')
                     }
                 }
             )

@@ -4,7 +4,8 @@ var Datavoxelimage = require('../models').Datavoxelimage;
 
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
- 
+var bucket = process.env === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
+
 module.exports.show = function(req, res) {
   if(req.isAuthenticated()) {
     res.render('app', {userSignedIn: true, user: req.user, datavoxelId: req.params.datavoxelId});
@@ -45,7 +46,7 @@ module.exports.uploadScreenshot = function(req, res) {
   var datavoxelId = req.body.id;
   var data = img.replace(/^data:image\/\w+;base64,/, "");
   var buf = new Buffer(data, 'base64');
-  var bucket = 'data-voxel-images'
+  console.log('The current bucket is:', bucket)
 
   Model.Datavoxelimage.findOne({
     where: {DatavoxelId: datavoxelId}
@@ -54,7 +55,7 @@ module.exports.uploadScreenshot = function(req, res) {
       var imgURL = s3Lib.uploadBlobToBucket(buf, datavoxelId, bucket, function(imageLink) {
         var dataVoxelImage = Datavoxelimage.build();
         dataVoxelImage.DatavoxelId = datavoxelId
-        dataVoxelImage.image =  'https://s3.amazonaws.com/data-voxel-images/' + imageLink
+        dataVoxelImage.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
         dataVoxelImage.save().then(function(){
           console.log('DatavoxelImage has been created', imageLink)
         });   
@@ -68,7 +69,7 @@ module.exports.uploadScreenshot = function(req, res) {
 module.exports.checkScreenshot = function(req, res) {
   var datavoxelId = req.body.datavoxelId;
   var params = {
-    Bucket: 'data-voxel-images',
+    Bucket: bucket,
     Key: datavoxelId.toString() + '.png',
   }
 
