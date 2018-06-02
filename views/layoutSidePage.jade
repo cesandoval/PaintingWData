@@ -232,11 +232,57 @@ script.
         d3.select(".surveyBack").remove();
         d3.select(".surveyBox").remove();
       });
-      let surveyBox = d3.select("body").append("div").classed("surveyBox",true);
+      let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
       surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
         d3.select(".surveyBack").remove();
         d3.select(".surveyBox").remove();
       });
+
+      surveyBox.append("p").classed("survey_title",true).text("Tell us more about you!");
+      let surveySubBox = surveyBox.append("div").classed("surveySubBox",true);
+
+      let survey_use = surveySubBox.append("div").classed("survey_use",true).classed("survey_item",true);
+      survey_use.append("p").classed("survey_subtitle",true).text("What do you want to use the application for?");
+      let use_options = survey_use.append("select").attr("id","use").attr("name","use");
+      use_options.append("option").attr("value", "").text("--");
+      use_options.append("option").attr("value", "business").text("Find Business Opportunities");
+      use_options.append("option").attr("value", "landuse").text("Analyze land use");
+      use_options.append("option").attr("value", "Public Health").text("Public health analysis");
+      use_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_industry = surveySubBox.append("div").classed("survey_industry",true).classed("survey_item",true);
+      survey_industry.append("p").classed("survey_subtitle",true).text("Which of the area below can best represent your background?");
+      let industry_options = survey_industry.append("select").attr("id","industry").attr("name","industry");
+      industry_options.append("option").attr("value", "").text("--");
+      industry_options.append("option").attr("value", "Urban Planning").text("Urban Planning");
+      industry_options.append("option").attr("value", "Policy Making").text("Policy Making");
+      industry_options.append("option").attr("value", "Development").text("Development");
+      industry_options.append("option").attr("value", "Public Health").text("Public Health");
+      industry_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_referal = surveySubBox.append("div").classed("survey_referal",true).classed("survey_item",true);
+      survey_referal.append("p").classed("survey_subtitle",true).text("How do you hear us?");
+      let referal_options = survey_referal.append("select").attr("id","referal").attr("name","referal");
+      referal_options.append("p").classed("survey_subtitle",true).text("How do you hear us?");
+      referal_options.append("option").attr("value", "").text("--");
+      referal_options.append("option").attr("value", "SNS").text("SNS(Facebook/twitter/linkedin/...)");
+      referal_options.append("option").attr("value", "friend").text("From a friend");
+      referal_options.append("option").attr("value", "company").text("From my company");
+      referal_options.append("option").attr("value", "search").text("By searching GIS tools");
+      referal_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_submit = surveySubBox.append("input").attr("type","submit").classed("survey_submit",true).attr("value","Done!")
+                            .attr("data-transition","fade")
+                            .attr("data-theme","c")
+
+    //- input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
+
+    //- input(type="text", id="email", class="form-control form-input-line", name="username", placeholder="newuser@gmail.com")
+
+
+
+    
+
 
   });
 
