@@ -8,6 +8,7 @@ const initialMapState = {
     started: false,
     loaded: false,
     bbox: {},
+    getScreenshot: null,
 }
 
 // TODO: layers: don't use array, use key-value object
@@ -16,13 +17,12 @@ export default (state = initialMapState, action) => {
     switch (action.type) {
         case t.MAP_INIT: {
             const { instance, datasetsLayers } = action
-
             // Sets the camera to the voxels' bbox
             // const bbox = datasetsLayers[0].bbox
             const bbox = state.bbox
 
             // Add the map to the canvas
-            PaintGraph.Pixels.buildMapbox(instance, bbox)
+            PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
 
             let geometries = Object.assign({}, state.geometries)
 
@@ -68,11 +68,14 @@ export default (state = initialMapState, action) => {
 
         case t.IMPORT_DATASETS: {
             const { datasets } = action // datasets is an Array
-
             const datasetLayerOne = datasets[0]
             const bbox = datasetLayerOne.Datavoxel.bbox.coordinates
+            const getScreenshot = datasetLayerOne.screenshot
 
-            return update(state, { bbox: { $set: bbox } })
+            return update(state, {
+                bbox: { $set: bbox },
+                getScreenshot: { $set: getScreenshot },
+            })
         }
 
         /*
