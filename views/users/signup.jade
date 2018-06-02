@@ -3,33 +3,34 @@ extends ../layoutSidePage
 block pageTitle
   div.container.login-container
     div.row
-      div.col-md-offset-4.col-md-4
+      div.col-md-offset-2.col-md-8
         if !(message == '')
           .alert.alert-danger(role='alert') #{message}
-        form(method="post", action="/users/signup")
+        form(method="post", action="/users/signup", id="signup_form")
           h2.spacing.prompt Create an account.
-          div(data-role='fieldcontain').form-group
-            fieldset(data-role='controlgroup')
-              label(for="email").
-                Username
-              input(type="text", id="email", class="form-control form-input-line", name="username", placeholder="newuser@gmail.com")
-              br
-          div(id='hiddendiv',data-role='fieldcontain')
-            fieldset(data-role='controlgroup')
-              label(for="password").
-                Password
-              input(type="password", id="password", class="form-control form-input-line", name="password")
-              br
-          div(id='hiddendiv',data-role='fieldcontain')
-            fieldset(data-role='controlgroup')
-              label(for="confirm_password").
-                Confirm Password
-              input(type="password", id="confirm_password", class="form-control form-input-line", name="confirm_password")
-              br
-          div(data-role='fieldcontain').spacing  
-            div(class="btn btn-outline-primary" id="trigger_survey").
-              Sign Up
-            //- input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
+          div.basicForm.col-md-offset-3
+            div(data-role='fieldcontain').form-group
+              fieldset(data-role='controlgroup')
+                label(for="email").
+                  Username
+                input(type="text", id="email", class="form-control form-input-line", name="username", placeholder="newuser@gmail.com")
+                br
+            div(id='hiddendiv',data-role='fieldcontain')
+              fieldset(data-role='controlgroup')
+                label(for="password").
+                  Password
+                input(type="password", id="password", class="form-control form-input-line", name="password")
+                br
+            div(id='hiddendiv',data-role='fieldcontain')
+              fieldset(data-role='controlgroup')
+                label(for="confirm_password").
+                  Confirm Password
+                input(type="password", id="confirm_password", class="form-control form-input-line", name="confirm_password")
+                br
+            div(data-role='fieldcontain').spacing  
+              div(class="btn btn-outline-primary" id="trigger_survey").
+                Sign Up
+              //- input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
 
         a.btn.btn-block.btn-social.btn-google(href="./google_oauth")
             span.fa.fa-google

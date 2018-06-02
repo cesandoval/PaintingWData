@@ -62,6 +62,15 @@ var signUpStrategy =
             newUser.password = hash;
             newUser.verified = false;
             newUser.urlLink = id;
+
+            if(!req.body.use.length || !req.body.industry.length || !req.body.referal.length)
+              return done(null, false, req.flash('signUpMessage',"Please make sure to complete the survey, thanks!"));
+
+            //survey results
+            newUser.use = req.body.use;
+            newUser.industry = req.body.industry;
+            newUser.referal = req.body.referal;
+
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
               mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
