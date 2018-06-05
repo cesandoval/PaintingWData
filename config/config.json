@@ -3,7 +3,7 @@
     "username": "root",
     "password": null,
     "database": "database_development",
-    "host": "127.0.0.1",
+    "host": "pwd-develop.cpynefgvbqsq.us-east-1.rds.amazonaws.com",
     "dialect": "mysql"
   },
   "test": {
