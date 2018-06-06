@@ -1039,18 +1039,24 @@ p {
     box-shadow: 0 11px 20px 0 rgba(97, 108, 121, 0.17);
     cursor: pointer;
     padding: 5px;
-    padding-bottom: 10px;
     transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
-
+    overflow: hidden;
   }
 
   .showcase-panel img {
-    width:100%;
-  }
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.3);
+}
 
 
   .showcase-panel:hover {
     opacity: 0.7;;
     background: rgba(0,0,0,0.2);
+}
+
+.showcase-panel div {
+    overflow: hidden;
 }
