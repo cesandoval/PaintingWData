@@ -603,14 +603,24 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
             newDataJSON.userId = req.user.id;
             newDataJSON.layerKey = hashKey;
 
-            console.log("req.body.datalayerIdsAndProps: ", req.body.datalayerIdsAndProps);
-            var rasterProps = [];
             var idsAndProps = req.body.datalayerIdsAndProps;
-            for (var key in idsAndProps) {
-                var prop = idsAndProps[key];
-                rasterProps.push(prop);
+            console.log("idsAndProps: ", idsAndProps);
+            var layersAndProps = {};
+            for (var id in idsAndProps){
+                var newId = id.split("..")[0];
+                if ( !(newId in layersAndProps)) {
+                    layersAndProps[newId] = "";
+                }
             }
-            var propsString = JSON.stringify(rasterProps);
+            for (var id in idsAndProps){
+                var newId = id.split("..")[0];
+                layersAndProps[newId] += idsAndProps[id] + ",";
+            }
+            for (var newId in layersAndProps){
+                values = layersAndProps[newId];
+                layersAndProps[newId] = values.substring(0, values.length-1);
+            }
+            var propsString = JSON.stringify(layersAndProps);
             console.log("propsString: ", propsString);
             newDataJSON.rasterProperty = propsString;
             
