@@ -1,6 +1,13 @@
 import store from './store'
 import * as t from './types'
 
+// app
+export const importUserfile = payload =>
+    store.dispatch({
+        type: t.IMPORT_USERFILE,
+        ...payload,
+    })
+
 // datasets
 export const importDatasets = payload =>
     store.dispatch({
@@ -99,5 +106,12 @@ export const setLoading = payload =>
 export const setPanelShow = payload =>
     store.dispatch({
         type: t.SET_PANELSHOW,
+        ...payload,
+    })
+
+// save/import stuff
+export const saveUserFile = payload =>
+    store.dispatch({
+        type: t.SAVE_USERFILE,
         ...payload,
     })

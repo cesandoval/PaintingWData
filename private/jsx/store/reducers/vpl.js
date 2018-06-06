@@ -41,6 +41,14 @@ export default (state = initialState, action) => {
     let links = _.cloneDeep(state.links)
 
     switch (action.type) {
+        case t.IMPORT_USERFILE: {
+            const newState = action
+            const { vpl } = newState
+
+            // Merges the options' properties together. The later arguments' properties take precedence.
+            return Object.assign({}, state, vpl)
+        }
+
         case t.NODE_ADD: {
             const { nodeKey, node } = action
 
