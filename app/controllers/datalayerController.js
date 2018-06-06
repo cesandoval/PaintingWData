@@ -12,7 +12,13 @@ var Model = require('../models'),
 
 
 module.exports.computeVoxels = function(req, res){
-    if  (req.body.datalayerIds !== ''){
+    console.log("req.body: ", req.body);
+    if (req.body.datalayerIds == '{}'){
+        console.log('select properties!!!!');
+        req.flash('layerAlert', "You haven't selected a property. Please select at least one property.");
+        res.redirect('/layers/'+ req.user.id);
+    }
+    else if  (req.body.datalayerIds !== ''){
         var datalayerIds = [];
 
         var datalayerIdsAndRasterValsObject = {};
