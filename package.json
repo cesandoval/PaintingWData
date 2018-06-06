@@ -48,6 +48,7 @@
     "jquery": "^3.2.1",
     "jsonfile": "^2.2.3",
     "jsonwebtoken": "^7.0.1",
+    "kernel-smooth": "^0.2.3",
     "kue": "^0.11.5",
     "lodash": "^4.17.4",
     "morgan": "~1.7.0",
@@ -79,6 +80,7 @@
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
     "yallist": "^3.0.2"
+    "victory": "^0.26.0"
   },
   "devDependencies": {
     "axios": "^0.15.2",

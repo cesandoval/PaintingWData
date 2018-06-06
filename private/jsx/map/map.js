@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
+import DensityChart from '../charts/charts'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
 
@@ -172,6 +173,22 @@ class MapCanvas extends React.Component {
 
         return (
             <div>
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        width: '80vw',
+                        height: '300px',
+                        position: 'fixed',
+                        overflow: 'hidden',
+                        bottom: '30px',
+                        right: '0',
+                        zIndex: '100',
+                        opacity: 0.5,
+                        display: panelShow.includes('Chart') ? '' : 'none',
+                    }}
+                >
+                    <DensityChart />
+                </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
