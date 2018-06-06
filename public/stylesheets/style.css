@@ -364,9 +364,8 @@ h1.site-title2 {
 }
 
 p.title-txt {
-
-    font-size: 14pt;
-    padding: 20px;
+    font-size: 1.6vh;
+    padding: 12px;
     padding-top: 15px;
     text-align: justify;
     text-justify: initial;
@@ -408,11 +407,14 @@ div.title-frame {
     /* left: 5vw; */
     left: 50%;
     transform: translateX(-50%);
+    width:90vw;
+    min-width: 400px;
 }
 
 
 .title_image {
-    width:25%;
+    width:25vw;
+    min-width: 160px;
     padding-left: 13px;
 }
 
@@ -453,17 +455,27 @@ div.title-frame {
 }
 
 .btn-outline-primary {
-    border-color: #e75332;
-    font-size: 12pt;
-    border-width: 1px;
-    color: #e75332;
+    border-color: #e75332 ;
+    font-size: 12pt !important;
+    border-width: 1px !important;
+    color: #e75332 ;
     height: auto;
 }
 
 .btn-outline-primary:hover {
     background-color: #e75332;
-    color: white;
+    color: white !important;
 }
+
+.btn-outline-primary>a {
+    color: #e75332 ;
+    padding: 12px;
+}
+
+.btn-outline-primary>a:hover {
+    color: white !important;
+}
+
 
 .btn-visited {
     background-color: #e75332;
@@ -965,4 +977,212 @@ p {
 .video-iframe {
     height:500px;
     width:800px;
+}
+
+.surveyBack {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 100;
+    background: rgba(0,0,0,0.3);
+}
+
+.surveyBox {
+    position: absolute;
+    z-index: 101;
+    background: white;
+    width: 90%;
+    height: 90%;
+    min-width: 350px;
+    max-width: 700px;
+    min-height: 350px;
+    overflow-y: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.delete_surveybox {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.survey_title {
+    font-size: 20px;
+    text-align: center;
+    margin: 20px;
+    font-weight: 700;
+}
+
+.surveySubBox {
+    padding: 40px;
+    font-size: 18px;
+}
+
+.survey_item {
+    margin-bottom: 50px;
+}
+
+.survey_submit {
+    display: inline-block;
+    padding: 10px;
+    padding-bottom: 6px;
+    background: #e75332 !important;
+    border: 2px solid #e75332;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    font-size: 20px;
+}
+
+.survey_submit:hover {
+    background: white !important;
+    color: #e75332;
+    cursor: pointer;
+}
+
+.basicForm {
+    width: 50%;
+    min-width: 300px;
+}
+
+.nav-fix {
+    position: absolute;
+    right: 10px;
+    top: 14px;
+}
+
+
+@media all and (min-width:0px) and (max-width: 500px) {
+    /* css for mobile */
+
+    .navbar-nav>li>a {
+        float: left;
+    }
+
+    .navbar-inverse {
+        overflow: hidden;
+    }
+
+    .navbar-brand{
+        height: 60px !important;
+
+    }
+
+    .nav {
+        float: left;
+        padding: 0.5vh;
+        width: 100%;
+    }
+
+    .navbar-nav>li {
+        height: 30px !important;
+        width:100%;
+        padding:5px;
+    }
+    
+    .navbar-nav>li>a {
+        width:100%;
+        padding-top: 0px !important;
+        
+    }
+
+    .navbar-right {
+        position: absolute;
+        right: 20px;
+        top: 140px;
+        height: 0px;
+        width: 150px;
+    }
+
+    .navbar-right li {
+      margin-bottom: 20px;
+    }
+
+    .navbar-expanded {
+        height: 250px;
+        overflow: visible;
+    }
+
+    .dropdown-menu {
+        background-color: black !important;
+    }
+}
+
+.surveyBack {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 100;
+    background: rgba(0,0,0,0.3);
+}
+
+.surveyBox {
+    position: absolute;
+    z-index: 101;
+    background: white;
+    width: 90%;
+    height: 90%;
+    min-width: 350px;
+    max-width: 700px;
+    min-height: 350px;
+    overflow-y: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.delete_surveybox {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.survey_title {
+    font-size: 20px;
+    text-align: center;
+    margin: 20px;
+    font-weight: 700;
+}
+
+.surveySubBox {
+    padding: 40px;
+    font-size: 18px;
+}
+
+.survey_item {
+    margin-bottom: 50px;
+}
+
+.survey_submit {
+    display: inline-block;
+    padding: 10px;
+    padding-bottom: 6px;
+    background: #e75332 !important;
+    border: 2px solid #e75332;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    font-size: 20px;
+}
+
+.survey_submit:hover {
+    background: white !important;
+    color: #e75332;
+    cursor: pointer;
+}
+
+.basicForm {
+    width: 50%;
+    min-width: 300px;
+
+
+
 }

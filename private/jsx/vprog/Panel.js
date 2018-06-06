@@ -158,7 +158,7 @@ class Panel extends React.Component {
 
     changeFilter = ([min, max]) => {
         console.log(`changeFilter(${min}, ${max})`)
-        const filter = { min, max }
+        const filter = Object.assign(this.state.node.filter, { min, max })
 
         Act.nodeUpdate({
             nodeKey: this.props.index,
@@ -194,14 +194,20 @@ class Panel extends React.Component {
         const dataMax = node.max || regularMax
         const remapMax = node.remap && node.remap.max ? node.remap.max : dataMax
 
+        const type = this.props.type
+        const minVal =
+            type === 'DATASET' && node.filter ? node.filter.minVal : 0
+        const maxVal =
+            type === 'DATASET' && node.filter ? node.filter.maxVal : 0
+
         const filter = (
             <div>
                 <span>Filter</span>
                 <Slider
                     range
                     defaultValue={filterDefault}
-                    min={0}
-                    max={1}
+                    min={minVal ? minVal : 0}
+                    max={maxVal ? maxVal : 1}
                     step={0.01}
                     onAfterChange={this.changeFilter}
                 />
@@ -217,8 +223,8 @@ class Panel extends React.Component {
                 />
             </div>
         )
-        const type = this.props.type
-        const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
+        // const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
+        const hasFilter = NodeType[type].class !== 'logic'
 
         return (
             <g>

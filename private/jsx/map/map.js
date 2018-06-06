@@ -164,6 +164,13 @@ class MapCanvas extends React.Component {
 
     render() {
         const panelShow = this.props.panelShow
+        const activeNodeType = this.props.activeNode
+            ? this.props.activeNode.type
+            : ''
+
+        const PCoordsShow =
+            panelShow == 'PCoords' || activeNodeType == 'DATASET'
+
         return (
             <div>
                 <div
@@ -185,13 +192,16 @@ class MapCanvas extends React.Component {
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
-                <div
-                    style={{
-                        display: panelShow == 'PCoords' ? '' : 'none',
-                    }}
-                >
+                <div id="PCoords">
                     <PCoords />
                 </div>
+                <style jsx>{`
+                    #PCoords {
+                        transition: visibility 0s, opacity 0.7s ease-out;
+                        visibility: ${PCoordsShow ? 'visible' : 'hidden'};
+                        opacity: ${PCoordsShow ? 1 : 0};
+                    }
+                `}</style>
                 <div
                     style={{
                         position: 'absolute',
@@ -253,6 +263,7 @@ export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
     panelShow: s.interactions.panelShow,
+    activeNode: s.vpl.nodes[s.interactions.activeNode],
     geometries: s.map.geometries,
     bbox: s.map.bbox,
 }))(MapCanvas)

@@ -1,9 +1,7 @@
 nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
   .container.margin-small.nav-container
     .navbar-header
-      button(class='navbar-toggle collapsed', data-toggle='collapse', data-target='#navbar', aria-expanded="false", aria-controls="navbar")
-        span.sronly.
-          Toggle navigation
+      button(id='toggle-navbar', class='navbar-toggle collapsed nav-fix', data-toggle='collapse', data-target='#navbar', aria-expanded="false", aria-controls="navbar")
         span.icon-bar
         span.icon-bar
         span.icon-bar
@@ -22,9 +20,12 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
       if userSignedIn
         li
           a(href='/voxels/#{user.id}') Application
+
       
     ul.nav.navbar-nav.navbar-right
       if userSignedIn
+       li
+        a(href='#').progress-tracker Progress Tracker
        li.dropdown
         a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
           <span class="caret"></span>
@@ -42,3 +43,5 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
           a(href='/users/signup') Sign Up
         li
           a(href='/users/login') Login
+block script
+  include ./navbarscript

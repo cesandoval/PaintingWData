@@ -1,4 +1,4 @@
-extends ../layout
+extends ../layoutSidePage
 
 block pageTitle
   div.container.login-container
@@ -25,8 +25,13 @@ block pageTitle
             div(data-role='fieldcontain')   
               input(type='submit',value='Sign In',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
           .col-md-3
-          form(method="get", action="/users/reset-password") 
-            input(type='submit',value='Forgot Password?', data-theme='c', class="btn btn-outline-primary", onclick="")
+            div(class="btn btn-outline-primary")
+              a(href="/users/reset-password").
+                Forgot Password?
+            //- form(method="get", action="/users/reset-password") 
+            //-   input(type='submit',value='Forgot Password?', data-theme='c', class="btn btn-outline-primary", onclick="")
+          div.spacing
+
         br
         br
         a.btn.btn-block.btn-social.btn-google(href="./google_oauth")

@@ -69,13 +69,18 @@ class Layers extends React.Component {
                     }
                     return dataset
                 })
-
                 act.importDatasets({ datasets })
+                // Act.mapSetPCoords({
+                //     value: Object.assign({}, this.props.pcoordsValue, brushes),
+                // })
 
                 /*
                 act.sideAddLayers(
                     data.map((l, index) => {
                         const length = l.geojson.geojson.features.length
+                        //TODO: Use shouldScreenshot to update react state to only screenshot when
+                        //neccessary
+                        //const shouldScreenshot = l.screenshot
                         const propertyName =
                             l.geojson.geojson.features[0].properties.property
 

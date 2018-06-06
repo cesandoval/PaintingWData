@@ -18,6 +18,7 @@ class Options extends React.Component {
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(
             this
         )
+        this.s3Screenshot = this.s3Screenshot.bind(this)
         */
     }
     componentDidMount() {
