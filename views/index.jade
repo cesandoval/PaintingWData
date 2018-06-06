@@ -1,3 +1,5 @@
+
+
 extends layout
 
 block pageTitle
@@ -17,10 +19,6 @@ block pageTitle
         img(class = "explore-btn" src="/images/scroll_down_btn.svg" id="explore")
         //a(class="btn btn-md btn-jumbotron btn-gray", href="/upload", role="button") Explore
       
-//.container
-  //.row
-    //for screenshot in screenshots
-      //div(id=hello)
 block content
   div.transparent.no-margin(id="app")
     .row.spacing
@@ -35,6 +33,27 @@ block content
         br
  
     div.spacing
+
+    div.container
+
+      .row
+        div.col-md-6.application-title
+          h2.spacing-small Explore Public Projects!
+      
+      .row
+        for screenshot in screenshots
+          -var itemOfStr = function(str,index){
+          - return String(str).split(",")[index];
+          -}
+
+          div(class = "col-md-3 showcase-panel")
+            a(href="/app/"+itemOfStr(screenshot,1))
+              img(src=itemOfStr(screenshot,0))
+
+
+
+    div.spacing
+
     div.container(id="about_section")
       .row
         div.col-md-6.application-title
@@ -75,7 +94,7 @@ block content
         //- .section_title_sm
         //-   h3.center Team
         .section_content.row.member_cont   
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/carlos.jpg')
             .icon_over
@@ -92,7 +111,7 @@ block content
                   img.icon_link_img.mybtn(src='images/github.png')
             p.member_name Carlos Sandoval Olascoaga
             //- p.member_role Project Founder / PhD Student, MIT
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/kai.jpg')
             .icon_over(style='opacity: 0;')
@@ -111,7 +130,7 @@ block content
             p.member_name Ting-Kai Chang
             //- p.member_role Software Engineer
 
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/peng.jpg')
             .icon_over(style='opacity: 0;')
@@ -130,7 +149,7 @@ block content
             p.member_name Wenzhe Peng
             //- p.member_role Software Engineer
 
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/yoeal.jpeg')
             .icon_over(style='opacity: 0;')
@@ -149,7 +168,7 @@ block content
             p.member_name Yoeal Efrem
           //-   p.member_role UROP
 
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/yaateh.jpg')
             .icon_over(style='opacity: 0;')
@@ -168,7 +187,7 @@ block content
             p.member_name Yaateh Richardson
           //-   p.member_role UROP
 
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/brena.jpg')
             .icon_over(style='opacity: 0;')
@@ -186,7 +205,7 @@ block content
                     img.icon_link_img.mybtn(src='images/github.png')
             p.member_name Brena Sena
           //-   p.member_role UROP
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/leon.jpg')
             .icon_over(style='opacity: 0;')
@@ -204,7 +223,7 @@ block content
                     img.icon_link_img.mybtn(src='images/github.png')
             p.member_name Leon Cheng
           //-   p.member_role UROP
-          .col-sm-3.tm_wrapper
+          .col-md-3.tm_wrapper
             .team_icon
               img(src='images/members/chris.jpg')
             .icon_over(style='opacity: 0;')
@@ -231,3 +250,7 @@ block content
             p.member_name_previous Wenfei Xu
             p.member_name_previous Dalma Foldesi
             p.member_name_previous Anurag Golla
+    
+    
+
+
