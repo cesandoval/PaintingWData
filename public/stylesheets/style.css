@@ -142,6 +142,16 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
     color: white;
 }
 
+.navbar-nav a:hover {
+    color: white !important;
+    opacity: 0.7;
+    transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    text-decoration: none !important;
+
+}
+
+
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
     color: white;
     padding-left: 25px;
@@ -363,7 +373,7 @@ h1.site-title2 {
 }
 
 p.title-txt {
-    font-size: 1.6vh;
+    font-size: 1.8vh;
     padding: 12px;
     padding-top: 15px;
     text-align: justify;
@@ -431,6 +441,7 @@ div.title-frame {
 
 .navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
     text-shadow: none;
+    font-size: 14px !important;
 }
 
 /*button login*/
@@ -996,6 +1007,7 @@ p {
         float: left;
         padding: 0.5vh;
         width: 100%;
+        transform: translateY(-4%);
     }
 
     .navbar-nav>li {
@@ -1059,4 +1071,8 @@ p {
 
 .showcase-panel div {
     overflow: hidden;
+}
+
+.layername h3 {
+    word-wrap: break-word;
 }
