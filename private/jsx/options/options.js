@@ -52,9 +52,9 @@ class Options extends React.Component {
     render() {
         const DataMenu = (
             <Menu onClick={({ key }) => this.togglePanelShow(key)}>
-                <Menu.Item key="TABLE">
+                {/* <Menu.Item key="TABLE">
                     <span> TABLE </span>
-                </Menu.Item>
+                </Menu.Item> */}
                 <Menu.SubMenu title="CHARTS">
                     <Menu.Item key="Chart:Density">Density Plot</Menu.Item>
                     <Menu.Item key="Chart:Histogram">Histogram</Menu.Item>
