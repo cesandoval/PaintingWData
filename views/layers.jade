@@ -91,7 +91,7 @@ block pageTitle
                         label.w3-label(for="location").
                           Selected Data Property
                         select#dropdown(multiple='multiple')
-                          for value, key in JSON.parse(datafile.Datadbfs[0].properties)
+                          for value, key in datafile.Datalayers[0].properties
                             if typeof(value) == "number"
                               option #{key}  
 
