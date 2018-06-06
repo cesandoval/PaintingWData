@@ -338,6 +338,7 @@ function mapGeometries(state) {
                         }
                         break
                     }
+                    /* change data directly instead of updating uniforms
                     case 'filter': {
                         const { min, max } = value
                         geo.material.uniforms.min.value = min
@@ -345,6 +346,7 @@ function mapGeometries(state) {
 
                         break
                     }
+                    */
                 }
                 return update(geometries, {
                     [key]: { $set: geo },

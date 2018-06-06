@@ -61,9 +61,6 @@ class PCoords extends React.Component {
                         .render()
                         .updateAxes()
                 }
-                // if (nprops.pcoordsValue != 'undefined') {
-                //     this.pc.brushExtents(nprops.pcoordsValue)
-                // }
             }
             if (!this.state.started) {
                 this.setState({ started: true })
@@ -189,7 +186,7 @@ class PCoords extends React.Component {
                 try {
                     this.pc.brushExtents(pcoordsValue)
                 } catch (e) {
-                    console.log(e.message)
+                    // console.log(e.message)
                 }
             }
         }
@@ -222,9 +219,6 @@ class PCoords extends React.Component {
             .brushMode('1D-axes')
 
         pc.on('brushend', this.calcRanges.bind(this))
-        // if (this.props.pcoordsValue != 'undefined') {
-        //     pc.brushExtents(this.props.pcoordsValue)
-        // }
 
         this.pc = pc
         this.setState({ pc: pc })
@@ -232,7 +226,7 @@ class PCoords extends React.Component {
 
     calcRanges() {
         // review: what is the mean of radoms 'true'?
-        this.pc.randoms = true
+        // this.pc.randoms = true
 
         const brushSelection = this.pc.brushExtents()
         const layerNames = Object.keys(brushSelection)
@@ -253,8 +247,6 @@ class PCoords extends React.Component {
         }
         this.minObjs = minObjs
         this.maxObjs = maxObjs
-
-        // Act.mapSetPCoords({ value: brushes })
 
         /*
         const lowBnd = this.lowBnd
@@ -392,7 +384,6 @@ const mapStateToProps = state => {
         layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
         nodes: state.vpl.nodes,
-        pcoordsValue: state.options.pcoordsValue,
         panelShow: state.interactions.panelShow,
     }
 }
