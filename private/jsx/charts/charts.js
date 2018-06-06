@@ -19,32 +19,28 @@ class Charts extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (!this.state.started) {
-            this.setState({ started: true })
-            this.props = newProps
-            const chartData = this.getDensityData()
-            this.setState({
-                densityData: chartData.densityData,
-                histogramData: chartData.histogramData,
-            })
-        }
         this.props = newProps
         if (
             Object.keys(this.props.geometries).length !== 0 &&
             this.props.geometries.constructor === Object
         ) {
-            let nodeLayers = Object.values(newProps.nodes).filter(
-                f => f.type == 'DATASET'
-            )
-            // let visibleNodes = nodeLayers.filter(l => l.visibility)
-            let visibleKeys = nodeLayers.map(function(l) {
-                if (l.visibility == true) {
-                    console.log(l.visibility, l.nodeKey, 6666)
-                    return l.nodeKey
-                }
-            })
-            console.log('updating......')
-            console.log(visibleKeys)
+            let visibleNodeKeys = Object.entries(newProps.nodes)
+                .filter(
+                    ([, node]) =>
+                        node.visibility == true && node.type == 'DATASET'
+                )
+                .map(([key]) => key)
+
+            this.setState({ visibleNodeKeys: visibleNodeKeys })
+
+            if (!this.state.started) {
+                this.setState({ started: true })
+                const chartData = this.getDensityData()
+                this.setState({
+                    densityData: chartData.densityData,
+                    histogramData: chartData.histogramData,
+                })
+            }
         }
     }
 
@@ -84,12 +80,15 @@ class Charts extends React.Component {
     }
 
     render() {
-        const chartLength = this.state.densityData.length
-        console.log('rendering chartssssssss')
+        const chartLength = Object.keys(this.state.densityData).length
 
+        let visibleNodeKeys =
+            typeof this.state.visibleNodeKeys != 'undefined'
+                ? this.state.visibleNodeKeys
+                : []
         return (
             <div id="layer-charts">
-                {Object.entries(this.state.densityData).map(([key, data]) => {
+                {visibleNodeKeys.map(key => {
                     return (
                         <span className="layer-chart" key={key}>
                             <VictoryChart
@@ -134,7 +133,7 @@ class Charts extends React.Component {
                                             },
                                         }}
                                         key={key}
-                                        data={data}
+                                        data={this.state.densityData[key]}
                                         interpolation={'natural'}
                                     />
                                 )}
