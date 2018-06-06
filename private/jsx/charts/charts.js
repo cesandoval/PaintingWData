@@ -28,6 +28,24 @@ class Charts extends React.Component {
                 histogramData: chartData.histogramData,
             })
         }
+        this.props = newProps
+        if (
+            Object.keys(this.props.geometries).length !== 0 &&
+            this.props.geometries.constructor === Object
+        ) {
+            let nodeLayers = Object.values(newProps.nodes).filter(
+                f => f.type == 'DATASET'
+            )
+            // let visibleNodes = nodeLayers.filter(l => l.visibility)
+            let visibleKeys = nodeLayers.map(function(l) {
+                if (l.visibility == true) {
+                    console.log(l.visibility, l.nodeKey, 6666)
+                    return l.nodeKey
+                }
+            })
+            console.log('updating......')
+            console.log(visibleKeys)
+        }
     }
 
     getDensityData() {
@@ -67,6 +85,7 @@ class Charts extends React.Component {
 
     render() {
         const chartLength = this.state.densityData.length
+        console.log('rendering chartssssssss')
 
         return (
             <div id="layer-charts">
