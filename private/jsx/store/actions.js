@@ -101,3 +101,9 @@ export const setPanelShow = payload =>
         type: t.SET_PANELSHOW,
         ...payload,
     })
+
+export const setRefreshVoxels = payload =>
+    store.dispatch({
+        type: t.SET_REFRESHVOXELS,
+        ...payload,
+    })
