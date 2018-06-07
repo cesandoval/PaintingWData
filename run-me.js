@@ -1,133 +1,4 @@
-console.log("-beginning of file");
-
-
 var Model = require('./app/models');
-
-
-// function showVoxels() {
-//     Model.Datavoxel.findAll({
-//            where : {
-//                userId : 1,
-//                processed : true,
-//                deleted: {$not: true}
-//            },
-//            include: [
-//                {
-//                model: Model.Datafile, 
-//                include: [
-//                    {
-//                        model: Model.Datalayer,
-//                        limit: 1
-//                    },
-//                    {
-//                        model: Model.Datadbf,
-//                        limit: 1
-//                    },
-//                ]                        
-//                },
-//                {
-//                    model: Model.Datajson,
-//                    attributes: ["rasterProperty"] 
-//                }
-//            ]
-//        }).then(function(datavoxels){
-//            console.log(datavoxels)
-//        });
-// }
-// showVoxels();
-
-// function foo() {
-//     Model.Datafile.findAll({
-//         include: [
-//             {
-//                 model: Model.Datalayer,
-//                 limit: 1
-//             }
-//         ]
-//     }).then(function(result) {
-//         console.log(result[0].dataValues);
-//     });
-// }
-// foo();
-
-// FIND WHICH DATALAYERS ARE MISSING A DATADBF
-// function foo() {
-//     Model.Datalayer.findAll({
-//         include: [
-//             {
-//                 model: Model.Datadbf,
-//             }
-//         ],
-//         // limit: 386
-//     }).then(function(result) {
-//         // console.log(result);
-//         for (var key in result) {
-//             // console.log("Datadbf: ", result[key].dataValues.Datadbf);
-//             var dbfValue = result[key].dataValues.Datadbf;
-//             if (dbfValue == null) {
-//                 console.log("datalayer", result[key].id, "has no datadbf associated");
-//             }
-//         }
-//         console.log(result.length);
-//     });
-// }
-// foo();
-
-
-
-// DELETE ALL DATALAYERS PAST A WITH A CERTAIN DATAFILEID
-// function foo() {
-//     Model.Datalayer.destroy({
-//         where: {
-//             datafileId: 2
-//         }
-//         // limit: 386
-//     }).then(function(result) {
-//         console.log(result);
-//         console.log(result.length);
-//     });
-// }
-// foo();
-
-
-// // FIND DATALAYERS THAT ARE MISSING DATADBFS, BUILD AND SAVE MISSING DATADBFS FOR THE FIRST 200 FOUND
-// function foo() {
-//     Model.Datalayer.findAll({
-//         // Include associated things that datalayer 'has'
-//         include: [
-//             {
-//                 model: Model.Datadbf,
-//             }
-//         ],
-//         limit: 200
-//     }).then(function(result) {
-//         // Iterate through all rows stored in Datalayers table
-//         for (var key in result) {
-//             var row = result[key];
-//             // Parse out the Datadbf property
-//             var dbfValue = row.dataValues.Datadbf;
-//             // If there is no Datadbf in this datalayer... 
-//             if (dbfValue == null) {
-//                 console.log("datalayer", key, "has no datadbf associated");
-                
-//                 // console.log("userId: ",row.userId);
-//                 // console.log("datalayerId: ",row.rasterval);
-//                 // console.log("datafileId: ", row.datafileId);
-//                 // console.log("properties: ", row.properties);
-
-//                 dataDbf = Model.Datadbf.build();
-//                 dataDbf.userId = row.userId;
-//                 dataDbf.datalayerId = row.rasterval;
-//                 dataDbf.datafileId = row.datafileId;
-//                 dataDbf.properties = row.properties;
-//                 dataDbf.save();
-                
-//             }
-//         }
-//     });
-// }
-// foo();
-
 
 // FIND DATALAYERS THAT ARE MISSING DATADBFS, BUILD AND SAVE MISSING DATADBFS FOR THEM
 function dbfsForDatalayers() {
@@ -158,7 +29,7 @@ function dbfsForDatalayers() {
         console.log("done going through datalayers");
     });
 }
-dbfsForDatalayers();
+// dbfsForDatalayers();
 
 
 // UPDATE RASTERPROPERTY IN DATAJSON FOR ROWS THAT ARE MISSING IT
@@ -200,7 +71,7 @@ function rasterPropertiesForDatajsons() {
     
                     // If the datavoxel is one of the ones that connect to a datajson with no properties, then continue to deal with it
                     var datavoxelObjectId = result[key].dataValues.id;
-                    if (datavoxelObjectId in Object.values(datajsonsWithoutPropertiesToDatavoxels)){
+                    if (Object.values(datajsonsWithoutPropertiesToDatavoxels).includes(datavoxelObjectId)){
                         var property = datafile.Datalayers[0].rasterProperty;
                         if ( !(datavoxelObjectId in datavoxelToProperties)) {
                             datavoxelToProperties[datavoxelObjectId] = "";
@@ -239,6 +110,8 @@ function rasterPropertiesForDatajsons() {
                     console.log("after update:", result);
                 });
             }
+
+            console.log("done going through datajsons");
     
     })
 
@@ -248,9 +121,20 @@ function rasterPropertiesForDatajsons() {
     })
 
 }
-rasterPropertiesForDatajsons();
+// rasterPropertiesForDatajsons();
 
 
+// FUNCTION THAT IS RUN WHEN THIS FILE IS RUN
+function runAll() {
+    console.log("starting run-me.js");
+    var promise = new Promise(function() {
+        dbfsForDatalayers();
+        rasterPropertiesForDatajsons();    
+    });
+    promise.then(function(result) {
+        console.log("done running run-me.js");
+    });
+}
 
+runAll();
 
-console.log("-end of file");
