@@ -1,41 +1,60 @@
 /*global datavoxelId*/
-
 import React from 'react'
-
 import * as Act from './store/actions.js'
-
 import Sidebar from './sidebar/sidebar'
 import Options from './options/options'
 import Map from './map/map'
-
+/**
+ * Summary. The main meat of the mapping service. 
+ *
+ * Description. Contains the Map, Sidebar and Options components. Also loads the
+ * saved "state" of a map if the user saved it beforehand. 
+ * 
+ * @author PaintingWithData
+ */
 export default class App extends React.Component {
-    // TODO: when the user closes out, save the userFile
+    /**
+     * Summary. Loads a saved state if we've saved it before. By "saved it 
+     * before" we mean "clicked on `Save Userfile`" before closing out. Then, 
+     * when we start it up again, it retains whatever options we did.
+     * 
+     * Description. HTTP GET request accesses `app/routers/appRouter.js` as
+     * per usual, which then accesses a method in `app/controllers/userFileController.js`.
+     * The Datauserfile model, in `app/models/datauserfile.js`, is where the
+     * necessary saved states are stored.
+     * 
+     * TODO: When the user closes out, automatically save.
+     */
     componentDidMount() {
-        /*eslint-disable*/
+        /*
+         * Promises. Fetches the saved state, and then updates the Redux variables
+         * accordingly.
+         */
         fetch(`/importuserfile/${datavoxelId}`, {
             method: 'GET',
             credentials: 'include',
         })
             .then(data => data.json())
             .then(newState => {
-                debugger;
                 Act.importUserfile(newState);
             })
             .catch(e => console.log('importUserfile() error', e))
+        /*
+         * TODO: The following should be ran when we don't have anything yet to
+         * import.
+         *     const data = {
+         *         options: {
+         *             opacity: 10, // 0 ~ 100
+         *             knnValue: 1, // 0 ~ 8
+         *             bgStyle: 'mapbox.dark',
+         *         },
+         *     }
+         *     Act.importUserfile({ data })
+         */
     }
-    //    TODO: this is called if the data is empty
-    //     //-- Test Block Start --: test importUserfile.
-    //     const data = {
-    //         options: {
-    //             opacity: 10, // 0 ~ 100
-    //             knnValue: 1, // 0 ~ 8
-    //             bgStyle: 'mapbox.dark',
-    //         },
-    //     }
-    //     Act.importUserfile({ data })
-    //     //--- Test Block End ---: test importUserfile.
-    // }
-
+    /**
+     * Summary. Renders the three components in App: Options, Sidebar, and Map.
+     */
     render() {
         return (
             <div className="mapMain">
