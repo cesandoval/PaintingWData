@@ -8,7 +8,10 @@ var User = require('../models').User,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
+    dotenv = require('dotenv');
 
+// Loads the local environment variables.
+dotenv.load();
 
 module.exports.show = function(req, res) {
   res.render('users/signUp')
