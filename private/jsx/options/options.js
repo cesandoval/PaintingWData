@@ -46,9 +46,9 @@ class Options extends React.Component {
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow })
     }
 
-    getScreenShot() {
-        window.getScreenShot()
-    }
+    // getScreenShot() {
+    //     window.getScreenShot()
+    // }
 
     render() {
         const DataMenu = (
@@ -82,7 +82,7 @@ class Options extends React.Component {
                         }}
                     />
                 </div>
-                <div
+                {/* <div
                     onClick={this.getScreenShot}
                     style={{
                         cursor: 'pointer',
@@ -102,7 +102,7 @@ class Options extends React.Component {
                     <span style={{ marginLeft: '5px', verticalAlign: 'sub' }}>
                         Map Screenshot
                     </span>
-                </div>
+                </div> */}
                 <Button
                     id="mapStyleOptionsButton"
                     className="buttons graphText btn buttonsText"

@@ -156,6 +156,10 @@ class MapCanvas extends React.Component {
         }
     }
 
+    getScreenShot() {
+        window.getScreenShot()
+    }
+
     zoomMap() {
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
@@ -239,6 +243,9 @@ class MapCanvas extends React.Component {
                                 }}
                             >
                                 SHP
+                            </MenuItem>
+                            <MenuItem onClick={this.getScreenShot}>
+                                IMAGE
                             </MenuItem>
                         </DropdownButton>
                     </div>
