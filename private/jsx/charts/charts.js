@@ -1,5 +1,4 @@
 import React from 'react'
-// import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 import * as Act from '../store/actions'
 import {
@@ -19,30 +18,8 @@ class Charts extends React.Component {
         super(props)
 
         this.state = { densityData: [], histogramData: [] }
-        // this.handleClick = this.handleClick.bind(this)
     }
 
-    // componentDidMount() {
-    //     document.addEventListener('mouseup', this.handleClick)
-    // }
-
-    // componentWillUnmount() {
-    //     document.removeEventListener('mouseup', this.handleClick)
-    // }
-
-    // handleClick(e) {
-    //     // console.log(e.target, e.target.key, this.node, typeof this.node)
-    //     // console.log(this.getDOMNode().contains(e.target))
-    //     // console.log(ReactDOM.findDOMNode(e.target))
-    //     // console.log(this.refs['1cf8riveu4'], console.log(e.target.refs))
-    //     // console.log(this.node.contains(e.target))
-    //     // console.log(ReactDOM.findDOMNode(e.target))
-    //     // if (this.node.getDOMNode(e.target)) {
-    //     //     console.log('You clicked INSIDE the component.')
-    //     // } else {
-    //     //     console.log('You clicked OUTSIDE the component.')
-    //     // }
-    // }
     componentWillReceiveProps(newProps) {
         this.props = newProps
         if (
@@ -70,7 +47,6 @@ class Charts extends React.Component {
     }
 
     filterCharts(key, domain) {
-        console.log('sjsjsjsjsjs')
         Act.nodeUpdate({
             nodeKey: key,
             attr: 'filter',
@@ -182,18 +158,6 @@ class Charts extends React.Component {
                                         brushStyle={{
                                             stroke: 'rgba(0, 0, 0, 0.6)',
                                             fill: 'rgba(255, 255, 255, 0.1)',
-                                        }}
-                                        events={{
-                                            onMouseUp: (evt, targetProps) => {
-                                                this.filterCharts(
-                                                    key,
-                                                    targetProps.domain
-                                                )
-                                                return BrushHelpers.onMouseUp(
-                                                    evt,
-                                                    targetProps
-                                                )
-                                            },
                                         }}
                                     />
                                 }
