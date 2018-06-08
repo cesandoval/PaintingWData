@@ -13,7 +13,7 @@ import {
 } from 'victory'
 var kernel = require('kernel-smooth')
 // var science = require('science')
-console.log(BrushHelpers.onMouseUp)
+
 class Charts extends React.Component {
     constructor(props) {
         super(props)
@@ -140,6 +140,33 @@ class Charts extends React.Component {
                                         margin: 'auto',
                                     },
                                 }}
+                                events={[
+                                    {
+                                        target: 'parent',
+                                        eventHandlers: {
+                                            onMouseUp: (evt, targetProps) => {
+                                                if (
+                                                    typeof targetProps.currentDomain !=
+                                                        'undefined' &&
+                                                    (targetProps.isPanning ==
+                                                        true ||
+                                                        targetProps.isSelecting ==
+                                                            true)
+                                                ) {
+                                                    this.filterCharts(
+                                                        key,
+                                                        targetProps.currentDomain
+                                                    )
+                                                }
+                                                return BrushHelpers.onMouseUp(
+                                                    evt,
+                                                    targetProps
+                                                )
+                                            },
+                                        },
+                                    },
+                                ]}
+                                domainPadding={{ x: [50, 20] }}
                                 containerComponent={
                                     <VictoryBrushContainer
                                         brushDimension="x"
@@ -206,6 +233,23 @@ class Charts extends React.Component {
                                     />
                                 )}
 
+                                {this.props.panelShow == 'Chart:Histogram' && (
+                                    <VictoryBar
+                                        style={{
+                                            data: {
+                                                fill: this.props.nodes[key]
+                                                    ? this.props.nodes[key]
+                                                          .color
+                                                    : 'gray',
+                                            },
+                                        }}
+                                        key={key}
+                                        // alignment="start"
+                                        data={this.state.histogramData[key]}
+                                        barRatio={0.999}
+                                    />
+                                )}
+
                                 {this.props.panelShow == 'Chart:Scatter' && (
                                     <VictoryScatter
                                         style={{
@@ -225,23 +269,6 @@ class Charts extends React.Component {
                                             { x: 4, y: 4 },
                                             { x: 5, y: 7 },
                                         ]}
-                                    />
-                                )}
-
-                                {this.props.panelShow == 'Chart:Histogram' && (
-                                    <VictoryBar
-                                        style={{
-                                            data: {
-                                                fill: this.props.nodes[key]
-                                                    ? this.props.nodes[key]
-                                                          .color
-                                                    : 'gray',
-                                            },
-                                        }}
-                                        key={key}
-                                        alignment="start"
-                                        data={this.state.histogramData[key]}
-                                        barRatio={0.999}
                                     />
                                 )}
                             </VictoryChart>)
