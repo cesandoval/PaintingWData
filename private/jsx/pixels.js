@@ -98,7 +98,7 @@ export default class Pixels {
 
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset =
-            radius / Math.tan((Math.PI / 180.0) * canvas.camera.fov * 0.5)
+            radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5)
         let thiscam = canvas.camera
 
         // THIS ONE IS PROJECTED......
@@ -146,7 +146,7 @@ export default class Pixels {
             var res = img ? '@2x.png' : '@2x.pngraw'
 
             //domain sharding
-            var serverIndex = 2 * (coords[1] % 2) + (coords[2] % 2)
+            var serverIndex = 2 * (coords[1] % 2) + coords[2] % 2
             var server = ['a', 'b', 'c', 'd'][serverIndex]
             //return 'sample.png'
             return (
@@ -268,7 +268,7 @@ export default class Pixels {
                     function(err, pixels) {
                         // usually a water tile-- fill with 0 elevation
                         if (err) pixels = null
-                        var parserIndex = 2 * (coords[1] % 2) + (coords[2] % 2)
+                        var parserIndex = 2 * (coords[1] % 2) + coords[2] % 2
                         parserPool[parserIndex].postMessage([
                             pixels,
                             coords,
