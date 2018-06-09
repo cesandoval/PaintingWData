@@ -4,65 +4,46 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 // import * as Act from '../store/actions'
 
-// var science = require('science')
-
 class Table extends React.Component {
     constructor(props) {
         super(props)
-        // this.state = { densityData: [], histogramData: [] }
+        this.state = {
+            columns: [],
+            tableData: [],
+        }
     }
 
     componentWillReceiveProps(newProps) {
         this.props = newProps
-        console.log(newProps.tableData, 234234325436464) //
+        const firstRowHeaders = Object.keys(this.props.tableData[0])
+        const columns = firstRowHeaders.map(function(headerValue) {
+            return { Header: headerValue, accessor: headerValue }
+        })
+        this.setState({ columns: columns, tableData: newProps.tableData })
     }
 
     render() {
-        const data = []
-        for (let i = 0; i < 100; i++) {
-            data.push({
-                name: 'Tanner Linsley',
-                age: i,
-                friend: {
-                    name: 'Jason Maurer',
-                    age: i,
-                },
-            })
-        }
-
-        const columns = [
-            {
-                Header: 'Name',
-                accessor: 'name', // String-based value accessors!
+        const tableData = this.state.tableData
+        this.state.columns.unshift({
+            Header: 'ID',
+            id: 'ID',
+            accessor: function(d) {
+                return tableData.indexOf(d)
             },
-            {
-                Header: 'Age',
-                accessor: 'age',
-                Cell: props => <span className="number">{props.value}</span>, // Custom cell components!
-            },
-            {
-                id: 'friendName', // Required because our accessor is not a string
-                Header: 'Friend Name',
-                accessor: d => d.friend.name, // Custom value accessors!
-            },
-            {
-                id: 'friendAge',
-                Header: 'Friend Age', // Custom header components!
-                accessor: d => d.friend.age,
-            },
-        ]
-
+            resizable: false,
+            minWidth: 50,
+            maxWidth: 75,
+        })
         return (
             <div>
                 <ReactTable
-                    data={data}
-                    columns={columns}
-                    showPagination={false}
+                    data={this.state.tableData}
+                    columns={this.state.columns}
                     showPaginationTop={false}
-                    showPaginationBottom={false}
+                    showPaginationBottom={true}
                     showPageJump={false}
-                    // defaultPageSize={50}
-                    // className="-striped -highlight"
+                    defaultPageSize={50}
+                    pageSizeOptions={[25, 50, 100, 500, 1000]}
                 />
             </div>
         )
@@ -70,11 +51,5 @@ class Table extends React.Component {
 }
 
 export default connect(s => ({
-    // datasets: s.datasets,
-    // layers: s.datasets.layers,
-    // geometries: s.map.geometries,
-    // nodes: s.vpl.nodes,
-    // pcoordsValue: s.options.pcoordsValue,
-    // panelShow: s.interactions.panelShow,
     tableData: s.datasets.tableData,
 }))(Table)
