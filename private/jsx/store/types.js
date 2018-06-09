@@ -1,5 +1,6 @@
 // datasets
 export const IMPORT_DATASETS = 'IMPORT_DATASETS'
+export const LOAD_TABLE_DATA = 'LOAD_TABLE_DATA'
 
 // map
 export const MAP_INIT = 'MAP_INIT'

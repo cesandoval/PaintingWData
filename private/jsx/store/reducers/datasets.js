@@ -128,6 +128,12 @@ export default (state = initialDatasetsState, action) => {
                 bounds: layers[0].bounds,
             }
         }
+        case t.LOAD_TABLE_DATA: {
+            const { value } = action
+            const loading = { tableData: value }
+
+            return Object.assign({}, state, loading)
+        }
         default:
             return state
     }
