@@ -926,6 +926,7 @@ p {
 
 .box_column {
     height: 100%;
+    overflow: hidden;
 }
 
 .member_box_bio {

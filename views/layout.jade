@@ -230,8 +230,13 @@ script.
           d3.selectAll(".pop_team_box").remove();
           d3.selectAll(".pop_team_box_back").remove();
       });
-      
+
   });
+
+      $( window).scroll(function() {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
 
 
 script(src="/javascripts/progressWidget.js", type="text/javascript")
