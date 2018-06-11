@@ -23,16 +23,15 @@ class Table extends React.Component {
     }
 
     render() {
-        const tableData = this.state.tableData
         this.state.columns.unshift({
             Header: 'ID',
-            id: 'ID',
-            accessor: function(d) {
-                return tableData.indexOf(d)
-            },
+            id: 'row',
+            maxWidth: 50,
+            filterable: false,
             resizable: false,
-            minWidth: 50,
-            maxWidth: 75,
+            Cell: row => {
+                return <div>{row.index + 1}</div>
+            },
         })
         return (
             <div>
