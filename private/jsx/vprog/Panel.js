@@ -229,7 +229,13 @@ class Panel extends React.Component {
         return (
             <g>
                 {/*<foreignObject x={this.props.position.x + 20} y={this.props.position.y + 95} style={{cursor: 'pointer'}}>*/}
-                <foreignObject x={20} y={95} width="160" height="28" style={{ cursor: 'pointer' }}>
+                <foreignObject
+                    x={20}
+                    y={95}
+                    width="160"
+                    height="28"
+                    style={{ cursor: 'pointer' }}
+                >
                     <div
                         style={{
                             position: 'fixed',
