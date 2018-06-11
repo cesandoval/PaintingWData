@@ -1129,4 +1129,15 @@ p {
 
 .home_icon_row {
     margin-top: 40px;
+    width: 100%;
+    max-width: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+}
+
+.home_icon_wrapper {
+    position: relative;
+    display: inline-block;
+    width: 33%;
 }
