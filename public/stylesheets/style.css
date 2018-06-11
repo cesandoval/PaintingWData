@@ -630,12 +630,10 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 .footer p {
     font-family: 'Roboto', sans-serif;
     font-size: 2vmin;
-    position: relative;
+    position: absolute;
     bottom: 0;
     width: 100%;
     padding: 10px;
-    padding-top: 2px;
-    padding-left: 30px;
     text-align: center;
 }
 
@@ -979,6 +977,7 @@ p {
     height:32vw;
     width:100%;
     max-width: 800px;
+    margin-bottom: 40px;
 }
 
 .nav-fix {
@@ -1108,4 +1107,26 @@ p {
 
 .layername h3 {
     word-wrap: break-word;
+}
+
+.footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    height: 150px;
+    width: 100%;
+    position: relative;
+}
+
+.home_icon {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+
+.home_icon:hover {
+    opacity: 0.6 !important;
+}
+
+.home_icon_row {
+    margin-top: 40px;
 }
