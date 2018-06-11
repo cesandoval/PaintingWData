@@ -1111,7 +1111,7 @@ p {
 
 .footer {
     border-top: 1px solid rgba(0,0,0,0.1);
-    height: 150px;
+    height: 250px;
     width: 100%;
     position: relative;
 }
@@ -1140,4 +1140,14 @@ p {
     position: relative;
     display: inline-block;
     width: 33%;
+}
+
+.contact-div {
+    position: absolute;
+    width: 50%;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(0,0,0,0.6);
 }
