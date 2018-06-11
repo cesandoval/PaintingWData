@@ -45,10 +45,12 @@ block content
           - return String(str).split(",")[index];
           -}
 
-          div(class = "col-md-3 showcase-panel")
+          div.col-md-3.showcase-panel
             div
               a(href="/app/"+itemOfStr(screenshot,1))
                 img(src=itemOfStr(screenshot,0))
+                div.showcase-panel-time= itemOfStr(screenshot,2)
+
 
 
 
