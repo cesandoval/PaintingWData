@@ -1185,7 +1185,9 @@ p {
 
 }
 
-
+.showcase-panel:hover .blog-title {
+    color: black !important;
+}
 
 
 .layername h3 {
@@ -1304,7 +1306,9 @@ p {
 .basicForm {
     width: 50%;
     min-width: 300px;
-
-
-
 }
+
+.blogs_container {
+    min-height: 800px;
+}
+
