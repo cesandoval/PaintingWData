@@ -121,7 +121,6 @@ export default (state = initialDatasetsState, action) => {
                     layerKey: l.layerKey,
                 }
             })
-
             return {
                 ...state,
                 layers: _.keyBy(layers, 'layerKey'),

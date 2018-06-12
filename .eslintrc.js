@@ -34,6 +34,7 @@ module.exports = {
     d3: true,
     THREE: true,
     PaintGraph: true,
+    science: true,
     _: false,
   },
 }

@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
+import DensityChart from '../charts/charts'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
 
@@ -223,18 +224,44 @@ class MapCanvas extends React.Component {
 
     render() {
         const panelShow = this.props.panelShow
+        const activeNodeType = this.props.activeNode
+            ? this.props.activeNode.type
+            : ''
+
+        const PCoordsShow =
+            panelShow == 'PCoords' || activeNodeType == 'DATASET'
+
         return (
             <div>
+                <div
+                    style={{
+                        backgroundColor: 'white',
+                        width: '80vw',
+                        height: '300px',
+                        position: 'fixed',
+                        overflow: 'hidden',
+                        bottom: '30px',
+                        right: '0',
+                        zIndex: '100',
+                        opacity: 0.5,
+                        display: panelShow.includes('Chart') ? '' : 'none',
+                    }}
+                >
+                    <DensityChart />
+                </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
-                <div
-                    style={{
-                        display: panelShow == 'PCoords' ? '' : 'none',
-                    }}
-                >
+                <div id="PCoords">
                     <PCoords />
                 </div>
+                <style jsx>{`
+                    #PCoords {
+                        transition: visibility 0s, opacity 0.7s ease-out;
+                        visibility: ${PCoordsShow ? 'visible' : 'hidden'};
+                        opacity: ${PCoordsShow ? 1 : 0};
+                    }
+                `}</style>
                 <div
                     style={{
                         position: 'absolute',
@@ -307,6 +334,7 @@ export default connect(s => ({
     mapStarted: s.map.started,
     options: s.options,
     panelShow: s.interactions.panelShow,
+    activeNode: s.vpl.nodes[s.interactions.activeNode],
     geometries: s.map.geometries,
     bbox: s.map.bbox,
     vpl: s.vpl,

@@ -12,9 +12,7 @@ var passport = require('passport'),
 //var jwt = require('jsonwebtoken');
 //var verify = require('./verify');
 
-  router.get('/', function(req, res, next) {
-    res.render('index', {userSignedIn: req.isAuthenticated(), user: req.user});
-  });
+  router.get('/', appController.getPublicVoxelScreenshots);
 
   router.get('/about', function (req, res) {
     res.render('about', {userSignedIn: req.isAuthenticated(), user: req.user});
@@ -58,6 +56,9 @@ var passport = require('passport'),
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
   router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
+  router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
+  router.get('/screenshot', appController.getPublicVoxelScreenshots);
+  router.post('/checkScreenshot', appController.checkScreenshot);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 

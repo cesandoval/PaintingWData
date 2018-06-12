@@ -35,11 +35,6 @@ export default (state = initialOptionsState, action) => {
             return Object.assign({}, state, knnValue)
         }
 
-        case t.MAP_SET_PCOORDS: {
-            const { value } = action
-            const pcoordsValue = { pcoordsValue: value }
-            return Object.assign({}, state, pcoordsValue)
-        }
         default:
             return state
     }

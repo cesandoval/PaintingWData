@@ -72,6 +72,9 @@ class VPL extends React.Component {
         }
 
         this.geometries = {}
+
+        // TODO: should be stored in the redux when start
+        this.originDatasetArray = {}
     }
 
     // create the dataset nodes if they're not exitst.
@@ -92,6 +95,11 @@ class VPL extends React.Component {
             }
             datasetNode.name = layer.name
             datasetNode.color = layer.color1
+
+            const min = layer.geojson.minMax[0]
+            const max = layer.geojson.minMax[1]
+
+            datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
             // TODO: use layerKey as nodeKey of layers node
             Act.nodeAdd({
@@ -131,6 +139,10 @@ class VPL extends React.Component {
             name: type,
             type: type,
             options: {},
+            filter: {
+                max: 1,
+                min: 0,
+            },
             position: {
                 x: init.x + step.x,
                 y: init.y + step.y,
@@ -148,6 +160,11 @@ class VPL extends React.Component {
 
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
+        }
+
+        if (newProps.refreshVoxels) {
+            this.refreshVoxels = true
+            Act.setRefreshVoxels({ value: false })
         }
     }
 
@@ -586,6 +603,38 @@ class VPL extends React.Component {
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
+        // Datasets Preprocess
+        datasetNodes.map(datasetKey => {
+            const geometry = this.geometries[datasetKey]
+
+            if (!this.originDatasetArray[datasetKey]) {
+                // copy original size array
+                const oriArray = geometry.geometry.attributes.originalsize.array
+                this.originDatasetArray[datasetKey] = oriArray
+            }
+
+            const oriArray = this.originDatasetArray[datasetKey]
+
+            geometry.geometry.attributes.size.array = oriArray
+
+            let node = _.cloneDeep(nodes[datasetKey])
+
+            if (node.filter) {
+                const { min, max } = node.filter
+                node.filter.min = min / node.filter.maxVal
+                node.filter.max = max / node.filter.maxVal
+            }
+
+            this.nodeOutput({ nodeKey: datasetKey, geometry: null })
+
+            this.evalArithmeticNode({
+                node,
+                mathFunction: arr => arr[0],
+                options: {},
+                geometries: [geometry],
+            })
+        })
+
         // const outputs = _.cloneDeep(this.props.links.outputs)
         // const inputs = _.cloneDeep(this.props.links.inputs)
 
@@ -674,12 +723,12 @@ class VPL extends React.Component {
             let inputGeometries = inputNodes.map(index => mapGeometries[index])
 
             if (inputGeometries.filter(f => f).length == inputNodes.length)
-                this.evalArithmeticNode(
+                this.evalArithmeticNode({
                     node,
                     mathFunction,
                     options,
-                    inputGeometries
-                )
+                    geometries: inputGeometries,
+                })
         }
 
         Object.entries(nodes).map(([nodeKey, node]) => {
@@ -737,7 +786,9 @@ class VPL extends React.Component {
     }
 
     // TODO: refactoring this function.
-    evalArithmeticNode = (node, mathFunction, options, geometries) => {
+    evalArithmeticNode = ({ node, mathFunction, options, geometries }) => {
+        console.log({ node })
+
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.datasets.allIndices
@@ -777,7 +828,7 @@ class VPL extends React.Component {
         if (node.remap) {
             const dataMax = math.max(sizeArray)
             // const dataMin = math.min(sizeArray)
-            const dataMin = 0
+            const dataMin = 0 // always be zero.
             const originScale = dataMax - dataMin
             const newScale = node.remap.max - dataMin
 
@@ -789,12 +840,18 @@ class VPL extends React.Component {
             // }
 
             if (originScale > 0) sizeArray = sizeArray.map(remap)
+
+            // console.log('[remap] after', {
+            //     max: math.max(sizeArray),
+            //     min: math.min(sizeArray),
+            // })
         }
 
         // new: filter feature (2017 Nov. )
         if (node.filter) {
             const dataMax = math.max(sizeArray)
-            const dataMin = math.min(sizeArray)
+            // const dataMin = math.min(sizeArray)
+            const dataMin = 0 // should be zero
 
             let { min, max } = node.filter
             console.log('[filter]', { min, max })
@@ -1064,7 +1121,7 @@ class VPL extends React.Component {
                             this.deleteNode(nodeKey)
                         }}
                         updated={() => {
-                            this.refreshVoxels = true
+                            Act.setRefreshVoxels({ value: true })
                         }}
                         // changeFilter={(min, max) => {
                         //     this.changeNodeFilter(nodeKey, min, max)
@@ -1145,6 +1202,7 @@ class VPL extends React.Component {
     }
 
     addVoxelGeometry = geometry => {
+        // TODO: adding Geometry function should be more simple
         const map = this.newProps.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
         const otherArray = []
@@ -1285,6 +1343,7 @@ const mapStateToProps = state => {
         map: state.map,
         layers: state.datasets.layers,
         datasets: state.datasets,
+        refreshVoxels: state.interactions.refreshVoxels,
     }
 }
 

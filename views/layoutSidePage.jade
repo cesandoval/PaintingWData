@@ -1,6 +1,15 @@
 doctype html
 html
   head
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118514810-1"></script>
+    script.
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-118514810-1');
+
     meta(charset="utf-8")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     title= 'Painting with Data'
@@ -25,7 +34,11 @@ html
 
     //- //add bootstrap dependencies from CDNjs. Using a CDN to distribute these files puts less pressure
     //- //on our web server and will be delivered faster to the client than our own server.
-    script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')
+    //- script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')		
+
+    
+    script(src='http://code.jquery.com/jquery-1.9.1.js')
+    script(src="http://code.jquery.com/ui/1.10.2/jquery-ui.js")
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
 
@@ -129,7 +142,6 @@ script.
 
 
   $(".pop_team").click(function () {
-      //console.log($(this).attr("bio1"));
 
       d3.select("body").append("div")
           .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
@@ -219,6 +231,79 @@ script.
           d3.selectAll(".pop_team_box_back").remove();
       });
       
+  });
+
+
+script(src="/javascripts/progressWidget.js", type="text/javascript")
+
+script.
+
+  $("#trigger_survey").click(function(){
+      d3.select(".surveyBack").remove();
+      d3.select(".surveyBox").remove();
+
+      let surveyBack = d3.select("body").append("div").classed("surveyBack",true).on("click",function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+      });
+      let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
+      surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+      });
+
+      surveyBox.append("p").classed("survey_title",true).text("Tell us more about you!");
+      let surveySubBox = surveyBox.append("div").classed("surveySubBox",true);
+
+      let survey_use = surveySubBox.append("div").classed("survey_use",true).classed("survey_item",true);
+      survey_use.append("p").classed("survey_subtitle",true).text("What will you use the application for?");
+      let use_options = survey_use.append("select").attr("id","use").attr("name","use");
+      use_options.append("option").attr("value", "").text("--");
+      use_options.append("option").attr("value", "Communication").text("Communication");
+      use_options.append("option").attr("value", "Data Visualization").text("Data Visualization");
+      use_options.append("option").attr("value", "Educational").text("Educational");
+      use_options.append("option").attr("value", "Real Estate Development").text("Real Estate Development");
+      use_options.append("option").attr("value", "Spatial Analysis").text("Spatial Analysis");
+      use_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_industry = surveySubBox.append("div").classed("survey_industry",true).classed("survey_item",true);
+      survey_industry.append("p").classed("survey_subtitle",true).text("What industry are you in?");
+      let industry_options = survey_industry.append("select").attr("id","industry").attr("name","industry");
+      industry_options.append("option").attr("value", "").text("--");
+      industry_options.append("option").attr("value", "Design").text("Design");
+      industry_options.append("option").attr("value", "Geography").text("Geography");
+      industry_options.append("option").attr("value", "Journalism").text("Journalism");
+      industry_options.append("option").attr("value", "Landscape Architecture").text("Landscape Architecture");
+      industry_options.append("option").attr("value", "Policy Making").text("Policy Making");
+      industry_options.append("option").attr("value", "Public Health").text("Public Health");
+      industry_options.append("option").attr("value", "Real Estate").text("Real Estate");
+      industry_options.append("option").attr("value", "Urban Planning").text("Urban Planning");
+      industry_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_referal = surveySubBox.append("div").classed("survey_referal",true).classed("survey_item",true);
+      survey_referal.append("p").classed("survey_subtitle",true).text("How did you hear about us?");
+      let referal_options = survey_referal.append("select").attr("id","referal").attr("name","referal");
+      referal_options.append("option").attr("value", "").text("--");
+      referal_options.append("option").attr("value", "Event").text("Event");
+      referal_options.append("option").attr("value", "Friend Recommendation").text("Friend Recommendation");
+      referal_options.append("option").attr("value", "Social Media").text("Social Media");
+      referal_options.append("option").attr("value", "Search Engine").text("Search Engine");
+      referal_options.append("option").attr("value", "Workshop").text("Workshop");
+      referal_options.append("option").attr("value", "Others").text("Others");
+
+      let survey_submit = surveySubBox.append("input").attr("type","submit").classed("survey_submit",true).attr("value","Done!")
+                            .attr("data-transition","fade")
+                            .attr("data-theme","c")
+
+    //- input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
+
+    //- input(type="text", id="email", class="form-control form-input-line", name="username", placeholder="newuser@gmail.com")
+
+
+
+    
+
+
   });
 
 
@@ -320,4 +405,3 @@ script.
 
         console.log(obj.contentWindow.document.body.scrollHeight);
     };
-
