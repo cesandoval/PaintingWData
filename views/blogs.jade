@@ -3,22 +3,16 @@ extends layoutSidePage
 
 block pageTitle
   div.container.spacing-large.spacing-blog
-    div.container
+    div.container.blogs_container
       .row.spacing-large.spacing-blog
          h1.center Blogs
 
 
+      .row
+          div.col-sm-12.showcase-panel
+            div
+              a(href="/blog#blog1")
+                img(src="posts/post1/images/image2.jpg")
+                div.showcase-panel-time.blog-title= "Introducing Painting with Data"
 
 
-block content
-  div.section_content.row
-    div.container.ifwrapper
-      iframe(src="posts/post1/index.html", id="post1", style="" class = "iframe_post")
-
-
-
-  script.
-    $("#post1").load(function () {
-      fixiframe("#post1");
-      expand_function("post1",);
-    });
