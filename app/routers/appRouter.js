@@ -6,6 +6,7 @@ var passport = require('passport'),
     updateController = require('../controllers/updateController'),
     voxelPrivacy = require('../controllers/voxelPrivacyController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
+    saveUserfile = require('../controllers/userFileController');
     isAuthenticatedOrPublicVoxel = require('../controllers/signupController').isAuthenticatedOrPublicVoxel,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -33,7 +34,7 @@ var passport = require('passport'),
     //console.log("Upload viewer id: " + stringParse);
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
     var size = stringParse.substr(stringParse.indexOf('$$')+2, stringParse.length);
-    
+
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
@@ -61,6 +62,7 @@ var passport = require('passport'),
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
-
-
+  // These are save/load files for a map's state, i.e. how the user exited it.
+  router.post('/saveuserfile/', isAuthenticated, saveUserfile.save);
+  router.get('/importuserfile/:datavoxelId', isAuthenticated, saveUserfile.import);
 module.exports = router;

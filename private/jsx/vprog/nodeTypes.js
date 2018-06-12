@@ -2,7 +2,7 @@
 const NodeType = {
   [name]: { // e.g. 'layer', 'add', 'sub', 'log'
     fullname: '', // e.g. 'Subraction', 'Multiplication', 'Division', 'Logarithm'
-    desc: `', // some 
+    desc: `', // some
         descripti
     `n
     inputs: {
@@ -26,7 +26,7 @@ export const DATASET = {
     fullName: 'Dataset',
     class: 'dataset',
     desc: `
-        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes. 
+        Contains a voxel layer inherited from the voxel project. The voxel values can be passed to other nodes.
     `,
     inputs: {
         // no input
@@ -223,7 +223,7 @@ export const XOR = {
     fullName: 'XOR',
     class: 'logic',
     desc: `
-        Returns the voxels that contain a visible voxel in one, and only one of the input datasets. 
+        Returns the voxels that contain a visible voxel in one, and only one of the input datasets.
     `,
     inputs: {
         Input1: 'I',

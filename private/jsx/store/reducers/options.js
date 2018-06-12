@@ -8,6 +8,14 @@ const initialOptionsState = {
 
 export default (state = initialOptionsState, action) => {
     switch (action.type) {
+        case t.IMPORT_USERFILE: {
+            const newState = action
+            const { options } = newState
+
+            // Merges the options' properties together. The later arguments' properties take precedence.
+            return Object.assign({}, state, options)
+        }
+
         case t.MAP_SET_BGSTYLE: {
             const { value } = action
             const bgStyle = { bgStyle: value }
@@ -15,6 +23,7 @@ export default (state = initialOptionsState, action) => {
         }
 
         case t.MAP_SET_OPACITY: {
+            console.log(state)
             const { value } = action
             const opacity = { opacity: value }
             return Object.assign({}, state, opacity)

@@ -1,4 +1,5 @@
 /* global project */
+/* global datavoxelId */
 
 import React from 'react'
 import * as Act from '../store/actions'
@@ -14,7 +15,7 @@ class MapCanvas extends React.Component {
     constructor(props) {
         super(props)
         // this.state = { layersAdded: false }
-        this.state = { mapInited: false, instance: {} }
+        this.state = { mapInited: false, instance: {}, mapStarted: false }
     }
     componentDidMount() {
         const gElement = document.getElementById('mapCanvas')
@@ -31,13 +32,24 @@ class MapCanvas extends React.Component {
         // Map them to Pixels objects
         // Add the pixel geometries to the map
         // console.log(99999,G)
-
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
             Act.mapInit({
                 instance: this.state.instance,
                 datasetsLayers: newProps.layers,
             })
             this.setState({ mapInited: true })
+        }
+
+        console.log('map componentWillReceiveProps()', { newProps })
+        // init the map options by default/userfile value from redux when map has started.
+        if (newProps.mapStarted && !this.state.mapStarted) {
+            const options = this.props.options
+
+            if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
+            if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
+            if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
+
+            this.setState({ mapStarted: true })
         }
 
         /*
@@ -161,6 +173,54 @@ class MapCanvas extends React.Component {
         window.refreshTiles()
         window.updateTiles()
     }
+    //TODO: Pass in the appropriate parameters!
+    saveFile() {
+        //Gets the voxel ID.
+        /*
+        var temp = window.location.toString().split('/')
+        var voxelId = parseInt(temp[temp.length - 1])
+        */
+        //This is horrible coding, copying from exportSVG... lolrip
+        let _centroid = this.props.map.camera.position
+        let bbox = this.props.bbox[0]
+        let projectedMin = project([bbox[0][0], bbox[0][1]])
+        let projectedMax = project([bbox[2][0], bbox[2][1]])
+
+        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
+        let _bounds = [
+            Math.abs(projectedMax.x + _translation[0]),
+            Math.abs(projectedMax.z + (0 - projectedMin.z)),
+        ]
+        //Save everything in one JSON -- pass variable "info" to the request handler.
+        var _info = {
+            // It's just the "map" attribute that we have to fix. "options" and "vpl" correspond to the correct properties.
+            map: {
+                translation: _translation,
+                centroid: _centroid,
+                bounds: _bounds,
+                /*
+                instance: {
+                  // ThreeJS Graph Object
+                  renderFunc,
+                },
+                loaded: false,
+                geometries: {
+                  [layer$key]: {
+
+                  },
+                },
+                // layers: [], // ???
+                */
+            },
+            options: this.props.options,
+            vpl: this.props.vpl,
+        }
+        Act.saveUserFile({
+            userId: 1, //replace with user Id
+            voxelId: datavoxelId,
+            info: _info,
+        })
+    }
 
     render() {
         const panelShow = this.props.panelShow
@@ -241,6 +301,15 @@ class MapCanvas extends React.Component {
                                 SHP
                             </MenuItem>
                         </DropdownButton>
+
+                        <Button
+                            id={`save-userfile`}
+                            onClick={() => {
+                                this.saveFile()
+                            }}
+                        >
+                            Save Userfile
+                        </Button>
                     </div>
                     <Button
                         id="zoomShow"
@@ -262,8 +331,11 @@ class MapCanvas extends React.Component {
 export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
+    mapStarted: s.map.started,
+    options: s.options,
     panelShow: s.interactions.panelShow,
     activeNode: s.vpl.nodes[s.interactions.activeNode],
     geometries: s.map.geometries,
     bbox: s.map.bbox,
+    vpl: s.vpl,
 }))(MapCanvas)
