@@ -1123,7 +1123,7 @@ p {
     .dropdown-menu {
         background-color: black !important;
     }
-}
+
 
   }
 
@@ -1132,7 +1132,7 @@ p {
     text-align: center;
     box-shadow: 0 11px 20px 0 rgba(97, 108, 121, 0.17);
     cursor: pointer;
-    padding: 5px;
+    padding: 5px !important;
     transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
     overflow: hidden;
