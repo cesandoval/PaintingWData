@@ -30,9 +30,10 @@ module.exports.import = function(req, res){
             datavoxelId: req.params.datavoxelId,
         }
     }).then(dataUserFile => {
-        // returns as an array ?!
-        var _state = dataUserFile.dataValues.state;
-        console.log(_state)
-        res.json(_state);
+        if (dataUserFile != null) {
+            var _state = dataUserFile.dataValues.state;
+            console.log(_state)
+            res.json(_state);
+        }
     })
 }
