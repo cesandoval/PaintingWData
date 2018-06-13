@@ -14,7 +14,6 @@ var Model = require('../models'),
 module.exports.computeVoxels = function(req, res){
     if  (req.body.datalayerIds !== ''){
         var datalayerIds = [];
-        var datalayerIdString = req.body.datalayerIds;
         req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
             if(datalayerId !== ""){
                 datalayerIds.push(datalayerId);
