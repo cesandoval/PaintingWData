@@ -1,14 +1,14 @@
 import axios from 'axios'
-import * as d3 from 'd3'
+// import * as d3 from 'd3'
 
 export default class Graph {
     constructor(canvasElement, height, width) {
-        // Camera Settings
-        this.height = height
-        this.width = width
-        this.fov = 90
-        this.near = 0.01
-        this.far = 15000
+        // // Camera Settings
+        // this.height = height
+        // this.width = width
+        // this.fov = 90
+        // this.near = 0.01
+        // this.far = 15000
 
         // Initialize a Canvas for Three.js
         // + all this necessary to see things
@@ -56,12 +56,18 @@ export default class Graph {
 
     // Create a Camera
     initCamera(width, height) {
-        let aspect = width / height
+        // let aspect = width / height
+        // var camera = new THREE.PerspectiveCamera(
+        //     this.fov,
+        //     aspect,
+        //     this.near,
+        //     this.far
+        // )
         var camera = new THREE.PerspectiveCamera(
-            this.fov,
-            aspect,
-            this.near,
-            this.far
+            90,
+            width / height,
+            0.01,
+            15000
         )
         camera.position.y = 300
         camera.lookAt(new THREE.Vector3(0.0, 0.0, 0.0))
@@ -70,47 +76,47 @@ export default class Graph {
         return camera
     }
 
-    toRadians(angle) {
-        return angle * (Math.PI / 180)
-    }
+    // toRadians(angle) {
+    //     return angle * (Math.PI / 180)
+    // }
 
-    getScaleFromZ(camera_z_position) {
-        let half_fov = this.fov / 2
-        let half_fov_radians = this.toRadians(half_fov)
-        let half_fov_height = Math.tan(half_fov_radians) * camera_z_position
-        let fov_height = half_fov_height * 2
-        let scale = this.height / fov_height // Divide visualization height by height derived from field of view
-        return scale
-    }
+    // getScaleFromZ(camera_z_position) {
+    //     let half_fov = this.fov / 2
+    //     let half_fov_radians = this.toRadians(half_fov)
+    //     let half_fov_height = Math.tan(half_fov_radians) * camera_z_position
+    //     let fov_height = half_fov_height * 2
+    //     let scale = this.height / fov_height // Divide visualization height by height derived from field of view
+    //     return scale
+    // }
 
-    getZFromScale(scale) {
-        let half_fov = this.fov / 2
-        let half_fov_radians = this.toRadians(half_fov)
-        let scale_height = this.height / scale
-        let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians))
-        return camera_z_position
-    }
+    // getZFromScale(scale) {
+    //     let half_fov = this.fov / 2
+    //     let half_fov_radians = this.toRadians(half_fov)
+    //     let scale_height = this.height / scale
+    //     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians))
+    //     return camera_z_position
+    // }
 
-    zoomHandler(d3_transform) {
-        let scale = d3_transform.k
-        let x = -(d3_transform.x - this.width / 2) / scale
-        let y = (d3_transform.y - this.height / 2) / scale
-        let z = this.getZFromScale(scale)
-        // canvas.controls.target
-        console.log(z)
+    // zoomHandler(d3_transform) {
+    //     let scale = d3_transform.k
+    //     let x = -(d3_transform.x - this.width / 2) / scale
+    //     let y = (d3_transform.y - this.height / 2) / scale
+    //     let z = this.getZFromScale(scale)
+    //     // canvas.controls.target
+    //     console.log(z)
 
-        this.camera.position.set(x, y, z)
-    }
+    //     this.camera.position.set(x, y, z)
+    // }
 
-    setUpZoom() {
-        this.view.call(this.zoom)
-        let initial_scale = this.getScaleFromZ(this.far)
-        var initial_transform = d3.zoomIdentity
-            .translate(this.width / 2, this.height / 2)
-            .scale(initial_scale)
-        this.zoom.transform(this.view, initial_transform)
-        this.camera.position.set(0, 0, this.far)
-    }
+    // setUpZoom() {
+    //     this.view.call(this.zoom)
+    //     let initial_scale = this.getScaleFromZ(this.far)
+    //     var initial_transform = d3.zoomIdentity
+    //         .translate(this.width / 2, this.height / 2)
+    //         .scale(initial_scale)
+    //     this.zoom.transform(this.view, initial_transform)
+    //     this.camera.position.set(0, 0, this.far)
+    // }
 
     // Create a Renderer
     initRenderer(width, height) {

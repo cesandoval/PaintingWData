@@ -34,7 +34,6 @@ export default (state = initialMapState, action) => {
 
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
-            // zoomExtent(instance, bbox)
 
             let geometries = Object.assign({}, state.geometries)
 
