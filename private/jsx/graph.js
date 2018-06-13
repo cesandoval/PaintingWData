@@ -1,7 +1,15 @@
 import axios from 'axios'
+// import * as d3 from 'd3'
 
 export default class Graph {
     constructor(canvasElement, height, width) {
+        // // Camera Settings
+        // this.height = height
+        // this.width = width
+        // this.fov = 90
+        // this.near = 0.0001
+        // this.far = 15000
+
         // Initialize a Canvas for Three.js
         // + all this necessary to see things
         this.canvas = canvasElement
@@ -25,6 +33,20 @@ export default class Graph {
         this.renderUntil = Date.now()
         this.untilTime = this.renderUntil - Date.now()
         this.rendering = false
+
+        // // Setup D3 Style Zoom
+        // this.zoom = d3
+        //     .zoom()
+        //     .scaleExtent([
+        //         this.getScaleFromZ(this.far),
+        //         this.getScaleFromZ(this.near),
+        //     ])
+        //     .on('zoom', () => {
+        //         let d3_transform = d3.event.transform
+        //         this.zoomHandler(d3_transform)
+        //     })
+        // this.view = d3.select(this.renderer.domElement)
+        // this.setUpZoom()
     }
 
     // Create a Scene
@@ -34,6 +56,13 @@ export default class Graph {
 
     // Create a Camera
     initCamera(width, height) {
+        // let aspect = width / height
+        // var camera = new THREE.PerspectiveCamera(
+        //     this.fov,
+        //     aspect,
+        //     this.near,
+        //     this.far
+        // )
         var camera = new THREE.PerspectiveCamera(
             90,
             width / height,
@@ -46,6 +75,48 @@ export default class Graph {
         camera.enableRotate = false
         return camera
     }
+
+    // toRadians(angle) {
+    //     return angle * (Math.PI / 180)
+    // }
+
+    // getScaleFromZ(camera_z_position) {
+    //     let half_fov = this.fov / 2
+    //     let half_fov_radians = this.toRadians(half_fov)
+    //     let half_fov_height = Math.tan(half_fov_radians) * camera_z_position
+    //     let fov_height = half_fov_height * 2
+    //     let scale = this.height / fov_height // Divide visualization height by height derived from field of view
+    //     return scale
+    // }
+
+    // getZFromScale(scale) {
+    //     let half_fov = this.fov / 2
+    //     let half_fov_radians = this.toRadians(half_fov)
+    //     let scale_height = this.height / scale
+    //     let camera_z_position = scale_height / (2 * Math.tan(half_fov_radians))
+    //     console.log(camera_z_position, 232323232)
+    //     return camera_z_position
+    // }
+
+    // zoomHandler(d3_transform) {
+    //     let scale = d3_transform.k
+    //     let x = -(d3_transform.x - this.width / 2) / scale
+    //     let y = (d3_transform.y - this.height / 2) / scale
+    //     let z = this.getZFromScale(scale)
+    //     console.log(z, 'zzzzzzzzzz')
+    //     // 14917.047481411128
+    //     this.camera.position.set(x, y, z)
+    // }
+
+    // setUpZoom() {
+    //     this.view.call(this.zoom)
+    //     let initial_scale = this.getScaleFromZ(this.far)
+    //     var initial_transform = d3.zoomIdentity
+    //         .translate(this.width / 2, this.height / 2)
+    //         .scale(initial_scale)
+    //     this.zoom.transform(this.view, initial_transform)
+    //     this.camera.position.set(0, 0, this.far)
+    // }
 
     // Create a Renderer
     initRenderer(width, height) {
@@ -144,7 +215,25 @@ export default class Graph {
     initControls(camera, canvas) {
         let controls = new THREE.OrbitControls(camera, canvas)
         controls.enableRotate = false
+
+        // console.log(controls.domElement)
+        // controls.domElement.addEventListener(
+        //     'mousewheel',
+        //     this.onDocumentMouseWheel,
+        //     false
+        // )
+
         return controls
+    }
+
+    onDocumentMouseWheel(event) {
+        console.log(949494499)
+        console.log(event)
+        // var fovMAX = 160;
+        // var fovMIN = 1;
+        // camera.fov -= event.wheelDeltaY * 0.05;
+        // camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
+        // camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
     }
 
     // Appends canvas onto the element

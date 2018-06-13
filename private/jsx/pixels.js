@@ -129,6 +129,13 @@ export default class Pixels {
             var pt = canvas.controls.target.distanceTo(
                 canvas.controls.object.position
             )
+            console.log(
+                canvas.controls.object.position,
+                canvas.controls.target,
+                pt,
+                Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22),
+                'zyzyzyzzyzyzy'
+            )
             return Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22)
         }
 
@@ -497,13 +504,21 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
+        console.log(this.highBnd + this.layerN * (this.highBnd * 0.025))
+        console.log(this.highBnd * 0.5 + this.layerN * 0.001)
+        console.log(this.highBnd, this.highBnd * 0.025)
+        console.log(0.3 + this.layerN * 0.001)
+        /* eslint-disable */ 
+        console.log((0.3 * this.layerN ) + 0.001)
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
             // console.log(currIndex)
             translations.setXYZ(
                 currIndex,
                 dataArray[i],
-                0.3 + this.layerN * 0.001,
+                // this.highBnd * 0.5 + this.layerN * 0.001,
+                // 0.0001 + this.layerN * 0.001,
+                0.00001 + this.layerN * 0.00001,
                 dataArray[i + 1]
             )
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);

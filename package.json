@@ -26,6 +26,7 @@
     "connect-flash": "~0.1.1",
     "cookie-parser": "~1.4.3",
     "cookie-session": "^2.0.0-beta.3",
+    "d3": "^5.4.0",
     "d3-queue": "^3.0.1",
     "dbgeo": "0.1.1",
     "debug": "~2.2.0",
@@ -79,8 +80,8 @@
     "supervisor": "0.11.0",
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
-    "yallist": "^3.0.2",
-    "victory": "^0.26.0"
+    "victory": "^0.26.0",
+    "yallist": "^3.0.2"
   },
   "devDependencies": {
     "axios": "^0.15.2",
