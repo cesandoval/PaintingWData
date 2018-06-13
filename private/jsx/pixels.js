@@ -129,13 +129,6 @@ export default class Pixels {
             var pt = canvas.controls.target.distanceTo(
                 canvas.controls.object.position
             )
-            console.log(
-                canvas.controls.object.position,
-                canvas.controls.target,
-                pt,
-                Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22),
-                'zyzyzyzzyzyzy'
-            )
             return Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22)
         }
 

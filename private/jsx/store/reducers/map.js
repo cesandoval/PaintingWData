@@ -12,7 +12,6 @@ const initialMapState = {
 }
 
 // TODO: layers: don't use array, use key-value object
-
 export default (state = initialMapState, action) => {
     switch (action.type) {
         case t.MAP_INIT: {
@@ -26,15 +25,16 @@ export default (state = initialMapState, action) => {
             // instance.camera.updateProjectionMatrix()
             // console.log('camera near....:', instance.camera.near)
             // console.log(bbox[0][0], bbox[0][2])
-            let diagonal = Math.sqrt(
-                Math.pow(bbox[0][2][0] - bbox[0][0][0], 2) +
-                    Math.pow(bbox[0][2][1] - bbox[0][0][1], 2)
-            )
-            instance.camera.near = diagonal * 5
-            instance.camera.updateProjectionMatrix()
+            // let diagonal = Math.sqrt(
+            //     Math.pow(bbox[0][2][0] - bbox[0][0][0], 2) +
+            //         Math.pow(bbox[0][2][1] - bbox[0][0][1], 2)
+            // )
+            // instance.camera.near = diagonal * 5
+            // instance.camera.updateProjectionMatrix()
 
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
+            // zoomExtent(instance, bbox)
 
             let geometries = Object.assign({}, state.geometries)
 
