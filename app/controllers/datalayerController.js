@@ -142,16 +142,16 @@ module.exports.showVoxels= function(req, res) {
                 },
                 {
                     model: Model.Datajson,
-                    attributes: ["rasterProperty"] 
+                    attributes: ["rasterProperty", "datafileId"] 
                 }
             ]
         }).then(function(datavoxels){
             // console.log("datavoxels: ", datavoxels);
-            // for (var key in datavoxels) {
-            //     var datavoxel = datavoxels[key];
-            //     console.log("datavoxel.Datajsons: ", datavoxel.Datajsons);
+            for (var key in datavoxels) {
+                var datavoxel = datavoxels[key];
+                console.log("datavoxel.Datajsons: ", datavoxel.Datajsons);
             //     // console.log("datavoxel.Datajsons[0].rasterProperty: ", datavoxel.Datajsons[0].rasterProperty);
-            // }
+            }
             // console.log("------------------------------------------------");
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });

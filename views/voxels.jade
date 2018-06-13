@@ -59,6 +59,7 @@ block pageTitle
                   if datavoxel.Datafiles.length > 0
                     -var index = 1
                     label.layer-label Layers in Voxel
+
                     for datafile in datavoxel.Datafiles
                       hr
                       label Layer #{index++}
@@ -76,7 +77,9 @@ block pageTitle
                         label.layer-label.voxel-label #{datafile.Datalayers[0].userLayerName}
 
                       p.label-body Layer Data Properties
-                        label.layer-label.voxel-label #{  JSON.parse(datavoxel.Datajsons[0].rasterProperty)[   Object.keys(JSON.parse(datavoxel.Datajsons[0].rasterProperty))[index - 2]   ]   }                        
+                        for datajson in datavoxel.Datajsons
+                          if datajson.datafileId == datafile.id
+                            label.layer-label.voxel-label #{  datajson.rasterProperty  }                        
 
                       p.label-body.text-right
                         a.btn.btn-gray.btn-jumbotron.btn-block(data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
