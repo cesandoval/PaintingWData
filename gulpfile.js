@@ -1,8 +1,37 @@
 var gulp = require('gulp')
-var gutil = require('gulp-util')
+// var gutil = require('gulp-util')
 
 var browserify = require('browserify')
-var babelify = require('babelify')
+
+const source = require('vinyl-source-stream')
+const glob = require('glob')
+const rename = require('gulp-rename')
+const es = require('event-stream')
+
+gulp.task('default', ['vueify', 'watch'])
+gulp.task('vueify', function(done) {
+    glob('./private/vue/*.js', function(err, files) {
+        if (err) done(err)
+
+        const tasks = files.map(function(entry) {
+            return (
+                browserify({ entries: [entry] })
+                    // .transform([vueify, babelify]) // defined at package.json
+                    .bundle()
+                    .pipe(source(entry))
+                    .pipe(rename({ dirname: '/' }))
+                    .pipe(gulp.dest('./public/javascripts/vue'))
+            )
+        })
+        es.merge(tasks).on('end', done)
+    })
+})
+
+gulp.task('vue:watch', function() {
+    gulp.watch(['private/vue/*.*'], ['vueify'])
+})
+
+/*
 var source = require('vinyl-source-stream')
 var chalk = require('chalk')
 
@@ -34,8 +63,4 @@ gulp.task('build', function() {
 
     return stream
 })
-
-gulp.task('watch', function() {
-    livereload.listen()
-    gulp.watch(['private/jsx/**/*.js'], ['build'])
-})
+*/

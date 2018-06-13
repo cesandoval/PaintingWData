@@ -5,6 +5,7 @@
   "scripts": {
     "init:db": "cd app && sequelize db:migrate",
     "dev": "cross-env NODE_ENV=development node ./bin/www",
+    "dev:vue": "gulp vue:watch",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
@@ -80,9 +81,12 @@
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
     "yallist": "^3.0.2",
-    "victory": "^0.26.0"
+    "victory": "^0.26.0",
+    "vue": "^2.5.16",
+    "yallist": "^3.0.2"
   },
   "devDependencies": {
+    "aliasify": "^2.1.0",
     "axios": "^0.15.2",
     "babel-core": "^6.x",
     "babel-eslint": "^7.x",
@@ -95,7 +99,7 @@
     "babel-preset-react": "^6.16.0",
     "babel-runtime": "^6.26.0",
     "babelify": "^7.3.0",
-    "browserify": "^13.1.1",
+    "browserify": "^16.2.2",
     "chalk": "^1.1.3",
     "cross-env": "^5.1.3",
     "css-loader": "^0.28.5",
@@ -108,9 +112,12 @@
     "eslint-plugin-jsx-a11y": "^5.x",
     "eslint-plugin-prettier": "^2.3.1",
     "eslint-plugin-react": "^7.4.0",
+    "event-stream": "^3.3.4",
     "file-loader": "^0.11.2",
+    "glob": "^7.1.2",
     "gulp": "^3.9.1",
     "gulp-livereload": "^3.8.1",
+    "gulp-rename": "^1.3.0",
     "gulp-util": "^3.0.7",
     "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
@@ -123,10 +130,23 @@
     "style-loader": "^0.19.0",
     "styled-jsx-plugin-sass": "^0.2.4",
     "url-loader": "^0.5.9",
-    "vinyl-source-stream": "^1.1.0",
+    "vinyl-source-stream": "^2.0.0",
+    "vueify": "^9.4.1",
     "webpack": "^3.5.5",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2"
+  },
+  "browserify": {
+    "transform": [
+      "vueify",
+      "babelify",
+      "aliasify"
+    ]
+  },
+  "aliasify": {
+    "aliases": {
+      "vue": "vue/dist/vue.js"
+    }
   }
 }
