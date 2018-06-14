@@ -4,34 +4,53 @@
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
-
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
 import DensityChart from '../charts/charts'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
-
+/**
+ * The Map component. Contains a draggable, zoomable map, with voxels as concentric circles
+ * representing the data points. This can be used to correlate two variables, such as home
+ * prices, or asthma rates, etc.
+ * @author PaintingWithData
+ */
 class MapCanvas extends React.Component {
+    /**
+     * The constructor, which initializes the state of the Map component.
+     * @param {Object} props
+     */
     constructor(props) {
         super(props)
-        // this.state = { layersAdded: false }
+        /**
+         * The state of the Map component.
+         * @type     {Object}
+         * @property {Boolean} mapInited
+         * @property {Boolean} mapStarted
+         * @property {PaintGraph.Graph} instance The graph containing the canvas properties.
+         */
         this.state = { mapInited: false, instance: {}, mapStarted: false }
     }
+    /**
+     * Renders the map on the DOM element with id "mapCanvas".
+     */
     componentDidMount() {
+        // The element 'mapCanvas'; the height and width.
         const gElement = document.getElementById('mapCanvas')
         const gHeight = window.innerHeight
         const gWidth = gElement.clientWidth
+        // Constructs a new PaintGraph.Graph based in "mapCanvas" and updates state.
         const G = new PaintGraph.Graph(gElement, gHeight, gWidth)
         G.start()
         this.setState({ instance: G })
-
-        // act.mapAddInstance(G)
     }
+    /**
+     * @param {Object} newProps The props to be passed in.
+     */
     componentWillReceiveProps(newProps) {
         // Get layers once they appear
         // Map them to Pixels objects
         // Add the pixel geometries to the map
-        // console.log(99999,G)
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
             Act.mapInit({
                 instance: this.state.instance,
@@ -51,51 +70,6 @@ class MapCanvas extends React.Component {
 
             this.setState({ mapStarted: true })
         }
-
-        /*
-        if (!_.isEmpty(newProps.layers) && !this.state.layersAdded) {
-            // Sets the camera to the voxels' bbox
-            const bbox = newProps.layers[0].bbox
-            const canvas = newProps.map
-
-            // Set the camera
-            PaintGraph.Pixels.zoomExtent(canvas, bbox)
-            // Add the map to the canvas
-            PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox)
-
-            this.setState({ layersAdded: true, bbox: bbox, canvas: canvas })
-
-            newProps.layers.map((layer, n) => {
-                // Defined geometry
-                const circle = new THREE.CircleBufferGeometry(1, 20)
-                // Parses the layer
-                const out = PaintGraph.Pixels.parseDataJSON(layer)
-
-                const nodeHashKey =
-                    (+new Date()).toString(32) +
-                    Math.floor(Math.random() * 36).toString(36)
-
-                // Creates the Pixels object
-                const P = new PaintGraph.Pixels(
-                    nodeHashKey,
-                    this.props.map,
-                    circle,
-                    out.otherArray,
-                    out.startColor,
-                    out.endColor,
-                    layer.geojson.minMax,
-                    out.addressArray,
-                    layer.rowsCols.cols,
-                    layer.rowsCols.rows,
-                    n,
-                    layer.bounds,
-                    layer.shaderText
-                )
-
-                act.mapAddGeometry(layer.name, P)
-            })
-        }
-        */
     }
 
     exportSVG(geoms) {

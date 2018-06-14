@@ -9,10 +9,10 @@ import Graph from './graph'
 import Exporter from './exporter'
 
 /**
- * Summary. The main entry point for the mapping service.
- * 
- * Description. Contains the App component, which contains the (1) map service 
- * and (2) options. The map visualizes geo-spatial data by breaking areas down 
+ * The main entry point for the mapping service.
+ *
+ * Contains the App component, which contains the (1) map service
+ * and (2) options. The map visualizes geo-spatial data by breaking areas down
  * into "voxels", which are concentric circles of different colors representing
  * various data, such as median income, asthma rates, home values, and so on.
  * The options can be configured to change the map theme, to change the opacity,
@@ -21,20 +21,26 @@ import Exporter from './exporter'
  * @author PaintingWithData
  */
 
-/*
- * Sets the variable "window.PaintGraph" to contain the Pixels, Graph and Exporter
- * classes, if it's yet to be defined.
- */
+// Defines the PaintGraph namespace.
 if (window.PaintGraph !== undefined) {
     console.error('window.PaintGraph object already exists')
 } else {
+    /**
+     * The PaintGraph namespace contains various helper methods for
+     * map rendering, from three classes: Pixels, Graph and Exporter.
+     *
+     * @namespace PaintGraph
+     *
+     * @property class Pixels TODO.
+     * @property class Graph TODO.
+     * @property class Exporter TODO
+     */
     window.PaintGraph = {
         Pixels: Pixels,
         Graph: Graph,
         Exporter: Exporter,
     }
 }
-
 /*
  * Under the Hot Module Replacement (HMR) protocol, we accept any updated webpack
  * modules.
@@ -42,7 +48,6 @@ if (window.PaintGraph !== undefined) {
 if (module.hot) {
     module.hot.accept()
 }
-
 /*
  * Renders the App component, which has the main meat of the mapping service. Also
  * sets up the Redux stores, which contain "global" state variables for the whole

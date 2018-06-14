@@ -1,7 +1,14 @@
 /*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project, datavoxelId */
-import axios from 'axios'
-
-// import '../../public/javascripts/libs/utilities.js'
+/**
+ * Summary. (use period)
+ *
+ * Description. (use period)
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author AuthorName.
+ * @since  x.x.x
+ */
 export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
@@ -361,29 +368,6 @@ export default class Pixels {
                 else child.visible = false
             }
         }
-    }
-
-    s3Screenshot() {
-        // this is being triggered twice.........
-        let request = { datavoxelId: datavoxelId }
-        axios({
-            method: 'post',
-            url: '/checkScreenshot',
-            data: request,
-        })
-            .then(function(response) {
-                //handle success
-                if (!response.data.screenshot) {
-                    console.log('Getting Public Screenshot')
-                    window.screenshotToS3(datavoxelId)
-                } else {
-                    console.log('Screenshot not Neededddd~!!!')
-                }
-            })
-            .catch(function(response) {
-                //handle error
-                console.log(response)
-            })
     }
 
     // Create a InstancedBufferGeometry Object
