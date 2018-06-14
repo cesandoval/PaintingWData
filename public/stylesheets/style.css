@@ -962,6 +962,7 @@ p {
 
 .body-container {
     margin-top: 60px;
+    min-height: 600px;
 }
 
 .member_name_previous {
