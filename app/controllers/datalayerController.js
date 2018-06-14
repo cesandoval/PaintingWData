@@ -6,13 +6,17 @@ var Model = require('../models'),
     Channel = require('../../worker/channel');
     processVoxels = require('../../worker/worker2').processVoxels;
 
-// This file extracts the datalayer ids from the request object and saves it on
-// the datalayerIds object.
-// The datalayer objects are all strings containing ids. Eg "3", "7" ...
-
-
+/**
+ * Handles creation of voxels from the datalayers that the user selects.
+ * Redirects to /voxels page.
+ * Also handles if the user deletes datalayers from the /layers page.
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.computeVoxels = function(req, res){
     if  (req.body.datalayerIds !== ''){
+        
+        // parses into a datalayerIds list
         var datalayerIds = [];
         req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
             if(datalayerId !== ""){
@@ -20,7 +24,9 @@ module.exports.computeVoxels = function(req, res){
             }
         });
 
+        // handles deleting layer(s)
         if (req.body.layerButton == 'delete') {
+            // delete relevant datafile
             Model.Datafile.update({
                 deleted: true
             }, {
@@ -28,6 +34,7 @@ module.exports.computeVoxels = function(req, res){
                     id: datalayerIds
                 }
             }).then(function(){
+                // delete relevant datalayers
                 Model.Datalayer.update({
                     deleted:true
                 }, {
@@ -43,7 +50,10 @@ module.exports.computeVoxels = function(req, res){
                     res.redirect('/layers/'+ req.user.id);
                 })
             })
-        } else {
+        } 
+
+        // handles creating a voxel, using one or more datalayers, redirects to /voxels/ url after completed
+        else {
             var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
             var datalayerIds = [];
             console.log("req: " + req);
@@ -58,13 +68,25 @@ module.exports.computeVoxels = function(req, res){
 
             res.redirect('/voxels/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
-    } else {
+    } 
+
+    // no layers were selected
+    else {
         console.log('select layers!!!!');
         req.flash('layerAlert', "You haven't selected layers. Please select at least one layer.");
         res.redirect('/layers/'+ req.user.id);
     }
 };
 
+/**
+ * Handles displaying of all datafiles that
+ *  (1) are owned by the user and
+ *  (2) are not deleted
+ * Renders at /layers page 
+ * Passes on relevant datafiles to layers.jade 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.show = function(req, res) {
     Model.Datafile.findAll({
         where : {
@@ -80,6 +102,16 @@ module.exports.show = function(req, res) {
         });
 }
 
+/**
+ * Handles displaying all voxels that
+ *  (1) are owned by the user
+ *  (2) are not deleted and
+ *  (3) have completed being processed
+ * Renders at /voxels page.
+ * Passes on datavoxels to voxels.jade
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.showVoxels= function(req, res) {
      Model.Datavoxel.findAll({
             where : {
@@ -100,15 +132,27 @@ module.exports.showVoxels= function(req, res) {
 }
 
 
+/**
+ * Handles display of a voxel for the voxel that the user selects to open.
+ * Redirects to /app/{voxelID} page.
+ * Also handles if the user deletes voxels from the /voxels page.
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.transformVoxels = function(req, res) {
     console.log(req.body)
 
     if  (req.body.datavoxelIds !== ''){
         var voxelId = parseInt(req.body.datavoxelIds);
+        
+        // handles displaying of a voxel
         if (req.body.layerButton == 'open') {
             res.redirect('/app/'+ voxelId);
 
-        } else{
+        } 
+
+        // handles deleting of a voxel
+        else{
             Model.Datavoxel.update({
                 deleted: true
             }, {
@@ -123,6 +167,7 @@ module.exports.transformVoxels = function(req, res) {
     } else {
         console.log('select layers!!!!');
 
+        // if no layers were selected at all
         req.flash('voxelAlert', "You haven't selected a Voxel. Please select a Voxel.");
         res.redirect('/voxels/'+ req.user.id);
 
