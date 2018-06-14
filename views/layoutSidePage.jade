@@ -324,7 +324,6 @@ script.
         $(myid).contents().find("a")
             .attr("target","_blank")
             .attr("href", function(d,dd){
-                //console.log(d,dd);
                 if(dd){
                     var out = dd;
                     if(out.indexOf("?q=")>-1)
@@ -354,8 +353,6 @@ script.
             .filter(function(){
                 if($(this).attr("colspan") == "1" && $(this).attr("rowspan") == "1"){
                     var widththis = +d3.select(this).style("width").split("px")[0];
-                    //console.log($(document).width(),widththis);
-
 
                     if(this.innerHTML.indexOf("Overview")!=-1){
                         $(this).replaceWith( "<div class = 'content_right_full left_proj'>"+$(this).html()+"</div>"
@@ -392,7 +389,6 @@ script.
             
             $(myid).contents().find("div")
             .filter(function(){
-                //console.log($(this).attr("class"));
                 if($(this).attr("class"))
                 return $(this).attr("class").indexOf("left_proj")>-1;
             }).insertAfter(
@@ -413,6 +409,36 @@ script.
     var resizeIFrameToFitContent = function( obj ) {
         if(obj)
         obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-
-        console.log(obj.contentWindow.document.body.scrollHeight);
     };
+
+    var getVidemThumb = (thumb_wrapper) => {
+        let video_id = thumb_wrapper.attr("id");
+
+        $.ajax({
+            type:'GET',
+            url: 'http://vimeo.com/api/v2/video/' + video_id + '.json',
+            jsonp: 'callback',
+            dataType: 'jsonp',
+            success: function(data){
+                var thumbnail_src = data[0].thumbnail_large;
+                thumb_wrapper.append("img").attr("src",thumbnail_src);
+            }
+        });
+
+
+
+
+    }
+
+        if (window.location.href.indexOf("blogs")!==-1){
+            // parse video posts' thumbnail
+            d3.selectAll(".blog-img-wrapper")[0].forEach((item) => {
+                let thiswrapper = d3.select(item);
+
+                // video post
+                if(thiswrapper.attr("id")){
+                    getVidemThumb(thiswrapper);
+
+                }
+            });
+        }
