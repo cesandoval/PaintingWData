@@ -1359,3 +1359,15 @@ p {
 .footer span {
     font-size: 12px;
 }
+.blog-panel {
+
+    height: 30vh;
+}
+
+.play-btn {
+    width: 30px !important;
+    height: 30px !important;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
