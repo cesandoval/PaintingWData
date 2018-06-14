@@ -91,9 +91,20 @@ html
     block pageTitle
     block content
 
-    hr
-
     div.footer
+      div.row.home_icon_row
+        div.home_icon_wrapper
+            a(href='https://twitter.com/PaintingWData', target='_blank')
+                img.icon_link_img.mybtn.home_icon(src='/images/twitter.png')
+        div.home_icon_wrapper
+            a(href='https://www.facebook.com/PaintingWData/', target='_blank')
+                img.icon_link_img.mybtn.home_icon(src='/images/facebook.png')
+        div.home_icon_wrapper
+            a(href='https://www.linkedin.com/company/27180309/', target='_blank')
+                img.icon_link_img.mybtn.home_icon(src='/images/linkedin.png')
+      div.contact-div.
+        Have a quick question? Email our Support Team at support@paintingwithdata.com
+
       p &copy; Painting with Data 2018. Patent Pending.
 
 script.
@@ -125,7 +136,7 @@ script.
 
   $("#explore").click(() => {
     $('html, body').animate({
-        scrollTop: $("#app").offset().top-80
+        scrollTop: $("#explore_section").offset().top-80
     }, 2000);
   });
   $("#about").click(() => {
@@ -153,8 +164,8 @@ script.
       thisholder
           .append("img").attr("src", "images/thex.png").attr("class", "close_expanded");
 
-      var left_panel = thisholder.append("div").attr("class","col-sm-5 box_column");
-      var right_panel = thisholder.append("div").attr("class","col-sm-7 box_column left_mark");
+      var left_panel = thisholder.append("div").attr("class","col-md-5 box_column");
+      var right_panel = thisholder.append("div").attr("class","col-md-7 box_column left_mark");
 
       left_panel.append("img").attr("class","member_box_img").attr("src",$(this).attr("img_url"));
       left_panel.append("p").attr("class","member_box_title").text($(this).attr("name"));
@@ -230,8 +241,13 @@ script.
           d3.selectAll(".pop_team_box").remove();
           d3.selectAll(".pop_team_box_back").remove();
       });
-      
+
   });
+
+      $( window).scroll(function() {
+          d3.selectAll(".pop_team_box").remove();
+          d3.selectAll(".pop_team_box_back").remove();
+      });
 
 
 script(src="/javascripts/progressWidget.js", type="text/javascript")
