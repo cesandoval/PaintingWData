@@ -18,11 +18,17 @@ export default (state = initialMapState, action) => {
         case t.MAP_INIT: {
             const { instance, datasetsLayers } = action
             // Sets the camera to the voxels' bbox
-            // const bbox = datasetsLayers[0].bbox
             const bbox = state.bbox
+            // let diagonal = Math.sqrt(
+            //     Math.pow(bbox[0][2][0] - bbox[0][0][0], 2) +
+            //         Math.pow(bbox[0][2][1] - bbox[0][0][1], 2)
+            // )
+            // instance.camera.near = diagonal * 5
+            // instance.camera.updateProjectionMatrix()
 
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
+            console.log(instance.controls.object.position, 'posssssss')
 
             let geometries = Object.assign({}, state.geometries)
 

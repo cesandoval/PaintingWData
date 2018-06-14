@@ -34,12 +34,8 @@ export default class Graph {
 
     // Create a Camera
     initCamera(width, height) {
-        var camera = new THREE.PerspectiveCamera(
-            90,
-            width / height,
-            0.01,
-            15000
-        )
+        // 0.1 = [70-2.78-0.001]
+        var camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 15000)
         camera.position.y = 300
         camera.lookAt(new THREE.Vector3(0.0, 0.0, 0.0))
         camera.enablePan = true
@@ -144,7 +140,29 @@ export default class Graph {
     initControls(camera, canvas) {
         let controls = new THREE.OrbitControls(camera, canvas)
         controls.enableRotate = false
+
+        console.log(controls.domElement)
+        controls.domElement.addEventListener(
+            'mousewheel',
+            // this.onDocumentMouseWheel,
+            event => {
+                console.log(event, this.controls.object.position)
+            },
+            false
+        )
+
         return controls
+    }
+
+    onDocumentMouseWheel(event) {
+        console.log(949494499)
+        console.log(event)
+        console.log(this.controls)
+        // var fovMAX = 160;
+        // var fovMIN = 1;
+        // camera.fov -= event.wheelDeltaY * 0.05;
+        // camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
+        // camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
     }
 
     // Appends canvas onto the element

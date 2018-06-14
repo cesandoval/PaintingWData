@@ -45,6 +45,10 @@ export default class Pixels {
         // Define the Shader
         this.shaderText = shaderText
 
+        this.zHeight =
+            Math.log(graph.controls.object.position.y) / 1000 > 0
+                ? Math.log(graph.controls.object.position.y) / 1000
+                : 0.00000001
         if (!vLang) {
             // Sanity Check
             if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -497,13 +501,21 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
+        // console.log(0.3 + this.layerN * 0.001, 'ZHEIGHTTTTTT')
+        // console.log(0.00001 + this.layerN * 0.00001, 'ZHEIGHTTTTTT')
+        // 2.78 = .0001
+        // 70 = .01
+        // Math.log(70)/100 = 0.0042626798770413156
+        // Math.log(2)/1000 = 0.00102
+        // Log y distance
+        let layerHeightValue = this.zHeight + this.layerN * 0.00001
+        console.log(layerHeightValue)
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
-            // console.log(currIndex)
             translations.setXYZ(
                 currIndex,
                 dataArray[i],
-                0.3 + this.layerN * 0.001,
+                layerHeightValue,
                 dataArray[i + 1]
             )
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);
