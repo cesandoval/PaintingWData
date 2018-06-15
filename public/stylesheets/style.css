@@ -1139,6 +1139,7 @@ p {
     transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
     overflow: hidden;
+    height: 30vh;
   }
 
   .showcase-panel img {
@@ -1156,6 +1157,7 @@ p {
 
 .showcase-panel div {
     overflow: hidden;
+    height: 100%;
 }
 
 .showcase-panel img {
