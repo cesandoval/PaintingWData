@@ -639,7 +639,7 @@ textarea:focus, .form-control:focus, input:focus, input:active{
 
 .footer p {
     font-family: 'Roboto', sans-serif;
-    font-size: 2vmin;
+    font-size: 15px;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -1307,4 +1307,8 @@ p {
 
 
 
+}
+
+.footer span {
+    font-size: 12px;
 }
