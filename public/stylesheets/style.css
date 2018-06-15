@@ -1358,3 +1358,20 @@ p {
     right: 10px;
     top: 10px;
 }
+
+.blogs_container {
+    min-height: 800px;
+}
+
+.blog-panel {
+
+    height: 30vh;
+}
+
+.play-btn {
+    width: 30px !important;
+    height: 30px !important;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
