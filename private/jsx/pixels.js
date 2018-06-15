@@ -501,15 +501,8 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
-        // console.log(0.3 + this.layerN * 0.001, 'ZHEIGHTTTTTT')
-        // console.log(0.00001 + this.layerN * 0.00001, 'ZHEIGHTTTTTT')
-        // 2.78 = .0001
-        // 70 = .01
-        // Math.log(70)/100 = 0.0042626798770413156
-        // Math.log(2)/1000 = 0.00102
-        // Log y distance
+        // Sets the height of the pixel layer according to how close the camera is to the base plane
         let layerHeightValue = this.zHeight + this.layerN * 0.00001
-        console.log(layerHeightValue)
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
             translations.setXYZ(

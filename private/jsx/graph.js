@@ -4,6 +4,7 @@ export default class Graph {
     constructor(canvasElement, height, width) {
         // Initialize a Canvas for Three.js
         // + all this necessary to see things
+        this.near = 0.1
         this.canvas = canvasElement
         this.clientHeight = height
         this.clientWidth = width
@@ -141,12 +142,24 @@ export default class Graph {
         let controls = new THREE.OrbitControls(camera, canvas)
         controls.enableRotate = false
 
-        console.log(controls.domElement)
+        // Adds an event listener that modifies the camera's frustum near plane to be behind the camera if necessary
         controls.domElement.addEventListener(
             'mousewheel',
-            // this.onDocumentMouseWheel,
-            event => {
-                console.log(event, this.controls.object.position)
+            () => {
+                if (this.controls.object.position.y <= this.near) {
+                    this.camera.near = this.controls.object.position.y / 10
+                    this.camera.updateProjectionMatrix()
+                    console.log('Modified Camera Frustum Near Plane')
+                } else if (
+                    this.camera.near < this.near &&
+                    this.controls.object.position.y > this.near
+                ) {
+                    this.camera.near = this.near
+                    this.camera.updateProjectionMatrix()
+                    console.log(
+                        'Modified Camera Frustum Near Plane Back to Original'
+                    )
+                }
             },
             false
         )
@@ -154,10 +167,7 @@ export default class Graph {
         return controls
     }
 
-    onDocumentMouseWheel(event) {
-        console.log(949494499)
-        console.log(event)
-        console.log(this.controls)
+    onDocumentMouseWheel() {
         // var fovMAX = 160;
         // var fovMIN = 1;
         // camera.fov -= event.wheelDeltaY * 0.05;
