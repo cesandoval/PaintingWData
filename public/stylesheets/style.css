@@ -1152,9 +1152,13 @@ p {
     background: rgba(0,0,0,0.2);
 }
 
-.showcase-panel div {
+.showcase-panel>div {
     overflow: hidden;
     height: 100%;
+}
+
+.showcase-panel div {
+    overflow: hidden;
 }
 
 .showcase-panel img {
