@@ -18,7 +18,6 @@ export default (state = initialMapState, action) => {
         case t.MAP_INIT: {
             const { instance, datasetsLayers } = action
             // Sets the camera to the voxels' bbox
-            // const bbox = datasetsLayers[0].bbox
             const bbox = state.bbox
 
             // Add the map to the canvas
