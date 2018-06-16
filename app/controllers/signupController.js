@@ -38,7 +38,6 @@ var signUpStrategy =
     function(req, email, password, done) { 
         User.findOne({
            where: {email: email},
-      
         }).then(function(user) {
           
            if(user){
@@ -65,6 +64,15 @@ var signUpStrategy =
             newUser.password = hash;
             newUser.verified = false;
             newUser.urlLink = id;
+
+            if(!req.body.use.length || !req.body.industry.length || !req.body.referal.length)
+              return done(null, false, req.flash('signUpMessage',"Please make sure to complete the survey, thanks!"));
+
+            //survey results
+            newUser.use = req.body.use;
+            newUser.industry = req.body.industry;
+            newUser.referal = req.body.referal;
+
             newUser.save().then(function(){
               //If testing locally change url to:  http://localhost:3000/users/verify/'
               mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
@@ -109,7 +117,6 @@ var loginStrategy = new LocalStrategy({
         return done(null, false, req.flash('loginMessage', "login failed"));
        }// do this if failed.
     ); 
-
   });
 
 /* Make Oauth call to facebook, retrieve information from facebook and store it in "profile" variable

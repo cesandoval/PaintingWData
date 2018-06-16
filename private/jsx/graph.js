@@ -4,6 +4,7 @@ export default class Graph {
     constructor(canvasElement, height, width) {
         // Initialize a Canvas for Three.js
         // + all this necessary to see things
+        this.near = 0.1
         this.canvas = canvasElement
         this.clientHeight = height
         this.clientWidth = width
@@ -34,12 +35,8 @@ export default class Graph {
 
     // Create a Camera
     initCamera(width, height) {
-        var camera = new THREE.PerspectiveCamera(
-            90,
-            width / height,
-            0.01,
-            15000
-        )
+        // 0.1 = [70-2.78-0.001]
+        var camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 15000)
         camera.position.y = 300
         camera.lookAt(new THREE.Vector3(0.0, 0.0, 0.0))
         camera.enablePan = true
@@ -144,7 +141,38 @@ export default class Graph {
     initControls(camera, canvas) {
         let controls = new THREE.OrbitControls(camera, canvas)
         controls.enableRotate = false
+
+        // Adds an event listener that modifies the camera's frustum near plane to be behind the camera if necessary
+        controls.domElement.addEventListener(
+            'mousewheel',
+            () => {
+                if (this.controls.object.position.y <= this.near) {
+                    this.camera.near = this.controls.object.position.y / 10
+                    this.camera.updateProjectionMatrix()
+                    console.log('Modified Camera Frustum Near Plane')
+                } else if (
+                    this.camera.near < this.near &&
+                    this.controls.object.position.y > this.near
+                ) {
+                    this.camera.near = this.near
+                    this.camera.updateProjectionMatrix()
+                    console.log(
+                        'Modified Camera Frustum Near Plane Back to Original'
+                    )
+                }
+            },
+            false
+        )
+
         return controls
+    }
+
+    onDocumentMouseWheel() {
+        // var fovMAX = 160;
+        // var fovMIN = 1;
+        // camera.fov -= event.wheelDeltaY * 0.05;
+        // camera.fov = Math.max( Math.min( camera.fov, fovMAX ), fovMIN );
+        // camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
     }
 
     // Appends canvas onto the element

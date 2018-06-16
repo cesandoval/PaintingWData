@@ -2,8 +2,9 @@ import * as t from '../types'
 
 const initialInteractionsState = {
     loading: true,
-    panelShow: 'PCoords', // 'VPL' or 'PCoords' or Null.
+    panelShow: 'PCoords', // 'VPL' or 'PCoords' or Null or 'Chart:Density or 'Chart:Bar' or 'Chart:Scatter.
     activeNode: '',
+    refreshVoxels: false,
 }
 
 export default (state = initialInteractionsState, action) => {
@@ -22,6 +23,11 @@ export default (state = initialInteractionsState, action) => {
             const { value } = action
             const activeNode = { activeNode: value }
             return Object.assign({}, state, activeNode)
+        }
+        case t.SET_REFRESHVOXELS: {
+            const { value } = action
+            const refreshVoxels = { refreshVoxels: value }
+            return Object.assign({}, state, refreshVoxels)
         }
         default:
             return state

@@ -69,8 +69,10 @@ class Layers extends React.Component {
                     }
                     return dataset
                 })
-
                 act.importDatasets({ datasets })
+                // Act.mapSetPCoords({
+                //     value: Object.assign({}, this.props.pcoordsValue, brushes),
+                // })
 
                 /*
                 act.sideAddLayers(

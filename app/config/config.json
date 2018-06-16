@@ -4,7 +4,7 @@
     "username": "postgres",
     "password": "postgrespass",
     "database": "PaintingWithData_Riyadh",
-    "host": "localhost",
+    "host": "pwd-develop.cpynefgvbqsq.us-east-1.rds.amazonaws.com",
     "dialect": "postgres"
   },
   "test": {
