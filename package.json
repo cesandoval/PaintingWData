@@ -80,7 +80,7 @@
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
     "yallist": "^3.0.2",
-    "victory": "^0.26.0"
+    "victory": "^0.26.0"  
   },
   "devDependencies": {
     "axios": "^0.15.2",
