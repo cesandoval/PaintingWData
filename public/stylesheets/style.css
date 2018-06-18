@@ -424,9 +424,7 @@ div.title-frame {
 .title_image {
     width:100%;
     padding:13px;
-    /* width:38vh;
-    min-width: 160px;
-    padding-left: 13px; */
+    padding-bottom: 0px;
 }
 
 /*body*/
