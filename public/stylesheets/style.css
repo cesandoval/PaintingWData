@@ -1376,3 +1376,8 @@ p {
     right: 10px;
     top: 10px;
 }
+
+.home-desc {
+    position: fixed;
+    top: 85px;
+}
