@@ -8,18 +8,19 @@
 
 ::-webkit-scrollbar
 {
-  width: 12px;  /* for vertical scrollbars */
-  height: 12px; /* for horizontal scrollbars */
+  width: 7px;  /* for vertical scrollbars */
+  height: 7px; /* for horizontal scrollbars */
 }
 
 ::-webkit-scrollbar-track
 {
-  background: rgba(50, 50, 50, 0.3);
+  background: rgba(0,0,0,0.05);
 }
 
 ::-webkit-scrollbar-thumb
 {
-  background: rgba(100, 100, 100, 0.9);
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
 }
 
 /*body 
