@@ -1158,6 +1158,11 @@ p {
     height: 100%;
 }
 
+.showcase-panel>div {
+    overflow: hidden;
+    height: 100%;
+}
+
 .showcase-panel div {
     overflow: hidden;
 }
@@ -1348,19 +1353,6 @@ p {
     min-height: 800px;
 }
 
-.blog-panel {
-
-    height: 30vh;
-}
-
-.play-btn {
-    width: 30px !important;
-    height: 30px !important;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-
-}
 .footer span {
     font-size: 12px;
 }
@@ -1377,7 +1369,15 @@ p {
     top: 10px;
 }
 
-.home-desc {
-    position: fixed;
-    top: 85px;
+.blog-panel {
+
+    height: 30vh;
+}
+
+.play-btn {
+    width: 30px !important;
+    height: 30px !important;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
