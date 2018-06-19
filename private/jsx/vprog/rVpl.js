@@ -1265,7 +1265,6 @@ class VPL extends React.Component {
 
     render() {
         const nodes = this.props.nodes
-
         return (
             <div className="pull-right col-md-10 vplContainer">
                 <div

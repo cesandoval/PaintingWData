@@ -1,5 +1,19 @@
 import store from './store'
 import * as t from './types'
+/**
+ * @author PaintingWithData
+ * Contains all of the methods that React will use to change Redux state variables.
+ *
+ * Example usage:
+ * import * as Act from '../store/actions'
+ * Act.mapInit({foo: 'bar'})
+ */
+// app
+export const importUserfile = payload =>
+    store.dispatch({
+        type: t.IMPORT_USERFILE,
+        ...payload,
+    })
 
 // datasets
 export const importDatasets = payload =>
@@ -93,6 +107,13 @@ export const setLoading = payload =>
 export const setPanelShow = payload =>
     store.dispatch({
         type: t.SET_PANELSHOW,
+        ...payload,
+    })
+
+// save/import stuff
+export const saveUserFile = payload =>
+    store.dispatch({
+        type: t.SAVE_USERFILE,
         ...payload,
     })
 
