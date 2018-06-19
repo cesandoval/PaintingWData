@@ -17,7 +17,7 @@ function dbfsForDatalayers() {
             var dbfValue = row.dataValues.Datadbf;
             // If there is no Datadbf in this datalayer, then create the missing one, with appropriate properties
             if (dbfValue == null) {
-                dataDbf = Model.Datadbf.build();
+                var dataDbf = Model.Datadbf.build();
                 dataDbf.userId = row.userId;
                 dataDbf.datalayerId = row.rasterval;
                 dataDbf.datafileId = row.datafileId;
@@ -37,9 +37,9 @@ function rasterPropertiesForDatajsons() {
 
     // Find the datajson rows that are missing properties
     // Find the datavoxelIds that are in these rows
-    datajsonsWithoutPropertiesToDatavoxels = {};
+    var datajsonsWithoutPropertiesToDatavoxels = {};
     // Find the datafileIds that are in these rows
-    datajsonsWithoutPropertiesToDatafiles = {};
+    var datajsonsWithoutPropertiesToDatafiles = {};
 
     Model.Datajson.findAll({
     }).then(function(result){
@@ -57,7 +57,7 @@ function rasterPropertiesForDatajsons() {
 
 
         // Find the property that corresponds to a voxel
-        datavoxelToDatafileToProperty = {};
+        var datavoxelToDatafileToProperty = {};
         Model.Datavoxel.findAll({
                include: [
                    {
@@ -71,13 +71,13 @@ function rasterPropertiesForDatajsons() {
                    },
                ]    
         }).then(function(result){
-            for (var key in result) {
+            for (var key1 in result) {
                 // console.log(result[key].dataValues.Datafiles);
-                for (var key2 in result[key].dataValues.Datafiles) {
-                    datafile = result[key].dataValues.Datafiles[key2];
+                for (var key2 in result[key1].dataValues.Datafiles) {
+                    var datafile = result[key1].dataValues.Datafiles[key2];
     
                     // If the datavoxel is one of the ones that connect to a datajson with no properties, then continue to deal with it
-                    var datavoxelObjectId = result[key].dataValues.id;
+                    var datavoxelObjectId = result[key1].dataValues.id;
                     if (Object.values(datajsonsWithoutPropertiesToDatavoxels).includes(datavoxelObjectId)){
                         var property = datafile.Datalayers[0].rasterProperty;
                         if ( !(datavoxelObjectId in datavoxelToDatafileToProperty)) {
@@ -92,14 +92,14 @@ function rasterPropertiesForDatajsons() {
 
             // Use the datavoxelToProperties object
             // Update all datajsons that are missing, with the correctly formatted new rasterProperty
-            for (var key in datajsonsWithoutPropertiesToDatavoxels) {
-                var firstKey = datajsonsWithoutPropertiesToDatavoxels[key];
-                var secondKey = datajsonsWithoutPropertiesToDatafiles[key];
+            for (var k in datajsonsWithoutPropertiesToDatavoxels) {
+                var firstKey = datajsonsWithoutPropertiesToDatavoxels[k];
+                var secondKey = datajsonsWithoutPropertiesToDatafiles[k];
                 var desiredProperty = datavoxelToDatafileToProperty[firstKey][secondKey];
 
                 Model.Datajson.update(
                     { rasterProperty:  desiredProperty },
-                    { where: {id: key} }
+                    { where: {id: k} }
                 )
                 .then(function(result) {
                     console.log("after update:", result);
@@ -126,7 +126,7 @@ function runAll() {
         dbfsForDatalayers();
         rasterPropertiesForDatajsons();    
     });
-    promise.then(function(result) {
+    promise.then(function() {
         console.log("done running run-me.js");
     });
 }
