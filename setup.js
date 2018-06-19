@@ -10,7 +10,7 @@
  * @author Christopher Xu
  * @since  06.07.2018
  */
-'use strict';
-var fs = require('fs');
-fs.createReadStream('.sample-env')
-  .pipe(fs.createWriteStream('.env'));
+// 'use strict';
+// var fs = require('fs');
+// fs.createReadStream('.sample-env')
+//   .pipe(fs.createWriteStream('.env'));

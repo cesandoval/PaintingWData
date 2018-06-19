@@ -30,15 +30,15 @@ export default class App extends React.Component {
          * Promises. Fetches the saved state, and then updates the Redux variables
          * accordingly.
          */
-        fetch(`/importuserfile/${datavoxelId}`, {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(data => data.json())
-            .then(newState => {
-                Act.importUserfile(newState)
-            })
-            .catch(e => console.log('importUserfile() error', e))
+        // fetch(`/importuserfile/${datavoxelId}`, {
+        //     method: 'GET',
+        //     credentials: 'include',
+        // })
+        //     .then(data => data.json())
+        //     .then(newState => {
+        //         Act.importUserfile(newState)
+        //     })
+        //     .catch(e => console.log('importUserfile() error', e))
         /*
          * TODO: The following should be ran when we don't have anything yet to
          * import.

@@ -62,6 +62,9 @@ export default class Graph {
         // Puts canvas onto the page.
         this.insertCanvas(this.canvas, this.renderer.domElement)
 
+        this.frameTime = new Date().getTime()
+        this.startTime = new Date().getTime()
+
         this.renderUntil = Date.now()
         this.untilTime = this.renderUntil - Date.now()
         /**

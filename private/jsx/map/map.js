@@ -59,17 +59,17 @@ class MapCanvas extends React.Component {
             this.setState({ mapInited: true })
         }
 
-        console.log('map componentWillReceiveProps()', { newProps })
-        // init the map options by default/userfile value from redux when map has started.
-        if (newProps.mapStarted && !this.state.mapStarted) {
-            const options = this.props.options
+        // console.log('map componentWillReceiveProps()', { newProps })
+        // // init the map options by default/userfile value from redux when map has started.
+        // if (newProps.mapStarted && !this.state.mapStarted) {
+        //     const options = this.props.options
 
-            if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
-            if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
-            if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
+        //     if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
+        //     if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
+        //     if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
 
-            this.setState({ mapStarted: true })
-        }
+        //     this.setState({ mapStarted: true })
+        // }
     }
 
     exportSVG(geoms) {
@@ -283,14 +283,14 @@ class MapCanvas extends React.Component {
                             </MenuItem>
                         </DropdownButton>
 
-                        <Button
+                        {/* <Button
                             id={`save-userfile`}
                             onClick={() => {
                                 this.saveFile()
                             }}
                         >
                             Save Userfile
-                        </Button>
+                        </Button> */}
                     </div>
                     <Button
                         id="zoomShow"

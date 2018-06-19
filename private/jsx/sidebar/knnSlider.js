@@ -206,7 +206,7 @@ class KnnSlider extends React.Component {
                             id="knnSlider"
                             type="range"
                             onChange={this.handleSlide}
-                            value={this.props.knn}
+                            // value={this.props.knn}
                             min="0"
                             max="8"
                             defaultValue="0"
