@@ -83,7 +83,6 @@ function rasterPropertiesForDatajsons() {
                         if ( !(datavoxelObjectId in datavoxelToDatafileToProperty)) {
                             datavoxelToDatafileToProperty[datavoxelObjectId] = {};
                         }
-                        datafileToProperty = {};
                         datavoxelToDatafileToProperty[datavoxelObjectId][datafile.id] = property;
                     }
                 }
