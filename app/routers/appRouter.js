@@ -26,6 +26,11 @@ var passport = require('passport'),
     res.render('blog', {userSignedIn: req.isAuthenticated(), user: req.user});
   });
 
+  router.get('/blogs', function (req, res) {
+    res.render('blogs', {userSignedIn: req.isAuthenticated(), user: req.user});
+  });
+
+
   router.get('/upload', isAuthenticated, fileUploadController.show);
   router.post('/upload', fileUploadController.upload);
 

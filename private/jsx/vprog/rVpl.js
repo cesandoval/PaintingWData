@@ -854,14 +854,14 @@ class VPL extends React.Component {
             const dataMin = 0 // should be zero
 
             let { min, max } = node.filter
-            console.log('[filter]', { min, max })
+            // console.log('[filter]', { min, max })
             const range = dataMax - dataMin
 
-            console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+            // console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
             min = dataMin + min * range
             max = dataMin + max * range
             sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-            console.log('[filter] After', { min, max }, sizeArray)
+            // console.log('[filter] After', { min, max }, sizeArray)
         }
 
         if (NodeType[node.type].class == 'logic') {

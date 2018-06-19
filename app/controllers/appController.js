@@ -30,7 +30,7 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
   }).then(function(screenshotLinks) {
     var images = [];
     screenshotLinks.forEach(function(screenshotLink) {
-      images.push(screenshotLink.image);
+      images.push([screenshotLink.image,screenshotLink.DatavoxelId,screenshotLink.createdAt]);
     });
     console.log('latest images are', images)
     res.render('index', {userSignedIn: req.isAuthenticated(), user: req.user, screenshots: images});

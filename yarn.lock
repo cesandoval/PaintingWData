@@ -10281,6 +10281,10 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+simple-scrollbar@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/simple-scrollbar/-/simple-scrollbar-0.4.0.tgz#cd0b7a4f8dcf7c0bb8d4c83b0ac5b0acebf2579b"
+
 "simplesmtp@~0.2 || ~0.3.30", simplesmtp@~0.3.30:
   version "0.3.35"
   resolved "https://registry.yarnpkg.com/simplesmtp/-/simplesmtp-0.3.35.tgz#017b1eb8b26317ac36d2a2a8a932631880736a03"

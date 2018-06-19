@@ -123,13 +123,14 @@ class Slider extends React.Component {
            */
         return (
             <foreignObject x={20} y={65}>
-                <div style={{ position: 'fixed', width: '157px' }}>
+                <div style={{ width: '157px' }}>
                     <ASlider
                         min={0}
                         max={1}
                         step={0.05}
                         value={this.state.value}
                         onChange={this.changeOpacity}
+                        tipFormatter={null}
                     />
                     <style jsx>{`
                         :global(.ant-slider) {
@@ -137,9 +138,11 @@ class Slider extends React.Component {
                             &:hover {
                                 :global(.ant-slider-track) {
                                     background-color: #b5b5b5;
+                                    transition-property: background-color, width;
                                 }
                                 :global(.ant-slider-handle) {
                                     border-color: #757575;
+                                    transition-property: left, border-color;
                                 }
                             }
                         }
