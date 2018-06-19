@@ -38,19 +38,26 @@ function rasterPropertiesForDatajsons() {
     // Find the datajson rows that are missing properties
     // Find the datavoxelIds that are in these rows
     datajsonsWithoutPropertiesToDatavoxels = {};
+    // Find the datafileIds that are in these rows
+    datajsonsWithoutPropertiesToDatafiles = {};
+
     Model.Datajson.findAll({
     }).then(function(result){
+
         for (var key in result) {
             var datajsonObject = result[key].dataValues;
             if (datajsonObject.rasterProperty == null) {
                 // console.log("datajson", result[key].dataValues.id, "has null rasterProperty");
                 datajsonsWithoutPropertiesToDatavoxels[ datajsonObject.id ] = datajsonObject.datavoxelId;
+                datajsonsWithoutPropertiesToDatafiles[ datajsonObject.id ] = datajsonObject.datafileId;
             }
         }
         console.log("datajsonsWithoutPropertiesToDatavoxels: ", datajsonsWithoutPropertiesToDatavoxels);
+        console.log("datajsonsWithoutPropertiesToDatafiles: ", datajsonsWithoutPropertiesToDatafiles);
+
 
         // Find the property that corresponds to a voxel
-        datavoxelToProperties = {};
+        datavoxelToDatafileToProperty = {};
         Model.Datavoxel.findAll({
                include: [
                    {
@@ -73,37 +80,25 @@ function rasterPropertiesForDatajsons() {
                     var datavoxelObjectId = result[key].dataValues.id;
                     if (Object.values(datajsonsWithoutPropertiesToDatavoxels).includes(datavoxelObjectId)){
                         var property = datafile.Datalayers[0].rasterProperty;
-                        if ( !(datavoxelObjectId in datavoxelToProperties)) {
-                            datavoxelToProperties[datavoxelObjectId] = "";
+                        if ( !(datavoxelObjectId in datavoxelToDatafileToProperty)) {
+                            datavoxelToDatafileToProperty[datavoxelObjectId] = {};
                         }
-                        datavoxelToProperties[datavoxelObjectId] += property + ",";    
+                        datafileToProperty = {};
+                        datavoxelToDatafileToProperty[datavoxelObjectId][datafile.id] = property;
                     }
                 }
             }
-            console.log("datavoxelToProperties: ", datavoxelToProperties);
+            console.log("datavoxelToDatafileToProperty: ", datavoxelToDatafileToProperty);
 
-            // Change the dictionary of ids to string (comma-separated-words)
-            // into a dictionary of ids to dictionary (each value is a different property)
-            for (key in datavoxelToProperties) {
-                value = datavoxelToProperties[key];
-                result = {};
-                list = value.split(",");
-                list.pop();
-                i = 1;
-                for (var a in list) {
-                    result[i] = list[a];
-                    i += 1;
-                }
-                datavoxelToProperties[key] = result;
-            }
-            console.log("datavoxelToProperties: ", datavoxelToProperties);
-    
             // Use the datavoxelToProperties object
             // Update all datajsons that are missing, with the correctly formatted new rasterProperty
             for (var key in datajsonsWithoutPropertiesToDatavoxels) {
-                var datajsonWithoutProperties = datajsonsWithoutPropertiesToDatavoxels[key];
+                var firstKey = datajsonsWithoutPropertiesToDatavoxels[key];
+                var secondKey = datajsonsWithoutPropertiesToDatafiles[key];
+                var desiredProperty = datavoxelToDatafileToProperty[firstKey][secondKey];
+
                 Model.Datajson.update(
-                    { rasterProperty:  JSON.stringify(datavoxelToProperties[datajsonsWithoutPropertiesToDatavoxels[key]]) },
+                    { rasterProperty:  desiredProperty },
                     { where: {id: key} }
                 )
                 .then(function(result) {
