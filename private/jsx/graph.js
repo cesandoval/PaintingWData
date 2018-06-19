@@ -246,7 +246,7 @@ export default class Graph {
     insertCanvas(element, canvas) {
         element.appendChild(canvas)
     }
-  
+
     /**
      *
      */

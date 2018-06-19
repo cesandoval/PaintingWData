@@ -1,6 +1,6 @@
-/*global datavoxelId*/
+// /*global datavoxelId*/
 import React from 'react'
-import * as Act from './store/actions.js'
+// import * as Act from './store/actions.js'
 import Sidebar from './sidebar/sidebar'
 import Options from './options/options'
 import Map from './map/map'
