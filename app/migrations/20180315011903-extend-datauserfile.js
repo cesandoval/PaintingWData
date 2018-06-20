@@ -1,29 +1,29 @@
-// 'use strict';
+'use strict';
 
-// module.exports = {
-//   up: (queryInterface, Sequelize) => {
-//     /*
-//       Add altering commands here.
-//       Return a promise to correctly handle asynchronicity.
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    /*
+      Add altering commands here.
+      Return a promise to correctly handle asynchronicity.
 
-//       Example:
-//       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
-//     */
-//     queryInterface.addColumn('Datauserfile',
-//     'state',
-//     {
-//         type: Sequelize.JSON,
-//     })
-//   },
+      Example:
+      return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+    */
+    // queryInterface.addColumn('Datauserfile',
+    // 'state',
+    // {
+    //     type: Sequelize.JSON,
+    // })
+  },
 
-//   down: (queryInterface, Sequelize) => {
-//     /*
-//       Add reverting commands here.
-//       Return a promise to correctly handle asynchronicity.
+  down: (queryInterface, Sequelize) => {
+    /*
+      Add reverting commands here.
+      Return a promise to correctly handle asynchronicity.
 
-//       Example:
-//       return queryInterface.dropTable('users');
-//     */
+      Example:
+      return queryInterface.dropTable('users');
+    */
 //     queryInterface.addColumn('Datauserfile',
 //     'map',
 //     {
@@ -47,5 +47,5 @@
 //     {
 //         type: Sequelize.STRING,
 //     })
-//   }
-// };
+  }
+};
