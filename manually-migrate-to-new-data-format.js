@@ -1,5 +1,31 @@
 var Model = require('./app/models')
 
+// UPDATE RASTERVAL OF ALL DATALAYERS TO 0, 1, 2, 3, ...
+function updateDatalayersRasterval(){
+    Model.Datalayer.findAll({
+
+    }).then(function(result)) {
+        for (var key in result) {
+            var datalayerObj = result[key];
+            var counters = {}; // dictionary mapping Datafile to Highest rasterval for that datafile
+            if ( !(datalayerObj.datafileId in counters)) {
+                counters[datalayerObj.datafileId] = -1;
+            }
+            counters[datalayerObj.datafileId] = counters[datalayerObj.datafileId] + 1;
+            
+            // do the update
+            Model.Datajson.update(
+                { rasterval: counters[datalayerObj.datafileId] },
+                { where: { id: datalayerObj.id } }
+            ).then(function(result) {
+                // console.log('after update:', result)
+            })
+
+        }
+    }
+}
+
+
 // FIND DATALAYERS THAT ARE MISSING DATADBFS, BUILD AND SAVE MISSING DATADBFS FOR THEM
 function dbfsForDatalayers() {
     Model.Datalayer.findAll({
@@ -131,13 +157,21 @@ function rasterPropertiesForDatajsons() {
 
 // FUNCTION THAT IS RUN WHEN THIS FILE IS RUN
 function runAll() {
-    console.log('starting run-me.js')
-    var promise = new Promise(function() {
-        dbfsForDatalayers()
-        rasterPropertiesForDatajsons()
+    console.log('starting manually-migrate-to-new-data-format.js');
+    var promiseOne = new Promise(function() {
+        var promiseTwo = new Promise(function() {
+            updateDatalayersRasterval();
+        })
+        promiseTwo.then(function() {
+            console.log('done updateDatalayersRasterval');
+            dbfsForDatalayers();
+            rasterPropertiesForDatajsons();    
+        })
     })
-    promise.then(function() {
-        console.log('done running run-me.js')
+    promiseOne.then(function() {
+        console.log('done dbfsForDatalayers');
+        console.log('done rasterPropertiesForDatajsons');
+        console.log('done manually-migrate-to-new-data-format.js');
     })
 }
 
