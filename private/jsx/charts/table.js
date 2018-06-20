@@ -24,9 +24,9 @@ class Table extends React.Component {
 
     render() {
         this.state.columns.unshift({
-            Header: 'ID',
+            Header: 'Voxel ID',
             id: 'row',
-            maxWidth: 50,
+            maxWidth: 60,
             filterable: false,
             resizable: false,
             Cell: row => {
@@ -43,6 +43,11 @@ class Table extends React.Component {
                     showPageJump={false}
                     defaultPageSize={50}
                     pageSizeOptions={[25, 50, 100, 500, 1000]}
+                    className="-highlight"
+                    style={{
+                        // This will force the table body to overflow and scroll, since there is not enough room
+                        height: '72.5vh',
+                    }}
                 />
             </div>
         )

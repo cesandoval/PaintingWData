@@ -184,14 +184,12 @@ class MapCanvas extends React.Component {
                         width: '75vw',
                         position: 'fixed',
                         overflow: 'hidden',
-                        top: '12.5vh',
+                        top: '15vh',
                         right: '2.5vw',
                         zIndex: '100',
                         opacity: 0.9,
                         display: panelShow == 'TABLE' ? '' : 'none',
-                        height: '75vh',
                         border: 'none',
-                        overflowY: 'scroll',
                     }}
                 >
                     <Table />
