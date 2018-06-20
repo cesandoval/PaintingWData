@@ -8,7 +8,7 @@ import * as Act from '../store/actions'
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
 class PCoords extends React.Component {
-    // TODO: ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAY
+    // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
 
     constructor(props) {
@@ -61,6 +61,9 @@ class PCoords extends React.Component {
                         .render()
                         .updateAxes()
                 }
+                if (nprops.pcoordsValue != 'undefined') {
+                    this.pc.brushExtents(nprops.pcoordsValue)
+                }
             }
             if (!this.state.started) {
                 this.setState({ started: true })
@@ -85,6 +88,8 @@ class PCoords extends React.Component {
                 const hashedMins = {}
                 const hashedMaxs = {}
                 const layersHashProperty = {}
+                // var layerIndeces = {}
+                // const layersNameProperty = {}
                 for (let i = 0; i < nprops.layers.length; i++) {
                     mins[i] = nprops.layers[i].geojson.minMax[0]
                     maxs[i] = nprops.layers[i].geojson.minMax[1]
@@ -104,6 +109,8 @@ class PCoords extends React.Component {
                 this.hashedMins = hashedMins
                 this.hashedMaxs = hashedMaxs
                 this.layersHashProperty = layersHashProperty
+                // this.layersNameProperty = layersNameProperty
+                // this.brushed = false;
 
                 // TODO: Assumes that each layer has different length.
                 // Assumes that all of the layers have the same length
@@ -118,6 +125,8 @@ class PCoords extends React.Component {
 
                 this.setState({ visibleLayers: visibleNodes.length })
 
+                // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
+                // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
                 let numLayers = visibleNodes.length
                 // TODO: should be reuse, so rename numLayer to visibleLayersLength
 
@@ -151,6 +160,8 @@ class PCoords extends React.Component {
                 }
 
                 this.build(dictBuild)
+                // this.layerIndeces = layerIndeces
+                // this.layersNameProperty = layersNameProperty
             }
         }
 
@@ -245,6 +256,8 @@ class PCoords extends React.Component {
                 brushes[layerNames[i]] = [selection[0], selection[1]]
             }
         }
+        this.minObjs = minObjs
+        this.maxObjs = maxObjs
 
         /*
         const lowBnd = this.lowBnd
@@ -252,12 +265,10 @@ class PCoords extends React.Component {
         // console.log({ highBnd, lowBnd })
         */
 
-
         /*
         const remap = function(x, i, mins, maxs) {
             return (
-                (highBnd - lowBnd) *
-                    ((x - mins[layerKey]) / (maxs[layerKey] - mins[layerKey])) +
+                (highBnd - lowBnd) * ((x - mins[i]) / (maxs[i] - mins[i])) +
                 lowBnd
             )
         }
@@ -271,47 +282,11 @@ class PCoords extends React.Component {
             const name = `${layer.userLayerName}_${layer.propertyName}`
             // Checks if the layer has been filtered, if it has, changes the min and max values
             if (layerNames.includes(name)) {
-                // let pixels = this.props.geometries[layer.layerKey]
-
-                const maxVal = this.maxVal[this.layerIndeces[dictName]]
-                const minVal = this.minVal[this.layerIndeces[dictName]]
+                const maxVal = this.hashedMaxs[layer.layerKey]
+                const minVal = this.hashedMins[layer.layerKey]
 
                 const max = maxObjs[name]
                 const min = minObjs[name]
-
-                // if (node.filter) {
-                //     const dataMax = math.max(sizeArray)
-                //     const dataMin = math.min(sizeArray)
-
-                //     let { min, max } = node.filter
-                //     console.log('[filter]', { min, max })
-                //     const range = dataMax - dataMin
-
-                //     console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
-                //     min = dataMin + min * range
-                //     max = dataMin + max * range
-                //     sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-                //     console.log('[filter] After', { min, max }, sizeArray)
-                // }
-
-
-                // this was misbehaving
-                // if (!(minObjs[name] && maxObjs[name])) continue
-                /*
-
-                pixels.material.uniforms.min.value = remap(
-                    minObjs[name],
-                    layer.layerKey,
-                    this.hashedMins,
-                    this.hashedMaxs
-                )
-                pixels.material.uniforms.max.value = remap(
-                    maxObjs[name],
-                    layer.layerKey,
-                    this.hashedMins,
-                    this.hashedMaxs
-                )
-                */
 
                 const filter = { max, min, maxVal, minVal }
                 console.log(`PCoords`, filter)
