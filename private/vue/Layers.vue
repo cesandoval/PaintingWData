@@ -1,126 +1,162 @@
-<template lang="pug">
-  .container
-    .container(style = "margin-top: 10px; margin-left: 0; width: 100vw;").spacing-large
-      .row.spacing
-        .col-md-9
-          h1 Layers
-
-      //- if (layerAlert)
-      template(v-if="layerAlert")
-        .alert.alert-danger(role='alert') {{layerAlert}}
-
-      .row
-        .col-md-6
-          h4.spacing This is your library of layers. Select layers below that you would like to add to a voxel project.
-          p To compute a voxel first select the set of layers you want to combine. To select a layer click on it once, to deselect click it again.
-
-
-      .row
-        .col-md-6.spacing
-          //- if datafiles.length == 0
-          template(v-if="datafiles.length == 0")
-            p.spacing-large(role='alert' style = "margin-top:20px" ) No layers found  &nbsp;
-            <br>
-            div
-              a(href = "/upload")
-                .btn.btn.btn-outline-primary Upload a layer
-          //- if datafiles.length != 0
-          template(v-if="datafiles.length != 0")
-            div
-              a(href = "/upload")
-                .btn.btn.btn-outline-primary Upload a layer
-
-    .container
-      .row
+<template>
+  <div class="container">
+  <div style="margin-top: 10px; margin-left: 0; width: 100vw;" class="container spacing-large">
+    <div class="row spacing">
+      <div class="col-md-9">
+        <h1>Layers</h1>
+      </div>
+    </div>
+    <!-- if (layerAlert) -->
+    <template v-if="layerAlert">
+      <div role="alert" class="alert alert-danger">{{layerAlert}}</div>
+    </template>
+    <div class="row">
+      <div class="col-md-6">
+        <h4 class="spacing">This is your library of layers. Select layers below that you would like to add to a voxel project.</h4>
+        <p>To compute a voxel first select the set of layers you want to combine. To select a layer click on it once, to deselect click it again.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 spacing">
+        <!-- //- if datafiles.length == 0 -->
+        <template v-if="datafiles.length == 0">
+          <p role="alert" style="margin-top:20px" class="spacing-large">No layers found  &nbsp;</p><br>
+          <div><a href="/upload">
+              <div class="btn btn btn-outline-primary">Upload a layer</div></a></div>
+        </template>
+        <!-- //- if datafiles.length != 0 -->
+        <template v-if="datafiles.length != 0">
+          <div><a href="/upload">
+              <div class="btn btn btn-outline-primary">Upload a layer</div></a></div>
+        </template>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row"></div>
+    <!-- 
       //- for datafile in datafiles
-        //- if datafile.Datalayers[0]
-      template(v-for="datafile in datafiles", v-if="datafile.Datalayers[0]")
-          .col-sm-6.col-md-4
-            .thumbnail.datalayer(selected = "false", style="z-index: 1;")
-              .caption
-                div(style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
-              div(:id="`map_${datafile.id}`", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
-              .caption(style="padding-left: 5%;")
-                  .layername
-                    h3(style="font-weight: 700;") {{datafile.Datalayers[0].userLayerName}}
-                    br
-                    label.layer-label Layer Name
-                    p(display='inline').label-body {{datafile.Datalayers[0].layername}}
-                  .userlayername
-                    label.layer-label User Layer Name
-                    p(display='inline').label-body {{datafile.Datalayers[0].userLayerName}}
-                  .property
-                    label.layer-label Data Property
-                    p.label-body {{datafile.Datalayers[0].rasterProperty}}
-                  //- if datafile.Datalayers[0].location.length > 0
-                  template(v-if="datafile.Datalayers[0].location.length > 0")
-                    .location
-                      label.layer-label Layer Location
-                      p.label-body {{datafile.Datalayers[0].location}}
-
-              p.label-body.text-center
-                a.modal-button.btn(id="modal-toggle", data-toggle="modal", :data-target="`#mapView_${datafile.id}`", :data-map-id="datafile.id") View Layer
-
-          div.modal.fade.bs-example-modal-lg(:id="`mapView_${datafile.id}`" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;" @show.bs.modal="showBSModal" @hidden.bs.modal="hiddenBSModal")
-            div.modal-dialog.modal-lg(role="document")
-              div.modal-content(style="z-index: 10000!important;")
-                div.modal-header
-                  button(type="button", class="close", data-dismiss="modal", :data-map-id="datafile.id", aria-label="Close")
-                    span(aria-hidden="true") &times;
-                  .row.spacing
-                    h1.center {{datafile.Datalayers[0].userLayerName}}
-                div.modal-body
-                  .row
-                    .col-md-6
-                      //- script.
-                        //- var id = {{datafile.id};}
-                        //- var size = #{size};
-                      div(:id="`map_thumbnail_${datafile.id}`", style="width: 400px; height: 400px; margin:0 auto;").spacing
-                    .col-md-6
-                      label.layer-label Layer Name
-                        p(display='inline').label-body {{datafile.Datalayers[0].layername}}
-                      .property
-                        label.layer-label EPSG Code
-                          p.label-body {{datafile.Datalayers[0].epsg}}
-                      //- if datafile.Datalayers[0].description.length > 0
-                      template(v-if="datafile.Datalayers[0].description.length > 0")
-                        .description
-                          label.layer-label Layer Description
-                          p.label-body {{datafile.Datalayers[0].description}}
-                      label.layer-label Uploaded On
-                        p.label-body {{new Date(datafile.Datalayers[0].createdAt).toUTCString()}}
-
-
-    //- if datafiles.length != 0
-    template(v-if="datafiles.length != 0")
-      .container.spacing-large
-        .row
-          .col-md-6
-            .row
-                h1.spacing-large Compute a Voxel
-            .row
-              form(method='post', action='/layers')
-                input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Project name...')
-                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden')
-                <br>
-                .row.spacing
-                  .col-md-3
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;") Density
-                  .col-md-9
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;")   10000 
-                    input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
-                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
-                <br>
-
-                .row.spacing
-                  .col-md-3
-                    .input-group-btn
-                      button.btn.btn-outline-primary(type='submit', name="layerButton", value="compute") Compute
-                  .col-md-3
-                    .input-group-btn.text-center
-                      button.btn.btn-outline-primary(type='submit', name="layerButton", value="delete", formaction="/layers") Delete Layer
-    
-    div.spacing-large
+       //- if datafile.Datalayers[0]
+    -->
+    <template v-for="datafile in datafiles" v-if="datafile.Datalayers[0]">
+      <div class="col-sm-6 col-md-4">
+        <div selected="false" style="z-index: 1;" class="thumbnail datalayer">
+          <div class="caption">
+            <div style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;"></div>
+          </div>
+          <div :id="`map_${datafile.id}`" style="width: 90%; height: 300px; margin:0 auto;" class="leafletMap"></div>
+          <div style="padding-left: 5%;" class="caption">
+            <div class="layername">
+              <h3 style="font-weight: 700;">{{datafile.Datalayers[0].userLayerName}}</h3><br/>
+              <label class="layer-label">Layer Name</label>
+              <p display="inline" class="label-body">{{datafile.Datalayers[0].layername}}</p>
+            </div>
+            <div class="userlayername">
+              <label class="layer-label">User Layer Name</label>
+              <p display="inline" class="label-body">{{datafile.Datalayers[0].userLayerName}}</p>
+            </div>
+            <div class="property">
+              <label class="layer-label">Data Property</label>
+              <p class="label-body">{{datafile.Datalayers[0].rasterProperty}}</p>
+            </div>
+            //- if datafile.Datalayers[0].location.length > 0
+            <template v-if="datafile.Datalayers[0].location.length &gt; 0">
+              <div class="location">
+                <label class="layer-label">Layer Location</label>
+                <p class="label-body">{{datafile.Datalayers[0].location}}</p>
+              </div>
+            </template>
+          </div>
+          <p class="label-body text-center"><a id="modal-toggle" data-toggle="modal" :data-target="`#mapView_${datafile.id}`" :data-map-id="datafile.id" class="modal-button btn">View Layer</a></p>
+        </div>
+      </div>
+      <div :id="`mapView_${datafile.id}`" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel" style="z-index: 10000;" @show.bs.modal="showBSModal" @hidden.bs.modal="hiddenBSModal" class="modal fade bs-example-modal-lg">
+        <div role="document" class="modal-dialog modal-lg">
+          <div style="z-index: 10000!important;" class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" :data-map-id="datafile.id" aria-label="Close" class="close"><span aria-hidden="true">&times;</span></button>
+              <div class="row spacing">
+                <h1 class="center">{{datafile.Datalayers[0].userLayerName}}</h1>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <!--
+                    //- script.
+                      //- var id = {{datafile.id};}
+                      //- var size = #{size};
+                  -->
+                  <div :id="`map_thumbnail_${datafile.id}`" style="width: 400px; height: 400px; margin:0 auto;" class="spacing"></div>
+                </div>
+                <div class="col-md-6">
+                  <label class="layer-label">Layer Name
+                    <p display="inline" class="label-body">{{datafile.Datalayers[0].layername}}</p>
+                  </label>
+                  <div class="property">
+                    <label class="layer-label">EPSG Code
+                      <p class="label-body">{{datafile.Datalayers[0].epsg}}</p>
+                    </label>
+                  </div>
+                  <template v-if="datafile.Datalayers[0].description.length &gt; 0">
+                    <div class="description">
+                      <label class="layer-label">Layer Description</label>
+                      <p class="label-body">{{datafile.Datalayers[0].description}}</p>
+                    </div>
+                  </template>
+                  <label class="layer-label">Uploaded On
+                    <p class="label-body">{{new Date(datafile.Datalayers[0].createdAt).toUTCString()}}</p>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+  <!-- //- if datafiles.length != 0 -->
+  <template v-if="datafiles.length != 0">
+    <div class="container spacing-large">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <h1 class="spacing-large">Compute a Voxel</h1>
+          </div>
+          <div class="row">
+            <form method="post" action="/layers">
+              <input type="text" name="voxelname" placeholder="Project name..." class="pull-right form-control form-input-line"/>
+              <input style="width: 100%" name="datalayerIds" id="selectedLayers" type="hidden" class="form-control hidden"/><br>
+              <div class="row spacing">
+                <div class="col-md-3">
+                  <p style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;" class="sans">Density</p>
+                </div>
+                <div class="col-md-9">
+                  <p style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;" class="sans">  10000 </p>
+                  <input style="display: inline-block; vertical-align: middle;" data-slider-handle="round" name="voxelDensity" data-slider-min="10000" data-slider-max="60000" data-slider-value="40000" class="slider"/>
+                  <p style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;" class="sans">    60000 </p>
+                </div>
+              </div><br>
+              <div class="row spacing">
+                <div class="col-md-3">
+                  <div class="input-group-btn">
+                    <button type="submit" name="layerButton" value="compute" class="btn btn-outline-primary">Compute</button>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="input-group-btn text-center">
+                    <button type="submit" name="layerButton" value="delete" formaction="/layers" class="btn btn-outline-primary">Delete Layer</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <div class="spacing-large"></div>
+</div>
   
 </template>
 
