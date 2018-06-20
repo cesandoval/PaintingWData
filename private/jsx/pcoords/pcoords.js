@@ -158,6 +158,7 @@ class PCoords extends React.Component {
                         }
                     }
                 }
+                Act.loadTableData({ value: dictBuild })
 
                 this.build(dictBuild)
                 // this.layerIndeces = layerIndeces
