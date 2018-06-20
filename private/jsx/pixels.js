@@ -473,6 +473,7 @@ export default class Pixels {
     }
 
     vlangBuildPixels(geometry, properties) {
+        console.log(properties)
         const translations = this.initAttribute(
             properties.size.length * 3,
             3,
@@ -495,7 +496,7 @@ export default class Pixels {
             values.setX(j, properties.size[j])
             originalValues.setX(j, properties.size[j])
         }
-
+        console.log(values)
         this.setAttributes(geometry, translations, values, originalValues)
     }
 

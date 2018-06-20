@@ -29,6 +29,9 @@ module.exports = function(sequelize, DataTypes) {
         },
         layerKey:{
             type: DataTypes.STRING,
+        },
+        rasterProperty: {
+            type: DataTypes.STRING,
         }
 
     }, {

@@ -12,14 +12,36 @@ var Model = require('../models'),
 
 
 module.exports.computeVoxels = function(req, res){
-    if  (req.body.datalayerIds !== ''){
+    console.log("req.body: ", req.body);
+    if (req.body.datalayerIds == '{}'){
+        console.log('select properties!!!!');
+        req.flash('layerAlert', "You haven't selected a property. Please select at least one property.");
+        res.redirect('/layers/'+ req.user.id);
+    }
+    else if  (req.body.datalayerIds !== ''){
         var datalayerIds = [];
-        var datalayerIdString = req.body.datalayerIds;
-        req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-            if(datalayerId !== ""){
-                datalayerIds.push(datalayerId);
-            }
-        });
+
+        var datalayerIdsAndRasterValsObject = {};
+        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
+        // Add a hash to each object property
+        for (var key in unparsed) {
+            var timestampHash = 0;
+            var properties = unparsed[key].split(";");
+            console.log("properties: ", properties);
+            for (var i = 0; i < properties.length; i++) {
+                datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
+                // datalayerIdsAndRasterValsObject[ key ] = properties[i];
+                timestampHash += 1;
+            } 
+        }
+        console.log(".datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
+
+
+        for (datalayerId in datalayerIdsAndRasterValsObject){
+            datalayerIds.push(datalayerId);
+        }
+
+        console.log("datalayerIds: ", datalayerIds);
 
         if (req.body.layerButton == 'delete') {
             Model.Datafile.update({
@@ -45,17 +67,30 @@ module.exports.computeVoxels = function(req, res){
                 })
             })
         } else {
-            var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity}};
+            var req = {'user' : {'id' : req.user.id}, 'body':{'voxelname' : req.body.voxelname, 'datalayerIds': req.body.datalayerIds, voxelDensity: req.body.voxelDensity, 'datalayerIdsAndProps': datalayerIdsAndRasterValsObject}};
             var datalayerIds = [];
-            console.log("req: " + req);
-            console.log("Data Layer ID: " + req.body.datalayerIds);
-            req.body.datalayerIds.split(" ").forEach(function(datalayerId, index){
-                if(datalayerId !== ""){
-                    datalayerIds.push(datalayerId);
-                }
-            });
-            req['voxelID'] = hash();
-            processVoxels([datalayerIds, req], function(){});
+            // var datalayerIdsAndRasterValsObject = JSON.parse(req.body.datalayerIds);
+            var datalayerIdsAndRasterValsObject = {};
+            var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
+            // Add a hash to each object property
+            for (var key in unparsed) {
+                var timestampHash = 0;
+                var properties = unparsed[key].split(";");
+                console.log("properties: ", properties);
+                for (var i = 0; i < properties.length; i++) {
+                    datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
+                    // datalayerIdsAndRasterValsObject[ key ] = properties[i];
+                    timestampHash += 1;
+                } 
+            }    
+            console.log("datalayerIdsAndRasterValsObject: ", datalayerIdsAndRasterValsObject);
+            
+            for (datalayerId in datalayerIdsAndRasterValsObject){
+                datalayerIds.push(datalayerId);
+            }
+    
+
+            processVoxels([datalayerIds, req], function(){}); 
 
             res.redirect('/voxels/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
@@ -74,9 +109,12 @@ module.exports.show = function(req, res) {
         },
         include: [{
             model: Model.Datalayer,
+            limit: 1},
+            {
+            model: Model.Datadbf,
             limit: 1}]
         }).then(function(datafiles){
-
+            
             res.render('layers', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
         });
 }
@@ -88,14 +126,33 @@ module.exports.showVoxels= function(req, res) {
                 processed : true,
                 deleted: {$not: true}
             },
-            include: [{
-                model: Model.Datafile, include: [{
-                    model: Model.Datalayer,
-                    limit: 1
-                }]
-            }]
+            include: [
+                {
+                model: Model.Datafile, 
+                include: [
+                    {
+                        model: Model.Datalayer,
+                        limit: 1
+                    },
+                    {
+                        model: Model.Datadbf,
+                        limit: 1
+                    },
+                ]                        
+                },
+                {
+                    model: Model.Datajson,
+                    attributes: ["rasterProperty", "datafileId"] 
+                }
+            ]
         }).then(function(datavoxels){
-            console.log("------------------------------------------------");
+            // console.log("datavoxels: ", datavoxels);
+            for (var key in datavoxels) {
+                var datavoxel = datavoxels[key];
+                console.log("datavoxel.Datajsons: ", datavoxel.Datajsons);
+            //     // console.log("datavoxel.Datajsons[0].rasterProperty: ", datavoxel.Datajsons[0].rasterProperty);
+            }
+            // console.log("------------------------------------------------");
             res.render('voxels', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
         });
 }

@@ -5,18 +5,22 @@ var mapIds = [];
 var maps = [];
 var $datalayers = $('.datalayer');
 var $selectedLayers = $('#selectedLayers');
-var selectedLayerIds = []
+var selectedLayerIds = {}
+var dropdownSelectedLayerIds = {}
 
 function getDatafileId(leafletMap){
     return leafletMap.attr('id').split("_")[1];
 }
 
 function updataSelectedLayersValueString(selectedLayerIds){
+    for (var id in selectedLayerIds) {
+        if (selectedLayerIds[id] == ""){
+            delete selectedLayerIds[id];
+        }
+    }
     $selectedLayers.val("");
     var valueString = "";
-    selectedLayerIds.forEach(function(id, index){
-        valueString += id + " ";
-    });
+    valueString = JSON.stringify(selectedLayerIds);
     $selectedLayers.val(valueString);
 }
 
@@ -32,14 +36,17 @@ $datalayers.click(function(){
     if(!($datalayer.hasClass("selected_layer"))){
         $datalayer.addClass('selected_layer');
         var id = getDatafileId($($datalayer.find(".leafletMap")));
-        selectedLayerIds.push(id);
+        // var rasterProperty = $($datalayer.find("#rasterProperty")).val(); //use jquery to grab property selected from form
+        var rasterProperty = dropdownSelectedLayerIds[id];
+        selectedLayerIds[id] = rasterProperty;
         updataSelectedLayersValueString(selectedLayerIds)
         console.log($selectedLayers.val());
     }
     else{
 
         $(this).removeClass('selected_layer');
-        selectedLayerIds.pop(this);
+        var id = getDatafileId($($datalayer.find(".leafletMap")));
+        delete selectedLayerIds[id];
         updataSelectedLayersValueString(selectedLayerIds)
         console.log($selectedLayers.val());
     }
@@ -55,9 +62,9 @@ maps.forEach(function(map, index){
 		processData: false, 
 		contentType: false, 
 		success: function(data){
-			var bBox = data.datafile.bbox;
+            var bBox = data.datafile.bbox;
 	        $(map).removeClass('temporary_map_visuals');
-	        $(map).empty();
+            $(map).empty();
 			render(mapId, bBox, data.datafile.centroid);
 		},
 		failure: function(err){
