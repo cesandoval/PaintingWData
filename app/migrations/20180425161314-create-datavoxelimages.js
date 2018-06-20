@@ -1,22 +1,24 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Datarasters', {
+    return queryInterface.createTable('Datavoxelimages', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      layername: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      raster: {
-        type: 'raster' // becareful about this, sequelize doesnt have a 'Raster' datatype.
-      },
-      srs: {
+      DatavoxelId: {
+        allowNull: false,
+        // primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      image: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      deleted: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +31,6 @@ module.exports = {
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Datarasters');
+    return queryInterface.dropTable('Datavoxelimages');
   }
 };

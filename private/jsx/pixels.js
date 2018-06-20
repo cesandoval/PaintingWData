@@ -1,6 +1,16 @@
-/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project */
+/*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project, datavoxelId */
+import axios from 'axios'
 
-// import '../../public/javascripts/libs/utilities.js'
+/**
+ * Summary. (use period)
+ *
+ * Description. (use period)
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author AuthorName.
+ * @since  x.x.x
+ */
 export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
@@ -44,6 +54,10 @@ export default class Pixels {
         // Define the Shader
         this.shaderText = shaderText
 
+        this.zHeight =
+            Math.log(graph.controls.object.position.y) / 1000 > 0
+                ? Math.log(graph.controls.object.position.y) / 1000
+                : 0.00000001
         if (!vLang) {
             // Sanity Check
             if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -107,13 +121,14 @@ export default class Pixels {
         thiscam.position.set(newPos.x, newPos.y, newPos.z)
     }
 
-    static buildMapbox(canvas, bbox) {
+    static buildMapbox(canvas, bbox, screenshot) {
         // TODO: fix eslint error `no-unused-vars`
         /* eslint-disable */
         var meshes = 0
         var parserRequests = 0
         var updaterRequests = 0
         var finished = 0
+        var totalTilesToLoad = 0
         /* eslint-enable */
 
         //compass functionality
@@ -256,6 +271,7 @@ export default class Pixels {
 
             tilesToGet += tiles.length
             updaterRequests += tiles.length
+            totalTilesToLoad = tilesToGet
 
             elevation.forEach(function(coords) {
                 //download the elevation image
@@ -300,6 +316,17 @@ export default class Pixels {
                     if (tilesToGet === 0) {
                         document.querySelector('#progress').style.opacity = 0
                         updateTileVisibility()
+                    }
+                    if (finished == totalTilesToLoad && screenshot) {
+                        setTimeout(function() {
+                            console.log(
+                                'Taking Screenshot for voxel',
+                                datavoxelId
+                            )
+                            window.screenshotToS3(datavoxelId)
+                        }, 3000)
+                    } else if (finished == totalTilesToLoad) {
+                        console.log('Screenshot not needed!')
                     }
                 }
             )
@@ -347,6 +374,29 @@ export default class Pixels {
                 else child.visible = false
             }
         }
+    }
+
+    s3Screenshot() {
+        // this is being triggered twice.........
+        let request = { datavoxelId: datavoxelId }
+        axios({
+            method: 'post',
+            url: '/checkScreenshot',
+            data: request,
+        })
+            .then(function(response) {
+                //handle success
+                if (!response.data.screenshot) {
+                    console.log('Getting Public Screenshot')
+                    window.screenshotToS3(datavoxelId)
+                } else {
+                    console.log('Screenshot not Neededddd~!!!')
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            })
     }
 
     // Create a InstancedBufferGeometry Object
@@ -461,13 +511,14 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
+        // Sets the height of the pixel layer according to how close the camera is to the base plane
+        let layerHeightValue = this.zHeight + this.layerN * 0.00001
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
-            // console.log(currIndex)
             translations.setXYZ(
                 currIndex,
                 dataArray[i],
-                0.3 + this.layerN * 0.001,
+                layerHeightValue,
                 dataArray[i + 1]
             )
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);

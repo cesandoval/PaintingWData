@@ -18,6 +18,7 @@ class PCoords extends React.Component {
             pc: null,
         }
 
+        this.pcoordsValue = {}
         this.build = this.build.bind(this)
         this.calcRanges = this.calcRanges.bind(this)
     }
@@ -28,6 +29,7 @@ class PCoords extends React.Component {
             Object.keys(this.props.geometries).length !== 0 &&
             this.props.geometries.constructor === Object
         ) {
+            // TODO: should be renamed to 'datasetNodes'
             let nodeLayers = Object.values(nprops.nodes).filter(
                 f => f.type == 'DATASET'
             )
@@ -58,9 +60,6 @@ class PCoords extends React.Component {
                         .dimensions(visibleNames)
                         .render()
                         .updateAxes()
-                }
-                if (nprops.pcoordsValue != 'undefined') {
-                    this.pc.brushExtents(nprops.pcoordsValue)
                 }
             }
             if (!this.state.started) {
@@ -154,6 +153,43 @@ class PCoords extends React.Component {
                 this.build(dictBuild)
             }
         }
+
+        if (this.pc) {
+            let pcoordsValue = {}
+
+            nprops.layers.map(({ userLayerName, propertyName, layerKey }) => {
+                const node = nprops.nodes[layerKey]
+                const key = userLayerName + '_' + propertyName
+                const filter = node.filter
+                const min = filter.min
+                const max = filter.max
+                const isMin = min == filter.minVal
+                const isMax = max == filter.maxVal
+                const isFiltered = !isMin || !isMax
+                const isBrushed = this.pcoordsValue[key]
+
+                // update brushs if is filtered, or is brushed but isn't filtered
+                if (isFiltered || (!isFiltered && isBrushed))
+                    pcoordsValue[key] = [min, max]
+            })
+
+            // check if status are updated
+            let visibleDatasets = Object.values(nprops.nodes).filter(
+                f => f.type == 'DATASET' && f.visibility
+            )
+            const layerU = visibleDatasets.length != this.state.visibleLayers
+            const pcoordsU = !_.isEqual(pcoordsValue, this.pcoordsValue)
+
+            if (layerU || pcoordsU) {
+                this.pcoordsValue = pcoordsValue
+
+                try {
+                    this.pc.brushExtents(pcoordsValue)
+                } catch (e) {
+                    // console.log(e.message)
+                }
+            }
+        }
     }
 
     build(data) {
@@ -183,16 +219,14 @@ class PCoords extends React.Component {
             .brushMode('1D-axes')
 
         pc.on('brushend', this.calcRanges.bind(this))
-        if (this.props.pcoordsValue != 'undefined') {
-            pc.brushExtents(this.props.pcoordsValue)
-        }
+
         this.pc = pc
         this.setState({ pc: pc })
     }
 
     calcRanges() {
         // review: what is the mean of radoms 'true'?
-        this.pc.randoms = true
+        // this.pc.randoms = true
 
         const brushSelection = this.pc.brushExtents()
         const layerNames = Object.keys(brushSelection)
@@ -212,21 +246,22 @@ class PCoords extends React.Component {
             }
         }
 
-        Act.mapSetPCoords({
-            value: Object.assign({}, this.props.pcoordsValue, brushes),
-        })
-
-        // Update Layers
+        /*
         const lowBnd = this.lowBnd
         const highBnd = this.highBnd
+        // console.log({ highBnd, lowBnd })
+        */
 
-        const remap = function(x, layerKey, mins, maxs) {
+
+        /*
+        const remap = function(x, i, mins, maxs) {
             return (
                 (highBnd - lowBnd) *
                     ((x - mins[layerKey]) / (maxs[layerKey] - mins[layerKey])) +
                 lowBnd
             )
         }
+        */
 
         // the range(min and max) of uniforms is 0 - 1
         // for (let name in minObjs) {
@@ -236,7 +271,33 @@ class PCoords extends React.Component {
             const name = `${layer.userLayerName}_${layer.propertyName}`
             // Checks if the layer has been filtered, if it has, changes the min and max values
             if (layerNames.includes(name)) {
-                let pixels = this.props.geometries[layer.layerKey]
+                // let pixels = this.props.geometries[layer.layerKey]
+
+                const maxVal = this.maxVal[this.layerIndeces[dictName]]
+                const minVal = this.minVal[this.layerIndeces[dictName]]
+
+                const max = maxObjs[name]
+                const min = minObjs[name]
+
+                // if (node.filter) {
+                //     const dataMax = math.max(sizeArray)
+                //     const dataMin = math.min(sizeArray)
+
+                //     let { min, max } = node.filter
+                //     console.log('[filter]', { min, max })
+                //     const range = dataMax - dataMin
+
+                //     console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
+                //     min = dataMin + min * range
+                //     max = dataMin + max * range
+                //     sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
+                //     console.log('[filter] After', { min, max }, sizeArray)
+                // }
+
+
+                // this was misbehaving
+                // if (!(minObjs[name] && maxObjs[name])) continue
+                /*
 
                 pixels.material.uniforms.min.value = remap(
                     minObjs[name],
@@ -250,8 +311,20 @@ class PCoords extends React.Component {
                     this.hashedMins,
                     this.hashedMaxs
                 )
+                */
+
+                const filter = { max, min, maxVal, minVal }
+                console.log(`PCoords`, filter)
+
+                Act.nodeUpdate({
+                    nodeKey: layer.layerKey,
+                    attr: 'filter',
+                    value: filter,
+                })
             }
         }
+
+        Act.setRefreshVoxels({ value: true })
     }
     style() {
         return {
@@ -311,7 +384,6 @@ const mapStateToProps = state => {
         layers: _.toArray(state.datasets.layers),
         geometries: state.map.geometries,
         nodes: state.vpl.nodes,
-        pcoordsValue: state.options.pcoordsValue,
         panelShow: state.interactions.panelShow,
     }
 }

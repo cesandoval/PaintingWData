@@ -8,29 +8,45 @@ const initialOptionsState = {
 
 export default (state = initialOptionsState, action) => {
     switch (action.type) {
+        /**
+         * Imports a saved userfile (i.e. one with saved options)
+         * @param {Object} options An Object containing bgStyle, opacity and knnValue properties
+         * from the saved userfile.
+         */
+        case t.IMPORT_USERFILE: {
+            const { options } = action
+            // Merges the options' properties together. The later arguments' properties take precedence.
+            return Object.assign({}, state, options)
+        }
+        /**
+         * Sets the bgStyle.
+         * @param {Number} value The value to change the bgStyle to.
+         */
         case t.MAP_SET_BGSTYLE: {
             const { value } = action
             const bgStyle = { bgStyle: value }
             return Object.assign({}, state, bgStyle)
         }
-
+        /**
+         * Sets the opacity.
+         * @param {Number} value The value to change the opacity to.
+         */
         case t.MAP_SET_OPACITY: {
+            console.log(state)
             const { value } = action
             const opacity = { opacity: value }
             return Object.assign({}, state, opacity)
         }
-
+        /**
+         * Sets the knnValue.
+         * @param {Number} value The value to change the knnValue to.
+         */
         case t.MAP_SET_KNN: {
             const { value } = action
             const knnValue = { knnValue: value }
             return Object.assign({}, state, knnValue)
         }
 
-        case t.MAP_SET_PCOORDS: {
-            const { value } = action
-            const pcoordsValue = { pcoordsValue: value }
-            return Object.assign({}, state, pcoordsValue)
-        }
         default:
             return state
     }

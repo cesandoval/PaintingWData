@@ -3,9 +3,10 @@ import { connect } from 'react-redux'
 
 import * as act from '../store/actions'
 
-import OptionsForm from './optionsForm'
 import OptionsMapStyle from './optionsMapStyle'
 import Button from 'react-bootstrap/lib/Button'
+
+import { Menu, Dropdown } from 'antd'
 
 class Options extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class Options extends React.Component {
         this.toggleOptionsMapStyleShow = this.toggleOptionsMapStyleShow.bind(
             this
         )
+        this.s3Screenshot = this.s3Screenshot.bind(this)
         */
     }
     componentDidMount() {
@@ -30,7 +32,7 @@ class Options extends React.Component {
     }
     */
     togglePanelShow = panelName => {
-        console.log(`togglePanelShow(${panelName})`)
+        console.log(`togglePanelShow(${panelName})`, { panelName })
         if (this.props.panelShow == panelName) act.setPanelShow({ value: '' })
         else act.setPanelShow({ value: panelName })
     }
@@ -44,14 +46,29 @@ class Options extends React.Component {
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow })
     }
 
-    getScreenShot() {
-        window.getScreenShot()
-    }
+    // getScreenShot() {
+    //     window.getScreenShot()
+    // }
 
     render() {
+        const DataMenu = (
+            <Menu onClick={({ key }) => this.togglePanelShow(key)}>
+                {/* <Menu.Item key="TABLE">
+                    <span> TABLE </span>
+                </Menu.Item> */}
+                <Menu.SubMenu title="CHARTS">
+                    <Menu.Item key="Chart:Density">Density Plot</Menu.Item>
+                    <Menu.Item key="Chart:Histogram">Histogram</Menu.Item>
+                    {/* <Menu.Item key="Chart:Scatter">Scatter Plot</Menu.Item> */}
+                </Menu.SubMenu>
+                <Menu.Item key="PCoords">
+                    <span> PCOORDS </span>
+                </Menu.Item>
+            </Menu>
+        )
+
         return (
             <div className="options--react">
-                <OptionsForm />
                 <div
                     id="mapStyleOptions"
                     style={{
@@ -65,7 +82,7 @@ class Options extends React.Component {
                         }}
                     />
                 </div>
-                <div
+                {/* <div
                     onClick={this.getScreenShot}
                     style={{
                         cursor: 'pointer',
@@ -85,7 +102,7 @@ class Options extends React.Component {
                     <span style={{ marginLeft: '5px', verticalAlign: 'sub' }}>
                         Map Screenshot
                     </span>
-                </div>
+                </div> */}
                 <Button
                     id="mapStyleOptionsButton"
                     className="buttons graphText btn buttonsText"
@@ -109,6 +126,20 @@ class Options extends React.Component {
                     {' '}
                     Compute Data{' '}
                 </Button>
+                <Dropdown overlay={DataMenu} placement="topRight">
+                    <span id="dataMenu">DATA</span>
+                </Dropdown>
+                <style jsx>{`
+                    :global(#dataMenu) {
+                        position: absolute;
+                        left: 20px;
+                        top: -50px;
+                        padding: 3px 40px;
+                        background-color: #d34031;
+                        border-radius: 5px;
+                        color: white;
+                    }
+                `}</style>
             </div>
         )
     }
