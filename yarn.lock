@@ -8286,6 +8286,12 @@ react-slick@~0.15.4:
     object-assign "^4.1.0"
     slick-carousel "^1.6.0"
 
+react-table@^6.8.6:
+  version "6.8.6"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-6.8.6.tgz#a0ad8b4839319052d5befc012603fb161e52ede3"
+  dependencies:
+    classnames "^2.2.5"
+
 react-transition-group@^2.0.0, react-transition-group@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.3.1.tgz#31d611b33e143a5e0f2d94c348e026a0f3b474b6"
