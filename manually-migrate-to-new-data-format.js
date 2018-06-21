@@ -2,6 +2,16 @@ var Model = require('./app/models'),
     async = require('async')
 
 
+// DELETE ALL DATADBFS, SO THAT NO DUPLICATES ARE MADE LATER ON BY DBFSFORDATALAYERS
+function deleteAllDatadbfs(callback) {
+    console.log("inside deleteAllDatadbfs");
+    Model.Datadbf.destroy({ 
+        truncate: true 
+    }).then(function(result) {
+        callback(null);
+    });
+}
+
 // UPDATE RASTERVAL OF ALL DATALAYERS TO 0, 1, 2, 3, ...
 function updateDatalayersRasterval(callback){
     console.log("inside updateDatalayersRasterval");
@@ -198,6 +208,7 @@ function allDone(callback) {
 function runAll() {
 
     async.waterfall([
+        deleteAllDatadbfs,
         updateDatalayersRasterval,
         dbfsForDatalayers,
         rasterPropertiesForDatajsons,
