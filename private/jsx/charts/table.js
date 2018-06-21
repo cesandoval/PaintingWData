@@ -27,7 +27,7 @@ class Table extends React.Component {
             Header: 'Voxel ID',
             id: 'row',
             maxWidth: 60,
-            filterable: false,
+            // filterable: false,
             resizable: false,
             Cell: row => {
                 return <div>{row.index + 1}</div>
@@ -48,6 +48,7 @@ class Table extends React.Component {
                         // This will force the table body to overflow and scroll, since there is not enough room
                         height: '72.5vh',
                     }}
+                    filterable
                 />
             </div>
         )
