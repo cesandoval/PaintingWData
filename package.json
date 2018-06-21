@@ -5,8 +5,9 @@
   "scripts": {
     "init:db": "cd app && sequelize db:migrate",
     "dev": "cross-env NODE_ENV=development node ./bin/www",
-    "dev:vue": "gulp vue:watch",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "vue:dev": "cross-env NODE_ENV=development webpack --watch --hide-modules --config webpack.vue.config.js",
+    "vue:build": "cross-env NODE_ENV=production webpack --progress --hide-modules --config webpack.vue.config.js",
     "start": "cross-env NODE_ENV=production node ./bin/www",
     "lint": "eslint . --color",
     "lint:vue": "gulp vue-lint",
@@ -81,7 +82,6 @@
     "supervisor": "0.11.0",
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
-    "yallist": "^3.0.2",
     "victory": "^0.26.0",
     "vue": "^2.5.16",
     "yallist": "^3.0.2"
@@ -135,6 +135,8 @@
     "styled-jsx-plugin-sass": "^0.2.4",
     "url-loader": "^0.5.9",
     "vinyl-source-stream": "^2.0.0",
+    "vue-loader": "^14.2.1",
+    "vue-template-compiler": "^2.5.16",
     "vueify": "^9.4.1",
     "webpack": "^3.5.5",
     "webpack-dev-middleware": "^1.12.0",
