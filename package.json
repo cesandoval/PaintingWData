@@ -84,11 +84,12 @@
     "uuid": "^3.2.1",
     "victory": "^0.26.0",
     "vue": "^2.5.16",
+    "vue-antd-ui": "^0.6.1",
     "yallist": "^3.0.2"
   },
   "devDependencies": {
     "aliasify": "^2.1.0",
-    "axios": "^0.15.2",
+    "axios": "^0.18.0",
     "babel-core": "^6.x",
     "babel-eslint": "^7.x",
     "babel-loader": "^7.1.2",
