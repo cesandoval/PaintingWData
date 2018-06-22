@@ -8,10 +8,6 @@ var User = require('../models').User,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
-    dotenv = require('dotenv');
-
-// Loads the local environment variables.
-dotenv.load();
 
 module.exports.show = function(req, res) {
   res.render('users/signUp')
@@ -141,6 +137,7 @@ sample profile variable representation:
 
 // The host is different in production
 var host = process.env === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
+console.log(host);
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
   clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
