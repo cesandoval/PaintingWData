@@ -1360,22 +1360,16 @@ p {
 }
 
 .play-btn {
-    width: 30px !important;
-    height: 30px !important;
+    width: 50px !important;
+    height: 50px !important;
+    opacity: 0.6;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%) !important;
 }
 
 .blog-panel {
 
     height: 25vh;
-}
-
-.play-btn {
-    width: 30px !important;
-    height: 30px !important;
-    position: absolute;
-    right: 10px;
-    top: 10px;
 }
