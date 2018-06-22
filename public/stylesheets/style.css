@@ -1176,7 +1176,7 @@ p {
     width:100%;
     height: 100%;    
     object-fit: cover;
-    transform: scale(1.3);
+    transform: scale(1);
 }
 
 .blog-panel iframe {
@@ -1211,7 +1211,7 @@ p {
 .blog-title {
     color: white !important;
     display: inline-block !important;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.15);
 }
 
 .showcase-panel:hover .blog-title {
