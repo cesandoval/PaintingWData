@@ -1141,7 +1141,7 @@ p {
     transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
     overflow: hidden;
-    height: 30vh;
+    height: 25vh;
   }
 
 
@@ -1369,7 +1369,7 @@ p {
 
 .blog-panel {
 
-    height: 30vh;
+    height: 25vh;
 }
 
 .play-btn {
