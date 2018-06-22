@@ -6,9 +6,17 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var bucket = process.env === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
 
+/**
+ * Displays app.jade on /app/{datavoxelId}
+ * This is the interactive page where the user views the voxel project
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.show = function(req, res) {
+  // user is signed in
   if(req.isAuthenticated()) {
     res.render('app', {userSignedIn: true, user: req.user, datavoxelId: req.params.datavoxelId});
+  // user is not signed in, gets redireted to /users/login because it is not authenticated
   } else {
     Model.Datavoxel.findOne({
           where: {id: req.params.datavoxelId}
@@ -22,6 +30,12 @@ module.exports.show = function(req, res) {
   }
 }
 
+
+/**
+ * TODO: fill this out
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.getPublicVoxelScreenshots = function(req, res) {
   Model.Datavoxelimage.findAll({
     limit: 10,
@@ -39,6 +53,11 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 
 }
 
+/**
+ * TODO: fill this out
+ * @param {} req 
+ * @param {*} res 
+ */
 module.exports.uploadScreenshot = function(req, res) {
   //Update react state so we know if this user has opened this voxel before
   var img = req.body.data;
@@ -66,6 +85,11 @@ module.exports.uploadScreenshot = function(req, res) {
   })
 }
 
+/**
+ * TODO fill this out
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.checkScreenshot = function(req, res) {
   var datavoxelId = req.body.datavoxelId;
   var params = {
@@ -84,14 +108,27 @@ module.exports.checkScreenshot = function(req, res) {
   })
 }
 
+/**
+ * TODO fill this out
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.getDatajsons = function(req, res){
   // add toggle in first datajson indicating if we should screenshot this page
     Model.Datajson.findAll({
     	where: { datavoxelId: req.params.datavoxelId, },
-        include: [{model: Model.Datavoxel}, {model: Model.Datafile, include: [{model: Model.Datalayer, limit: 1}]}]
+        include: [
+			{model: Model.Datavoxel}, 
+			{model: Model.Datafile, 
+				include: [
+					{model: Model.Datalayer, limit: 1}
+				]
+			}
+		]
     }).then(function(datajsons){
       Model.Datavoxel.findOne({
-          where: {id: req.params.datavoxelId }, include: [{model: Model.Datavoxelimage}]
+		  where: {id: req.params.datavoxelId }, 
+		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
         if (voxel.Datavoxelimage === null && voxel.public == true) {
           //screenshot needed
