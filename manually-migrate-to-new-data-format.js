@@ -7,7 +7,7 @@ function deleteAllDatadbfs(callback) {
     console.log("inside deleteAllDatadbfs");
     Model.Datadbf.destroy({ 
         truncate: true 
-    }).then(function(result) {
+    }).then(function() {
         callback(null);
     });
 }
@@ -39,7 +39,7 @@ function updateDatalayersRasterval(callback){
             Model.Datalayer.update(
                 { rasterval: counters[datalayerObj.datafileId] },
                 { where: { id: datalayerObj.id } }
-            ).then(function(res) {
+            ).then(function() {
                 numUpdated += 1;
                 // console.log(numUpdated);
                 if (numUpdated == numDatalayers) {
@@ -201,6 +201,7 @@ function rasterPropertiesForDatajsons(callback) {
 
 function allDone(callback) {
     console.log("done running file");
+    callback(null);
 }
 
 
@@ -214,6 +215,7 @@ function runAll() {
         rasterPropertiesForDatajsons,
         allDone,
     ], function (err, result) {
+        console.log(err, result);
     });    
 
 }
