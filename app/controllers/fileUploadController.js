@@ -6,10 +6,21 @@ var fileUploadHelper = require('../../lib/fileUploadHelper'),
     fs_extra = require('fs-extra')
     getSize = require('get-folder-size');
 
+/**
+ * Displays upload.jade for /upload page
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.show = function(req, res) {
     res.render('upload', {userSignedIn: req.isAuthenticated(), user: req.user, uploadAlert: req.flash('uploadAlert')[0]});
 }
 
+/**
+ * Handles uploading zip files to the Datafiles database
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {*} next 
+ */
 module.exports.upload = function(req, res, next) {
 
   var form = new formidable.IncomingForm();
@@ -32,7 +43,6 @@ module.exports.upload = function(req, res, next) {
     // once all the files have been uploaded, send a response to the client
     form.on('end', function() {
       var file = files[0];
-      var whitelist = [];
       if("undefined" !== typeof file) {
         fs.rename(file.path, path.join(form.uploadDir, file.name), function(err){
         if(err){
