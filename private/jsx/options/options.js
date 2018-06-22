@@ -46,16 +46,16 @@ class Options extends React.Component {
         this.setState({ optionsMapStyleShow: !this.state.optionsMapStyleShow })
     }
 
-    getScreenShot() {
-        window.getScreenShot()
-    }
+    // getScreenShot() {
+    //     window.getScreenShot()
+    // }
 
     render() {
         const DataMenu = (
             <Menu onClick={({ key }) => this.togglePanelShow(key)}>
-                {/* <Menu.Item key="TABLE">
+                <Menu.Item key="TABLE">
                     <span> TABLE </span>
-                </Menu.Item> */}
+                </Menu.Item>
                 <Menu.SubMenu title="CHARTS">
                     <Menu.Item key="Chart:Density">Density Plot</Menu.Item>
                     <Menu.Item key="Chart:Histogram">Histogram</Menu.Item>
@@ -82,7 +82,7 @@ class Options extends React.Component {
                         }}
                     />
                 </div>
-                <div
+                {/* <div
                     onClick={this.getScreenShot}
                     style={{
                         cursor: 'pointer',
@@ -102,7 +102,7 @@ class Options extends React.Component {
                     <span style={{ marginLeft: '5px', verticalAlign: 'sub' }}>
                         Map Screenshot
                     </span>
-                </div>
+                </div> */}
                 <Button
                     id="mapStyleOptionsButton"
                     className="buttons graphText btn buttonsText"

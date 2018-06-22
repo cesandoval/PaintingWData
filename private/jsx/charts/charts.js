@@ -1,12 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
-// import * as Act from '../store/actions'
+import * as Act from '../store/actions'
 import {
     VictoryLine,
     VictoryChart,
     VictoryLabel,
     VictoryScatter,
     VictoryBar,
+    VictoryBrushContainer,
+    BrushHelpers,
 } from 'victory'
 var kernel = require('kernel-smooth')
 // var science = require('science')
@@ -42,6 +44,18 @@ class Charts extends React.Component {
                 })
             }
         }
+    }
+
+    filterCharts(key, domain) {
+        Act.nodeUpdate({
+            nodeKey: key,
+            attr: 'filter',
+            value: {
+                max: domain.x[1],
+                min: domain.x[0],
+            },
+        })
+        Act.setRefreshVoxels({ value: true })
     }
 
     getDensityData() {
@@ -102,6 +116,51 @@ class Charts extends React.Component {
                                         margin: 'auto',
                                     },
                                 }}
+                                events={[
+                                    {
+                                        target: 'parent',
+                                        eventHandlers: {
+                                            onMouseUp: (evt, targetProps) => {
+                                                if (
+                                                    typeof targetProps.currentDomain !=
+                                                        'undefined' &&
+                                                    (targetProps.isPanning ==
+                                                        true ||
+                                                        targetProps.isSelecting ==
+                                                            true)
+                                                ) {
+                                                    this.filterCharts(
+                                                        key,
+                                                        targetProps.currentDomain
+                                                    )
+                                                }
+                                                return BrushHelpers.onMouseUp(
+                                                    evt,
+                                                    targetProps
+                                                )
+                                            },
+                                        },
+                                    },
+                                ]}
+                                domainPadding={{ x: [50, 20] }}
+                                containerComponent={
+                                    <VictoryBrushContainer
+                                        brushDimension="x"
+                                        brushDomain={{
+                                            x: [
+                                                this.props.nodes[key].filter
+                                                    .min,
+                                                this.props.nodes[key].filter
+                                                    .max,
+                                            ],
+                                        }}
+                                        defaultBrushArea="disable"
+                                        brushStyle={{
+                                            stroke: 'rgba(0, 0, 0, 0.6)',
+                                            fill: 'rgba(255, 255, 255, 0.1)',
+                                        }}
+                                    />
+                                }
                             >
                                 <VictoryLabel
                                     textAnchor="start"
@@ -138,6 +197,23 @@ class Charts extends React.Component {
                                     />
                                 )}
 
+                                {this.props.panelShow == 'Chart:Histogram' && (
+                                    <VictoryBar
+                                        style={{
+                                            data: {
+                                                fill: this.props.nodes[key]
+                                                    ? this.props.nodes[key]
+                                                          .color
+                                                    : 'gray',
+                                            },
+                                        }}
+                                        key={key}
+                                        // alignment="start"
+                                        data={this.state.histogramData[key]}
+                                        barRatio={0.999}
+                                    />
+                                )}
+
                                 {this.props.panelShow == 'Chart:Scatter' && (
                                     <VictoryScatter
                                         style={{
@@ -157,23 +233,6 @@ class Charts extends React.Component {
                                             { x: 4, y: 4 },
                                             { x: 5, y: 7 },
                                         ]}
-                                    />
-                                )}
-
-                                {this.props.panelShow == 'Chart:Histogram' && (
-                                    <VictoryBar
-                                        style={{
-                                            data: {
-                                                fill: this.props.nodes[key]
-                                                    ? this.props.nodes[key]
-                                                          .color
-                                                    : 'gray',
-                                            },
-                                        }}
-                                        key={key}
-                                        alignment="start"
-                                        data={this.state.histogramData[key]}
-                                        barRatio={0.999}
                                     />
                                 )}
                             </VictoryChart>)

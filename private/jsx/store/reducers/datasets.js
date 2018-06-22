@@ -5,6 +5,7 @@ const initialDatasetsState = {
     minMax: [],
     allIndices: [],
     bounds: [],
+    userId: 0,
 }
 
 export default (state = initialDatasetsState, action) => {
@@ -126,7 +127,14 @@ export default (state = initialDatasetsState, action) => {
                 minMax: layers[0].geojson.minMax,
                 allIndices: layers[0].allIndices,
                 bounds: layers[0].bounds,
+                userId: datasets[0].userId,
             }
+        }
+        case t.LOAD_TABLE_DATA: {
+            const { value } = action
+            const loading = { tableData: value }
+
+            return Object.assign({}, state, loading)
         }
         default:
             return state

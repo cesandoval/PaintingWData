@@ -65,6 +65,7 @@
     "pg-promise": "^7.3.3",
     "rangeslider.js": "^2.3.0",
     "react-bootstrap": "^0.32.1",
+    "react-table": "^6.8.6",
     "redis-server": "^1.1.0",
     "request": "^2.73.0",
     "rxjs": "^5.4.3",
@@ -79,8 +80,8 @@
     "supervisor": "0.11.0",
     "turf": "^3.0.14",
     "uuid": "^3.2.1",
-    "yallist": "^3.0.2",
-    "victory": "^0.26.0"
+    "victory": "^0.26.0",
+    "yallist": "^3.0.2"
   },
   "devDependencies": {
     "axios": "^0.15.2",
@@ -123,7 +124,7 @@
     "style-loader": "^0.19.0",
     "styled-jsx-plugin-sass": "^0.2.4",
     "url-loader": "^0.5.9",
-    "vinyl-source-stream": "^1.1.0",
+    "vinyl-source-stream": "^1.1.2",
     "webpack": "^3.5.5",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-dev-server": "^2.7.1",

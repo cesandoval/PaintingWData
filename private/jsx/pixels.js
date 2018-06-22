@@ -1,7 +1,16 @@
 /*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project, datavoxelId */
 import axios from 'axios'
 
-// import '../../public/javascripts/libs/utilities.js'
+/**
+ * Summary. (use period)
+ *
+ * Description. (use period)
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author AuthorName.
+ * @since  x.x.x
+ */
 export default class Pixels {
     // GeometryObject will be a Three.js geometry
     // dataArray will be an array which holds the x, y, and value for each object
@@ -45,6 +54,10 @@ export default class Pixels {
         // Define the Shader
         this.shaderText = shaderText
 
+        this.zHeight =
+            Math.log(graph.controls.object.position.y) / 1000 > 0
+                ? Math.log(graph.controls.object.position.y) / 1000
+                : 0.00000001
         if (!vLang) {
             // Sanity Check
             if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -460,6 +473,7 @@ export default class Pixels {
     }
 
     vlangBuildPixels(geometry, properties) {
+        console.log(properties)
         const translations = this.initAttribute(
             properties.size.length * 3,
             3,
@@ -482,7 +496,7 @@ export default class Pixels {
             values.setX(j, properties.size[j])
             originalValues.setX(j, properties.size[j])
         }
-
+        console.log(values)
         this.setAttributes(geometry, translations, values, originalValues)
     }
 
@@ -497,13 +511,14 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
+        // Sets the height of the pixel layer according to how close the camera is to the base plane
+        let layerHeightValue = this.zHeight + this.layerN * 0.00001
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
-            // console.log(currIndex)
             translations.setXYZ(
                 currIndex,
                 dataArray[i],
-                0.3 + this.layerN * 0.001,
+                layerHeightValue,
                 dataArray[i + 1]
             )
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);

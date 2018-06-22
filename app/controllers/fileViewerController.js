@@ -76,8 +76,12 @@ module.exports.getDatalayers = function(req, res){
         },
         include: [{
             model: Model.Datalayer,
+            limit: 1},
+            {
+            model: Model.Datadbf,
             limit: 1}]
     }).then(function(datafile){
+        // console.log("datafile: ", datafile);
         res.send({
             datafile
         })

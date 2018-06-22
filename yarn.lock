@@ -5865,15 +5865,11 @@ lodash.uniqby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.uniqby/-/lodash.uniqby-4.7.0.tgz#d99c07a669e9e6d24e1362dfe266c67616af1302"
 
-lodash@4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.12.0.tgz#2bd6dc46a040f59e686c972ed21d93dc59053258"
-
 lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.16.5, lodash@^4.17.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@~4.17.4:
   version "4.17.5"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
-lodash@^4.17.5:
+lodash@^4.17.10, lodash@^4.17.5:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -6256,14 +6252,18 @@ module-deps@^4.0.8:
     xtend "^4.0.0"
 
 moment-timezone@^0.5.4:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.14.tgz#4eb38ff9538b80108ba467a458f3ed4268ccfcb1"
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.20.tgz#fe66da425dd9f9bbf416f131bf17659680aabb99"
   dependencies:
     moment ">= 2.9.0"
 
-moment@2.x, moment@2.x.x, "moment@>= 2.9.0", moment@^2.13.0, moment@^2.16.0, moment@^2.17.1, moment@^2.19.3:
+moment@2.x, moment@2.x.x, "moment@>= 2.9.0", moment@^2.16.0, moment@^2.17.1, moment@^2.19.3:
   version "2.22.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.0.tgz#7921ade01017dd45186e7fee5f424f0b8663a730"
+
+moment@^2.13.0:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 monotone-convex-hull-2d@^1.0.1:
   version "1.0.1"
@@ -8286,6 +8286,12 @@ react-slick@~0.15.4:
     object-assign "^4.1.0"
     slick-carousel "^1.6.0"
 
+react-table@^6.8.6:
+  version "6.8.6"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-6.8.6.tgz#a0ad8b4839319052d5befc012603fb161e52ede3"
+  dependencies:
+    classnames "^2.2.5"
+
 react-transition-group@^2.0.0, react-transition-group@^2.2.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.3.1.tgz#31d611b33e143a5e0f2d94c348e026a0f3b474b6"
@@ -8985,15 +8991,15 @@ sequelize-cli@^2.4.0:
     yargs "^8.0.1"
 
 sequelize@^3.23.4:
-  version "3.32.1"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-3.32.1.tgz#f957155412346a33d4d6c8460a20dc58878188de"
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-3.33.0.tgz#b0eb12b87223aded10e50a9d78506e0dd42f9208"
   dependencies:
     bluebird "^3.3.4"
     depd "^1.1.0"
     dottie "^1.0.0"
     generic-pool "2.4.2"
     inflection "^1.6.0"
-    lodash "4.12.0"
+    lodash "^4.17.10"
     moment "^2.13.0"
     moment-timezone "^0.5.4"
     retry-as-promised "^2.0.0"
@@ -9766,9 +9772,10 @@ taskgroup@^4.0.5, taskgroup@^4.2.0:
     csextends "^1.0.3"
 
 terraformer-wkt-parser@^1.1.0:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/terraformer-wkt-parser/-/terraformer-wkt-parser-1.1.2.tgz#336a0c8fc82094a5aff83288f69aedecd369bf0c"
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/terraformer-wkt-parser/-/terraformer-wkt-parser-1.2.0.tgz#c9d6ac3dff25f4c0bd344e961f42694961834c34"
   dependencies:
+    "@types/geojson" "^1.0.0"
     terraformer "~1.0.5"
 
 terraformer@~1.0.5:
@@ -10655,6 +10662,13 @@ utils-merge@1.0.1, utils-merge@1.x.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
+utils-regex-from-string@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/utils-regex-from-string/-/utils-regex-from-string-1.0.0.tgz#fe1a2909f8de0ff0d5182c80fbc654d6a687d189"
+  dependencies:
+    regex-regex "^1.0.0"
+    validate.io-string-primitive "^1.0.0"
+
 uuid@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
@@ -10858,7 +10872,7 @@ vinyl-fs@^0.3.0:
     through2 "^0.6.1"
     vinyl "^0.4.0"
 
-vinyl-source-stream@^1.1.0:
+vinyl-source-stream@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vinyl-source-stream/-/vinyl-source-stream-1.1.2.tgz#62b53a135610a896e98ca96bee3a87f008a8e780"
   dependencies:
