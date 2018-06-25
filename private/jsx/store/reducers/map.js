@@ -17,9 +17,7 @@ export default (state = initialMapState, action) => {
     switch (action.type) {
         // TODO: Fix the map parameters that are sent into this function from map.js
         case t.IMPORT_USERFILE: {
-            /*eslint-disable*/
-            debugger;
-            const {saveMap} = action;
+            const { saveMap } = action
 
             let newState = {}
             newState.bbox = saveMap
@@ -27,6 +25,8 @@ export default (state = initialMapState, action) => {
         }
 
         case t.MAP_INIT: {
+            /*eslint-disable*/
+            debugger;
             const { instance, datasetsLayers } = action
             // Sets the camera to the voxels' bbox
             const bbox = state.bbox
