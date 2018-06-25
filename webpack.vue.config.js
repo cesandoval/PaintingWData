@@ -70,6 +70,19 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
+                options: {
+                    plugins: [
+                        'transform-runtime',
+                        [
+                            'import',
+                            { libraryName: 'vue-antd-ui', style: 'css' },
+                        ],
+                    ],
+                    // This is a feature of `babel-loader` for webpack (not Babel itself).
+                    // It enables caching results in ./node_modules/.cache/babel-loader/
+                    // directory for faster rebuilds.
+                    cacheDirectory: true,
+                },
             },
             {
                 test: /\.(png|jpg|gif|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
