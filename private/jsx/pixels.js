@@ -54,10 +54,16 @@ export default class Pixels {
         // Define the Shader
         this.shaderText = shaderText
 
+        // Sets the Z-heights for the layers, and the Z-heigh step size for every layer
         this.zHeight =
             Math.log(graph.controls.object.position.y) / 1000 > 0
                 ? Math.log(graph.controls.object.position.y) / 1000
                 : 0.00000001
+        this.layerZHeight =
+            Math.log(graph.controls.object.position.y) / 10000 > 0
+                ? Math.log(graph.controls.object.position.y) / 10000 * 2
+                : 0.00000001
+
         if (!vLang) {
             // Sanity Check
             if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -512,7 +518,7 @@ export default class Pixels {
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
         // Sets the height of the pixel layer according to how close the camera is to the base plane
-        let layerHeightValue = this.zHeight + this.layerN * 0.00001
+        let layerHeightValue = this.zHeight + this.layerN * this.layerZHeight
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
             translations.setXYZ(

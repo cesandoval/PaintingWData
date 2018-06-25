@@ -88,7 +88,12 @@ export default class Graph {
      */
     initCamera(width, height) {
         // Initializes the camera.
-        var camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 15000)
+        var camera = new THREE.PerspectiveCamera(
+            90,
+            width / height,
+            this.near,
+            15000
+        )
         // Configures settings. Pan, but don't rotate.
         camera.position.y = 300
         camera.lookAt(new THREE.Vector3(0.0, 0.0, 0.0))
