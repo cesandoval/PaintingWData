@@ -30,11 +30,25 @@ export default class Pixels {
         vLang = false,
         properties = {}
     ) {
+        /**
+         * The name of the layer.
+         * @member {String} layerName
+         */
         this.layerName = name
+        /**
+         * The low and high bounds.
+         * @member {Number} lowBnd
+         * @member {Number} highBnd
+         */
         this.lowBnd = bounds[0]
         this.highBnd = bounds[1]
-
-        // Constants
+        /**
+         * @member {Number} ELEMENTS_PER_ITEM
+         * @member {Number} pxWidth
+         * @member {Number} pxHeight
+         * @member {Number} minVal
+         * @member {Number} maxVal
+         */
         this.ELEMENTS_PER_ITEM = 3
         this.pxWidth = pxWidth
         this.pxHeight = pxHeight
@@ -369,9 +383,10 @@ export default class Pixels {
             }
         }
     }
-
-    // Create a InstancedBufferGeometry Object
-    // See Three.js Docs for more info
+    /**
+     * Creates an InstancedBufferGeometry object.
+     * @return {THREE.InstancedBufferGeometry} a generic InstancedBufferGeometry object.
+     */
     initGeometry() {
         const buffer_geometry = new THREE.InstancedBufferGeometry()
         buffer_geometry.dynamic = true
