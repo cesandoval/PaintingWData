@@ -1,4 +1,6 @@
 /*global project, project, getBaseLog, slashify, basePlaneDimension, basePlaneDimension, slashify, getPixels, basePlaneDimension, resolveSeams, neighborTiles, slashify, project, datavoxelId */
+import axios from 'axios'
+
 /**
  * Summary. (use period)
  *
@@ -65,6 +67,16 @@ export default class Pixels {
 
         // Define the Shader
         this.shaderText = shaderText
+
+        // Sets the Z-heights for the layers, and the Z-heigh step size for every layer
+        this.zHeight =
+            Math.log(graph.controls.object.position.y) / 1000 > 0
+                ? Math.log(graph.controls.object.position.y) / 1000
+                : 0.00000001
+        this.layerZHeight =
+            Math.log(graph.controls.object.position.y) / 10000 > 0
+                ? Math.log(graph.controls.object.position.y) / 10000 * 2
+                : 0.00000001
 
         if (!vLang) {
             // Sanity Check
@@ -398,6 +410,30 @@ export default class Pixels {
             }
         }
     }
+
+    s3Screenshot() {
+        // this is being triggered twice.........
+        let request = { datavoxelId: datavoxelId }
+        axios({
+            method: 'post',
+            url: '/checkScreenshot',
+            data: request,
+        })
+            .then(function(response) {
+                //handle success
+                if (!response.data.screenshot) {
+                    console.log('Getting Public Screenshot')
+                    window.screenshotToS3(datavoxelId)
+                } else {
+                    console.log('Screenshot not Neededddd~!!!')
+                }
+            })
+            .catch(function(response) {
+                //handle error
+                console.log(response)
+            })
+    }
+
     /**
      * Creates an InstancedBufferGeometry object.
      * @return {THREE.InstancedBufferGeometry} a generic InstancedBufferGeometry object.
@@ -474,6 +510,7 @@ export default class Pixels {
     }
 
     vlangBuildPixels(geometry, properties) {
+        console.log(properties)
         const translations = this.initAttribute(
             properties.size.length * 3,
             3,
@@ -496,7 +533,7 @@ export default class Pixels {
             values.setX(j, properties.size[j])
             originalValues.setX(j, properties.size[j])
         }
-
+        console.log(values)
         this.setAttributes(geometry, translations, values, originalValues)
     }
 
@@ -511,13 +548,14 @@ export default class Pixels {
         const remap = x =>
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
+        // Sets the height of the pixel layer according to how close the camera is to the base plane
+        let layerHeightValue = this.zHeight + this.layerN * this.layerZHeight
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
-            // console.log(currIndex)
             translations.setXYZ(
                 currIndex,
                 dataArray[i],
-                0.3 + this.layerN * 0.001,
+                layerHeightValue,
                 dataArray[i + 1]
             )
             // translations.setXYZ(currIndex, dataArray[i], this.layerN * 0.00001, -dataArray[i+1]);

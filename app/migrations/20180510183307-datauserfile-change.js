@@ -9,11 +9,11 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    queryInterface.addColumn('Datauserfiles',
-    'voxelId',
-    {
-        type: Sequelize.INTEGER,
-    })
+    // queryInterface.addColumn('Datauserfiles',
+    // 'voxelId',
+    // {
+    //     type: Sequelize.INTEGER,
+    // })
   },
 
   down: (queryInterface, Sequelize) => {

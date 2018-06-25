@@ -15,6 +15,12 @@ export const importDatasets = payload =>
         ...payload,
     })
 
+export const loadTableData = payload =>
+    store.dispatch({
+        type: t.LOAD_TABLE_DATA,
+        ...payload,
+    })
+
 // map
 export const mapInit = payload =>
     store.dispatch({

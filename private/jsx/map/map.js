@@ -6,7 +6,8 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
-import DensityChart from '../charts/charts'
+import Charts from '../charts/charts'
+import Table from '../charts/table'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
 /**
@@ -63,16 +64,19 @@ class MapCanvas extends React.Component {
             // Now we know that the map is initialized.
             this.setState({ mapInited: true })
         }
+
         // Initializes the sidebar options.
-        if (newProps.mapStarted && !this.state.mapStarted) {
-            const options = this.props.options
-            // Changes the option values accordingly.
-            if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
-            if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
-            if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
-            // Sets mapStarted = true so that this conditional block doesn't get accessed again.
-            this.setState({ mapStarted: true })
-        }
+        // if (newProps.mapStarted && !this.state.mapStarted) {
+        //     const options = this.props.options
+        //     // Changes the option values accordingly.
+
+        //     if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
+        //     if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
+        //     if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
+        //     // Sets mapStarted = true so that this conditional block doesn't get accessed again.
+
+        //     this.setState({ mapStarted: true })
+        // }
     }
 
     exportSVG(geoms) {
@@ -144,6 +148,11 @@ class MapCanvas extends React.Component {
             }
         }
     }
+
+    getScreenShot() {
+        window.getScreenShot()
+    }
+
     /**
      * Zooms the map back to its original location.
      */
@@ -215,6 +224,22 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
+                        width: '75vw',
+                        position: 'fixed',
+                        overflow: 'hidden',
+                        top: '15vh',
+                        right: '2.5vw',
+                        zIndex: '100',
+                        opacity: 0.9,
+                        display: panelShow == 'TABLE' ? '' : 'none',
+                        border: 'none',
+                    }}
+                >
+                    <Table />
+                </div>
+                <div
+                    style={{
+                        backgroundColor: 'white',
                         width: '80vw',
                         height: '300px',
                         position: 'fixed',
@@ -226,7 +251,7 @@ class MapCanvas extends React.Component {
                         display: panelShow.includes('Chart') ? '' : 'none',
                     }}
                 >
-                    <DensityChart />
+                    <Charts />
                 </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
@@ -279,16 +304,19 @@ class MapCanvas extends React.Component {
                             >
                                 SHP
                             </MenuItem>
+                            <MenuItem onClick={this.getScreenShot}>
+                                IMAGE
+                            </MenuItem>
                         </DropdownButton>
 
-                        <Button
+                        {/* <Button
                             id={`save-userfile`}
                             onClick={() => {
                                 this.saveFile()
                             }}
                         >
                             Save Userfile
-                        </Button>
+                        </Button> */}
                     </div>
                     <Button
                         id="zoomShow"

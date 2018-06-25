@@ -1,6 +1,6 @@
-/*global datavoxelId*/
+// /*global datavoxelId*/
 import React from 'react'
-import * as Act from './store/actions.js'
+// import * as Act from './store/actions.js'
 import Sidebar from './sidebar/sidebar'
 import Options from './options/options'
 import Map from './map/map'
@@ -30,15 +30,15 @@ export default class App extends React.Component {
          * Promises. Fetches the saved state, and then updates the Redux variables
          * accordingly.
          */
-        fetch(`/importuserfile/${datavoxelId}`, {
-            method: 'GET',
-            credentials: 'include',
-        })
-            .then(data => data.json())
-            .then(newState => {
-                Act.importUserfile(newState)
-            })
-            .catch(e => console.log('importUserfile() error', e))
+        // fetch(`/importuserfile/${datavoxelId}`, {
+        //     method: 'GET',
+        //     credentials: 'include',
+        // })
+        //     .then(data => data.json())
+        //     .then(newState => {
+        //         Act.importUserfile(newState)
+        //     })
+        //     .catch(e => console.log('importUserfile() error', e))
         /*
          * TODO: The following should be ran when we don't have anything yet to
          * import.

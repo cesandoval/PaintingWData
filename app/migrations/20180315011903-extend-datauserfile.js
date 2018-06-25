@@ -9,11 +9,11 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    queryInterface.addColumn('Datauserfile',
-    'state',
-    {
-        type: Sequelize.JSON,
-    })
+    // queryInterface.addColumn('Datauserfile',
+    // 'state',
+    // {
+    //     type: Sequelize.JSON,
+    // })
   },
 
   down: (queryInterface, Sequelize) => {
@@ -24,28 +24,28 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-    queryInterface.addColumn('Datauserfile',
-    'map',
-    {
-        type: Sequelize.JSON,
-    })
+//     queryInterface.addColumn('Datauserfile',
+//     'map',
+//     {
+//         type: Sequelize.JSON,
+//     })
 
-    queryInterface.addColumn('Datauserfile',
-    'options',
-    {
-        type: Sequelize.JSON,
-    })
+//     queryInterface.addColumn('Datauserfile',
+//     'options',
+//     {
+//         type: Sequelize.JSON,
+//     })
 
-    queryInterface.addColumn('Datauserfile',
-    'UPL',
-    {
-        type: Sequelize.JSON,
-    })
+//     queryInterface.addColumn('Datauserfile',
+//     'UPL',
+//     {
+//         type: Sequelize.JSON,
+//     })
 
-    queryInterface.addColumn('Datauserfile',
-    'datavoxelId',
-    {
-        type: Sequelize.STRING,
-    })
+//     queryInterface.addColumn('Datauserfile',
+//     'datavoxelId',
+//     {
+//         type: Sequelize.STRING,
+//     })
   }
 };

@@ -9,20 +9,20 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-    return queryInterface.createTable('Datauserfiles', {
-      map: {
-        type: Sequelize.JSON
-      },
-      options: {
-        type: Sequelize.JSON
-      },
-      UPL: {
-        type: Sequelize.JSON
-      },
-      datavoxelId: {
-        type: Sequelize.STRING//whatever the hash is. it's a string!
-      }
-    });
+    // return queryInterface.createTable('Datauserfiles', {
+    //   map: {
+    //     type: Sequelize.JSON
+    //   },
+    //   options: {
+    //     type: Sequelize.JSON
+    //   },
+    //   UPL: {
+    //     type: Sequelize.JSON
+    //   },
+    //   datavoxelId: {
+    //     type: Sequelize.STRING//whatever the hash is. it's a string!
+    //   }
+    // });
   },
 
   down: (queryInterface, Sequelize) => {
