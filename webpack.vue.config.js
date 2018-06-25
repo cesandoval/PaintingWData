@@ -28,8 +28,10 @@ module.exports = {
                 exclude: /node_modules/,
                 enforce: 'pre',
                 options: {
-                    // fix: true,
-                    // cache: true,
+                    configFile: './private/vue/.eslintrc_vue.js',
+                    ignorePath: '.gitignore',
+                    fix: true,
+                    cache: true,
                 },
             },
             {

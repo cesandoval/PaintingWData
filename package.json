@@ -9,6 +9,7 @@
     "vue:dev": "cross-env NODE_ENV=development webpack --watch --hide-modules --config webpack.vue.config.js",
     "vue:build": "cross-env NODE_ENV=production webpack --progress --hide-modules --config webpack.vue.config.js",
     "start": "cross-env NODE_ENV=production node ./bin/www",
+    "eslint": "eslint",
     "lint": "eslint . --color",
     "lint:vue": "gulp vue-lint",
     "lint:fix": "eslint . --cache --color --fix --debug",
