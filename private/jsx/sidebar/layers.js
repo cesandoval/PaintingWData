@@ -6,73 +6,47 @@ import * as act from '../store/actions'
 import axios from 'axios'
 
 import Layer from './layer'
-
-// const color10 = d3.scaleOrdinal(d3.schemeCategory10).range() // d3.js v4 (backup)
-const color10 = d3.scale.category10().range() // d3.js v3
-
-// shuffle the color10
-for (let i = color10.length; i; i--) {
-    let j = Math.floor(Math.random() * i)
-    ;[color10[i - 1], color10[j]] = [color10[j], color10[i - 1]]
-}
-
-/*
-const createLayer = (
-    name,
-    propertyName,
-    visible,
-    color1 = '#00ff00',
-    color2 = '#0000ff',
-    geojson = [],
-    bbox,
-    rowsCols,
-    bounds,
-    allIndices,
-    shaderText,
-    userLayerName
-) => ({
-    name,
-    propertyName,
-    visible,
-    color1,
-    color2,
-    geojson,
-    bbox,
-    rowsCols,
-    bounds,
-    allIndices,
-    shaderText,
-    userLayerName,
-})
-*/
-
+/**
+ * The top 2/3rds of the sidebar, "Layers".
+ */
 class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)
         this.getLayers() // NEED REFACTORING
     }
-    // Assumes that geojson will be nonzero size
+    /**
+     * Requests Datajsons, and then adds a transformed version to the Redux state.
+     * Because of this, the last line will trigger "componentWillReceiveProps" in "../map/map.js".
+     */
     getLayers() {
-        // TODO Change this when migrate to actual code
+        // TODO: Change this when migrate to actual code
         // GET RID OF DATA... THIS SHOULD BE DONE ON THE FLY WITH A TRANSFORM
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                /*
+                 * "data" is an array of "datasets", which contain important voxel information.
+                 * For each "dataset" in "data", add the "layerKey" property if it doesn't exist.
+                 */
                 let datasets = data.map(dataset => {
+                    // The hash function.
                     const hashKey =
                         (+new Date()).toString(32) +
                         Math.floor(Math.random() * 36).toString(36)
-
                     if (!dataset.layerKey) {
                         dataset.layerKey = hashKey
                     }
                     return dataset
                 })
+                // With "datasets", we'll add a transformed version of this to the Redux state.
                 act.importDatasets({ datasets })
             })
             .catch(e => console.log('getLayers() error', e))
     }
+    /**
+     * Renders the "Layers" component, which is the top 2/3rd of the sidebar on the left.
+     */
     render() {
         return (
             <div className="layers">
@@ -85,8 +59,6 @@ class Layers extends React.Component {
                         name={layer.name}
                         visible={layer.visible}
                         showSidebar={layer.showSidebar}
-                        // color1={layer.color1}
-                        // color2={layer.color2}
                     />
                 ))}
             </div>

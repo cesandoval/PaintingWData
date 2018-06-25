@@ -5,63 +5,49 @@ import { connect } from 'react-redux'
 class Layer extends React.Component {
     constructor(props) {
         super(props)
-
+        /**
+         * Sets default state to gray and visible.
+         * @property {String} color The color of the layer.
+         * @property {Boolean} visibility The visibility of the color.
+         */
         this.state = {
             node: {
                 color: '#AFAFAF',
                 visibility: true,
             },
         }
-
-        this.changeVisibility = this.changeVisibility.bind(this)
+        /**
+         * @member {Function} changeColor
+         * @member {Function} handleCheckedEvent
+         */
         this.changeColor = this.changeColor.bind(this)
         this.handleCheckedEvent = this.handleCheckedEvent.bind(this)
     }
-    changeVisibility(e) {
-        /*
-        act.updateGeometry(
-            this.props.name,
-            'Visibility',
-            e.target.checked,
-            'visible'
-        )
-        act.vlangUpdateNode({
-            nodeKey: this.props.name,
-            attr: 'visibility',
-            value: e.target.checked,
-        })
-        */
-
+    /**
+     * Handles a check/uncheck event by changing visibility of the layer.
+     * @listens onChange
+     */
+    handleCheckedEvent(e) {
         Act.nodeUpdate({
             nodeKey: this.props.layerKey,
             attr: 'visibility',
             value: e.target.checked,
         })
-
-        // act.sideRemoveLayer(this.props.name) // deprecated
-    }
-    handleCheckedEvent(e) {
-        this.changeVisibility(e)
-        // var layerName = this.props.name;
-        // act.sideRemoveLayer(layerName);
     }
     componentWillReceiveProps(props) {
+        /*eslint-disable*/
+        debugger;
         console.log('layer props', this.props.name, { props })
 
         const node = props.nodes[props.layerKey]
 
         if (node) this.setState({ node })
     }
+    /**
+     * Handles a color change.
+     * @listens onChange When its color ends up changing.
+     */
     changeColor(e) {
-        /*
-        act.updateGeometry(this.props.name, 'Color', e.target.value, 'color1')
-        act.vlangUpdateNode({
-            nodeKey: this.props.name,
-            attr: 'color',
-            value: e.target.value,
-        })
-        */
-
         Act.nodeUpdate({
             nodeKey: this.props.layerKey,
             attr: 'color',
@@ -70,6 +56,10 @@ class Layer extends React.Component {
 
         if (window.renderSec) window.renderSec(0.5, 'sidebar layer color')
     }
+    /**
+     * Renders each "Layer" component, which shows: (1) the name, (2) a checkbox for visibility,
+     * and (3) the color.
+     */
     render() {
         if (this.props.showSidebar != false)
             return (

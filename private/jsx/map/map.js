@@ -148,8 +148,6 @@ class MapCanvas extends React.Component {
      * Zooms the map back to its original location.
      */
     zoomMap() {
-        /*eslint-disable*/
-        debugger;
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()

@@ -11,6 +11,8 @@ const initialDatasetsState = {
 export default (state = initialDatasetsState, action) => {
     switch (action.type) {
         case t.IMPORT_DATASETS: {
+            /*eslint-disable*/
+            debugger;
             const { datasets } = action // datasets is an Array
 
             // TODO: check how to use datasets value to setup `minMax` and `allIndices`

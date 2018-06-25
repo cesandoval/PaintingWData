@@ -198,24 +198,24 @@ export default class Pixels {
                 '?access_token=pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg'
             )
         }
-        // Initializes basePlane and mat (the material) for "plane", the mesh.
+        // Initializes basePlane for "plane", the mesh.
         var basePlane = new THREE.PlaneBufferGeometry(
             basePlaneDimension * 100,
             basePlaneDimension * 100,
             1,
             1
         )
+        // Initializes "mat", the mesh material, for "plane".
         var mat = new THREE.MeshBasicMaterial({
             wireframe: true,
             opacity: 0,
         })
-        // Configures the mesh and we add it to the scene.
+        // Configures the mesh "plane" and we add it to the scene.
         var plane = new THREE.Mesh(basePlane, mat)
         plane.rotation.x = -0.5 * Math.PI
         plane.opacity = 0
         canvas.scene.add(plane)
-
-        // calculates which tiles are in view to download
+        // Calculates which tiles are in view to download.
         var updater = new Worker('/javascripts/workers/updatetile.js')
         updater.addEventListener(
             'message',
@@ -292,7 +292,6 @@ export default class Pixels {
             tiles = tiles.map(function(tile) {
                 return slashify(tile)
             })
-
             tilesToGet += tiles.length
             updaterRequests += tiles.length
             totalTilesToLoad = tilesToGet
