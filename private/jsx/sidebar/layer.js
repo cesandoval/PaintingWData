@@ -1,7 +1,9 @@
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
-
+/**
+ * The sub-component of "Layers"; it depicts a single layer.
+ */
 class Layer extends React.Component {
     constructor(props) {
         super(props)
