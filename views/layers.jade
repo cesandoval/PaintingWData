@@ -6,7 +6,9 @@ block pageTitle
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
 
-  #layers
+block content
+  .container(style = "margin-top: 80px;")
+    #layers
 
   - const server = { datafiles, id, userSignedIn, user, layerAlert: layerAlert ? true : false}
 
