@@ -90,47 +90,53 @@ export default class Pixels {
         // Pixels.vlangBuildPixels();
         this.addToScene(graph.scene)
     }
-
-    // Zoom Extent based on geo's bbox
+    /**
+     * Puts the camera back into its original position when we opened up the app.
+     * @param {PaintGraph.Graph} canvas The map canvas.
+     * @param {Array} bbox An array with one element: an array of five 2-tuples specifying the bbox.
+     */
     static zoomExtent(canvas, bbox) {
         let radius = 0
+        // An array of five 2-tuples (first equals last), specifying the latitude/longitude of the bbox rectangle.
         let newBbox = bbox[0]
-
+        // Projects the diagonal corners into 3-space.
         let projectedMin = project([newBbox[0][0], newBbox[0][1]])
         let projectedMax = project([newBbox[2][0], newBbox[2][1]])
         let testMin = new THREE.Vector3()
         let testMax = new THREE.Vector3()
+        // The diagonal corners are now stored in testMin and test Max.
         testMin.x = projectedMin.x
         testMin.y = projectedMin.z
         testMin.z = projectedMin.y
         testMax.x = projectedMax.x
         testMax.y = projectedMax.z
         testMax.z = projectedMax.y
+        // Gets the center of the bbox, and sets the attached OrbitControls to that location.
         let testCenter = new THREE.Vector3()
         testCenter.x = (testMax.x + testMin.x) * 0.5
         testCenter.z = (testMax.y + testMin.y) * 0.5
         testCenter.y = (testMax.z + testMin.z) * 0.5
         canvas.controls.target = testCenter
-
-        // Compute world AABB "radius" (approx: better if BB height)
+        // Computes the "radius" of the bounding box, which is one half the distance between the corner vectors.
         let diag = new THREE.Vector3()
         diag = diag.subVectors(testMax, testMin)
         radius = diag.length() * 0.5
-
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset =
             radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5)
-        let thiscam = canvas.camera
-
-        // THIS ONE IS PROJECTED......
+        // We calculate newPos based on the above offset.
         let newPos = new THREE.Vector3(testCenter.x, offset, testCenter.z)
-
-        //set camera position and target
-        thiscam.position.set(newPos.x, newPos.y, newPos.z)
+        // Sets the camera position and target to newPos.
+        canvas.camera.position.set(newPos.x, newPos.y, newPos.z)
     }
-
+    /**
+     *
+     * @param {PaintGraph.Graph} canvas
+     * @param {Array} bbox
+     * @param {Boolean} screenshot
+     */
     static buildMapbox(canvas, bbox, screenshot) {
-        // TODO: fix eslint error `no-unused-vars`
+        // These are counter variables; used only for testing purposes.
         /* eslint-disable */
         var meshes = 0
         var parserRequests = 0
@@ -141,35 +147,46 @@ export default class Pixels {
 
         //compass functionality
         var screenPosition
-
+        // Moves the camera to the specified starting position.
         this.zoomExtent(canvas, bbox)
-
+        // Defines a raycaster for later.
         var raycaster = new THREE.Raycaster()
-
+        /**
+         * Calculates the amount the camera is zoomed in.
+         * @return {Number} The above.
+         */
         function getZoom() {
+            /*
+             * This is achieved by finding the distance between the camera position and the target.
+             * Note that they only differ in y-coordinate (i.e. moving "in" and "out" of the screen).
+             */
             var pt = canvas.controls.target.distanceTo(
                 canvas.controls.object.position
             )
+            // Applies some transformation to that value to get the zoom.
             return Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22)
         }
 
         var tilesToGet = 0
-
+        /**
+         *
+         * @param {Boolean} img
+         * @param {Array} coords A 3D array of coordinates [z,x,y]
+         */
         function assembleUrl(img, coords) {
+            // Determines the mapboxStyle; defaults to 'mapbox.light'
             const mapboxStyle = window.mapBgStyle || 'mapbox.light'
-            var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
-
+            // Return a 1px white color png image if empty.
             if (mapboxStyle === 'empty') {
-                // return a 1px white color png image
                 return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
             }
-
+            // Variables that depend on "img".
+            var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
             var res = img ? '@2x.png' : '@2x.pngraw'
-
-            //domain sharding
+            // Calculates the server to download from given the coordinates.
             var serverIndex = 2 * (coords[1] % 2) + coords[2] % 2
             var server = ['a', 'b', 'c', 'd'][serverIndex]
-            //return 'sample.png'
+            // Returns an assembled URL that we can now use.
             return (
                 'https://' +
                 server +
@@ -181,7 +198,7 @@ export default class Pixels {
                 '?access_token=pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg'
             )
         }
-
+        // Initializes basePlane and mat (the material) for "plane", the mesh.
         var basePlane = new THREE.PlaneBufferGeometry(
             basePlaneDimension * 100,
             basePlaneDimension * 100,
@@ -191,9 +208,8 @@ export default class Pixels {
         var mat = new THREE.MeshBasicMaterial({
             wireframe: true,
             opacity: 0,
-            //transparent: true
         })
-
+        // Configures the mesh and we add it to the scene.
         var plane = new THREE.Mesh(basePlane, mat)
         plane.rotation.x = -0.5 * Math.PI
         plane.opacity = 0

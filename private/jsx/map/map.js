@@ -25,14 +25,15 @@ class MapCanvas extends React.Component {
         /**
          * The state of the Map component.
          * @type     {Object}
-         * @property {Boolean} mapInited
-         * @property {Boolean} mapStarted
+         * @property {Boolean} mapInited True iff we've rendered the map graphics.
+         * @property {Boolean} mapStarted True iff the sidebar options have been initialized.
          * @property {PaintGraph.Graph} instance The graph containing the canvas properties.
          */
         this.state = { mapInited: false, instance: {}, mapStarted: false }
     }
     /**
-     * Renders the map on the DOM element with id "mapCanvas".
+     * Adds the DOM element with id "mapCanvas", and binds it to a Graph G.
+     * Then, G is bound to this.state.instance.
      */
     componentDidMount() {
         // The element 'mapCanvas'; the height and width.
@@ -45,29 +46,31 @@ class MapCanvas extends React.Component {
         this.setState({ instance: G })
     }
     /**
+     * This function either:
+     *    (1) Renders the initial map; this is only when the map loads.
+     *    (2) Initializes the sidebar options.
+     * We'll only do anything on initialization. Otherwise, we don't do anything.
      * @param {Object} newProps The props to be passed in.
      */
     componentWillReceiveProps(newProps) {
-        // Get layers once they appear
-        // Map them to Pixels objects
-        // Add the pixel geometries to the map
+        // Checks if we've already initialized or if the props passed in aren't layers.
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
+            // Gets the layers once they appear, maps them to Pixels objects, and adds the pixel geometries to the map.
             Act.mapInit({
                 instance: this.state.instance,
                 datasetsLayers: newProps.layers,
             })
+            // Now we know that the map is initialized.
             this.setState({ mapInited: true })
         }
-
-        console.log('map componentWillReceiveProps()', { newProps })
-        // init the map options by default/userfile value from redux when map has started.
+        // Initializes the sidebar options.
         if (newProps.mapStarted && !this.state.mapStarted) {
             const options = this.props.options
-
+            // Changes the option values accordingly.
             if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
             if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
             if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
-
+            // Sets mapStarted = true so that this conditional block doesn't get accessed again.
             this.setState({ mapStarted: true })
         }
     }
@@ -141,8 +144,12 @@ class MapCanvas extends React.Component {
             }
         }
     }
-
+    /**
+     * Zooms the map back to its original location.
+     */
     zoomMap() {
+        /*eslint-disable*/
+        debugger;
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()
