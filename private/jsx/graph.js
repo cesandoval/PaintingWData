@@ -187,8 +187,8 @@ export default class Graph {
             let previewRatio = height / newPreviewHeight
             let newPreviewWidth = width / previewRatio
 
-            resizedCanvas.height = newPreviewHeight.toString()
-            resizedCanvas.width = newPreviewWidth.toString()
+            resizedPreview.height = newPreviewHeight.toString()
+            resizedPreview.width = newPreviewWidth.toString()
             resizedContextPreview.drawImage(
                 renderer.domElement,
                 0,
@@ -197,8 +197,10 @@ export default class Graph {
                 newPreviewHeight
             )
 
-            let img = resizedCanvas.toDataURL('image/jpeg')
             let preview = resizedPreview.toDataURL('image/jpeg')
+
+            let img = resizedCanvas.toDataURL('image/jpeg')
+
             let request = { id: datavoxelId, data: img, preview: preview }
 
             axios({

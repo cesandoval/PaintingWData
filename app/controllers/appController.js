@@ -4,8 +4,8 @@ var Datavoxelimage = require('../models').Datavoxelimage;
 
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-var bucket = process.env === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
-var previewBucket = process.env === 'production' ? 'data-voxel-preview-server' : 'data-voxel-preview';
+var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
+var previewBucket = process.env.NODE_ENV === 'production' ? 'data-voxel-preview-server' : 'data-voxel-preview';
 
 /**
  * Displays app.jade on /app/{datavoxelId}
@@ -41,7 +41,7 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
   Model.Datavoxelimage.findAll({
     limit: 10,
     order:[['createdAt', 'ASC']],
-    // where: {deleted: 0}
+    where: {public: true}
   }).then(function(screenshotLinks) {
     var images = [];
     screenshotLinks.forEach(function(screenshotLink) {
@@ -72,33 +72,31 @@ module.exports.uploadScreenshot = function(req, res) {
   var previewBuf = new Buffer(previewData, 'base64');
   console.log('The current bucket is:', bucket)
 
-  Model.Datavoxelimage.findOne({
-    where: {DatavoxelId: datavoxelId},
-    include: [{model: Model.Datavoxel}]
-  }).then(function(dataVoxelImage) {
-    if (dataVoxelImage == null) {
-      s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
-        var newDataVoxelImage = Datavoxelimage.build();
-        newDataVoxelImage.DatavoxelId = datavoxelId
-        newDataVoxelImage.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
-        newDataVoxelImage.public = dataVoxelImage.Datavoxel.dataValues.public
-        newDataVoxelImage.preview = true
-        
-        newDataVoxelImage.save().then(function(){
-          console.log('DatavoxelImage has been created', imageLink)
-        });   
-      });
-    } else if (dataVoxelImage.preview == null) {
-      s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
-        dataVoxelImage.update({preview: true}).then(() => {
-          console.log('DatavoxelImage has been upated with a Preview Image', imageLink)
+  Model.Datavoxel.findOne({
+    where: {id: datavoxelId }, 
+    include: [{model: Model.Datavoxelimage}]
+    }).then(function(voxel) {
+      if (voxel.Datavoxelimage === null) {
+        s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
+          var newDataVoxelImage = Datavoxelimage.build();
+          newDataVoxelImage.DatavoxelId = datavoxelId
+          newDataVoxelImage.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
+          newDataVoxelImage.public = voxel.public
+          newDataVoxelImage.preview = true
+          newDataVoxelImage.save().then(function(){
+            console.log('DatavoxelImage has been created', imageLink)
+          });   
+        });
+      } else if (voxel.Datavoxelimage.preview == null){
+        s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
+          voxel.Datavoxelimage.update({preview: true}).then(() => {
+            console.log('DatavoxelImage has been upated with a Preview Image at', imageLink)
+          })
         })
-      })
-    }
-    else {
-      console.log('DatavoxelImage already exists')
-    }
-  })
+      } else {
+        console.log('DatavoxelImage already exists')
+      }  
+    })
 }
 
 /**
@@ -146,10 +144,8 @@ module.exports.getDatajsons = function(req, res){
 		  where: {id: req.params.datavoxelId }, 
 		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
-        console.log(8383838383, 'screenshotttt')
-        // console.log(voxel.Datavoxelimage, voxel.Datavoxelimage.preview, voxel.public)
         if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null) {
-          console.log(8383838383, 'needed')
+          console.log('Screenshot needed on the backend!')
           //screenshot needed
           datajsons[0].dataValues.screenshot = true
           res.json(datajsons);
