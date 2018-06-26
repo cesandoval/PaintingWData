@@ -37,8 +37,6 @@ class Layer extends React.Component {
         })
     }
     componentWillReceiveProps(props) {
-        /*eslint-disable*/
-        debugger;
         console.log('layer props', this.props.name, { props })
 
         const node = props.nodes[props.layerKey]

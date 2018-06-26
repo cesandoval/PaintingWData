@@ -5,6 +5,7 @@ var Datavoxelimage = require('../models').Datavoxelimage;
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3({apiVersion: '2006-03-01'});
 var bucket = process.env === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
+var previewBucket = process.env === 'production' ? 'data-voxel-preview-server' : 'data-voxel-preview';
 
 /**
  * Displays app.jade on /app/{datavoxelId}
@@ -61,25 +62,40 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 module.exports.uploadScreenshot = function(req, res) {
   //Update react state so we know if this user has opened this voxel before
   var img = req.body.data;
+  var preview = req.body.preview;
 
   var datavoxelId = req.body.id;
   var data = img.replace(/^data:image\/\w+;base64,/, "");
+  var previewData = preview.replace(/^data:image\/\w+;base64,/, "");
+
   var buf = new Buffer(data, 'base64');
+  var previewBuf = new Buffer(previewData, 'base64');
   console.log('The current bucket is:', bucket)
 
   Model.Datavoxelimage.findOne({
-    where: {DatavoxelId: datavoxelId}
+    where: {DatavoxelId: datavoxelId},
+    include: [{model: Model.Datavoxel}]
   }).then(function(dataVoxelImage) {
     if (dataVoxelImage == null) {
-      var imgURL = s3Lib.uploadBlobToBucket(buf, datavoxelId, bucket, function(imageLink) {
-        var dataVoxelImage = Datavoxelimage.build();
-        dataVoxelImage.DatavoxelId = datavoxelId
-        dataVoxelImage.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
-        dataVoxelImage.save().then(function(){
+      s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
+        var newDataVoxelImage = Datavoxelimage.build();
+        newDataVoxelImage.DatavoxelId = datavoxelId
+        newDataVoxelImage.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
+        newDataVoxelImage.public = dataVoxelImage.Datavoxel.dataValues.public
+        newDataVoxelImage.preview = true
+        
+        newDataVoxelImage.save().then(function(){
           console.log('DatavoxelImage has been created', imageLink)
         });   
       });
-    } else {
+    } else if (dataVoxelImage.preview == null) {
+      s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
+        dataVoxelImage.update({preview: true}).then(() => {
+          console.log('DatavoxelImage has been upated with a Preview Image', imageLink)
+        })
+      })
+    }
+    else {
       console.log('DatavoxelImage already exists')
     }
   })
@@ -130,7 +146,10 @@ module.exports.getDatajsons = function(req, res){
 		  where: {id: req.params.datavoxelId }, 
 		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
-        if (voxel.Datavoxelimage === null && voxel.public == true) {
+        console.log(8383838383, 'screenshotttt')
+        // console.log(voxel.Datavoxelimage, voxel.Datavoxelimage.preview, voxel.public)
+        if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null) {
+          console.log(8383838383, 'needed')
           //screenshot needed
           datajsons[0].dataValues.screenshot = true
           res.json(datajsons);

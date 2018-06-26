@@ -13,10 +13,8 @@ export default (state = initialDatasetsState, action) => {
          * Imports datasets from "layers.js", which then triggers the creation of Pixels in "map.js" (componentWillReceiveProps).
          */
         case t.IMPORT_DATASETS: {
-            /*eslint-disable*/
-            debugger;
             const { datasets } = action // "datasets" is an Array; each element is an Object containing
-                                        // all the relevant geojson data.
+            // all the relevant geojson data.
             // TODO: check how to use datasets value to setup `minMax` and `allIndices`
             // TODO: refactor color......
             // Takes an array of colors, and shuffles them.
@@ -28,7 +26,8 @@ export default (state = initialDatasetsState, action) => {
             // Transforms each "datasets" element into an element of "layers".
             let layers = datasets.map((l, index) => {
                 const length = l.geojson.geojson.features.length
-                const propertyName = l.geojson.geojson.features[0].properties.property
+                const propertyName =
+                    l.geojson.geojson.features[0].properties.property
                 // Will hold a transformed geojson.
                 const transGeojson = {
                     // The layer name.
