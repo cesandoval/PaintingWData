@@ -6,184 +6,47 @@ import * as act from '../store/actions'
 import axios from 'axios'
 
 import Layer from './layer'
-
-// const color10 = d3.scaleOrdinal(d3.schemeCategory10).range() // d3.js v4 (backup)
-const color10 = d3.scale.category10().range() // d3.js v3
-
-// shuffle the color10
-for (let i = color10.length; i; i--) {
-    let j = Math.floor(Math.random() * i)
-    ;[color10[i - 1], color10[j]] = [color10[j], color10[i - 1]]
-}
-
-/*
-const createLayer = (
-    name,
-    propertyName,
-    visible,
-    color1 = '#00ff00',
-    color2 = '#0000ff',
-    geojson = [],
-    bbox,
-    rowsCols,
-    bounds,
-    allIndices,
-    shaderText,
-    userLayerName
-) => ({
-    name,
-    propertyName,
-    visible,
-    color1,
-    color2,
-    geojson,
-    bbox,
-    rowsCols,
-    bounds,
-    allIndices,
-    shaderText,
-    userLayerName,
-})
-*/
-
+/**
+ * The top 2/3rds of the sidebar, "Layers".
+ */
 class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)
         this.getLayers() // NEED REFACTORING
     }
-    // Assumes that geojson will be nonzero size
+    /**
+     * Requests Datajsons, and then adds a transformed version to the Redux state.
+     * Because of this, the last line will trigger "componentWillReceiveProps" in "../map/map.js".
+     */
     getLayers() {
-        // TODO Change this when migrate to actual code
+        // TODO: Change this when migrate to actual code
         // GET RID OF DATA... THIS SHOULD BE DONE ON THE FLY WITH A TRANSFORM
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                /*
+                 * "data" is an array of "datasets", which contain important voxel information.
+                 * For each "dataset" in "data", add the "layerKey" property if it doesn't exist.
+                 */
                 let datasets = data.map(dataset => {
+                    // The hash function.
                     const hashKey =
                         (+new Date()).toString(32) +
                         Math.floor(Math.random() * 36).toString(36)
-
                     if (!dataset.layerKey) {
                         dataset.layerKey = hashKey
                     }
                     return dataset
                 })
+                // With "datasets", we'll add a transformed version of this to the Redux state.
                 act.importDatasets({ datasets })
-                // Act.mapSetPCoords({
-                //     value: Object.assign({}, this.props.pcoordsValue, brushes),
-                // })
-
-                /*
-                act.sideAddLayers(
-                    data.map((l, index) => {
-                        const length = l.geojson.geojson.features.length
-                        //TODO: Use shouldScreenshot to update react state to only screenshot when
-                        //neccessary
-                        //const shouldScreenshot = l.screenshot
-                        const propertyName =
-                            l.geojson.geojson.features[0].properties.property
-
-                        // Will hold a transoformed geojson
-                        const transGeojson = {
-                            name: l.geojson.layername,
-                            type: l.geojson.geojson.features[0].geometry.type,
-                            length: length,
-                            // data: Array(Math.floor(Math.sqrt(length))),
-                            // OTHERDATA SHOULD BE ELIMINATED ONCE THE GRAPH CREATOR IS MIGRATED TO THE NEW VERSION
-                            otherdata: Array(length),
-                            hashedData: {},
-                            minMax: Array(2),
-                        }
-                        // geojson -> Float32Array([x, y, z, w, id])
-                        // Map Geojson data to matrix index
-
-                        const projOffset = 111.111
-                        const ptDistance = l.Datavoxel.ptDistance * projOffset
-                        const lowBnd = ptDistance / 10
-                        const highBnd = ptDistance * 1.2
-                        const bounds = [lowBnd, highBnd]
-
-                        // Define the Shader
-                        let shaderContent = document.getElementById(
-                            'fragmentShader'
-                        ).textContent
-                        shaderContent = shaderContent.replace(
-                            /1.5/g,
-                            parseFloat(1 / ptDistance)
-                        )
-
-                        const mappedGeojson = l.geojson.geojson.features.map(
-                            g => {
-                                // Shouldn't need to parse
-                                //const coords = g.geometry.coodinates.map(a=>(parseFloat(a)))
-                                const coords = g.geometry.coordinates
-                                // const id = parseFloat(g.id);
-                                const weight = parseFloat(
-                                    g.properties[l.layername]
-                                )
-                                const row = g.properties.neighborhood.row
-                                const column = g.properties.neighborhood.column
-                                const pointIndex = g.properties.pointIndex
-                                return new Float32Array([
-                                    coords[0],
-                                    coords[1],
-                                    0,
-                                    weight,
-                                    1,
-                                    row,
-                                    column,
-                                    pointIndex,
-                                ])
-                            }
-                        )
-                        // mappedGeojson.sort();
-                        // for (let i = 0; i < Math.floor(Math.sqrt(length)); i++){
-                        //     let j = i * 200;
-                        //     transGeojson.data[i] = mappedGeojson.slice(j, j+200);
-                        // }
-
-                        let minVal = Number.POSITIVE_INFINITY
-                        let maxVal = Number.NEGATIVE_INFINITY
-
-                        for (let i = 0, j = 0; i < length; i++, j = j + 3) {
-                            if (mappedGeojson[i][3] < minVal) {
-                                minVal = mappedGeojson[i][3]
-                            }
-                            if (mappedGeojson[i][3] > maxVal) {
-                                maxVal = mappedGeojson[i][3]
-                            }
-                            transGeojson.otherdata[i] = mappedGeojson[i]
-                            transGeojson.hashedData[mappedGeojson[i][7]] =
-                                mappedGeojson[i]
-                        }
-
-                        // TODO: more than 10 color
-                        l.color1 = color10[index % 10]
-                        l.color2 = l.color1
-                        // l.color2 = d3.rgb(l.color1).brighter().toString()
-
-                        transGeojson.minMax = [minVal, maxVal]
-                        return createLayer(
-                            l.layername,
-                            propertyName,
-                            true,
-                            l.color1,
-                            l.color2,
-                            transGeojson,
-                            l.Datavoxel.bbox.coordinates,
-                            l.Datavoxel.rowsCols,
-                            bounds,
-                            l.Datavoxel.allIndices,
-                            shaderContent,
-                            l.Datafile.Datalayers[0].userLayerName
-                        )
-                    })
-                )
-                */
             })
             .catch(e => console.log('getLayers() error', e))
     }
+    /**
+     * Renders the "Layers" component, which is the top 2/3rd of the sidebar on the left.
+     */
     render() {
         return (
             <div className="layers">
@@ -196,8 +59,6 @@ class Layers extends React.Component {
                         name={layer.name}
                         visible={layer.visible}
                         showSidebar={layer.showSidebar}
-                        // color1={layer.color1}
-                        // color2={layer.color2}
                     />
                 ))}
             </div>

@@ -1,5 +1,7 @@
 // import * as c from '../consts'
-
+/**
+ * TODO: This file is UNUSED. We should delete it soon!
+ */
 const initialSidebarState = {
     layers: [],
     opacity: 0.5,

@@ -1,89 +1,82 @@
 /* global project */
+/* global datavoxelId */
 
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
-
 import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
-import DensityChart from '../charts/charts'
+import Charts from '../charts/charts'
+import Table from '../charts/table'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import Button from 'react-bootstrap/lib/Button'
-
+/**
+ * The Map component. Contains a draggable, zoomable map, with voxels as concentric circles
+ * representing the data points. This can be used to correlate two variables, such as home
+ * prices, or asthma rates, etc.
+ * @author PaintingWithData
+ */
 class MapCanvas extends React.Component {
+    /**
+     * The constructor, which initializes the state of the Map component.
+     * @param {Object} props
+     */
     constructor(props) {
         super(props)
-        // this.state = { layersAdded: false }
-        this.state = { mapInited: false, instance: {} }
+        /**
+         * The state of the Map component.
+         * @type     {Object}
+         * @property {Boolean} mapInited True iff we've rendered the map graphics.
+         * @property {Boolean} mapStarted True iff the sidebar options have been initialized.
+         * @property {PaintGraph.Graph} instance The graph containing the canvas properties.
+         */
+        this.state = { mapInited: false, instance: {}, mapStarted: false }
     }
+    /**
+     * Adds the DOM element with id "mapCanvas", and binds it to a Graph G.
+     * Then, G is bound to this.state.instance.
+     */
     componentDidMount() {
+        // The element 'mapCanvas'; the height and width.
         const gElement = document.getElementById('mapCanvas')
         const gHeight = window.innerHeight
         const gWidth = gElement.clientWidth
+        // Constructs a new PaintGraph.Graph based in "mapCanvas" and updates state.
         const G = new PaintGraph.Graph(gElement, gHeight, gWidth)
         G.start()
         this.setState({ instance: G })
-
-        // act.mapAddInstance(G)
     }
+    /**
+     * This function either:
+     *    (1) Renders the initial map; this is only when the map loads.
+     *    (2) Initializes the sidebar options.
+     * We'll only do anything on initialization. Otherwise, we don't do anything.
+     * @param {Object} newProps The props to be passed in.
+     */
     componentWillReceiveProps(newProps) {
-        // Get layers once they appear
-        // Map them to Pixels objects
-        // Add the pixel geometries to the map
-        // console.log(99999,G)
-
+        // Checks if we've already initialized or if the props passed in aren't layers.
         if (!_.isEmpty(newProps.layers) && !this.state.mapInited) {
+            // Gets the layers once they appear, maps them to Pixels objects, and adds the pixel geometries to the map.
             Act.mapInit({
                 instance: this.state.instance,
                 datasetsLayers: newProps.layers,
             })
+            // Now we know that the map is initialized.
             this.setState({ mapInited: true })
         }
 
-        /*
-        if (!_.isEmpty(newProps.layers) && !this.state.layersAdded) {
-            // Sets the camera to the voxels' bbox
-            const bbox = newProps.layers[0].bbox
-            const canvas = newProps.map
+        // Initializes the sidebar options.
+        // if (newProps.mapStarted && !this.state.mapStarted) {
+        //     const options = this.props.options
+        //     // Changes the option values accordingly.
 
-            // Set the camera
-            PaintGraph.Pixels.zoomExtent(canvas, bbox)
-            // Add the map to the canvas
-            PaintGraph.Pixels.buildMapbox(this.props.map, canvas, bbox)
+        //     if (options.knnValue) Act.mapSetKNN({ value: options.knnValue })
+        //     if (options.opacity) Act.mapSetOpacity({ value: options.opacity })
+        //     if (options.bgStyle) Act.mapSetBgStyle({ value: options.bgStyle })
+        //     // Sets mapStarted = true so that this conditional block doesn't get accessed again.
 
-            this.setState({ layersAdded: true, bbox: bbox, canvas: canvas })
-
-            newProps.layers.map((layer, n) => {
-                // Defined geometry
-                const circle = new THREE.CircleBufferGeometry(1, 20)
-                // Parses the layer
-                const out = PaintGraph.Pixels.parseDataJSON(layer)
-
-                const nodeHashKey =
-                    (+new Date()).toString(32) +
-                    Math.floor(Math.random() * 36).toString(36)
-
-                // Creates the Pixels object
-                const P = new PaintGraph.Pixels(
-                    nodeHashKey,
-                    this.props.map,
-                    circle,
-                    out.otherArray,
-                    out.startColor,
-                    out.endColor,
-                    layer.geojson.minMax,
-                    out.addressArray,
-                    layer.rowsCols.cols,
-                    layer.rowsCols.rows,
-                    n,
-                    layer.bounds,
-                    layer.shaderText
-                )
-
-                act.mapAddGeometry(layer.name, P)
-            })
-        }
-        */
+        //     this.setState({ mapStarted: true })
+        // }
     }
 
     exportSVG(geoms) {
@@ -156,10 +149,65 @@ class MapCanvas extends React.Component {
         }
     }
 
+    getScreenShot() {
+        window.getScreenShot()
+    }
+
+    /**
+     * Zooms the map back to its original location.
+     */
     zoomMap() {
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()
+    }
+    //TODO: Pass in the appropriate parameters!
+    saveFile() {
+        //Gets the voxel ID.
+        /*
+        var temp = window.location.toString().split('/')
+        var voxelId = parseInt(temp[temp.length - 1])
+        */
+        //This is horrible coding, copying from exportSVG... lolrip
+        let _centroid = this.props.map.camera.position
+        let bbox = this.props.bbox[0]
+        let projectedMin = project([bbox[0][0], bbox[0][1]])
+        let projectedMax = project([bbox[2][0], bbox[2][1]])
+
+        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
+        let _bounds = [
+            Math.abs(projectedMax.x + _translation[0]),
+            Math.abs(projectedMax.z + (0 - projectedMin.z)),
+        ]
+        //Save everything in one JSON -- pass variable "info" to the request handler.
+        var _info = {
+            // It's just the "map" attribute that we have to fix. "options" and "vpl" correspond to the correct properties.
+            map: {
+                translation: _translation,
+                centroid: _centroid,
+                bounds: _bounds,
+                /*
+                instance: {
+                  // ThreeJS Graph Object
+                  renderFunc,
+                },
+                loaded: false,
+                geometries: {
+                  [layer$key]: {
+
+                  },
+                },
+                // layers: [], // ???
+                */
+            },
+            options: this.props.options,
+            vpl: this.props.vpl,
+        }
+        Act.saveUserFile({
+            userId: 1, //replace with user Id
+            voxelId: datavoxelId,
+            info: _info,
+        })
     }
 
     render() {
@@ -176,6 +224,22 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
+                        width: '75vw',
+                        position: 'fixed',
+                        overflow: 'hidden',
+                        top: '15vh',
+                        right: '2.5vw',
+                        zIndex: '100',
+                        opacity: 0.9,
+                        display: panelShow == 'TABLE' ? '' : 'none',
+                        border: 'none',
+                    }}
+                >
+                    <Table />
+                </div>
+                <div
+                    style={{
+                        backgroundColor: 'white',
                         width: '80vw',
                         height: '300px',
                         position: 'fixed',
@@ -187,7 +251,7 @@ class MapCanvas extends React.Component {
                         display: panelShow.includes('Chart') ? '' : 'none',
                     }}
                 >
-                    <DensityChart />
+                    <Charts />
                 </div>
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
@@ -240,7 +304,19 @@ class MapCanvas extends React.Component {
                             >
                                 SHP
                             </MenuItem>
+                            <MenuItem onClick={this.getScreenShot}>
+                                IMAGE
+                            </MenuItem>
                         </DropdownButton>
+
+                        {/* <Button
+                            id={`save-userfile`}
+                            onClick={() => {
+                                this.saveFile()
+                            }}
+                        >
+                            Save Userfile
+                        </Button> */}
                     </div>
                     <Button
                         id="zoomShow"
@@ -262,8 +338,11 @@ class MapCanvas extends React.Component {
 export default connect(s => ({
     layers: s.datasets.layers,
     map: s.map.instance,
+    mapStarted: s.map.started,
+    options: s.options,
     panelShow: s.interactions.panelShow,
     activeNode: s.vpl.nodes[s.interactions.activeNode],
     geometries: s.map.geometries,
     bbox: s.map.bbox,
+    vpl: s.vpl,
 }))(MapCanvas)

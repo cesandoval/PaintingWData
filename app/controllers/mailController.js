@@ -37,7 +37,6 @@ module.exports.sendVerificationEmail = function(email, verificationLink) {
 };
 
 module.exports.sendVoxelEmail = function(email, userId) {
-  /* //chxu (temporary)
 	var mailOptions = {
     	from: '"Painting With Data" <support@paintingwithdata.com>', 
 		to: email, 
@@ -52,7 +51,6 @@ module.exports.sendVoxelEmail = function(email, userId) {
     	}
     	console.log('Message %s sent: %s', info.messageId, info.response);
   	});
-    */
 };
 
 module.exports.sendResetPasswordEmail = function(email, passwordLink) {
@@ -75,7 +73,6 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
 
 
 module.exports.sendLayerEmail = function(email, userId) {
-  /* //chxu (temporary)
   var mailOptions = {
       from: '"Painting With Data" <support@paintingwithdata.com>', 
     to: email, 
@@ -90,5 +87,4 @@ module.exports.sendLayerEmail = function(email, userId) {
       }
       console.log('Message %s sent: %s', info.messageId, info.response);
     });
-  */
 };

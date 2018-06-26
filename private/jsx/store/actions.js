@@ -1,10 +1,23 @@
 import store from './store'
 import * as t from './types'
 
+// app
+export const importUserfile = payload =>
+    store.dispatch({
+        type: t.IMPORT_USERFILE,
+        ...payload,
+    })
+
 // datasets
 export const importDatasets = payload =>
     store.dispatch({
         type: t.IMPORT_DATASETS,
+        ...payload,
+    })
+
+export const loadTableData = payload =>
+    store.dispatch({
+        type: t.LOAD_TABLE_DATA,
         ...payload,
     })
 
@@ -99,5 +112,12 @@ export const setPanelShow = payload =>
 export const setRefreshVoxels = payload =>
     store.dispatch({
         type: t.SET_REFRESHVOXELS,
+        ...payload,
+    })
+
+// save/import stuff
+export const saveUserFile = payload =>
+    store.dispatch({
+        type: t.SAVE_USERFILE,
         ...payload,
     })
