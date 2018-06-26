@@ -10,7 +10,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      deleted: {
+      public: {
+        type: DataTypes.BOOLEAN,
+      },
+      preview: {
         type: DataTypes.BOOLEAN,
       },
   }, {

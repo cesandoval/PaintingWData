@@ -181,8 +181,27 @@ export default class Graph {
                 newHeight
             )
 
-            let img = resizedCanvas.toDataURL()
-            let request = { id: datavoxelId, data: img }
+            let resizedPreview = document.createElement('canvas')
+            let resizedContextPreview = resizedPreview.getContext('2d')
+            let newPreviewHeight = 900
+            let previewRatio = height / newPreviewHeight
+            let newPreviewWidth = width / previewRatio
+
+            resizedPreview.height = newPreviewHeight.toString()
+            resizedPreview.width = newPreviewWidth.toString()
+            resizedContextPreview.drawImage(
+                renderer.domElement,
+                0,
+                0,
+                newPreviewWidth,
+                newPreviewHeight
+            )
+
+            let preview = resizedPreview.toDataURL('image/jpeg')
+
+            let img = resizedCanvas.toDataURL('image/jpeg')
+
+            let request = { id: datavoxelId, data: img, preview: preview }
 
             axios({
                 method: 'post',
