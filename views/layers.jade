@@ -1,21 +1,139 @@
 extends layoutSidePage
 
 block pageTitle
-
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+  link(rel="stylesheet", href="/stylesheets/layers.css")
+  link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
-
-block content
-  .container(style = "margin-top: 80px;")
-    #layers
-
-  - const server = { datafiles, id, userSignedIn, user, layerAlert: layerAlert ? true : false}
-
+  script(src="/javascripts/layers.js")
+  script(src="/javascripts/js/bootstrap-slider.js")
   script.
-    const server = !{JSON.stringify(server)}
-    console.log({server})
+  
+  .container(style = "margin-top: 10px; margin-left: 0; width: 100vw;").spacing-large
+    .container
+      .row.spacing
+        .col-md-9
+          h1 Layers
 
-  script(src="/javascripts/vue/Layers.js")
+      if (layerAlert)
+        .alert.alert-danger(role='alert') #{layerAlert}
+
+      .row
+        .col-md-6
+          h4.spacing This is your library of layers. Select layers below that you would like to add to a voxel project.
+          p To compute a voxel first select the set of layers you want to combine. To select a layer click on it once, to deselect click it again.
 
 
+      .row
+        .col-md-6.spacing
+          if datafiles.length == 0
+            p.spacing-large(role='alert' style = "margin-top:20px" ) No layers found  &nbsp;
+            <br>
+            div
+              a(href = "/upload")
+                btn.btn.btn-outline-primary Upload a layer
+          if datafiles.length != 0
+            div
+              a(href = "/upload")
+                btn.btn.btn-outline-primary Upload a layer
+
+  .container
+      .row
+      for datafile in datafiles
+        if datafile.Datalayers[0]
+          .col-sm-6.col-md-4
+            .thumbnail.datalayer(selected = "false", style="z-index: 1;")
+              .caption
+                div(style="height: 3px; width: 70%; margin-left: 15%; display: block; padding-bottom: 20px;")
+              div(id="map_#{datafile.id}", class = "leafletMap", style="width: 90%; height: 300px; margin:0 auto;")
+              .caption(style="padding-left: 5%;")
+                  .layername
+                    h3(style="font-weight: 700;") #{datafile.Datalayers[0].userLayerName}
+                    br
+                    label.layer-label Layer Name
+                    p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                  .userlayername
+                    label.layer-label User Layer Name
+                    p(display='inline').label-body #{datafile.Datalayers[0].userLayerName}
+                  .property
+                    label.layer-label Data Property
+                    p.label-body #{datafile.Datalayers[0].rasterProperty}
+                  if datafile.Datalayers[0].location.length > 0
+                    .location
+                      label.layer-label Layer Location
+                      p.label-body #{datafile.Datalayers[0].location}
+
+              p.label-body.text-center
+                a.modal-button.btn(id="modal-toggle" data-toggle="modal" data-target="#mapView_#{datafile.id}" data-map-id="#{datafile.id}") View Layer
+
+          div.modal.fade.bs-example-modal-lg(id="mapView_#{datafile.id}" tabindex="-1" role="dialog" data-backdrop="false" data-container="body" aria-labelledby="gridSystemModalLabel", style="z-index: 10000;")
+            div.modal-dialog.modal-lg(role="document")
+              div.modal-content(style="z-index: 10000!important;")
+                div.modal-header
+                  button(type="button" class="close" data-dismiss="modal" data-map-id="#{datafile.id}" aria-label="Close")<span aria-hidden="true">&times;</span></button>
+                  .row.spacing
+                    h1.center #{datafile.Datalayers[0].userLayerName}
+                div.modal-body
+                  .row
+                    .col-md-6
+                      script.
+                        var id = #{datafile.id};
+                        //- var size = #{size};
+                      div(id="map_thumbnail_#{datafile.id}", style="width: 400px; height: 400px; margin:0 auto;").spacing
+                    .col-md-6
+                      label.layer-label Layer Name
+                        p(display='inline').label-body #{datafile.Datalayers[0].layername}
+                      .property
+                        label.layer-label EPSG Code
+                          p.label-body #{datafile.Datalayers[0].epsg}
+                      if datafile.Datalayers[0].description.length > 0
+                        .description
+                          label.layer-label Layer Description
+                          p.label-body #{datafile.Datalayers[0].description}
+                      label.layer-label Uploaded On
+                        p.label-body #{datafile.Datalayers[0].createdAt.toUTCString()}
+
+    if datafiles.length != 0
+      .container.spacing-large
+        .row
+          .col-md-6
+            .row
+                h1.spacing-large Compute a Voxel
+            .row
+              form(method='post', action='/layers')
+                input.pull-right.form-control.form-input-line(type='text', name= 'voxelname', placeholder='Project name...')
+                input.form-control.hidden(style="width: 100%", name = "datalayerIds" ,id="selectedLayers", type='hidden')
+                <br>
+                .row.spacing
+                  .col-md-3
+                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;") Density
+                  .col-md-9
+                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-right: 10px;")   10000 
+                    input.slider(style="display: inline-block; vertical-align: middle;" data-slider-handle="round", name='voxelDensity', data-slider-min='10000', data-slider-max='60000', data-slider-value='40000')
+                    p.sans(style="font-size: 11pt; display: inline; vertical-align: middle; line-height: 20px; padding-left: 10px;")     60000 
+                <br>
+
+                .row.spacing
+                  .col-md-3
+                    .input-group-btn
+                      button.btn.btn-outline-primary(type='submit', name="layerButton", value="compute") Compute
+                  .col-md-3
+                    .input-group-btn.text-center
+                      button.btn.btn-outline-primary(type='submit', name="layerButton", value="delete", formaction="/layers") Delete Layer
+    
+    div.spacing-large
+    
+  script.
+    var mySlider = $("input.slider").bootstrapSlider();
+    var value = mySlider.bootstrapSlider('getValue');
+
+    // For non-getter methods, you can chain together commands
+    //- mySlider
+    //-     .bootstrapSlider('setValue', 5)
+    //-     .bootstrapSlider('setValue', 7);
+
+  script(src="/javascripts/map_thumbnail_viewer.js")
+  script(src="/javascripts/user_layer.js")
+  // script(src="/javascripts/layer_viewer.js") 
+    
