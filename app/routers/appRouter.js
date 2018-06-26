@@ -46,15 +46,25 @@ var passport = require('passport'),
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
+  router.get('/datasets/:id', isAuthenticated, datalayerController.showDatasets);
+  router.get('/datasets/:id/:datafileId', isAuthenticated, datalayerController.showDatasets);
+  router.post('/datasets', isAuthenticated, datalayerController.computeVoxels);
+
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
   router.get('/voxels/:id/:datalayerId', isAuthenticated, datalayerController.showVoxels);
   router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);
 
+  router.get('/projects/:id', isAuthenticated, datalayerController.showProjects);
+  router.get('/projects/:id/:datalayerId', isAuthenticated, datalayerController.showProjects);
+  router.post('/projects', isAuthenticated, datalayerController.transformProjects);
 
   // vue test page
   router.get('/vue', function (req, res) { 
     res.render('vue', {userSignedIn: req.isAuthenticated(), user: req.user}); 
   }); 
+
+  // TODO(CreateProject)
+  // router.get('/createProject/:id', isAuthenticated, datalayerController.createProject);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
