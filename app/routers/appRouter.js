@@ -50,6 +50,12 @@ var passport = require('passport'),
   router.get('/voxels/:id/:datalayerId', isAuthenticated, datalayerController.showVoxels);
   router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);
 
+
+  // vue test page
+  router.get('/vue', function (req, res) { 
+    res.render('vue', {userSignedIn: req.isAuthenticated(), user: req.user}); 
+  }); 
+
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
 
   router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);

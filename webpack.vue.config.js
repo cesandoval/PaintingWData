@@ -112,6 +112,7 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             turf: '@turf/turf',
+            _: 'lodash',
         }),
         new webpack.NamedModulesPlugin(),
     ],
