@@ -1,6 +1,8 @@
 var gulp = require('gulp')
 // var gutil = require('gulp-util')
+gulp.task('default', ['watch'])
 
+/*
 const eslint = require('gulp-eslint')
 
 var browserify = require('browserify')
@@ -10,7 +12,6 @@ const glob = require('glob')
 const rename = require('gulp-rename')
 const es = require('event-stream')
 
-gulp.task('default', ['vueify', 'watch'])
 gulp.task('vueify', function(done) {
     glob('./private/vue/*.js', function(err, files) {
         if (err) done(err)
@@ -58,6 +59,7 @@ gulp.task('vue:watch', function() {
     // gulp.watch(['private/vue/*.*'], ['vue-lint', 'vueify'])
     gulp.watch(['private/vue/*.*'], ['vueify'])
 })
+*/
 
 /*
 var source = require('vinyl-source-stream')
