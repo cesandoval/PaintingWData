@@ -32,7 +32,9 @@ module.exports.show = function(req, res) {
 
 
 /**
- * TODO: fill this out
+ * Find (up to) the 10 most recent public voxels.
+ * Display them on the home page.
+ * Render the index.jade page with the given screenshots.
  * @param {Object} req 
  * @param {Object} res 
  */
@@ -54,7 +56,8 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 }
 
 /**
- * TODO: fill this out
+ * Upload a new screenshot to PaintingWithData?
+ * (Used in graph.js?)
  * @param {} req 
  * @param {*} res 
  */
@@ -86,7 +89,8 @@ module.exports.uploadScreenshot = function(req, res) {
 }
 
 /**
- * TODO fill this out
+ * Check that screenshot exists?
+ * (Used in pixels.js?)
  * @param {*} req 
  * @param {*} res 
  */
@@ -109,7 +113,8 @@ module.exports.checkScreenshot = function(req, res) {
 }
 
 /**
- * TODO fill this out
+ * Find all datajsons with a specifid datavoxelId
+ * (Used in layers.js?)
  * @param {*} req 
  * @param {*} res 
  */
