@@ -459,6 +459,8 @@ export default class Pixels {
     static parseDataJSON(datajson) {
         // console.log(datajson)
         // Matrix of data
+        /*eslint-disable*/
+        debugger;
         const hashedData = datajson.geojson.hashedData
         const allIndices = datajson.allIndices
 
@@ -506,7 +508,10 @@ export default class Pixels {
         // }
         const bounds = [this.lowBnd, this.highBnd]
 
-        return { otherArray, startColor, endColor, addressArray, bounds }
+        const ret = { otherArray, startColor, endColor, addressArray, bounds }
+        /*eslint-disable*/
+        debugger;
+        return ret
     }
 
     vlangBuildPixels(geometry, properties) {
