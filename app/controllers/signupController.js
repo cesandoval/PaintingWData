@@ -133,26 +133,33 @@ var host = process.env === 'production' ? 'http://paintingwithdata.com/' : 'http
  */
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
-  clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
-  clientSecret: process.env.FACEBOOKCLIENTSECRET, //Same as above
+  // Get this from making facebook developer app
+  clientID: process.env.FACEBOOKCLIENTID, 
+  // Same as above
+  clientSecret: process.env.FACEBOOKCLIENTSECRET, 
   callbackURL: host+"users/facebook_oauth",
   profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {
-    //console.log(profile);
+    // console.log(profile);
     User.findOne({
-      where: {email: profile._json.email}, //check if user with same email already exists
+      // Check if user with same email already exists 
+      where: {email: profile._json.email}, 
     }).then(function(user) {
       if (user) {
         return done(null, user);
       }
       else {
         var newUser = User.build();
-        newUser.email = profile._json.email; //use facebook email as the database's email
-        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
-        newUser.verified = true; //No need to verify when using oauth
+        // Use Facebook email as the database's email
+        newUser.email = profile._json.email;
+        // TODO: change something here, for now set the password to a random string because you don't need a password if you login using OAuth 
+        newUser.password = "something";
+        //No need to verify when using oauth 
+        newUser.verified = true; 
         newUser.urlLink = uuid.v4();
-        newUser.extraUserInfo = profile._json //store all the rest of the info from facebook into here
+        //store all the rest of the info from facebook into here
+        newUser.extraUserInfo = profile._json;
         newUser.save().then(function() {
           console.log(newUser);
           return done(null, newUser)
@@ -170,25 +177,32 @@ function(req, accessToken, refreshToken, profile, done) {
  */
 var googleStrategy = new GoogleStrategy({
   passReqToCallback : true,
-  clientID: process.env.GOOGLECLIENTID, // Get this from making google developer app
-  clientSecret: process.env.GOOGLECLIENTSECRET, //Same as above
+  // Get this from making google developer app
+  clientID: process.env.GOOGLECLIENTID, 
+  // Same as above
+  clientSecret: process.env.GOOGLECLIENTSECRET,
   callbackURL: host+"users/google_oauth",
 },
 function(req, accessToken, refreshToken, profile, done) {
     // console.log(profile);
     User.findOne({
-      where: {email: profile.emails[0].value}, //check if user with same email already exists
+      // Check if user with same email already exists
+      where: {email: profile.emails[0].value}, 
     }).then(function(user) {
       if (user) {
         return done(null, user)
       }
       else {
         var newUser = User.build();
-        newUser.email = profile.emails[0].value; //use gmail email as the database's email
-        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
-        newUser.verified = true; //No need to verify when using oauth
+        // Use Google email as the database's email for the user
+        newUser.email = profile.emails[0].value;
+        // TODO: change something here, for now set the password to a random string because you don't need a password if you login using OAuth
+        newUser.password = "something"; 
+        //No need to verify when using oauth
+        newUser.verified = true; 
         newUser.urlLink = uuid.v4();
-        newUser.extraUserInfo = profile._json //store all the rest of the info from google into here
+        // Store all the rest of the info from google into here
+        newUser.extraUserInfo = profile._json; 
         newUser.save().then(function() {
           // console.log(newUser);
           return done(null, newUser)
