@@ -52,6 +52,13 @@ export default class App extends React.Component {
          *     Act.importUserfile({ data })
          */
     }
+
+    onIncrement() {
+        this.setState(prevState => ({
+            counter: prevState.counter + 1,
+        }))
+    }
+
     /**
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */
