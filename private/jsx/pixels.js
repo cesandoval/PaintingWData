@@ -32,11 +32,25 @@ export default class Pixels {
         vLang = false,
         properties = {}
     ) {
+        /**
+         * The name of the layer.
+         * @member {String} layerName
+         */
         this.layerName = name
+        /**
+         * The low and high bounds.
+         * @member {Number} lowBnd
+         * @member {Number} highBnd
+         */
         this.lowBnd = bounds[0]
         this.highBnd = bounds[1]
-
-        // Constants
+        /**
+         * @member {Number} ELEMENTS_PER_ITEM
+         * @member {Number} pxWidth
+         * @member {Number} pxHeight
+         * @member {Number} minVal
+         * @member {Number} maxVal
+         */
         this.ELEMENTS_PER_ITEM = 3
         this.pxWidth = pxWidth
         this.pxHeight = pxHeight
@@ -54,10 +68,16 @@ export default class Pixels {
         // Define the Shader
         this.shaderText = shaderText
 
+        // Sets the Z-heights for the layers, and the Z-heigh step size for every layer
         this.zHeight =
             Math.log(graph.controls.object.position.y) / 1000 > 0
                 ? Math.log(graph.controls.object.position.y) / 1000
                 : 0.00000001
+        this.layerZHeight =
+            Math.log(graph.controls.object.position.y) / 10000 > 0
+                ? Math.log(graph.controls.object.position.y) / 10000 * 2
+                : 0.00000001
+
         if (!vLang) {
             // Sanity Check
             if (dataArray.length % this.ELEMENTS_PER_ITEM != 0)
@@ -82,47 +102,53 @@ export default class Pixels {
         // Pixels.vlangBuildPixels();
         this.addToScene(graph.scene)
     }
-
-    // Zoom Extent based on geo's bbox
+    /**
+     * Puts the camera back into its original position when we opened up the app.
+     * @param {PaintGraph.Graph} canvas The map canvas.
+     * @param {Array} bbox An array with one element: an array of five 2-tuples specifying the bbox.
+     */
     static zoomExtent(canvas, bbox) {
         let radius = 0
+        // An array of five 2-tuples (first equals last), specifying the latitude/longitude of the bbox rectangle.
         let newBbox = bbox[0]
-
+        // Projects the diagonal corners into 3-space.
         let projectedMin = project([newBbox[0][0], newBbox[0][1]])
         let projectedMax = project([newBbox[2][0], newBbox[2][1]])
         let testMin = new THREE.Vector3()
         let testMax = new THREE.Vector3()
+        // The diagonal corners are now stored in testMin and test Max.
         testMin.x = projectedMin.x
         testMin.y = projectedMin.z
         testMin.z = projectedMin.y
         testMax.x = projectedMax.x
         testMax.y = projectedMax.z
         testMax.z = projectedMax.y
+        // Gets the center of the bbox, and sets the attached OrbitControls to that location.
         let testCenter = new THREE.Vector3()
         testCenter.x = (testMax.x + testMin.x) * 0.5
         testCenter.z = (testMax.y + testMin.y) * 0.5
         testCenter.y = (testMax.z + testMin.z) * 0.5
         canvas.controls.target = testCenter
-
-        // Compute world AABB "radius" (approx: better if BB height)
+        // Computes the "radius" of the bounding box, which is one half the distance between the corner vectors.
         let diag = new THREE.Vector3()
         diag = diag.subVectors(testMax, testMin)
         radius = diag.length() * 0.5
-
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset =
             radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5)
-        let thiscam = canvas.camera
-
-        // THIS ONE IS PROJECTED......
+        // We calculate newPos based on the above offset.
         let newPos = new THREE.Vector3(testCenter.x, offset, testCenter.z)
-
-        //set camera position and target
-        thiscam.position.set(newPos.x, newPos.y, newPos.z)
+        // Sets the camera position and target to newPos.
+        canvas.camera.position.set(newPos.x, newPos.y, newPos.z)
     }
-
+    /**
+     *
+     * @param {PaintGraph.Graph} canvas
+     * @param {Array} bbox
+     * @param {Boolean} screenshot
+     */
     static buildMapbox(canvas, bbox, screenshot) {
-        // TODO: fix eslint error `no-unused-vars`
+        // These are counter variables; used only for testing purposes.
         /* eslint-disable */
         var meshes = 0
         var parserRequests = 0
@@ -133,35 +159,46 @@ export default class Pixels {
 
         //compass functionality
         var screenPosition
-
+        // Moves the camera to the specified starting position.
         this.zoomExtent(canvas, bbox)
-
+        // Defines a raycaster for later.
         var raycaster = new THREE.Raycaster()
-
+        /**
+         * Calculates the amount the camera is zoomed in.
+         * @return {Number} The above.
+         */
         function getZoom() {
+            /*
+             * This is achieved by finding the distance between the camera position and the target.
+             * Note that they only differ in y-coordinate (i.e. moving "in" and "out" of the screen).
+             */
             var pt = canvas.controls.target.distanceTo(
                 canvas.controls.object.position
             )
+            // Applies some transformation to that value to get the zoom.
             return Math.min(Math.max(getBaseLog(0.5, pt / 12000) + 4, 0), 22)
         }
 
         var tilesToGet = 0
-
+        /**
+         *
+         * @param {Boolean} img
+         * @param {Array} coords A 3D array of coordinates [z,x,y]
+         */
         function assembleUrl(img, coords) {
+            // Determines the mapboxStyle; defaults to 'mapbox.light'
             const mapboxStyle = window.mapBgStyle || 'mapbox.light'
-            var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
-
+            // Return a 1px white color png image if empty.
             if (mapboxStyle === 'empty') {
-                // return a 1px white color png image
                 return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII='
             }
-
+            // Variables that depend on "img".
+            var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
             var res = img ? '@2x.png' : '@2x.pngraw'
-
-            //domain sharding
+            // Calculates the server to download from given the coordinates.
             var serverIndex = 2 * (coords[1] % 2) + coords[2] % 2
             var server = ['a', 'b', 'c', 'd'][serverIndex]
-            //return 'sample.png'
+            // Returns an assembled URL that we can now use.
             return (
                 'https://' +
                 server +
@@ -173,25 +210,24 @@ export default class Pixels {
                 '?access_token=pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg'
             )
         }
-
+        // Initializes basePlane for "plane", the mesh.
         var basePlane = new THREE.PlaneBufferGeometry(
             basePlaneDimension * 100,
             basePlaneDimension * 100,
             1,
             1
         )
+        // Initializes "mat", the mesh material, for "plane".
         var mat = new THREE.MeshBasicMaterial({
             wireframe: true,
             opacity: 0,
-            //transparent: true
         })
-
+        // Configures the mesh "plane" and we add it to the scene.
         var plane = new THREE.Mesh(basePlane, mat)
         plane.rotation.x = -0.5 * Math.PI
         plane.opacity = 0
         canvas.scene.add(plane)
-
-        // calculates which tiles are in view to download
+        // Calculates which tiles are in view to download.
         var updater = new Worker('/javascripts/workers/updatetile.js')
         updater.addEventListener(
             'message',
@@ -268,7 +304,6 @@ export default class Pixels {
             tiles = tiles.map(function(tile) {
                 return slashify(tile)
             })
-
             tilesToGet += tiles.length
             updaterRequests += tiles.length
             totalTilesToLoad = tilesToGet
@@ -399,8 +434,10 @@ export default class Pixels {
             })
     }
 
-    // Create a InstancedBufferGeometry Object
-    // See Three.js Docs for more info
+    /**
+     * Creates an InstancedBufferGeometry object.
+     * @return {THREE.InstancedBufferGeometry} a generic InstancedBufferGeometry object.
+     */
     initGeometry() {
         const buffer_geometry = new THREE.InstancedBufferGeometry()
         buffer_geometry.dynamic = true
@@ -512,7 +549,7 @@ export default class Pixels {
             valDiff * ((x - this.minVal) / (this.maxVal - this.minVal)) + lowBnd
 
         // Sets the height of the pixel layer according to how close the camera is to the base plane
-        let layerHeightValue = this.zHeight + this.layerN * 0.00001
+        let layerHeightValue = this.zHeight + this.layerN * this.layerZHeight
         for (let i = 0, j = 0; i < dataArray.length; i = i + 3, j++) {
             let currIndex = addresses[i + 2]
             translations.setXYZ(

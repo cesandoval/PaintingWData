@@ -8,10 +8,6 @@ var User = require('../models').User,
     async = require('async');
     uuid = require('uuid');
     mailer = require('./mailController');
-    //dotenv = require('dotenv');
-
-// Loads the local environment variables.
-//dotenv.load();
 
 module.exports.show = function(req, res) {
   res.render('users/signUp')
@@ -131,7 +127,6 @@ var loginStrategy = new LocalStrategy({
 // The host is different in production
 // Used for facebook and google strategies
 var host = process.env === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
-
 
 /**
  * Use Facebook OAuth as another signup/login strategy.
