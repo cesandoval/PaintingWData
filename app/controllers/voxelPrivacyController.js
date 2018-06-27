@@ -18,6 +18,7 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 	if(req.body.id && req.body.public) {
 		var id = req.body.id;
 		var isPublic = req.body.public;
+		console.log("Setting the voxelPrivacy", id, isPublic);
 		Voxel.findOne({
 			where: {id: id},
 		}).then(function(voxel) {

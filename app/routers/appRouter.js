@@ -36,10 +36,11 @@ var passport = require('passport'),
 
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     var stringParse = req.params.id
-    //console.log("Upload viewer id: " + stringParse);
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
     var size = stringParse.substr(stringParse.indexOf('$$')+2, stringParse.length);
 
+    console.log("Upload viewer id: " + id);
+    console.log("Upload viewer size: " + size);    
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
