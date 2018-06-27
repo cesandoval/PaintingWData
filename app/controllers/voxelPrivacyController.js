@@ -6,6 +6,14 @@ var Voxel = require('../models').Datavoxel,
     Channel = require('../../worker/channel');
     processVoxels = require('../../worker/worker2').processVoxels;
 
+
+/**
+ * Set the voxel to be public or private.
+ * (Shown as a checkbox for each voxel on the /voxels page)
+ * (Used in voxels-select.js and voxels.jade).
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
 	if(req.body.id && req.body.public) {
 		var id = req.body.id;
