@@ -104,6 +104,15 @@ module.exports = {
 * Run on browser `http://localhost:3000/` to view the website locally
 
 
+## Develope the pages with VUE
+
+``` bash
+## watch & run vueify build
+yarn dev:vue
+
+```
+
+
 ## Build and Server Setup
 
 ``` bash

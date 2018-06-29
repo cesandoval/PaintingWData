@@ -138,6 +138,38 @@ module.exports.show = function(req, res) {
         });
 }
 
+module.exports.showDatasets = function(req, res) {
+    Model.Datafile.findAll({
+        where : {
+            userId : req.user.id,
+            deleted: {$not: true}
+        },
+        include: [{
+            model: Model.Datalayer,
+            limit: 1}]
+        }).then(function(datafiles){
+
+            res.render('datasets', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
+        });
+}
+
+/* TODO(CreateProject)
+module.exports.showDatasets = function(req, res) {
+    Model.Datafile.findAll({
+        where : {
+            userId : req.user.id,
+            deleted: {$not: true}
+        },
+        include: [{
+            model: Model.Datalayer,
+            limit: 1}]
+        }).then(function(datafiles){
+
+            res.render('createProject', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
+        });
+}
+*/
+
 /**
  * Handles displaying all voxels that
  *  (1) are owned by the user
@@ -225,6 +257,55 @@ module.exports.transformVoxels = function(req, res) {
         res.redirect('/voxels/'+ req.user.id);
 
     }
+}
+
+module.exports.showProjects= function(req, res) {
+    Model.Datavoxel.findAll({
+           where : {
+               userId : req.user.id,
+               processed : true,
+               deleted: {$not: true}
+           },
+           include: [{
+               model: Model.Datafile, include: [{
+                   model: Model.Datalayer,
+                   limit: 1
+               }]
+           }]
+       }).then(function(datavoxels){
+           console.log("------------------------------------------------");
+           res.render('projects', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
+       });
+}
+
+
+module.exports.transformProjects = function(req, res) {
+   console.log(req.body)
+
+   if  (req.body.datavoxelIds !== ''){
+       var voxelId = parseInt(req.body.datavoxelIds);
+       if (req.body.layerButton == 'open') {
+           res.redirect('/app/'+ voxelId);
+
+       } else{
+           Model.Datavoxel.update({
+               deleted: true
+           }, {
+               where: {
+                   id: voxelId
+               }
+           }).then(function(){
+               req.flash('voxelAlert', "Your Voxel has been deleted");
+               res.redirect('/projects/'+ req.user.id);
+           });
+       }
+   } else {
+       console.log('select layers!!!!');
+
+       req.flash('voxelAlert', "You haven't selected a Voxel. Please select a Voxel.");
+       res.redirect('/voxels/'+ req.user.id);
+
+   }
 }
 
 /*
