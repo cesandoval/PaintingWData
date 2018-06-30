@@ -155,7 +155,6 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 .navbar-nav > li.dropdown > ul > a.li.dropdown-item {
     color: white;
     padding-left: 25px;
-    padding-bottom: 25px;
     border-radius: 0;
 }
 
@@ -1373,3 +1372,8 @@ p {
 
     height: 25vh;
 }
+
+.main-container {
+    min-height: calc(100vh - 250px);
+  }
+  
