@@ -86,6 +86,7 @@
     "victory": "^0.26.0",
     "vue": "^2.5.16",
     "vue-antd-ui": "^0.6.1",
+    "vue-infinite-scroll": "^2.0.2",
     "yallist": "^3.0.2"
   },
   "devDependencies": {

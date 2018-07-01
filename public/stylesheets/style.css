@@ -1374,6 +1374,6 @@ p {
 }
 
 .main-container {
-    min-height: calc(100vh - 250px);
-  }
+    height: calc(100vh - 130px);  
+}
   
