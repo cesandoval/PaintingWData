@@ -1,4 +1,4 @@
-export default {
+export default
 {
     "name": "Asthma_ED_Visit",
     "propertyName": "Rate",
@@ -103655,7 +103655,7 @@ export default {
             "1": 40.54856872558594,
             "2": 0,
             "3": 24.299999237060547,
-    @h@        "4": 1,
+            "4": 1,
             "5": 12,
             "6": 102,
             "7": 8784
@@ -144803,5 +144803,4 @@ export default {
     "shaderText": "precision lowp float;\n\nuniform float amplitude;\nuniform vec3 startColor;\nuniform vec3 endColor;\nuniform float transparency;\n\nvarying vec3 vNormal;\nvarying vec4 vTest;\nvarying float vSize;\n\n\nvoid main() {\nvec3 light = vec3(0.5,0.2,1.0);\nlight = normalize(light);\n\nfloat vProd = max(0.0, dot(vNormal, light));\n\nvec3 modColor = vec3(0.0, 0.0, 0.0);\nmodColor.x = ((endColor.x - startColor.x) * (vSize*2.4689849833615334)) + startColor.x;\nmodColor.y = ((endColor.y - startColor.y) * (vSize*2.4689849833615334)) + startColor.y;\nmodColor.z = ((endColor.z - startColor.z) * (vSize*2.4689849833615334)) + startColor.z;\ngl_FragColor = vec4(modColor, transparency);\n\n}\n",
     "userLayerName": "",
     "layerKey": "1cfvb64k6f"
-    }
 }

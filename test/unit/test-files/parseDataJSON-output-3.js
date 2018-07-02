@@ -1,4 +1,4 @@
-export default {
+export default 
 {
   "otherArray": {
     "0": -13349.7666015625,
@@ -21538,5 +21538,4 @@ export default {
     null,
     null
   ]
-}
 }
