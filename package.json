@@ -10,8 +10,22 @@
     "lint": "eslint . --color",
     "lint:fix": "eslint . --cache --color --fix --debug",
     "lint:check": "eslint . --cache --color --quiet",
-    "test:unit": "mocha --require babel-core/register --require ./test/helpers.js --require ./test/dom.js --require ignore-styles 'test/**/*.spec.js'",
+    "test:unit": "jest",
     "test:unit:watch": "npm run test:unit -- --watch"
+  },
+  "jest": {
+    "modulePaths": ["/shared/vendor/modules"],
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleDirectories": ["node_modules", "bower_components", "shared"],
+    "modulePathIgnorePatterns": ["<rootDir>/public/"],
+
+    "moduleNameMapper": {
+      "^react(.*)$": "<rootDir>/vendor/react-master$1",
+      "^config$": "<rootDir>/configs/app-config.js",
+
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+      "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js"
+    }
   },
   "dependencies": {
     "@turf/interpolate": "^5.1.5",
@@ -120,6 +134,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-util": "^3.0.7",
     "html-webpack-plugin": "^2.30.1",
+    "jest": "^23.2.0",
     "node-sass": "^4.7.2",
     "prettier": "^1.7.4",
     "react": "^15.6.1",
