@@ -120,6 +120,7 @@
     "gulp-livereload": "^3.8.1",
     "gulp-util": "^3.0.7",
     "html-webpack-plugin": "^2.30.1",
+    "jest": "^23.2.0",
     "node-sass": "^4.7.2",
     "prettier": "^1.7.4",
     "react": "^15.6.1",
