@@ -1,4 +1,4 @@
-import Pixels from '../../private/jsx/pixels'
+import Graph from '../../private/jsx/graph'
 
 describe('Local State', () => {
   it('should parse a geoJSON to build pixels', () => {
@@ -6,13 +6,13 @@ describe('Local State', () => {
     const parsedGeoJSON = {test: 'name'}
     const tester = {test: 'name'}
 
-    expect(parsedGeoJSON).to.deep.equal(tester);
+    expect(parsedGeoJSON).toEqual(tester);
   });
 
   it('should compare an addition', () => {
     // console.log(Pixels.parseDataJSON({}), 8383838338383)
     const parsedGeoJSON = 1+1
     
-    expect(parsedGeoJSON).to.equal(2);
+    expect(parsedGeoJSON).toBe(2);
   });
 });
