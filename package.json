@@ -14,15 +14,24 @@
     "test:unit:watch": "npm run test:unit -- --watch"
   },
   "jest": {
-    "modulePaths": ["/shared/vendor/modules"],
-    "moduleFileExtensions": ["js", "jsx"],
-    "moduleDirectories": ["node_modules", "bower_components", "shared"],
-    "modulePathIgnorePatterns": ["<rootDir>/public/"],
-
+    "modulePaths": [
+      "/shared/vendor/modules"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "bower_components",
+      "shared"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/public/"
+    ],
     "moduleNameMapper": {
       "^react(.*)$": "<rootDir>/vendor/react-master$1",
       "^config$": "<rootDir>/configs/app-config.js",
-
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js"
     }
@@ -57,7 +66,7 @@
     "formidable": "^1.0.17",
     "fs": "0.0.2",
     "fs-extra": "^2.0.0",
-    "gdal": "^0.9.6",
+    "gdal": "^0.9.7",
     "get-folder-size": "^1.0.0",
     "i18n": "^0.8.3",
     "ignore-styles": "^5.0.1",
