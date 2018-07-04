@@ -74,7 +74,8 @@
                 <a-list-item slot="renderItem" slot-scope="item, index">
                   <a-list-item-meta description="">
                     <a slot="title" :key="item">{{ item }}</a>
-                    <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                    <!-- <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> -->
+                    <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
                   </a-list-item-meta>
                   <div/>
                 </a-list-item>
