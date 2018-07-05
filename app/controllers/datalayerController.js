@@ -270,9 +270,10 @@ module.exports.showProjects= function(req, res) {
                model: Model.Datafile, include: [{
                    model: Model.Datalayer,
                    limit: 1
-               },
-               {model: Model.Datavoxelimage}]
-           }]
+               }]
+           }, {
+               model: Model.Datavoxelimage
+            }]
        }).then(function(datavoxels){
            console.log("------------------------------------------------");
            res.render('projects', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
