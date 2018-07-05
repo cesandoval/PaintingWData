@@ -25,6 +25,9 @@ class Layers extends React.Component {
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
+                /*eslint-disable*/
+                debugger;
+                /*eslint-enable*/
                 /*
                  * "data" is an array of "datasets", which contain important voxel information.
                  * For each "dataset" in "data", add the "layerKey" property if it doesn't exist.
