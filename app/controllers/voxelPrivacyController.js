@@ -1,11 +1,4 @@
-var Voxel = require('../models').Datavoxel,
-    async = require('async'),
-    path = require('path'),
-    request = require('request'),
-    app = require('../../app'),
-    Channel = require('../../worker/channel');
-    processVoxels = require('../../worker/worker2').processVoxels;
-
+var Model = require('../models');
 
 /**
  * Set the voxel to be public or private.
@@ -19,11 +12,15 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 		var id = req.body.id;
 		var isPublic = req.body.public;
 		console.log("Setting the voxelPrivacy", id, isPublic);
-		Voxel.findOne({
+		Model.Datavoxel.findOne({
 			where: {id: id},
+			include: [{model: Model.Datavoxelimage}]
 		}).then(function(voxel) {
 			voxel.public = isPublic;
-			voxel.save();
+			voxel.save().then(function(voxel){
+				voxel.Datavoxelimage.public = isPublic
+				voxel.Datavoxelimage.save()
+			})
 		}, function(error){
             console.log(err);
         });
