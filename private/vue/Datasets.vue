@@ -1,5 +1,4 @@
-<template
-  @click="()=> {unSqueezeTiles()}">
+<template>
   <div>
     <div>
       <h1 class = "page-title">Datasets</h1>
@@ -63,13 +62,25 @@
       <span
         class="unsqueeze"
         @click="()=> {unSqueezeTiles()}">
-        X
+        <a-icon type="close" />
       </span>
+
+
+      <a-dropdown class = "actions">
+        <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
+          <a-menu-item key="1" >Delete Dataset</a-menu-item>
+        </a-menu>
+        <a-button>
+          Actions <a-icon type="down" />
+        </a-button>
+      </a-dropdown>
+
       <div class = "datainfo-content">
 
         <div class = "info-cover-wrapper">
           <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover">
         </div>
+
 
         <div class = "info-text">
 
@@ -89,7 +100,7 @@
           <div>Longitude:  
             <span class = "info-digits"
           >{{ (datafiles[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
-          <div>geometryType:  
+          <div>Type of Geometry:  
             <span class = "info-digits"
           >{{ datafiles[selectedIndex].geometryType }}</span></div>
           <br>
@@ -122,9 +133,6 @@
   </div>
 
 
-  </div>
-
-
 </template>
 
 <script>
@@ -149,8 +157,6 @@ export default {
   },
   computed: {
     datefileList() {
-      console.log(this.sortDate, this.sortDown)
-
       if (this.sortDate) {
         if (this.sortDown) {
           return _.sortBy(this.datafiles, [
@@ -169,7 +175,6 @@ export default {
         if (this.sortDown) {
           return _.sortBy(this.datafiles, [
             function(o) {
-              console.log(-o.filename[0])
               return o.filename[0]
             },
           ])
@@ -216,11 +221,22 @@ export default {
     parseCoord(coord) {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)
     },
+    handleDeleteClick(datasetId) {
+      console.log(datasetId)
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.actions {
+  position: absolute;
+  left: 11px;
+  top: 4px;
+  border: none;
+  padding: 0px;
+}
+
 .ant-switch-checked {
   background-color: rgba(0, 0, 0, 0.4);
 }
