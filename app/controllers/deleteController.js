@@ -6,6 +6,7 @@ var Model = require('../models')
  * @param {Object} res 
  */
 module.exports.deleteDataset = function(req, res){
+    // Array of dataFileIds
     let dataFileIds = req.body.datalayerIds
     // delete relevant datafile
     Model.Datafile.destroy({
@@ -34,6 +35,7 @@ module.exports.deleteDataset = function(req, res){
  * @param {Object} res 
  */
 module.exports.deleteDataVoxel = function(req, res){
+    // Array of dataVoxelsIds
     let dataVoxelIds = req.body.dataVoxelIds
     // delete relevant datafile
     Model.Datavoxel.destroy({
