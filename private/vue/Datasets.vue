@@ -1,14 +1,39 @@
 <template
   @click="()=> {unSqueezeTiles()}">
   <div>
-    <h1>Datasets</h1>
+    <div>
+      <h1 class = "page-title">Datasets</h1>
+
+      <div v-if="datafiles.length>0"
+           class = "sorting-switches"
+      >
+        <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
+                  size="small"/>
+        <br>
+        <a-switch v-model="sortDown" 
+                  size="small">
+          <a-icon slot="checkedChildren" type="arrow-down"/>
+          <a-icon slot="unCheckedChildren" type="arrow-up"/>
+        </a-switch>
+      </div>
+
+    </div>
+
+
+    <div v-if="datafiles.length===0"
+         class = "no-data"
+    >
+      No Data Uploaded.
+    </div>
+    
+
 
     <transition>
       <div 
         :class="{ squeezeddatasetlist: isSqueezed, }"
         class = "dataset-list">
         <span
-          v-for="datafile,index in datafiles"
+          v-for="datafile,index in datefileList"
           v-if="true" :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -47,18 +72,23 @@
         </div>
 
         <div class = "info-text">
-          <div class = "info-title">{{ datafiles[selectedIndex].filename }}</div>
-          <div class = "info-time">{{ parseTime(datafiles[selectedIndex].createdAt) }}</div>
+
+          <div class = "info-title">File name:  
+            <span class = "info-digits"
+          >{{ datafiles[selectedIndex].filename.split(".")[0] }}</span></div>
+          <div>Created at:  
+            <span class = "info-time"
+          >{{ parseTime(datafiles[selectedIndex].createdAt) }}</span></div>
           <br>
-          <div>updatedAt:  
+          <div>Last updated at:  
             <span class = "info-digits"
           >{{ parseTime(datafiles[selectedIndex].updatedAt) }}</span></div>
-          <div>Latlng:  
+          <div>Latitude:  
             <span class = "info-digits"
-          >{{ parseCoord(datafiles[selectedIndex].centroid.coordinates) }}</span></div>
-          <div>epsg:  
+          >{{ (datafiles[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
+          <div>Longitude:  
             <span class = "info-digits"
-          >{{ datafiles[selectedIndex].epsg }}</span></div>
+          >{{ (datafiles[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
           <div>geometryType:  
             <span class = "info-digits"
           >{{ datafiles[selectedIndex].geometryType }}</span></div>
@@ -74,7 +104,6 @@
                 <a-list-item slot="renderItem" slot-scope="item, index">
                   <a-list-item-meta description="">
                     <a slot="title" :key="item">{{ item }}</a>
-                    <!-- <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" /> -->
                     <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
                   </a-list-item-meta>
                   <div/>
@@ -114,36 +143,45 @@ export default {
       selectedIndex: null,
       loading: false,
       busy: false,
+      sortDate: true,
+      sortDown: true,
     })
   },
   computed: {
-    byNameDatafiles() {
-      return _.sortBy(this.datafiles, [
-        function(o) {
-          return o.filename
-        },
-      ])
-    },
-    byNameDatafilesReverse() {
-      return _.sortBy(this.datafiles, [
-        function(o) {
-          return -o.filename
-        },
-      ])
-    },
-    byDateDatafiles() {
-      return _.sortBy(this.datafiles, [
-        function(o) {
-          return o.createdAt
-        },
-      ])
-    },
-    byDateDatafilesReverse() {
-      return _.sortBy(this.datafiles, [
-        function(o) {
-          return -o.createdAt
-        },
-      ])
+    datefileList() {
+      console.log(this.sortDate, this.sortDown)
+
+      if (this.sortDate) {
+        if (this.sortDown) {
+          return _.sortBy(this.datafiles, [
+            function(o) {
+              return o.createdAt
+            },
+          ]).reverse()
+        } else {
+          return _.sortBy(this.datafiles, [
+            function(o) {
+              return o.createdAt
+            },
+          ])
+        }
+      } else {
+        if (this.sortDown) {
+          return _.sortBy(this.datafiles, [
+            function(o) {
+              console.log(-o.filename[0])
+              return o.filename[0]
+            },
+          ])
+        } else {
+          return _.sortBy(this.datafiles, [
+            function(o) {
+              console.log(o.filename[0])
+              return o.filename[0]
+            },
+          ]).reverse()
+        }
+      }
     },
   },
   created() {
@@ -183,6 +221,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ant-switch-checked {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.ant-switch {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sorting-switches {
+  display: inline-block;
+  float: right;
+  margin: 15px;
+}
+
+.no-data {
+  position: absolute;
+  text-align: center;
+  font-size: 20px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.page-title {
+  margin: 20px;
+  margin-left: 0px;
+  display: inline-block;
+}
+
 .card {
   padding: 0px !important;
 }
@@ -238,8 +304,13 @@ export default {
 }
 
 .selected {
-  transform: translateY(-5px);
-  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.3);
+  background: rgba(231, 83, 50, 0.8);
+
+  /deep/ {
+    .ant-card {
+      transform: scale(0.95);
+    }
+  }
 }
 
 .info-cover-wrapper {
