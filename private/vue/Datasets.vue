@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div class = "page-title-section">
       <h1 class = "page-title">Datasets</h1>
 
       <div v-if="datafiles.length>0"
@@ -229,6 +229,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-title-section {
+  margin-top: 80px;
+}
+
 .actions {
   position: absolute;
   left: 11px;

@@ -1,11 +1,10 @@
 <template>
   <div 
-    :class="{squeezedContainer:selectedProject!=null}"
+    :class="{ squeezedContainer:selectedProject!=null, }"
     class = "mainContainer"
   
-  
   >
-    <div >
+    <div class = "page-title-section">
       <h1 class = "page-title">Projects</h1>
 
       <div v-if="datavoxels.length>0"
@@ -69,6 +68,74 @@
           <a-icon type="close" />
         </span>
 
+        <div class = "info-text">
+
+          <div class = "col-sm-6 info-text-left">
+            <div class = "info-title">
+              {{ datavoxels[selectedIndex].voxelname?datavoxels[selectedIndex].voxelname:'Untitled' }}</div>
+
+            <a-dropdown class = "actions">
+              <a-menu slot="overlay" @click="handleDeleteClick(selectedProject)">
+                <a-menu-item key="1" >Delete Project</a-menu-item>
+                <a-menu-item key="2" >                  
+                  <a-checkbox :checked="datavoxels[selectedIndex].public">Public</a-checkbox>
+                </a-menu-item>
+
+              </a-menu>
+
+
+              <a-button>
+                Actions <a-icon type="down" />
+              </a-button>
+            </a-dropdown>
+
+
+            <div class = "info-bottom-left">
+
+              <div>Created at:  
+                <span class = "info-time"
+              >{{ parseTime(datavoxels[selectedIndex].createdAt) }}</span></div>
+              <div>Last updated at:  
+                <span class = "info-digits"
+              >{{ parseTime(datavoxels[selectedIndex].updatedAt) }}</span></div>
+
+            </div>
+            <br>
+          </div>
+          <div class = "col-sm-6 ">
+
+            <div><strong>Layers</strong></div>
+            <template>
+              <div 
+                class="demo-infinite-container"
+              >
+                <a-list
+                  :data-source="datavoxels[selectedIndex].Datafiles"
+                >
+                  <a-list-item slot="renderItem" slot-scope="item, index">
+                    <a-list-item-meta description="">
+                      <a slot="title" :key="item.filename">{{ item.filename }}</a>
+                      <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
+                    </a-list-item-meta>
+                    <div/>
+                  </a-list-item>
+                </a-list>
+              </div>
+            </template>
+
+
+
+
+          </div>
+
+
+
+
+
+
+
+        </div>
+
 
       </div>
 
@@ -118,17 +185,26 @@ export default {
       this.selectedProject = null
       this.selectedIndex = null
     },
+    handleDeleteClick(datasetId) {
+      console.log(datasetId)
+    },
   },
 }
 </script>
 
+
 <style lang="scss" scoped>
+.page-title-section {
+  margin-top: 80px;
+}
+
 .mainContainer {
   min-height: calc(100vh - 130px);
 }
 
 .squeezedContainer {
   height: 0px;
+  min-height: 0px;
 }
 
 .unselectProject {
@@ -154,10 +230,11 @@ export default {
 
 .actions {
   position: absolute;
-  left: 11px;
-  top: 4px;
+  left: 15px;
+  top: 50px;
   border: none;
   padding: 0px;
+  background: none;
 }
 
 .ant-switch-checked {
@@ -263,13 +340,24 @@ export default {
 }
 
 .info-text {
-  padding: 10px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  min-width: 350px;
+  width: 80%;
+  height: 60%;
+  min-height: 400px;
 
   /deep/ {
     .info-title {
       font-weight: 700;
-      font-size: 15px;
+      font-size: 30px;
       text-overflow: ellipsis;
+
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .info-time {
@@ -279,6 +367,17 @@ export default {
 
     .info-digits {
       color: rgba(0, 0, 0, 0.45);
+    }
+
+    .info-text-left {
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      min-height: 100%;
+    }
+
+    .info-bottom-left {
+      position: absolute;
+      left: 15px;
+      bottom: 0px;
     }
   }
 }
