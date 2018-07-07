@@ -34,8 +34,8 @@
       <div 
         class = "dataset-list">
         <span
-          v-for="datafile,index in datavoxels"
-          v-if="true" :key="datafile.id"
+          v-for="(datafile,index) in projectList"
+          :key="datafile.id"
           :class="{selected:datafile.id===selectedProject}"
           class="card col-sm-4"
           @click="()=> {setActiveDatasetId(datafile.id,index)}"
@@ -80,14 +80,17 @@
                 <a-menu-item key="2" >                  
                   <a-checkbox :checked="datavoxels[selectedIndex].public">Public</a-checkbox>
                 </a-menu-item>
-
               </a-menu>
-
-
               <a-button>
                 Actions <a-icon type="down" />
               </a-button>
             </a-dropdown>
+
+            <a-button class = "open-btn"
+                      @click="openProject(selectedProject)"
+            
+            
+            >Open Project</a-button>
 
 
             <div class = "info-bottom-left">
@@ -164,6 +167,40 @@ export default {
       selectedIndex: null,
     })
   },
+
+  computed: {
+    projectList() {
+      if (this.sortDate) {
+        if (this.sortDown) {
+          return _.sortBy(this.datavoxels, [
+            function(o) {
+              return o.createdAt
+            },
+          ]).reverse()
+        } else {
+          return _.sortBy(this.datavoxels, [
+            function(o) {
+              return o.createdAt
+            },
+          ])
+        }
+      } else {
+        if (this.sortDown) {
+          return _.sortBy(this.datavoxels, [
+            function(o) {
+              return o.voxelname[0]
+            },
+          ])
+        } else {
+          return _.sortBy(this.datavoxels, [
+            function(o) {
+              return o.voxelname[0]
+            },
+          ]).reverse()
+        }
+      }
+    },
+  },
   created() {
     // console.log('created')
     console.log(this.datavoxels)
@@ -192,12 +229,21 @@ export default {
     handleDeleteClick(datasetId) {
       console.log(datasetId)
     },
+    openProject(projectId) {
+      window.location = '/app/' + projectId
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
+.open-btn {
+  position: absolute;
+  right: 15px;
+  border: none;
+  top: 50px;
+}
 .page-title-section {
   margin-top: 80px;
 }

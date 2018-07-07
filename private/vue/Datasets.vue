@@ -32,8 +32,8 @@
         :class="{ squeezeddatasetlist: isSqueezed, }"
         class = "dataset-list">
         <span
-          v-for="datafile,index in datefileList"
-          v-if="true" :key="datafile.id"
+          v-for="(datafile,index) in datafileList"
+          :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
           @click="()=> {setActiveDatasetId(datafile.id,index)}"
@@ -137,7 +137,6 @@
 
 <script>
 import DatasetCard from '@/components/DatasetCard'
-import infiniteScroll from 'vue-infinite-scroll'
 
 export default {
   name: 'Datasets',
@@ -156,7 +155,7 @@ export default {
     })
   },
   computed: {
-    datefileList() {
+    datafileList() {
       if (this.sortDate) {
         if (this.sortDown) {
           return _.sortBy(this.datafiles, [
@@ -181,7 +180,6 @@ export default {
         } else {
           return _.sortBy(this.datafiles, [
             function(o) {
-              console.log(o.filename[0])
               return o.filename[0]
             },
           ]).reverse()
