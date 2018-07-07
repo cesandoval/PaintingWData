@@ -1375,5 +1375,6 @@ p {
 
 .main-container {
     min-height: calc(100vh - 130px);  
+    margin-bottom: 20px;
 }
   

@@ -72,13 +72,13 @@
 
           <div class = "col-sm-6 info-text-left">
             <div class = "info-title">
-              {{ datavoxels[selectedIndex].voxelname?datavoxels[selectedIndex].voxelname:'Untitled' }}</div>
+              {{ projectList[selectedIndex].voxelname?projectList[selectedIndex].voxelname:'Untitled' }}</div>
 
             <a-dropdown class = "actions">
               <a-menu slot="overlay" @click="handleDeleteClick(selectedProject)">
                 <a-menu-item key="1" >Delete Project</a-menu-item>
                 <a-menu-item key="2" >                  
-                  <a-checkbox :checked="datavoxels[selectedIndex].public">Public</a-checkbox>
+                  <a-checkbox :checked="projectList[selectedIndex].public">Public</a-checkbox>
                 </a-menu-item>
               </a-menu>
               <a-button>
@@ -97,10 +97,10 @@
 
               <div>Created at:  
                 <span class = "info-time"
-              >{{ parseTime(datavoxels[selectedIndex].createdAt) }}</span></div>
+              >{{ parseTime(projectList[selectedIndex].createdAt) }}</span></div>
               <div>Last updated at:  
                 <span class = "info-digits"
-              >{{ parseTime(datavoxels[selectedIndex].updatedAt) }}</span></div>
+              >{{ parseTime(projectList[selectedIndex].updatedAt) }}</span></div>
 
             </div>
             <br>
@@ -113,7 +113,7 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="datavoxels[selectedIndex].Datajsons"
+                  :data-source="projectList[selectedIndex].Datajsons"
                 >
 
                   <a-list-item slot="renderItem" slot-scope="item, index"
