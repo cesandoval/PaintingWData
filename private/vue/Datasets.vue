@@ -41,11 +41,19 @@
           <a-card
             hoverable
           >
-            <img
+
+            <div class="map-thumbnail">
+              <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
+                <l-tile-layer :url="url" :attribution="attribution"/>
+                <l-polygon :lat-lngs="getBbox(datafile)" color="red"/>
+
+              </l-map>
+            </div>
+            <!-- <img
               slot="cover"
               alt="example"
               src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            >
+            > -->
             <a-card-meta
               :title="datafile.filename"
               :description="parseTime(datafile.createdAt)"/>
@@ -78,7 +86,15 @@
       <div class = "datainfo-content">
 
         <div class = "info-cover-wrapper">
-          <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover">
+          <!-- <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover"> -->
+          <div class="map-thumbnail">
+            <l-map :zoom="zoom" :center="getMapCenter(datafileList[selectedIndex])" :bounds="getBbox(datafileList[selectedIndex])">
+              <l-tile-layer :url="url" :attribution="attribution"/>
+              <l-polygon :lat-lngs="getBbox(datafileList[selectedIndex])" color="red"/>
+
+            </l-map>
+          </div>
+
         </div>
 
 
@@ -86,20 +102,20 @@
 
           <div class = "info-title">File name:  
             <span class = "info-digits"
-          >{{ datafiles[selectedIndex].filename.split(".")[0] }}</span></div>
+          >{{ datafileList[selectedIndex].filename.split(".")[0] }}</span></div>
           <div>Created at:  
             <span class = "info-time"
-          >{{ parseTime(datafiles[selectedIndex].createdAt) }}</span></div>
+          >{{ parseTime(datafileList[selectedIndex].createdAt) }}</span></div>
           <br>
           <div>Last updated at:  
             <span class = "info-digits"
-          >{{ parseTime(datafiles[selectedIndex].updatedAt) }}</span></div>
+          >{{ parseTime(datafileList[selectedIndex].updatedAt) }}</span></div>
           <div>Latitude:  
             <span class = "info-digits"
-          >{{ (datafiles[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
+          >{{ (datafileList[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
           <div>Longitude:  
             <span class = "info-digits"
-          >{{ (datafiles[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
+          >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
           <div>Type of Geometry:  
             <span class = "info-digits"
           >{{ datafiles[selectedIndex].geometryType }}</span></div>
@@ -137,11 +153,29 @@
 
 <script>
 import DatasetCard from '@/components/DatasetCard'
+import Vue2Leaflet from 'vue2-leaflet'
+import L from 'leaflet'
+
+let { LMap, LTileLayer, LPolygon } = Vue2Leaflet
+
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+})
 
 export default {
   name: 'Datasets',
 
-  components: { DatasetCard },
+  components: {
+    DatasetCard,
+    LMap,
+    LTileLayer,
+    LPolygon,
+  },
+
   data() {
     return Object.assign(server, {
       maps: {},
@@ -152,6 +186,13 @@ export default {
       busy: false,
       sortDate: true,
       sortDown: true,
+
+      zoom: 13,
+      center: L.latLng(47.41322, -1.219482),
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      // url: 'http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+
+      attribution: '',
     })
   },
   computed: {
@@ -189,8 +230,20 @@ export default {
   },
   created() {
     // console.log('created')
+    // this.$http.get('/getThumbnailData/29').then(response => {
+    //   console.log(response)
+    // })
   },
   methods: {
+    getBbox(datafile) {
+      return datafile.bbox.coordinates[0].map(data => [data[1], data[0]])
+    },
+    getMapCenter(datafile) {
+      return L.latLng(
+        datafile.centroid.coordinates[1],
+        datafile.centroid.coordinates[0]
+      )
+    },
     setActiveDatasetId(id, index) {
       console.log('click ' + id)
       // squeeze tile display
@@ -227,6 +280,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.map-thumbnail {
+  width: 100%;
+  // padding-top: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 200px;
+
+  margin-bottom: 10px;
+}
+
 .page-title-section {
   margin-top: 80px;
 }
@@ -395,4 +457,8 @@ export default {
     }
   }
 }
+</style>
+
+<style>
+@import '~leaflet/dist/leaflet.css';
 </style>
