@@ -68,7 +68,7 @@
           <a-icon type="close" />
         </span>
 
-        <div class = "info-text">
+        <div class = "info-text ">
 
           <div class = "col-sm-6 info-text-left">
             <div class = "info-title">
@@ -102,7 +102,7 @@
             </div>
             <br>
           </div>
-          <div class = "col-sm-6 ">
+          <div class = "col-sm-6 info-text-right">
 
             <div><strong>Layers</strong></div>
             <template>
@@ -110,12 +110,16 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="datavoxels[selectedIndex].Datafiles"
+                  :data-source="datavoxels[selectedIndex].Datajsons"
                 >
-                  <a-list-item slot="renderItem" slot-scope="item, index">
-                    <a-list-item-meta description="">
-                      <a slot="title" :key="item.filename">{{ item.filename }}</a>
-                      <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
+
+                  <a-list-item slot="renderItem" slot-scope="item, index"
+                  >
+
+                    <a-list-item-meta :description="item.rasterProperty"
+                    >
+                      <a slot="title" :key="item.datafileId">{{ item.layername }}</a>
+                      <a-button slot="avatar" shape="circle">{{ item.layername.charAt(0).toUpperCase() }}</a-button>
                     </a-list-item-meta>
                     <div/>
                   </a-list-item>
@@ -224,7 +228,7 @@ export default {
   bottom: 0px;
   left: 0px;
   right: 0px;
-  background: #e8e8e8;
+  background: white;
   z-index: 1000;
 }
 
@@ -370,8 +374,12 @@ export default {
     }
 
     .info-text-left {
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
-      min-height: 100%;
+      height: 100%;
+    }
+    .info-text-right {
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      height: 100%;
+      overflow-y: auto;
     }
 
     .info-bottom-left {
@@ -383,11 +391,9 @@ export default {
 }
 
 .demo-infinite-container {
-  border: 1px solid #e8e8e8;
   border-radius: 4px;
   overflow: auto;
   padding: 8px 24px;
-  height: 300px;
 }
 .demo-loading {
   position: absolute;
@@ -402,16 +408,10 @@ export default {
 .ant-list-item {
   /deep/ {
     .ant-list-item-meta-content {
-      padding-top: 5px;
     }
-  }
-}
 
-.demo-infinite-container {
-  /deep/ {
-    .ant-spin-container {
-      max-height: 150px;
-      overflow-y: auto;
+    .ant-list-item-meta-description {
+      font-size: 12px;
     }
   }
 }
