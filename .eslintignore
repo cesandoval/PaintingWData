@@ -1,4 +1,4 @@
 */*
-!private/jsx/*
+!private/jsx
 !gulpfile.js
 **/Vpl.js
