@@ -19,7 +19,7 @@ module.exports.show = function(req, res) {
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
- 
+
 passport.deserializeUser(function(id, done) {
   User.findById(id).then(
     function(user){
@@ -31,15 +31,19 @@ passport.deserializeUser(function(id, done) {
     );
 });
 
-var signUpStrategy = 
+/**
+ * Local sign up strategy.
+ * For the user to create an account using PaintingWithData.
+ */
+var signUpStrategy =
   new LocalStrategy({
       passReqToCallback : true
     },
-    function(req, email, password, done) { 
+    function(req, email, password, done) {
         User.findOne({
            where: {email: email},
         }).then(function(user) {
-          
+
            if(user){
             //check if user email is verified
             var verified = user.verified;
@@ -60,7 +64,7 @@ var signUpStrategy =
             // generate hash by doing 10 rounds of salt. Is blocking.
             var salt = bcrypt.genSaltSync(10);
             var id = uuid.v4();
-            var hash = bcrypt.hashSync(req.body.password, salt); 
+            var hash = bcrypt.hashSync(req.body.password, salt);
             newUser.password = hash;
             newUser.verified = false;
             newUser.urlLink = id;
@@ -77,26 +81,29 @@ var signUpStrategy =
               //If testing locally change url to:  http://localhost:3000/users/verify/'
               mailer.sendVerificationEmail(email, 'http://paintingwithdata.com/users/verify/' + id);
               return done(null, false, req.flash('signUpMessage', "We sent an email to you, please click the link to verify your account."));
-            });   
+            });
            }
            }, function(error){
             return done(null, false, req.flash('signUpMessage', "User registration failed."));
-            console.log(err);
         });
-        
+
     });
 
-
+/**
+ * Local login strategy.
+ * Using PaintingWithData, verify that the user account is created and 
+ * that the email and password are correct.
+ */
 var loginStrategy = new LocalStrategy({
     passReqToCallback : true
   },
-  function(req, email, password, done) { 
-    
+  function(req, email, password, done) {
+
     User.findOne({
       where: {email: email},
-      
+
     }).then(function(user) {
-       if(user){  
+       if(user){
          if (user.verified){
           if(bcrypt.compareSync(password, user.password)) {
             return done(null, user, req.flash('loginMessage', "user successfully logged in"));
@@ -112,57 +119,46 @@ var loginStrategy = new LocalStrategy({
        else{
           return done(null, false, req.flash('loginMessage', "invalid email"));
         }
-       },  // do the above if succeeded 
+       },  // do the above if succeeded
        function(error){
         return done(null, false, req.flash('loginMessage', "login failed"));
        }// do this if failed.
-    ); 
+    );
   });
 
-/* Make Oauth call to facebook, retrieve information from facebook and store it in "profile" variable
-sample profile variable representation: 
-{ id: '119372979383927645',
-  username: undefined,
-  displayName: undefined,
-  name: { familyName: 'Anderson', givenName: 'Carl', middleName: undefined },
-  gender: undefined,
-  profileUrl: undefined,
-  emails: [ { value: 'carl@gmail.com' } ],
-  provider: 'facebook',
-  _raw: '{"id":"119372979383927645","email":"carl\\u0040gmail.com","last_name":"Anderson","first_name":"Carl"}',
-  _json: 
-   { id: '119372979383927645',
-     email: 'Carl@gmail.com',
-     last_name: 'Anderson',
-     first_name: 'Carl' } }
-
-*/
 
 // The host is different in production
 var host = app.get('env') === 'production' ? 'http://paintingwithdata.com/' : 'http://localhost:3000/';
 
 var facebookStrategy = new FacebookStrategy({
   passReqToCallback : true,
-  clientID: process.env.FACEBOOKCLIENTID, // Get this from making facebook developer app
-  clientSecret: process.env.FACEBOOKCLIENTSECRET, //Same as above
+  // Get this from making facebook developer app
+  clientID: process.env.FACEBOOKCLIENTID, 
+  // Same as above
+  clientSecret: process.env.FACEBOOKCLIENTSECRET, 
   callbackURL: host+"users/facebook_oauth",
   profileFields: ['id', 'email', 'name'],
 },
 function(req, accessToken, refreshToken, profile, done) {
-    //console.log(profile);
+    // console.log(profile);
     User.findOne({
-      where: {email: profile._json.email}, //check if user with same email already exists
+      // Check if user with same email already exists 
+      where: {email: profile._json.email}, 
     }).then(function(user) {
       if (user) {
-        return done(null, user)
+        return done(null, user);
       }
       else {
         var newUser = User.build();
-        newUser.email = profile._json.email; //use facebook email as the database's email
-        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
-        newUser.verified = true; //No need to verify when using oauth
+        // Use Facebook email as the database's email
+        newUser.email = profile._json.email;
+        // TODO: change something here, for now set the password to a random string because you don't need a password if you login using OAuth 
+        newUser.password = "something";
+        //No need to verify when using oauth 
+        newUser.verified = true; 
         newUser.urlLink = uuid.v4();
-        newUser.extraUserInfo = profile._json //store all the rest of the info from facebook into here
+        //store all the rest of the info from facebook into here
+        newUser.extraUserInfo = profile._json;
         newUser.save().then(function() {
           console.log(newUser);
           return done(null, newUser)
@@ -174,59 +170,38 @@ function(req, accessToken, refreshToken, profile, done) {
     })
 
 });
-  
-/* Make Oauth call to Google, retrieve information from Google and store it in "profile" variable
-sample profile variable representation: 
-{ id: '37264174916476217098211',
-  displayName: 'Bob Bitdiddle',
-  name: { familyName: 'Bitdiddle', givenName: 'Bob' },
-  emails: [ { value: '57leonardo@gmail.com', type: 'account' } ],
-  photos: 
-   [ { value: 'https://lh4.googleusercontent.com/-SIJJeEjjxR9/ABAAIAAAA/AAAAAEDAER0/SGxdsghseDscDSgk/photo.jpg?sz=213' } ],
-  gender: 'male',
-  provider: 'google',
-  _raw: '{\n "kind": "plus#person",\n "etag": "\\"EhMivDE25UysA1ltNG8tqFM2v-A/Nx-MmR55geZoGSnoiFVwSZCCbPg\\"",\n "occupation": "Student",\n "gender": "male",\n "urls": [\n  {\n   "value": "http://sites.google.com/site/freefun57/",\n   "type": "other",\n   "label": "http://sites.google.com/site/freefun57/"\n  }\n ],\n "objectType": "person",\n "id": "110728992102719556814",\n "displayName": "Leon Cheng",\n "name": {\n  "familyName": "Cheng",\n  "givenName": "Leon"\n },\n "url": "https://plus.google.com/110728992102719556814",\n "image": {\n  "url": "https://lh4.googleusercontent.com/-YxPDEjjxRS4/AAAAAAAAAAI/AAAAAAAAER0/SGxJJWIlJgk/photo.jpg?sz=50",\n  "isDefault": false\n },\n "organizations": [\n  {\n   "title": "Student",\n   "type": "work",\n   "primary": true\n  }\n ],\n "placesLived": [\n  {\n   "value": "new york, new york"\n  },\n  {\n   "value": "Brooklyn"\n  }\n ],\n "isPlusUser": true,\n "language": "en",\n "verified": false\n}\n',
-  _json: 
-   { kind: 'plus#person',
-     etag: '"EhMivDE25UysA1ltNG8tqFM2v-A/Nx-MmR55geZoGSnoiFVwSZCCbPg"',
-     occupation: 'Student',
-     gender: 'male',
-     urls: [ [Object] ],
-     objectType: 'person',
-     id: '110728992102719556814',
-     displayName: 'Leon Cheng',
-     name: { familyName: 'Cheng', givenName: 'Leon' },
-     url: 'https://plus.google.com/110728992102719556814',
-     image: 
-      { url: 'https://lh4.googleusercontent.com/-YxPDEjjxRS4/AAAAAAAAAAI/AAAAAAAAER0/SGxJJWIlJgk/photo.jpg?sz=50',
-        isDefault: false },
-     organizations: [ [Object] ],
-     placesLived: [ [Object], [Object] ],
-     isPlusUser: true,
-     language: 'en',
-     verified: false } }
-*/
+
+/**
+ * Use Google OAuth as another signup/login strategy.
+ */
 var googleStrategy = new GoogleStrategy({
   passReqToCallback : true,
-  clientID: process.env.GOOGLECLIENTID, // Get this from making google developer app
-  clientSecret: process.env.GOOGLECLIENTSECRET, //Same as above
+  // Get this from making google developer app
+  clientID: process.env.GOOGLECLIENTID, 
+  // Same as above
+  clientSecret: process.env.GOOGLECLIENTSECRET,
   callbackURL: host+"users/google_oauth",
 },
 function(req, accessToken, refreshToken, profile, done) {
     // console.log(profile);
     User.findOne({
-      where: {email: profile.emails[0].value}, //check if user with same email already exists
+      // Check if user with same email already exists
+      where: {email: profile.emails[0].value}, 
     }).then(function(user) {
       if (user) {
         return done(null, user)
       }
       else {
         var newUser = User.build();
-        newUser.email = profile.emails[0].value; //use gmail email as the database's email
-        newUser.password = "something" //TODO: change something here, for now set the password to empty string because you don't need a password if you login using oauth
-        newUser.verified = true; //No need to verify when using oauth
+        // Use Google email as the database's email for the user
+        newUser.email = profile.emails[0].value;
+        // TODO: change something here, for now set the password to a random string because you don't need a password if you login using OAuth
+        newUser.password = "something"; 
+        //No need to verify when using oauth
+        newUser.verified = true; 
         newUser.urlLink = uuid.v4();
-        newUser.extraUserInfo = profile._json //store all the rest of the info from google into here
+        // Store all the rest of the info from google into here
+        newUser.extraUserInfo = profile._json; 
         newUser.save().then(function() {
           // console.log(newUser);
           return done(null, newUser)
@@ -239,6 +214,14 @@ function(req, accessToken, refreshToken, profile, done) {
 
 });
 
+/**
+ * Check if user is Authenticated already.
+ * If yes, then move on to next.
+ * If no, then store current page in req.session.returnTo and return to login page.
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 var isAuthenticated = function (req, res, next) {
   if (req.isAuthenticated()){
     return next();
@@ -248,6 +231,14 @@ var isAuthenticated = function (req, res, next) {
   res.redirect('/users/login');
 }
 
+/**
+ * Check if user is Authenticated already or if voxel is public.
+ * If yes, then move on to next.
+ * If no, then store current page in req.session.returnTo and return to login page.
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 var isAuthenticatedOrPublicVoxel = function (req, res, next) {
   if (req.isAuthenticated()){
     return next();
@@ -272,7 +263,7 @@ module.exports = {
   LoginStrategy : loginStrategy,
   SignUpStrategy : signUpStrategy,
   FacebookLoginStrategy : facebookStrategy,
-  GoogleLoginStrategy : googleStrategy, 
+  GoogleLoginStrategy : googleStrategy,
   isAuthenticated : isAuthenticated,
   isAuthenticatedOrPublicVoxel : isAuthenticatedOrPublicVoxel
 }

@@ -8,6 +8,13 @@ var Model = require('../models'),
     async = require('async'),
     express = require('express');
 
+/**
+ * Handles POST request for /uploadViewer page.
+ * Saves layer that the user selected.
+ * Unless the user has reached its account upload size limit and is not a premium account.
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 module.exports.saveShapes = function(req, res) {
     var newReq = {
         body: {
@@ -25,19 +32,24 @@ module.exports.saveShapes = function(req, res) {
     var app = express()
 
     Model.User.findById(req.user.id).then(function(user) {
-        //send user an email
+        // Send user an email
         var uploadsSize = parseFloat(user.uploadsSize);
         var newUploadsSize = uploadsSize + parseFloat(req.body.size);
         console.log('The user has uploaded a total of ' + newUploadsSize + ' mbs')
 
+        // If not running on production mode, then ignore any upload size warnings
         if (app.get('env') !== 'production') {
             console.log(app.get('env'))
             newUploadsSize = 0;
         }
-        if (newUploadsSize <= 100 || user.paidUser) {
+
+        // If User has uploaded more than 100, then do not allow if the it is not a Premium Account
+        var UPLOAD_LIMIT = 100;
+        if (newUploadsSize <= UPLOAD_LIMIT || user.paidUser) {
             user.update({
                 uploadsSize: uploadsSize + parseFloat(req.body.size)
             }).then(function() {
+                // Save layer and then redirect to /layers page
                 processShapes(newReq, function(){});
                 res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
             })
@@ -50,6 +62,14 @@ module.exports.saveShapes = function(req, res) {
     })
 }
 
+
+/**
+ * Return the Datafile of a given datafileId (stored in req.params.datafileId)
+ * Also returns datalayer and datadbf associated with the datafile
+ * Used in user_layer.js to help display maps
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.getDatalayers = function(req, res){
     console.log("Data layer id: " + req.params.datafileId + "\n\n");
 
@@ -60,14 +80,24 @@ module.exports.getDatalayers = function(req, res){
         },
         include: [{
             model: Model.Datalayer,
+            limit: 1},
+            {
+            model: Model.Datadbf,
             limit: 1}]
     }).then(function(datafile){
+        // console.log("datafile: ", datafile);
         res.send({
             datafile
         })
     });
 }
 
+/**
+ * Get Map data with specified datafileId (using loadViewerData and getGeoJSON from fileViewerHelper.js)
+ * Used in layers.js (as part of requestMap)
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
         async.apply(fileViewerHelper.loadViewerData, req.params.id, req.body),
@@ -83,6 +113,12 @@ module.exports.serveMapData = function(req, res) {
     });
 }
 
+/**
+ * Get Thumbnail Data with specified datafileId (using loadDatalayers from fileViewerHelper.js)
+ * Used in map_thumbnail_viewer.js
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.serveThumbnailData = function(req, res) {
     async.waterfall([
         async.apply(fileViewerHelper.loadDatalayers, req.params.id, req.body),

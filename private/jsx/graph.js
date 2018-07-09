@@ -1,23 +1,65 @@
 import axios from 'axios'
-
+/**
+ * Summary. (use period)
+ *
+ * Description. (use period)
+ *
+ * @file   This file defines the Graph class, for use in the PaintGraph namespace.
+ * @author PaintingWithData
+ */
 export default class Graph {
+    /**
+     * Summary. (use period)
+     *
+     * Description. (use period)
+     *
+     * @access public
+     * @class
+     * @memberof PaintGraph
+     *
+     * @param {Element} canvasElement   The canvas element within which the map is drawn.
+     * @param {Number}  height          The canvas height.
+     * @param {Number}  width           The canvas width.
+     */
     constructor(canvasElement, height, width) {
-        // Initialize a Canvas for Three.js
-        // + all this necessary to see things
+        /**
+         * The canvas element (where the map is rendered).
+         * @member {Element} canvas
+         */
+
         this.near = 0.1
         this.canvas = canvasElement
+        /**
+         * The canvas height, depending on the window.
+         * @member {Number} clientHeight
+         */
         this.clientHeight = height
+        /**
+         * The canvas width, depending on the window.
+         * @member {Number} clientWidth
+         */
         this.clientWidth = width
+        /**
+         * The scene.
+         * @member {THREE.Scene} scene
+         */
         this.scene = this.initScene()
-        //this.scene.fog = new THREE.Fog( 0xffffff, 2000, 10000 );
+        /**
+         * The camera.
+         * @member {THREE.PerspectiveCamera} camera
+         */
         this.camera = this.initCamera(this.clientWidth, this.clientHeight)
+        /**
+         * The renderer.
+         * @member {THREE.WebGLRenderer} renderer
+         */
         this.renderer = this.initRenderer(this.clientWidth, this.clientHeight)
+        /**
+         * The controls.
+         * @member {THREE.OrbitControls} controls
+         */
         this.controls = this.initControls(this.camera, this.canvas)
-
-        // Optional
-        // this.gridHelperId = this.initGrid(this.scene);
-
-        // Put canvas onto the page
+        // Puts canvas onto the page.
         this.insertCanvas(this.canvas, this.renderer.domElement)
 
         this.frameTime = new Date().getTime()
@@ -25,26 +67,47 @@ export default class Graph {
 
         this.renderUntil = Date.now()
         this.untilTime = this.renderUntil - Date.now()
+        /**
+         * Are we rendering or not?
+         * @member {Boolean}
+         */
         this.rendering = false
     }
-
-    // Create a Scene
+    /**
+     * Creates a new three.js Scene object for the canvas.
+     * @return {THREE.Scene}
+     */
     initScene() {
         return new THREE.Scene()
     }
-
-    // Create a Camera
+    /**
+     * Initializes and returns the map camera.
+     * @param {Number} width
+     * @param {Number} height
+     * @return {THREE.PerspectiveCamera}
+     */
     initCamera(width, height) {
-        // 0.1 = [70-2.78-0.001]
-        var camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 15000)
+        // Initializes the camera.
+        var camera = new THREE.PerspectiveCamera(
+            90,
+            width / height,
+            this.near,
+            15000
+        )
+        // Configures settings. Pan, but don't rotate.
         camera.position.y = 300
         camera.lookAt(new THREE.Vector3(0.0, 0.0, 0.0))
         camera.enablePan = true
         camera.enableRotate = false
         return camera
     }
-
-    // Create a Renderer
+    /**
+     * Initializes the renderer, and defines various helper methods under the
+     * "window" namespace.
+     * @param {Number} width
+     * @param {Number} height
+     * @return {THREE.WebGLRenderer}
+     */
     initRenderer(width, height) {
         var renderer = new THREE.WebGLRenderer({
             precision: 'mediump',
@@ -54,33 +117,31 @@ export default class Graph {
         renderer.setPixelRatio(window.devicePixelRatio)
         renderer.setSize(width, height)
         renderer.setClearColor(new THREE.Color('white'))
-
+        /**
+         * Renders the current scene.
+         * @alias window~render
+         */
         window.render = () => renderer.render(this.scene, this.camera)
-
+        /**
+         * Calls the API for a screenshot of their map. To be displayed to the
+         * reader.
+         * @alias window~getScreenShot
+         */
         window.getScreenShot = () => {
-            // We might turn it directly into a blob instead...
+            // A string representation of the image.
             const img = renderer.domElement.toDataURL('image/png')
-            // This opens up a new tab with the screenshot
-            // const w = window.open('about:blank', 'PaintingWithData Screenshot')
-            // w.document.write(
-            //     "<img src='" + img + "' alt='PaintingWithData Screenshot'/>"
-            // )
-
+            // Decodes the string representation.
             var byteString = atob(img.split(',')[1])
-
-            // separate out the mime component
+            // Separates out the MIME component.
             var mimeString = img
                 .split(',')[0]
                 .split(':')[1]
                 .split(';')[0]
-
-            // write the bytes of the string to an ArrayBuffer
+            // Creates a new ArrayBuffer for byteString.
             var ab = new ArrayBuffer(byteString.length)
-
-            // create a view into the buffer
+            // Creates a view into the buffer, so "ab" can be modified.
             var ia = new Uint8Array(ab)
-
-            // set the bytes of the buffer to the correct values
+            // Set the bytes of the buffer to the values of byteString.
             for (var i = 0; i < byteString.length; i++) {
                 ia[i] = byteString.charCodeAt(i)
             }
@@ -98,7 +159,11 @@ export default class Graph {
             document.body.appendChild(link)
             link.click()
         }
-
+        /**
+         *
+         * @alias window~screenshotToS3
+         * @param {Number} datavoxelId
+         */
         window.screenshotToS3 = datavoxelId => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
@@ -116,8 +181,27 @@ export default class Graph {
                 newHeight
             )
 
-            let img = resizedCanvas.toDataURL()
-            let request = { id: datavoxelId, data: img }
+            let resizedPreview = document.createElement('canvas')
+            let resizedContextPreview = resizedPreview.getContext('2d')
+            let newPreviewHeight = 900
+            let previewRatio = height / newPreviewHeight
+            let newPreviewWidth = width / previewRatio
+
+            resizedPreview.height = newPreviewHeight.toString()
+            resizedPreview.width = newPreviewWidth.toString()
+            resizedContextPreview.drawImage(
+                renderer.domElement,
+                0,
+                0,
+                newPreviewWidth,
+                newPreviewHeight
+            )
+
+            let preview = resizedPreview.toDataURL('image/jpeg')
+
+            let img = resizedCanvas.toDataURL('image/jpeg')
+
+            let request = { id: datavoxelId, data: img, preview: preview }
 
             axios({
                 method: 'post',
@@ -136,8 +220,11 @@ export default class Graph {
 
         return renderer
     }
-
-    // Initialize Controls Object
+    /**
+     * Initializes the control object.
+     * @param {THREE.PerspectiveCamera} camera
+     * @param {Element} canvas
+     */
     initControls(camera, canvas) {
         let controls = new THREE.OrbitControls(camera, canvas)
         controls.enableRotate = false
@@ -175,18 +262,20 @@ export default class Graph {
         // camera.projectionMatrix = new THREE.Matrix4().makePerspective(camera.fov, window.innerWidth / window.innerHeight, camera.near, camera.far);
     }
 
-    // Appends canvas onto the element
+    /**
+     * Appends canvas onto the given element.
+     * @param {Element} element The element to be appended to.
+     * @param {Element} canvas The canvas.
+     */
     insertCanvas(element, canvas) {
         element.appendChild(canvas)
     }
 
+    /**
+     *
+     */
     start() {
-        // (function() {
-        //     window.requestAnimationFrame =
-        //         window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-        //         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-        // })();
-
+        // Adds event listener for resizing.
         window.addEventListener('resize', this.onResize.bind(this), false)
         this.renderSec(7)
 
@@ -199,15 +288,15 @@ export default class Graph {
                 })
             }
         }, 2000)
-
+        // TODO: Comment on these event handlers.
         // default mouseUp to renderSec(1)
         document.body.addEventListener('mouseup', () => {
-            this.renderSec(1, 'mouseUp')
+            this.renderSec(1)
         })
 
         // default mouseDown to renderSec(0.5)
         document.body.addEventListener('mousedown', () => {
-            this.renderSec(0.5, 'mouseDown')
+            this.renderSec(0.5)
         })
     }
 
@@ -243,7 +332,11 @@ export default class Graph {
             return -1
         }
     }
-
+    /**
+     * Resizes the map when we resize the window.
+     *
+     * Updates the aspect ratio of the camera, and the size of the renderer.
+     */
     onResize() {
         this.camera.aspect = window.innerWidth * 0.799 / window.innerHeight
         this.camera.updateProjectionMatrix()
@@ -252,29 +345,28 @@ export default class Graph {
             window.innerHeight
         )
     }
-
-    renderSec(sec = 1, label = '') {
+    /**
+     *
+     * @param {Number} sec The number of seconds
+     * @param {String} label Unused.
+     */
+    renderSec(sec = 1) {
+        // "sec" seconds into the future
         const untilTime = Date.now() + sec * 1000
-
-        if (untilTime > this.renderUntil) this.renderUntil = untilTime
-
-        // if(until > 0){
+        // "this.renderUntil" is at least as far back as untilTime.
+        if (untilTime > this.renderUntil) {
+            this.renderUntil = untilTime
+        }
         if (this.rendering == false) {
             this.render()
         }
-
-        console.log(`renderSec(${sec}) until ${this.renderUntil}. ${label}`)
     }
 
     render() {
         this.renderer.render(this.scene, this.camera)
 
         const until = Math.ceil((this.renderUntil - Date.now()) / 1000)
-
-        if (this.untilTime != until) {
-            this.untilTime = until
-            // console.log(`render ${until} secs`)
-        }
+        this.untilTime = until
 
         if (until > 0) {
             this.rendering = true
@@ -284,8 +376,5 @@ export default class Graph {
         } else {
             this.rendering = false
         }
-
-        // window.requestAnimationFrame( this.render.bind(this) );
-        // setTimeout(this.render.bind(this), 1000); // do not under 1000
     }
 }

@@ -13,6 +13,14 @@ var transporter = nodemailer.createTransport({
     }
   });
 
+/**
+ * Send a prepared and formatted email to the user
+ * in order for them to verify their newly created account
+ * using the automatatically generated verificationLink.
+ * (Used in signupController.js)
+ * @param {String} email 
+ * @param {String} verificationLink 
+ */
 module.exports.sendVerificationEmail = function(email, verificationLink) {
   console.log(email)
   var mailOptions = {
@@ -34,8 +42,13 @@ module.exports.sendVerificationEmail = function(email, verificationLink) {
 
 };
 
+/**
+ * Send the user an email after a voxel is done being processed.
+ * (Used in fileProcessor.js)
+ * @param {String} email 
+ * @param {Integer} userId 
+ */
 module.exports.sendVoxelEmail = function(email, userId) {
-  /* //chxu (temporary)
 	var mailOptions = {
     	from: '"Painting With Data" <support@paintingwithdata.com>', 
 		to: email, 
@@ -50,9 +63,15 @@ module.exports.sendVoxelEmail = function(email, userId) {
     	}
     	console.log('Message %s sent: %s', info.messageId, info.response);
   	});
-    */
 };
 
+/**
+ * Send the user an email to reset their password.
+ * Include the link to reset the password.
+ * (Used in users.js)
+ * @param {String} email 
+ * @param {String} passwordLink 
+ */
 module.exports.sendResetPasswordEmail = function(email, passwordLink) {
   var mailOptions = {
       from: '"Painting With Data" <support@paintingwithdata.com>', 
@@ -71,9 +90,13 @@ module.exports.sendResetPasswordEmail = function(email, passwordLink) {
 
 };
 
-
+/**
+ * Send the user an email after a layer is done being uploaded.
+ * (Used in fileProcessor.js)
+ * @param {*} email 
+ * @param {*} userId 
+ */
 module.exports.sendLayerEmail = function(email, userId) {
-  /* //chxu (temporary)
   var mailOptions = {
       from: '"Painting With Data" <support@paintingwithdata.com>', 
     to: email, 
@@ -88,5 +111,4 @@ module.exports.sendLayerEmail = function(email, userId) {
       }
       console.log('Message %s sent: %s', info.messageId, info.response);
     });
-  */
 };
