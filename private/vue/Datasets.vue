@@ -45,7 +45,7 @@
             <div class="map-thumbnail">
               <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" color="red"/>
+                <l-polygon :lat-lngs="getBbox(datafile)" color="black"/>
 
               </l-map>
             </div>
@@ -80,31 +80,30 @@
         </a-menu>
         <a-button>
           Actions <a-icon type="down" />
-        </a-button>
+        </a-button>v-
       </a-dropdown>
 
       <div class = "datainfo-content">
 
         <div class = "info-cover-wrapper">
+          <a-icon v-if="selectedGeometries==null" 
+                  type="loading" 
+                  class = "map-loading"/>
           <!-- <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover"> -->
           <div class="map-thumbnail">
-            <l-map :zoom="zoom" :center="getMapCenter(datafileList[selectedIndex])" :bounds="getBbox(datafileList[selectedIndex])">
+            <l-map v-if="selectedGeometries!=null" 
+                   :zoom="zoom" 
+                   :center="getMapCenter(datafileList[selectedIndex])"
+                   :bounds="getBbox(datafileList[selectedIndex])">
               <l-tile-layer :url="url" :attribution="attribution"/>
-              <l-polygon :lat-lngs="getBbox(datafileList[selectedIndex])" color="red"/>
 
-              <!-- <l-polygon 
-               v-for=""
-              
-              :lat-lngs="getBbox(datafileList[selectedIndex])" color="red"/> -->
-
-              <template
-                v-if="selectedGeometries!=null">
+              <!-- polygons -->
+              <template>
                 <l-polygon 
-                  v-for="(geometry) in selectedGeometries"
-                  :lat-lngs="geometry" color="red"/>
+                  v-for="(geometry,index) in selectedGeometries"
+                  :key="index"
+                  :lat-lngs="geometry" color="black" stroke-weight="1"/>
               </template>
-
-
 
             </l-map>
           </div>
@@ -291,8 +290,6 @@ export default {
       this.selectedDataset = id
       this.selectedIndex = index
 
-      console.log(this.datafiles[this.selectedIndex])
-
       this.queryMapGeometry(this.selectedDataset)
 
       // highlight selected tile
@@ -304,10 +301,12 @@ export default {
       console.log('query dataset ', datasetId)
 
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        console.log(response)
+        console.log(response.data.geoJSON.map(obj => obj.coordinates[0]))
 
         // TODO: parse the result and set selectedGeometries
-        this.selectedGeometries = null
+        this.selectedGeometries = response.data.geoJSON.map(obj =>
+          obj.coordinates[0].map(item => [item[1], item[0]])
+        )
       })
     },
 
@@ -324,6 +323,7 @@ export default {
       this.isSqueezed = false
       this.selectedDataset = null
       this.selectedIndex = null
+      this.selectedGeometries = null
     },
     parseCoord(coord) {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)
@@ -453,6 +453,7 @@ export default {
   width: 100%;
   padding: 10px;
   margin-top: 30px;
+  position: relative;
 }
 
 .info-cover {
@@ -512,6 +513,14 @@ export default {
       overflow-y: auto;
     }
   }
+}
+
+.map-loading {
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  top: 50%;
+  transform: scale(2) translate(-50%, -50%);
 }
 </style>
 
