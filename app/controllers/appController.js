@@ -90,7 +90,7 @@ module.exports.uploadScreenshot = function(req, res) {
             console.log('DatavoxelImage has been created', imageLink)
           });   
         });
-      } else if (voxel.Datavoxelimage.preview == null){
+      } else if (voxel.Datavoxelimage.preview == null || voxel.Datavoxelimage.preview === false){
         s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
           voxel.Datavoxelimage.update({preview: true}).then(() => {
             console.log('DatavoxelImage has been upated with a Preview Image at', imageLink)
@@ -149,7 +149,7 @@ module.exports.getDatajsons = function(req, res){
 		  where: {id: req.params.datavoxelId }, 
 		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
-        if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null) {
+        if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null || voxel.Datavoxelimage.preview === false) {
           console.log('Screenshot needed on the backend!')
           //screenshot needed
           datajsons[0].dataValues.screenshot = true
