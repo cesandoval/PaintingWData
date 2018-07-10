@@ -43,11 +43,22 @@
           <a-card
             hoverable
           >
-            <img
-              slot="cover"
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            >
+            <div class="card-images">
+              <img
+                v-if="datafile.Datavoxelimage!=null"
+                slot="cover"
+                :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
+                class = "thumbnail-img"
+
+                alt="example"
+              >
+              <a-icon 
+                v-else 
+                type="picture"
+                class="preview-ph"
+              />
+
+            </div>
             <a-card-meta
               :title="datafile.voxelname?datafile.voxelname:'Untitled'"
               :description="parseTime(datafile.createdAt)"/>
@@ -61,6 +72,13 @@
     <transition>
       <div v-if="selectedProject!=null"
            class = "project-info">
+
+
+        <img
+          v-if="projectList[selectedIndex].Datavoxelimage!=null"
+          :src="parsePreviewImg(projectList[selectedIndex].Datavoxelimage.DatavoxelId)[1]"
+          class = "preview-img"
+        >
 
         <span
           class="unselectProject"
@@ -77,7 +95,7 @@
             <a-dropdown class = "actions">
               <a-menu slot="overlay" @click="handleDeleteClick(selectedProject)">
                 <a-menu-item key="1" >Delete Project</a-menu-item>
-                <a-menu-item key="2" >                  
+                <a-menu-item key="2" >
                   <a-checkbox :checked="projectList[selectedIndex].public">Public</a-checkbox>
                 </a-menu-item>
               </a-menu>
@@ -232,12 +250,39 @@ export default {
     openProject(projectId) {
       window.location = '/app/' + projectId
     },
+    parsePreviewImg(ThumbnailId) {
+      let thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images/'
+      let previewBase = 'https://s3.amazonaws.com/data-voxel-preview/'
+
+      return [
+        thumbnailBase + ThumbnailId + '.jpg',
+        previewBase + ThumbnailId + '.jpg',
+      ]
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
+.preview-ph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: scale(3) translate(-50%, -50%);
+  transform-origin: 0% 0%;
+}
+
+.preview-img {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
 .open-btn {
   position: absolute;
   right: 15px;
@@ -285,6 +330,15 @@ export default {
   border: none;
   padding: 0px;
   background: none;
+}
+
+.card-images {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+
+  background-color: rgba(0, 0, 0, 0.03);
+  margin-bottom: 10px;
 }
 
 .ant-switch-checked {
@@ -383,6 +437,17 @@ export default {
   width: 100%;
   padding: 10px;
   margin-top: 30px;
+}
+
+.thumbnail-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  transform: scale(1.3);
 }
 
 .info-cover {
