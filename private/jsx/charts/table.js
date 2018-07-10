@@ -35,7 +35,7 @@ export class Table extends React.Component {
             },
         })
         return (
-            <div>
+            <div className="chartTable">
                 <ReactTable
                     data={this.state.tableData}
                     columns={this.state.columns}

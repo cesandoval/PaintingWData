@@ -7,30 +7,52 @@ Enzyme.configure({ adapter: new Adapter() });
 
 function setup() {
     const props = {
-      addTodo: jest.fn()
+        columns: jest.fn(),
+        tableData: jest.fn()
     }
 
-    const enzymeWrapper = shallow(<Table />)
+    const enzymeWrapper = shallow(<Table {...props}/>)
 
     return {
-      props,
-      enzymeWrapper
+        props,
+        enzymeWrapper
     }
   }
 
 describe('Charts', () => {
     describe('Table', () => {
-      it('should render self and subcomponents', () => {
-        const { enzymeWrapper } = setup()
+        it('should render self and subcomponents', () => {
+            const { enzymeWrapper } = setup()
 
-        expect(enzymeWrapper.find('div').hasClass('header')).toBe(true)
+            // Tests whether or not the main div was rendered
+            expect(enzymeWrapper.find('div').hasClass('chartTable')).toBe(true)
 
-        // expect(enzymeWrapper.find('h1').text()).toBe('todos')
+            // Tests whether or not the reactTable was rendered
+            expect(enzymeWrapper.find('ReactTable').exists()).toBe(true)
 
-        // const todoInputProps = enzymeWrapper.find('TodoTextInput').props()
-        // expect(todoInputProps.newTodo).toBe(true)
-        // expect(todoInputProps.placeholder).toEqual('What needs to be done?')
+            // Tests the initial properties for the table header
+            const tableProps = enzymeWrapper.find('ReactTable').props()
+            expect(tableProps.columns[0].Header).toBe('Voxel ID')
+            expect(tableProps.columns[0].id).toBe('row')
+            expect(tableProps.columns[0].maxWidth).toBe(60)
+            expect(tableProps.columns[0].resizable).toBe(false)
+        })
+        
+        it('add new columns to the table', () => {
+            const { enzymeWrapper, props } = setup()
+
+            // Attach the table component
+            let tableProps = enzymeWrapper.find('ReactTable').props()
+            // Initial table length should be 1
+            expect(tableProps.columns.length).toBe(1)
+
+            // Add a column to the table
+            enzymeWrapper.setState({ columns: [{Header: 'layerProp', accessor: 'layerVal'}] })
+            // Redefine tableProps
+            tableProps = enzymeWrapper.find('ReactTable').props()
+            // New table length should be 2
+            expect(tableProps.columns.length).toBe(2)
+
+        })
       })
-
-    })
   })
