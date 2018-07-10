@@ -202,8 +202,11 @@ export default {
 
       zoom: 13,
       center: L.latLng(47.41322, -1.219482),
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      // url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       // url: 'http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
+
+      url:
+        'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
 
       attribution: '',
       polygon: {
