@@ -52,6 +52,7 @@ module.exports.updateShapes = function (req, res) {
                                // associated with the voxelId.
     }
     // First, find all the data voxel progresses and push to output.
+    console.log("AN ACTUAL SHAPE")
     Model.Datavoxel.findAll({
         where: {
             userId: req.user.id,

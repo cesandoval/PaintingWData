@@ -30,7 +30,7 @@ function progressWidgetInit(){
             // update the widget to that effect.
             setInterval(function(){
                 this._queryController();
-            }.bind(this), 1000);
+            }.bind(this), 1000); //TODO: Why do we need this to run every second? It's polluting the console.
         },
 
         /**
