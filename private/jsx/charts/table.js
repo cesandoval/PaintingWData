@@ -4,7 +4,8 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 // import * as Act from '../store/actions'
 
-class Table extends React.Component {
+// Use named export for unconnected component (for tests)
+export class Table extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -55,6 +56,7 @@ class Table extends React.Component {
     }
 }
 
+// Use default export for the connected component (for app)
 export default connect(s => ({
     tableData: s.datasets.tableData,
 }))(Table)

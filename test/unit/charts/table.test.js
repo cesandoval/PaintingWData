@@ -1,7 +1,7 @@
 import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15';
-import Table from '../../../private/jsx/charts/table'
+import { Table } from '../../../private/jsx/charts/table'
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -10,7 +10,7 @@ function setup() {
       addTodo: jest.fn()
     }
 
-    const enzymeWrapper = shallow(<Table {...props} />)
+    const enzymeWrapper = shallow(<Table />)
 
     return {
       props,
