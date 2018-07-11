@@ -6,11 +6,11 @@
       <div v-if="datafiles.length>0"
            class = "sorting-switches"
       >
+        <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small"/>
-        <br>
+                  size="small" class = "switch"/>
         <a-switch v-model="sortDown" 
-                  size="small">
+                  size="small" class = "switch">
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
@@ -45,7 +45,7 @@
             <div class="map-thumbnail">
               <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" color="black"/>
+                <l-polygon :lat-lngs="getBbox(datafile)" color="black" weight="2" fill-color="rgb(255,255,255)"/>
 
               </l-map>
             </div>
@@ -102,7 +102,8 @@
                 <l-polygon 
                   v-for="(geometry,index) in selectedGeometries"
                   :key="index"
-                  :lat-lngs="geometry" color="black" stroke-weight="1"/>
+                  :lat-lngs="geometry" color="black" weight="1" 
+                  fill-color="rgb(255,255,255)"/>
               </template>
 
             </l-map>
@@ -371,7 +372,8 @@ export default {
 .sorting-switches {
   display: inline-block;
   float: right;
-  margin: 15px;
+
+  margin-top: 30px;
 }
 
 .no-data {
@@ -386,6 +388,13 @@ export default {
   margin: 20px;
   margin-left: 0px;
   display: inline-block;
+}
+
+.switch {
+  float: left;
+  margin-left: 12px;
+
+  font-size: 12px;
 }
 
 .card {

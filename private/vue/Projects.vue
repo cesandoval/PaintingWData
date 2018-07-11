@@ -8,13 +8,15 @@
       <h1 class = "page-title">Projects</h1>
 
       <div v-if="datavoxels.length>0"
-           class="sortingSwitches"
+           class="sorting-Switches"
       >
+        <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small"/>
-        <br>
+                  size="small"
+                  class = "switch"/>
         <a-switch v-model="sortDown" 
-                  size="small">
+                  size="small"
+                  class = "switch">
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
@@ -52,11 +54,13 @@
 
                 alt="example"
               >
-              <a-icon 
-                v-else 
-                type="picture"
-                class="preview-ph"
-              />
+              <div v-else>
+                <a-icon 
+                  type="picture"
+                  class="preview-ph"
+                />
+                <span class="preview-ph-text">Preview not available yet.</span>
+              </div>
 
             </div>
             <a-card-meta
@@ -273,6 +277,16 @@ export default {
   transform-origin: 0% 0%;
 }
 
+.preview-ph-text {
+  position: absolute;
+  opacity: 0.6;
+  font-size: 14px;
+  bottom: 10px;
+  text-align: center;
+
+  width: 100%;
+}
+
 .preview-img {
   position: absolute;
   left: 0px;
@@ -288,6 +302,7 @@ export default {
   right: 15px;
   border: none;
   top: 50px;
+  color: #e75332;
 }
 .page-title-section {
   margin-top: 80px;
@@ -349,10 +364,11 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.sortingSwitches {
+.sorting-Switches {
   display: inline-block;
   float: right;
-  margin: 15px;
+
+  margin-top: 30px;
 }
 
 .no-data {
@@ -378,6 +394,13 @@ export default {
   height: 100%;
   overflow-y: auto;
   float: left;
+}
+
+.switch {
+  float: left;
+  margin-left: 12px;
+
+  font-size: 12px;
 }
 
 .dataset-info {
@@ -517,6 +540,10 @@ export default {
 }
 
 .ant-list-item {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px;
+  border-radius: 5px;
+
   /deep/ {
     .ant-list-item-meta-content {
     }
