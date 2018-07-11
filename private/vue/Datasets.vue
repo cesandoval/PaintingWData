@@ -544,6 +544,9 @@ export default {
     }
   }
 }
+.mainContainer {
+  min-height: calc(100vh - 130px);
+}
 
 .demo-infinite-container {
   margin-top: 10px;
