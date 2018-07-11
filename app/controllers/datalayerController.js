@@ -99,7 +99,7 @@ module.exports.computeVoxels = function(req, res){
 
             processVoxels([datalayerIds, req], function(){}); 
 
-            res.redirect('/voxels/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
+            res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
     } 
 
