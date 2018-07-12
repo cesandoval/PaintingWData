@@ -106,9 +106,15 @@ block pageTitle
                                     label.layer-label Upload Date
                                       p.label-body #{datafile.Datalayers[0].createdAt}
 
+        - const server = {id, datavoxels, userSignedIn, user, voxelAlert: voxelAlert ? true : false}
+
         script.
           var data = !{JSON.stringify(datavoxel)};
           renderMap(document.getElementById("map_#{datavoxel.id}"), data);
+
+          const server = !{JSON.stringify(server)}
+          console.log({server})
+
 
   script(src="/javascripts/map_thumbnail_viewer.js")
   script(src="/javascripts/voxels-select.js")

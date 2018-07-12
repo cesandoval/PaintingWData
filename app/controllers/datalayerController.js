@@ -111,7 +111,8 @@ module.exports.computeVoxels = function(req, res){
     
             // Processes each of the voxels.
             processVoxels([datalayerIds, req], function(){}); 
-            res.redirect('/voxels/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
+
+            res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
     } 
 
@@ -278,12 +279,28 @@ module.exports.showProjects= function(req, res) {
                processed : true,
                deleted: {$not: true}
            },
+
            include: [{
-               model: Model.Datafile, include: [{
-                   model: Model.Datalayer,
-                   limit: 1
-               }]
-           }]
+               model: Model.Datafile, 
+
+               include: [
+                    {
+                        model: Model.Datalayer,
+                        limit: 1
+                    },
+                    {
+                        model: Model.Datadbf,
+                        limit: 1
+                    },
+                ]                        
+
+                }, {
+                model: Model.Datavoxelimage
+                }, {
+                    model: Model.Datajson,
+                    attributes: ["rasterProperty", "datafileId","layername"] 
+                }
+            ]
        }).then(function(datavoxels){
            console.log("------------------------------------------------");
            res.render('projects', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
