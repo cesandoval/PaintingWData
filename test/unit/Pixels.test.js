@@ -1,7 +1,7 @@
 import Pixels from '../../private/jsx/pixels'
 import axios from 'axios'
-import input from './test-files/parseDataJSON-input-3.js'
-import output from './test-files/parseDataJSON-output-3.js'
+//import input from './test-files/parseDataJSON-input-3.js'
+//import output from './test-files/parseDataJSON-output-3.js'
 
 describe('pixels.js', () => {
   // The code below is commented out UNTIL we fix the "global project" variable issue, which this relies on.
