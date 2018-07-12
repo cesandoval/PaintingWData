@@ -238,8 +238,8 @@ export default {
       window.location = '/app/' + projectId
     },
     parsePreviewImg(ThumbnailId) {
-      let thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images/'
-      let previewBase = 'https://s3.amazonaws.com/data-voxel-preview/'
+      let thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images-server2/'
+      let previewBase = 'https://s3.amazonaws.com/data-voxel-preview-server/'
 
       return [
         thumbnailBase + ThumbnailId + '.jpg',
