@@ -16,14 +16,14 @@ class Panels extends React.Component {
                     more:
                         'https://en.wikipedia.org/wiki/Visual_programming_language',
                 },
-                PCoord: {
+                PCoords: {
                     title: 'Parallel Coordinates',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
                     desc: 'Visualize Filtered Data by Coordinates',
                     more: 'https://github.com/syntagmatic/parallel-coordinates',
                 },
-                Table: {
+                TABLE: {
                     title: 'Table',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
