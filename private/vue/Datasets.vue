@@ -293,7 +293,7 @@ export default {
       console.log('query dataset ', datasetId)
 
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        console.log(response.data.geoJSON.map(obj => obj.coordinates[0]))
+        // console.log(response.data.geoJSON.map(obj => obj.coordinates[0]))
 
         // TODO: parse the result and set selectedGeometries
         this.selectedGeometries = response.data.geoJSON.map(obj =>
