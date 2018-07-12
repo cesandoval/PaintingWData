@@ -75,11 +75,11 @@ function progressWidgetInit(){
         */
         _checkUrl: function(){
             // Are we uploading layers? /layers/<user_id>/<file_id>
-            // Are we uploading voxels? /voxels/<user_id>/<hash_voxel_id>$$<...data_layer_id's> (joined by double dollars)
-            // What if we're not uploading anything? (layers) /layers/<user_id> OR (voxels) /voxels/<user_id>
+            // Are we uploading voxels? /projects/<user_id>/<hash_voxel_id>$$<...data_layer_id's> (joined by double dollars)
+            // What if we're not uploading anything? (layers) /layers/<user_id> OR (voxels) /projects/<user_id>
             var urlString = window.location.pathname;
             var isLayerUrl = contains(urlString, '/layers'),
-                isVoxelUrl = contains(urlString, '/voxels'),
+                isVoxelUrl = contains(urlString, '/projects'),
                 urlHasUploads = (urlString.match(/\/\d+(?!\.)\/\d+(?!\.)/) != null); // This matches two numbers with no decimal points.
             if ((isLayerUrl || isVoxelUrl) && urlHasUploads) {
                 try {
@@ -375,7 +375,7 @@ function progressWidgetInit(){
                     job[5] = true;
                     var urlString = window.location.pathname;
                     var isLayerUrl = contains(urlString, '/layers'),
-                        isVoxelUrl = contains(urlString, '/voxels');
+                        isVoxelUrl = contains(urlString, '/projects');
                     if (isLayerUrl || isVoxelUrl){
                         location.reload();
                     }
