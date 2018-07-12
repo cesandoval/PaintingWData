@@ -28,9 +28,22 @@ function progressWidgetInit(){
             this._display();
             // This is the main loop: we query the controller, update the data structures accordingly, and then
             // update the widget to that effect.
-            setInterval(function(){
+            this.queryLoop = setInterval(function(){
+                if (this._emptyQuery()){
+                    clearInterval(this.queryLoop);
+                }
                 this._queryController();
-            }.bind(this), 1000);
+            }.bind(this), this.queryInterval); //TODO: Why do we need this to run every second? It's polluting the console.
+        },
+
+        /**
+         * Returns true if and only if this.state.queryIds has nothing.
+         * Used to clear this.queryLoop.
+         */
+        _emptyQuery: function(){
+            var queries = this.state.queryIds;
+            return queries.shapes.length == 0 &&
+                    jQuery.isEmptyObject(queries.voxels);
         },
 
         /**
@@ -61,6 +74,9 @@ function progressWidgetInit(){
             this.request = null; // The current XMLHTTPRequest, when querying for job progress.
             this.progress = []; // This gets populated upon querying the controller for job progress. Of course, the
                                 // hard part is comparing this to the current jobs (this.state.jobs)
+            // Query intervals and timing.
+            this.queryInterval = 1000;
+            this.queryLoop = null; 
             // Loads the saved state.
             var savedState = window.localStorage.getItem('progressWidget');
             if (savedState && savedState !== 'undefined')
@@ -75,11 +91,11 @@ function progressWidgetInit(){
         */
         _checkUrl: function(){
             // Are we uploading layers? /layers/<user_id>/<file_id>
-            // Are we uploading voxels? /voxels/<user_id>/<hash_voxel_id>$$<...data_layer_id's> (joined by double dollars)
-            // What if we're not uploading anything? (layers) /layers/<user_id> OR (voxels) /voxels/<user_id>
+            // Are we uploading voxels? /projects/<user_id>/<hash_voxel_id>$$<...data_layer_id's> (joined by double dollars)
+            // What if we're not uploading anything? (layers) /layers/<user_id> OR (voxels) /projects/<user_id>
             var urlString = window.location.pathname;
             var isLayerUrl = contains(urlString, '/layers'),
-                isVoxelUrl = contains(urlString, '/voxels'),
+                isVoxelUrl = contains(urlString, '/projects'),
                 urlHasUploads = (urlString.match(/\/\d+(?!\.)\/\d+(?!\.)/) != null); // This matches two numbers with no decimal points.
             if ((isLayerUrl || isVoxelUrl) && urlHasUploads) {
                 try {
@@ -375,13 +391,13 @@ function progressWidgetInit(){
                     job[5] = true;
                     var urlString = window.location.pathname;
                     var isLayerUrl = contains(urlString, '/layers'),
-                        isVoxelUrl = contains(urlString, '/voxels');
+                        isVoxelUrl = contains(urlString, '/projects');
+
+                    this._removeFromQueryIds(job);
+                    this._createFlash(job[1] + " has completed!");
                     if (isLayerUrl || isVoxelUrl){
                         location.reload();
                     }
-                    this._createFlash(job[1] + " has completed!");
-                    // TODO: refresh the page once the job has completed and if you're on the page that displays the voxels.
-                    this._removeFromQueryIds(job);
                 }
             }
         },
