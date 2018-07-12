@@ -208,7 +208,7 @@ export default {
   },
   created() {
     // console.log('created')
-    console.log(this.datavoxels)
+    // console.log(this.datavoxels)
   },
   methods: {
     setActiveDatasetId(id, index) {
