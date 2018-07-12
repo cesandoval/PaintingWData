@@ -254,7 +254,7 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
     var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= '` + req.voxelRandomId + `')`;
-    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, ` + req.voxelId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(l(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, ` + req.voxelId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
     var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
     var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
 

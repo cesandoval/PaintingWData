@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div :class="{ squeezedContainer:selectedDataset!=null, }"
+       class = "mainContainer"
+  >
     <div class = "page-title-section">
       <h1 class = "page-title">Datasets</h1>
 
       <div v-if="datafiles.length>0"
            class = "sorting-switches"
       >
+        <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small"/>
-        <br>
+                  size="small" class = "switch"/>
         <a-switch v-model="sortDown" 
-                  size="small">
+                  size="small" class = "switch">
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
@@ -45,7 +47,7 @@
             <div class="map-thumbnail">
               <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" color="black"/>
+                <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
 
               </l-map>
             </div>
@@ -72,87 +74,99 @@
         @click="()=> {unSqueezeTiles()}">
         <a-icon type="close" />
       </span>
-
-
-      <a-dropdown class = "actions">
-        <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
-          <a-menu-item key="1" >Delete Dataset</a-menu-item>
-        </a-menu>
-        <a-button>
-          Actions <a-icon type="down" />
-        </a-button>v-
-      </a-dropdown>
+       
 
       <div class = "datainfo-content">
 
-        <div class = "info-cover-wrapper">
-          <a-icon v-if="selectedGeometries==null" 
-                  type="loading" 
-                  class = "map-loading"/>
-          <!-- <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover"> -->
-          <div class="map-thumbnail">
-            <l-map v-if="selectedGeometries!=null" 
-                   :zoom="zoom" 
-                   :center="getMapCenter(datafileList[selectedIndex])"
-                   :bounds="getBbox(datafileList[selectedIndex])">
-              <l-tile-layer :url="url" :attribution="attribution"/>
+        <div class = "col-sm-6 left-col">
 
-              <!-- polygons -->
-              <template>
-                <l-polygon 
-                  v-for="(geometry,index) in selectedGeometries"
-                  :key="index"
-                  :lat-lngs="geometry" color="black" stroke-weight="1"/>
-              </template>
 
-            </l-map>
+          <a-dropdown class = "actions">
+            <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
+              <a-menu-item key="1" >Delete Dataset</a-menu-item>
+            </a-menu>
+            <a-button>
+              Actions <a-icon type="down" />
+            </a-button>v-
+          </a-dropdown>
+
+          <div class = "info-cover-wrapper">
+            <a-icon v-if="selectedGeometries==null" 
+                    type="loading" 
+                    class = "map-loading"/>
+            <!-- <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover"> -->
+            <div class="map-thumbnail-preview">
+              <l-map v-if="selectedGeometries!=null" 
+                     :zoom="zoom" 
+                     :center="getMapCenter(datafileList[selectedIndex])"
+                     :bounds="getBbox(datafileList[selectedIndex])">
+                <l-tile-layer :url="url" :attribution="attribution"/>
+
+                <!-- polygons -->
+                <template>
+                  <l-polygon 
+                    v-for="(geometry,index) in selectedGeometries"
+                    :key="index"
+                    :lat-lngs="geometry" :weight="1" color="black" 
+                    fill-color="rgb(255,255,255)"/>
+                </template>
+
+              </l-map>
+            </div>
           </div>
 
-        </div>
+          <div class = "info-text bottom-info">
+            <div class = "info-title">File name:  
+              <span class = "info-digits"
+            >{{ datafileList[selectedIndex].filename.split(".")[0] }}</span></div>
+            <div>Created at:  
+              <span class = "info-time"
+            >{{ parseTime(datafileList[selectedIndex].createdAt) }}</span></div>
+            <br>
+            <div>Last updated at:  
+              <span class = "info-digits"
+            >{{ parseTime(datafileList[selectedIndex].updatedAt) }}</span></div>
+            <div>Latitude:  
+              <span class = "info-digits"
+            >{{ (datafileList[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
+            <div>Longitude:  
+              <span class = "info-digits"
+            >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
+            <div>Type of Geometry:  
+              <span class = "info-digits"
+            >{{ datafiles[selectedIndex].geometryType }}</span></div>
+          </div> 
+        </div> 
 
-
-        <div class = "info-text">
-
-          <div class = "info-title">File name:  
-            <span class = "info-digits"
-          >{{ datafileList[selectedIndex].filename.split(".")[0] }}</span></div>
-          <div>Created at:  
-            <span class = "info-time"
-          >{{ parseTime(datafileList[selectedIndex].createdAt) }}</span></div>
-          <br>
-          <div>Last updated at:  
-            <span class = "info-digits"
-          >{{ parseTime(datafileList[selectedIndex].updatedAt) }}</span></div>
-          <div>Latitude:  
-            <span class = "info-digits"
-          >{{ (datafileList[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
-          <div>Longitude:  
-            <span class = "info-digits"
-          >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
-          <div>Type of Geometry:  
-            <span class = "info-digits"
-          >{{ datafiles[selectedIndex].geometryType }}</span></div>
-          <br>
-          <div><strong>Properties</strong></div>
-          <template>
-            <div 
-              class="demo-infinite-container"
-            >
-              <a-list
-                :data-source="Object.keys(datafiles[selectedIndex].Datalayers[0].properties)"
+        <div class = "col-sm-6 right-col">
+          <div class = "info-text">
+            <div><strong>Properties</strong></div>
+            <template>
+              <div 
+                class="demo-infinite-container"
               >
-                <a-list-item slot="renderItem" slot-scope="item, index">
-                  <a-list-item-meta description="">
-                    <a slot="title" :key="item">{{ item }}</a>
-                    <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
-                  </a-list-item-meta>
-                  <div/>
-                </a-list-item>
-                <a-spin v-if="loading && !busy" class="demo-loading" />
-              </a-list>
-            </div>
-          </template>
-        </div>
+                <a-list
+                  :data-source="Object.keys(datafiles[selectedIndex].Datalayers[0].properties)"
+                >
+                  <a-list-item slot="renderItem" slot-scope="item, index">
+                    <a-list-item-meta description="">
+                      <a slot="title" :key="item">{{ item }}</a>
+                      <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
+                    </a-list-item-meta>
+                    <div/>
+                  </a-list-item>
+                  <a-spin v-if="loading && !busy" class="demo-loading" />
+                </a-list>
+              </div>
+            </template>
+
+          </div> 
+        </div> 
+
+
+
+
+
 
       </div>
       
@@ -202,35 +216,13 @@ export default {
 
       zoom: 13,
       center: L.latLng(47.41322, -1.219482),
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      // url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       // url: 'http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
 
+      url:
+        'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
+
       attribution: '',
-      polygon: {
-        latlngs: [
-          [47.2263299, -1.6222],
-          [47.21024000000001, -1.6270065],
-          [47.1969447, -1.6136169],
-          [47.18527929999999, -1.6143036],
-          [47.1794457, -1.6098404],
-          [47.1775788, -1.5985107],
-          [47.1676598, -1.5753365],
-          [47.1593731, -1.5521622],
-          [47.1593731, -1.5319061],
-          [47.1722111, -1.5143967],
-          [47.1960115, -1.4841843],
-          [47.2095404, -1.4848709],
-          [47.2291277, -1.4683914],
-          [47.2533687, -1.5116501],
-          [47.2577961, -1.5531921],
-          [47.26828069, -1.5621185],
-          [47.2657179, -1.589241],
-          [47.2589612, -1.6204834],
-          [47.237287, -1.6266632],
-          [47.2263299, -1.6222],
-        ],
-        color: '#ff00ff',
-      },
       selectedGeometries: null,
     })
   },
@@ -338,10 +330,16 @@ export default {
 <style lang="scss" scoped>
 .map-thumbnail {
   width: 100%;
-  // padding-top: 100%;
   background-color: rgba(0, 0, 0, 0.1);
   height: 200px;
 
+  margin-bottom: 10px;
+}
+
+.map-thumbnail-preview {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  height: 100%;
   margin-bottom: 10px;
 }
 
@@ -351,7 +349,7 @@ export default {
 
 .actions {
   position: absolute;
-  left: 11px;
+  left: 25px;
   top: 4px;
   border: none;
   padding: 0px;
@@ -368,7 +366,8 @@ export default {
 .sorting-switches {
   display: inline-block;
   float: right;
-  margin: 15px;
+
+  margin-top: 30px;
 }
 
 .no-data {
@@ -385,6 +384,13 @@ export default {
   display: inline-block;
 }
 
+.switch {
+  float: left;
+  margin-left: 12px;
+
+  font-size: 12px;
+}
+
 .card {
   padding: 0px !important;
 }
@@ -396,18 +402,37 @@ export default {
   float: left;
 }
 
+.left-col {
+  height: 100%;
+}
+
 .dataset-info {
-  position: relative;
-  width: 40%;
-  float: left;
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  min-height: calc(100vh - 300px);
-  margin-bottom: 20px;
   box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.1);
+  background-color: rgb(255, 255, 255);
+
+  padding-top: 80px;
+
+  z-index: 1000;
 }
 .datainfo-content {
-  height: calc(100% - 20px);
-  overflow-y: auto;
+  height: 70%;
+  position: absolute;
+  width: 90%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.right-col {
+  height: 100%;
+  position: relative;
 }
 
 .squeezeddatasetlist {
@@ -431,8 +456,11 @@ export default {
 .unsqueeze {
   cursor: pointer;
   position: absolute;
-  top: 10px;
+  top: 90px;
   right: 10px;
+  transform: scale(2);
+
+  z-index: 1001;
 }
 
 .unsqueeze:hover {
@@ -454,14 +482,28 @@ export default {
   padding: 10px;
   margin-top: 30px;
   position: relative;
+  height: 50%;
+}
+
+.squeezedContainer {
+  height: 0px;
+  min-height: 0px;
 }
 
 .info-cover {
   width: 100%;
 }
 
+.bottom-info {
+  position: absolute;
+  bottom: 0px;
+  height: auto !important;
+  width: 100%;
+}
+
 .info-text {
   padding: 10px;
+  height: 100%;
 
   /deep/ {
     .info-title {
@@ -486,16 +528,13 @@ export default {
   border-radius: 4px;
   overflow: auto;
   padding: 8px 24px;
-  height: 300px;
+  // height: 300px;
 }
 .demo-loading {
   position: absolute;
   bottom: 40px;
   width: 100%;
   text-align: center;
-}
-.demo-infinite-container {
-  height: auto;
 }
 
 .ant-list-item {
@@ -505,11 +544,16 @@ export default {
     }
   }
 }
+.mainContainer {
+  min-height: calc(100vh - 130px);
+}
 
 .demo-infinite-container {
+  margin-top: 10px;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.01);
   /deep/ {
     .ant-spin-container {
-      max-height: 150px;
       overflow-y: auto;
     }
   }
@@ -521,6 +565,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: scale(2) translate(-50%, -50%);
+  transform-origin: 0% 0%;
 }
 </style>
 

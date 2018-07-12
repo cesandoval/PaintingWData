@@ -8,13 +8,15 @@
       <h1 class = "page-title">Projects</h1>
 
       <div v-if="datavoxels.length>0"
-           class="sortingSwitches"
+           class="sorting-Switches"
       >
+        <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small"/>
-        <br>
+                  size="small"
+                  class = "switch"/>
         <a-switch v-model="sortDown" 
-                  size="small">
+                  size="small"
+                  class = "switch">
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
@@ -43,11 +45,24 @@
           <a-card
             hoverable
           >
-            <img
-              slot="cover"
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            >
+            <div class="card-images">
+              <img
+                v-if="datafile.Datavoxelimage!=null"
+                slot="cover"
+                :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
+                class = "thumbnail-img"
+
+                alt="example"
+              >
+              <div v-else>
+                <a-icon 
+                  type="picture"
+                  class="preview-ph"
+                />
+                <span class="preview-ph-text">Preview not available yet.</span>
+              </div>
+
+            </div>
             <a-card-meta
               :title="datafile.voxelname?datafile.voxelname:'Untitled'"
               :description="parseTime(datafile.createdAt)"/>
@@ -61,6 +76,13 @@
     <transition>
       <div v-if="selectedProject!=null"
            class = "project-info">
+
+
+        <img
+          v-if="projectList[selectedIndex].Datavoxelimage!=null"
+          :src="parsePreviewImg(projectList[selectedIndex].Datavoxelimage.DatavoxelId)[1]"
+          class = "preview-img"
+        >
 
         <span
           class="unselectProject"
@@ -77,7 +99,7 @@
             <a-dropdown class = "actions">
               <a-menu slot="overlay" @click="handleDeleteClick(selectedProject)">
                 <a-menu-item key="1" >Delete Project</a-menu-item>
-                <a-menu-item key="2" >                  
+                <a-menu-item key="2" >
                   <a-checkbox :checked="projectList[selectedIndex].public">Public</a-checkbox>
                 </a-menu-item>
               </a-menu>
@@ -129,28 +151,11 @@
                 </a-list>
               </div>
             </template>
-
-
-
-
           </div>
-
-
-
-
-
-
-
         </div>
-
-
       </div>
-
     </transition>
-
-
   </div>
-  
 </template>
 
 <script>
@@ -232,17 +237,55 @@ export default {
     openProject(projectId) {
       window.location = '/app/' + projectId
     },
+    parsePreviewImg(ThumbnailId) {
+      let thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images/'
+      let previewBase = 'https://s3.amazonaws.com/data-voxel-preview/'
+
+      return [
+        thumbnailBase + ThumbnailId + '.jpg',
+        previewBase + ThumbnailId + '.jpg',
+      ]
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
+.preview-ph {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: scale(3) translate(-50%, -50%);
+  transform-origin: 0% 0%;
+}
+
+.preview-ph-text {
+  position: absolute;
+  opacity: 0.6;
+  font-size: 14px;
+  bottom: 10px;
+  text-align: center;
+
+  width: 100%;
+}
+
+.preview-img {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+}
+
 .open-btn {
   position: absolute;
   right: 15px;
   border: none;
   top: 50px;
+  color: #e75332;
 }
 .page-title-section {
   margin-top: 80px;
@@ -287,6 +330,15 @@ export default {
   background: none;
 }
 
+.card-images {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+
+  background-color: rgba(0, 0, 0, 0.03);
+  margin-bottom: 10px;
+}
+
 .ant-switch-checked {
   background-color: rgba(0, 0, 0, 0.4);
 }
@@ -295,10 +347,11 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.sortingSwitches {
+.sorting-Switches {
   display: inline-block;
   float: right;
-  margin: 15px;
+
+  margin-top: 30px;
 }
 
 .no-data {
@@ -324,6 +377,13 @@ export default {
   height: 100%;
   overflow-y: auto;
   float: left;
+}
+
+.switch {
+  float: left;
+  margin-left: 12px;
+
+  font-size: 12px;
 }
 
 .dataset-info {
@@ -383,6 +443,17 @@ export default {
   width: 100%;
   padding: 10px;
   margin-top: 30px;
+}
+
+.thumbnail-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+
+  transform: scale(1.3);
 }
 
 .info-cover {
@@ -452,6 +523,10 @@ export default {
 }
 
 .ant-list-item {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 12px;
+  border-radius: 5px;
+
   /deep/ {
     .ant-list-item-meta-content {
     }
