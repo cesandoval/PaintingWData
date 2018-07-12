@@ -21,6 +21,12 @@ export default class Sidebar extends React.Component {
                         <Controls />
                     </TabPane>
                 </Tabs>
+
+                <style jsx>{`
+                    :global(.ant-tabs-nav-scroll) {
+                        text-align: center;
+                    }
+                `}</style>
             </div>
         )
     }
