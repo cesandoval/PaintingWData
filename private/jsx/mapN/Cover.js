@@ -309,7 +309,7 @@ class Cover extends React.Component {
                     footer={null}
                     onCancel={() => this.setExportModalVisible(false)}
                 >
-                    <span className="title">Export</span>
+                    <span className="title">Export Project</span>
                     {/* SVG GeoJSON SHP IMAGE */}
                     <span className="fileTypes">
                         <span

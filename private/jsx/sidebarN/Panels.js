@@ -12,7 +12,7 @@ class Panels extends React.Component {
                     title: 'VPL',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
-                    desc: 'Compute & Connect Data By Draggable Tool',
+                    desc: 'Compute & Analyze Data With Visual Programming',
                     more:
                         'https://en.wikipedia.org/wiki/Visual_programming_language',
                 },
@@ -20,26 +20,26 @@ class Panels extends React.Component {
                     title: 'Parallel Coordinates',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
-                    desc: 'Visualize Filtered Data by Coordinates',
+                    desc: 'Filter Data with Parallel Coordinates',
                     more: 'https://github.com/syntagmatic/parallel-coordinates',
                 },
                 TABLE: {
                     title: 'Table',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
-                    desc: 'See data Table of each layer',
+                    desc: 'Interact with the Values in Tabular Form',
                 },
                 'Chart:Bar': {
                     title: 'Bar Chart',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
-                    desc: 'Analyze and Filter Data by Bar Chart',
+                    desc: 'Visualize and Filter Data with a Bar Chart',
                 },
                 'Chart:Density': {
                     title: 'Density Chart',
                     img:
                         'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
-                    desc: 'Analyze and Filter Data by Density Chart',
+                    desc: 'Visualize and Filter Data with a Density Chart',
                 },
             },
         }

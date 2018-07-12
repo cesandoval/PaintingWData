@@ -226,7 +226,7 @@ class Modifications extends React.Component {
                         value={this.props.opacity}
                     />
                 </div>
-                <p className="modifications-name"> INTERPOLATED </p>
+                <p className="modifications-name"> INTERPOLATION </p>
                 <div className="modification-slider">
                     <Slider
                         marks={knnMarks}
