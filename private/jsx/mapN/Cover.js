@@ -46,7 +46,7 @@ class Cover extends React.Component {
         let textFile = window.URL.createObjectURL(data)
 
         let link = document.createElement('a')
-        link.setAttribute('download', 'voxelExport.'.concat(exportType))
+        link.setAttribute('download', 'projectExport.'.concat(exportType))
         link.href = textFile
         document.body.appendChild(link)
         link.click()
