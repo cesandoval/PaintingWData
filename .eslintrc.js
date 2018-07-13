@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'react/prop-types': 'off', // don't use propTypes.
     'no-console': 'off', // no console.log
+    'no-debugger': 'off',
 
     'prettier/prettier': ['warn', {
       'trailingComma': 'es5',
