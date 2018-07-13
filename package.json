@@ -19,7 +19,7 @@
     "@turf/meta": "^6.0.0-beta.3",
     "@turf/random": "^5.1.5",
     "amqplib": "^0.5.1",
-    "antd": "^2.13.8",
+    "antd": "^3.6.5",
     "async": "^2.6.0",
     "aws-sdk": "^2.249.1",
     "bcrypt-nodejs": "0.0.3",

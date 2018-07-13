@@ -67,7 +67,7 @@ class Charts extends React.Component {
             let vals = []
             for (var currPoint in currLayer.geojson.otherdata) {
                 let currVal = currLayer.geojson.otherdata[currPoint][3]
-                if (currVal != 0) {
+                if (currVal != 0 && isNaN(parseFloat(currVal)) == false) {
                     vals.push(currVal)
                 }
             }
@@ -90,6 +90,7 @@ class Charts extends React.Component {
             layersDensity[currLayer.layerKey] = currDensityData
             layersHistogram[currLayer.layerKey] = currHistogramData
         }
+
         return { densityData: layersDensity, histogramData: layersHistogram }
     }
 
@@ -197,7 +198,7 @@ class Charts extends React.Component {
                                     />
                                 )}
 
-                                {this.props.panelShow == 'Chart:Histogram' && (
+                                {this.props.panelShow == 'Chart:Bar' && (
                                     <VictoryBar
                                         style={{
                                             data: {
