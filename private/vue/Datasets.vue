@@ -485,7 +485,7 @@ export default {
 
 .squeezedContainer {
   height: 0px;
-  min-height: 0px;
+  min-height: 0px !important;
 }
 
 .info-cover {
