@@ -232,15 +232,22 @@ export default {
       this.selectedIndex = null
     },
     handleDeleteClick(projectId) {
-      console.log(projectId)
+      let req = { userId: this.id, dataVoxelId: projectId }
+      this.$http.post('/delete/project/', req).then(response => {
+        // TODO: WHY this is not printed after the call?
+        // ideally the UI deletion below should be moved here.
+        console.log('deleted', req, response)
+      })
 
-      // let req = { userId: this.id, dataVoxelId: projectId }
-      // this.$http.post('/delete/project/', req).then(response => {
-      //   // TODO: WHY this is not printed after the call?
-      //   // ideally the UI deletion below should be moved here.
-      //   console.log('deleted', req, response)
-      // })
+      // deletion in the UI
+      this.unselectProject()
+      this.datavoxels = this.datavoxels.filter(item => item.id != projectId)
     },
+
+    handlePublicity() {
+      // `req: {userId: integer, datavoxelId: integer, public: boolean}`
+    },
+
     openProject(projectId) {
       window.location = '/app/' + projectId
     },
