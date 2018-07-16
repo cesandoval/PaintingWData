@@ -29,12 +29,6 @@ module.exports.deleteDataset = function(req, res){
     })
 } 
 
-Model.Datavoxel.update({
-    deleted: true
-}, {
-    where: {
-        id: voxelId
-    }
 
 /**
  * Handles deletion of projects from the /projects page.
