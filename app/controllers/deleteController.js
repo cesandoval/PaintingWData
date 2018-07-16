@@ -7,11 +7,11 @@ var Model = require('../models')
  */
 module.exports.deleteDataset = function(req, res){
     // Array of dataFileIds
-    let dataFileIds = req.body.datalayerIds
+    let dataFileId = req.body.datalayerId
     // delete relevant datafile
     Model.Datafile.destroy({
         where: {
-            id: dataFileIds
+            id: datafileId
         }
     }).then(function(){
         // delete relevant datalayers
@@ -20,7 +20,7 @@ module.exports.deleteDataset = function(req, res){
                 datafileId: dataFileIds
             }
         }).then(function(){
-            if (dataFileIds.length == 1) {
+            if (dataFileId.length == 1) {
                 req.flash('layerAlert', "Your layer has been deleted");
             } else {
                 req.flash('layerAlert', "Your layers have been deleted");
@@ -36,11 +36,11 @@ module.exports.deleteDataset = function(req, res){
  */
 module.exports.deleteDataVoxel = function(req, res){
     // Array of dataVoxelsIds
-    let dataVoxelIds = req.body.dataVoxelIds
+    let dataVoxelId = req.body.dataVoxelId
     // delete relevant datafile
     Model.Datavoxel.destroy({
         where: {
-            id: dataVoxelIds
+            id: dataVoxelId
         }
     }).then(function(){
         req.flash('voxelAlert', "Your Voxel has been deleted");
