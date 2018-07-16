@@ -231,8 +231,15 @@ export default {
       this.selectedProject = null
       this.selectedIndex = null
     },
-    handleDeleteClick(datasetId) {
-      console.log(datasetId)
+    handleDeleteClick(projectId) {
+      console.log(projectId)
+
+      // let req = { userId: this.id, dataVoxelId: projectId }
+      // this.$http.post('/delete/project/', req).then(response => {
+      //   // TODO: WHY this is not printed after the call?
+      //   // ideally the UI deletion below should be moved here.
+      //   console.log('deleted', req, response)
+      // })
     },
     openProject(projectId) {
       window.location = '/app/' + projectId

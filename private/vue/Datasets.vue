@@ -82,7 +82,7 @@
             </a-menu>
             <a-button>
               Actions <a-icon type="down" />
-            </a-button>v-
+            </a-button>
           </a-dropdown>
 
           <div class = "info-cover-wrapper">
@@ -312,14 +312,15 @@ export default {
     handleDeleteClick(datasetId) {
       let req = { userId: this.id, datafileId: datasetId }
 
-      this.$http
-        .post('/delete/dataset/', req)
-        .then(function(response) {
-          console.log('deleted', req, response)
-        })
-        .catch(function(error) {
-          console.log(error)
-        })
+      this.$http.post('/delete/dataset/', req).then(response => {
+        // TODO: WHY this is not printed after the call?
+        // ideally the UI deletion below should be moved here.
+        console.log('deleted', req, response)
+      })
+
+      // deletion in the UI
+      this.unSqueezeTiles()
+      this.datafiles = this.datafiles.filter(item => item.id != datasetId)
     },
   },
 }
