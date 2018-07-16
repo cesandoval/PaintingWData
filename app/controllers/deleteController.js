@@ -22,7 +22,7 @@ module.exports.deleteDataset = function(req, res){
             }
         }).then(function(result){
             console.log(result)
-            req.json({datafileId:datafileId, success: true});
+            res.json({datafileId:datafileId, success: true});
         })
     })
 } 
@@ -41,6 +41,6 @@ module.exports.deleteDataVoxel = function(req, res){
             id: dataVoxelId
         }
     }).then(function(){
-        req.json({dataVoxelId:dataVoxelId, success: true});
+        res.json({dataVoxelId:dataVoxelId, success: true});
     })
 } 
