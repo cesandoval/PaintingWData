@@ -6,7 +6,6 @@ var Model = require('../models')
  * @param {Object} res 
  */
 module.exports.deleteDataset = function(req, res){
-    console.log(req.body)
     // Array of dataFileIds
     let datafileId = req.body.datafileId
     // delete relevant datafile
@@ -21,7 +20,6 @@ module.exports.deleteDataset = function(req, res){
                 datafileId: datafileId
             }
         }).then(function(result){
-            console.log(result)
             res.json({datafileId:datafileId, success: true});
         })
     })
