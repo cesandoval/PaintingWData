@@ -19,7 +19,9 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 			voxel.public = isPublic;
 			voxel.save().then(function(voxel){
 				voxel.Datavoxelimage.public = isPublic
-				voxel.Datavoxelimage.save()
+				voxel.Datavoxelimage.save().then(function(){
+					res.json({voxelId:id, success:true})
+				})
 			})
 		}, function(error){
             console.log(err);
