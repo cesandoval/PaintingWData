@@ -22,8 +22,7 @@ module.exports.deleteDataset = function(req, res){
             }
         }).then(function(result){
             console.log(result)
-            req.flash('layerAlert', "Your layer has been deleted");
-
+            req.json({datafileId:datafileId, success: true});
         })
     })
 } 
@@ -42,6 +41,6 @@ module.exports.deleteDataVoxel = function(req, res){
             id: dataVoxelId
         }
     }).then(function(){
-        req.flash('voxelAlert', "Your Voxel has been deleted");
+        req.json({dataVoxelId:dataVoxelId, success: true});
     })
 } 

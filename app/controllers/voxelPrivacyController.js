@@ -9,7 +9,7 @@ var Model = require('../models');
  */
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
 	if(req.body.id && req.body.public) {
-		var id = req.body.id;
+		var id = req.body.datavoxelId;
 		var isPublic = req.body.public;
 		console.log("Setting the voxelPrivacy", id, isPublic);
 		Model.Datavoxel.findOne({
