@@ -281,20 +281,6 @@ module.exports.showProjects= function(req, res) {
            },
 
            include: [{
-               model: Model.Datafile, 
-
-               include: [
-                    {
-                        model: Model.Datalayer,
-                        limit: 1
-                    },
-                    {
-                        model: Model.Datadbf,
-                        limit: 1
-                    },
-                ]                        
-
-                }, {
                 model: Model.Datavoxelimage
                 }, {
                     model: Model.Datajson,
@@ -303,6 +289,7 @@ module.exports.showProjects= function(req, res) {
             ]
        }).then(function(datavoxels){
            console.log("------------------------------------------------");
+           console.log(datavoxels)
            res.render('projects', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
        });
 }
