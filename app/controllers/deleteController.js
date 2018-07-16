@@ -9,13 +9,17 @@ module.exports.deleteDataset = function(req, res){
     // Array of dataFileIds
     let datafileId = req.body.datafileId
     // delete relevant datafile
-    Model.Datafile.destroy({
+    Model.Datafile.update({
+        deleted: true
+    }, {
         where: {
             id: datafileId
         }
     }).then(function(){
         // delete relevant datalayers
-        Model.Datalayer.destroy({
+        Model.Datalayer.update({
+            deleted: true
+        }, {
             where: {
                 datafileId: datafileId
             }
@@ -24,6 +28,13 @@ module.exports.deleteDataset = function(req, res){
         })
     })
 } 
+
+Model.Datavoxel.update({
+    deleted: true
+}, {
+    where: {
+        id: voxelId
+    }
 
 /**
  * Handles deletion of projects from the /projects page.
