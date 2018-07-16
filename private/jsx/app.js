@@ -4,6 +4,9 @@ import React from 'react'
 import Sidebar from './sidebarN/Sidebar' // origin is sidebar/sidebar
 // import Options from './options/options'
 import Map from './mapN/map'
+
+import Loading from './utils/Loading'
+
 /**
  * Summary. The main meat of the mapping service.
  *
@@ -58,6 +61,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="mapMain">
+                <Loading />
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />

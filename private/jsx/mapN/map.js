@@ -63,6 +63,7 @@ class MapCanvas extends React.Component {
             })
             // Now we know that the map is initialized.
             this.setState({ mapInited: true })
+            Act.setLoading({ value: false })
         }
 
         // Initializes the sidebar options.
