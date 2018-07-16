@@ -313,14 +313,15 @@ export default {
       let req = { userId: this.id, datafileId: datasetId }
 
       this.$http.post('/delete/dataset/', req).then(response => {
-        // TODO: WHY this is not printed after the call?
-        // ideally the UI deletion below should be moved here.
         console.log('deleted', req, response)
+        if (response.data.success) {
+          // deletion in the UI
+          this.unSqueezeTiles()
+          this.datafiles = this.datafiles.filter(item => item.id != datasetId)
+        } else {
+          // TODO: handle delete fail
+        }
       })
-
-      // deletion in the UI
-      this.unSqueezeTiles()
-      this.datafiles = this.datafiles.filter(item => item.id != datasetId)
     },
   },
 }
