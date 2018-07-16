@@ -15,7 +15,7 @@ module.exports.deleteDataset = function(req, res){
         }
     }).then(function(){
         // delete relevant datalayers
-        Model.Datalayer.update({
+        Model.Datalayer.destroy({
             where: {
                 datafileId: dataFileIds
             }
