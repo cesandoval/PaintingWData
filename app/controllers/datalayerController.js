@@ -289,7 +289,6 @@ module.exports.showProjects= function(req, res) {
             ]
        }).then(function(datavoxels){
            console.log("------------------------------------------------");
-           console.log(datavoxels)
            res.render('projects', {id: req.params.id, datavoxels : datavoxels, userSignedIn: req.isAuthenticated(), user: req.user, voxelAlert: req.flash('voxelAlert')[0]});
        });
 }
