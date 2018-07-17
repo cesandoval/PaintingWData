@@ -35,6 +35,7 @@
         class = "dataset-list">
         <span
           v-for="(datafile,index) in datafileList"
+          v-if="datafile.deleted!==false"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -74,8 +75,6 @@
       <div class = "datainfo-content">
 
         <div class = "col-sm-6 left-col">
-
-
           <a-dropdown class = "actions">
             <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
               <a-menu-item key="1" >Delete Dataset</a-menu-item>
@@ -87,7 +86,7 @@
 
           <div class = "info-cover-wrapper">
             <a-icon v-if="selectedGeometries==null" 
-                    type="loading" 
+                    type="loading"
                     class = "map-loading"/>
             <div class="map-thumbnail-preview">
               <l-map v-if="selectedGeometries!=null" 
