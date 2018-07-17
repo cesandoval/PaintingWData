@@ -8,7 +8,7 @@ var Model = require('../models');
  * @param {*} res 
  */
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
-	if(req.body.id && req.body.public) {
+	if(req.body.datavoxelId && req.body.public != null) {
 		var id = req.body.datavoxelId;
 		var isPublic = req.body.public;
 		console.log("Setting the voxelPrivacy", id, isPublic);
@@ -24,7 +24,8 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 				})
 			})
 		}, function(error){
-            console.log(err);
+			console.log(err);
+			res.json({voxelId:id, success:false})
         });
 	} else {
 		res.status(400).send({
