@@ -28,7 +28,7 @@
     <div v-if="datavoxels.length===0"
          class = "no-data"
     >
-      No Data Uploaded.
+      No Project Created.
     </div>
 
 
@@ -100,7 +100,7 @@
               <a-menu slot="overlay">
                 <a-menu-item key="1" @click.native="handleDeleteClick(selectedProject)">Delete Project</a-menu-item>
                 <a-menu-item key="2" >
-                  <a-checkbox :checked="projectList[selectedIndex].public">Public</a-checkbox>
+                  <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox>
                 </a-menu-item>
               </a-menu>
               <a-button>
@@ -245,8 +245,22 @@ export default {
       })
     },
 
-    handlePublicity() {
+    handlePublicity(e) {
       // `req: {userId: integer, datavoxelId: integer, public: boolean}`
+      // projectList[selectedIndex].public
+
+      // console.log(e.target.checked)
+
+      let req = {
+        userId: this.id,
+        datavoxelId: this.selectedProject,
+        public: e.target.checked,
+      }
+
+      // TODO: this seems not working?
+      this.$http.post('/voxelPrivacy/', req).then(response => {
+        console.log('publicity', req, response)
+      })
     },
 
     openProject(projectId) {
