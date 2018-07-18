@@ -1,0 +1,43 @@
+# Ignore Mac DS_Store files
+.DS_Store
+**/.DS_Store
+*.DS_Store
+
+<<<<<<< HEAD
+# We don't want any local environment variables.
+.env
+=======
+**/app/*.DS_Store
+
+>>>>>>> 977ce6048f454f2e73188bf7757c46b32a800cfc
+
+# we dont want to add node modules to github
+/node_modules
+# we dont want to add the shape_files directory either
+/app/controllers/shape_files
+/app/controllers/tmp
+lib/shape_files/
+
+tasks.txt
+instructions
+ngrok
+# we dont want temp files
+.swp
+
+/worker/dump.rdb
+/public/.DS_Store
+/public/javascripts/.DS_Store
+public/javascripts/.DS_Store
+.DS_Store
+/lib/.DS_Store
+deploy.txt
+
+#cache
+.eslintcache
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
