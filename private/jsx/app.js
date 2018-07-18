@@ -4,6 +4,7 @@ import React from 'react'
 import Sidebar from './sidebarN/Sidebar' // origin is sidebar/sidebar
 // import Options from './options/options'
 import Map from './mapN/map'
+// import MapBox from './map/mapbox'
 /**
  * Summary. The main meat of the mapping service.
  *
@@ -21,7 +22,7 @@ export default class App extends React.Component {
      * Description. HTTP GET request accesses `app/routers/appRouter.js` as
      * per usual, which then accesses a method in `app/controllers/userFileController.js`.
      * The Datauserfile model, in `app/models/datauserfile.js`, is where the
-     * necessary saved states are stored.
+     * necessary saved states are stored.
      *
      * TODO: When the user closes out, automatically save.
      */
@@ -61,6 +62,7 @@ export default class App extends React.Component {
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />
+                {/* <MapBox /> */}
             </div>
         )
     }

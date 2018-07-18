@@ -99,6 +99,8 @@ export default (state = initialDatasetsState, action) => {
                 // "minMax" holds the highest and lowest weights over all features.
                 transGeojson.minMax = [minVal, maxVal]
                 // Return some stuff.
+                /*eslint-disable*/
+                debugger;
                 return {
                     name: l.layername,
                     propertyName: propertyName,
