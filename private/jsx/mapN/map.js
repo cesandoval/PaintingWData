@@ -229,7 +229,7 @@ class MapCanvas extends React.Component {
                         width: 'calc(95vw - 280px)',
                         position: 'fixed',
                         overflow: 'hidden',
-                        top: '15vh',
+                        top: '170px',
                         right: '2.5vw',
                         zIndex: '100',
                         opacity: 0.9,
