@@ -256,9 +256,14 @@ class Cover extends React.Component {
             </Menu>
         )
 
+        const mapButtonsInvisible = this.props.panelShow == 'VPL'
+
         return (
             <div>
-                <div id="mapButtons">
+                <div
+                    id="mapButtons"
+                    style={{ display: mapButtonsInvisible ? 'none' : '' }}
+                >
                     <div id="left-top">
                         <Dropdown overlay={MapStyleMenu}>
                             <Button
@@ -406,4 +411,5 @@ export default connect(s => ({
     bbox: s.map.bbox,
     vpl: s.vpl,
     bgStyle: s.options.bgStyle,
+    panelShow: s.interactions.panelShow,
 }))(Cover)

@@ -1268,7 +1268,7 @@ class VPL extends React.Component {
         return (
             <div className="pull-right col-md-10 vplContainer">
                 <div
-                    style={{ position: 'absolute', right: '80px', top: '20px' }}
+                    style={{ position: 'absolute', right: '80px', top: '30px' }}
                     className="map-menu"
                 >
                     <ButtonGroup>
