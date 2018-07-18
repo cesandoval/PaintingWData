@@ -15,7 +15,7 @@
 
 .sidebar {
     z-index: 2000;
-    width: 20vw;
+    width: 280px;
     background-color: white;
     overflow: auto;
     position: fixed;

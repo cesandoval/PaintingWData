@@ -279,7 +279,7 @@ class Cover extends React.Component {
                     #left-top {
                         position: absolute;
                         top: 20px;
-                        left: calc(20vw + 30px);
+                        left: calc(280px + 30px);
                     }
                     #right-top {
                         position: absolute;
