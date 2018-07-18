@@ -1,4 +1,7 @@
 var Model = require('../models')
+var s3Lib = require('../../lib/awsFs')
+var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
+var previewBucket = process.env.NODE_ENV === 'production' ? 'data-voxel-preview-server' : 'data-voxel-preview';
 
 /**
  * Handles deletion of datasets or datalayers from the /datasets page.
@@ -37,13 +40,30 @@ module.exports.deleteDataset = function(req, res){
  */
 module.exports.deleteDataVoxel = function(req, res){
     // Array of dataVoxelsIds
-    let dataVoxelId = req.body.dataVoxelId
+    let datavoxelId = req.body.dataVoxelId
     // delete relevant datafile
     Model.Datavoxel.destroy({
         where: {
-            id: dataVoxelId
+            id: datavoxelId
         }
     }).then(function(){
-        res.json({dataVoxelId:dataVoxelId, success: true});
+        Model.Datajson.destroy({
+            where: {
+                datavoxelId: datavoxelId
+            }
+        }).then(function() {
+            Model.Datavoxelimage.destroy({
+                where: {
+                    DatavoxelId: datavoxelId
+                }
+            }).then(function() {
+                let bucketObj = {bucket: bucket, preview: previewBucket}
+                s3Lib.deleteDatavoxelImage(bucketObj, datavoxelId, function(datavoxelId){
+                    console.log('DatavoxelImage has been destroyed', datavoxelId)
+                    res.json({dataVoxelId:datavoxelId, success: true});
+                })
+            })
+        })
     })
 } 
+ 
