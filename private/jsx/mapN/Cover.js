@@ -306,7 +306,7 @@ class Cover extends React.Component {
                             margin: 10px;
                             border-color: #00000030;
                             // border-width: 0px;
-                            background-color: #fffff0e0;
+                            background-color: #ffffffe0;
                             &:hover {
                                 color: #e75332;
                                 border-color: #e75332;
