@@ -13,6 +13,8 @@ class Cover extends React.Component {
         this.state = {
             exportModalVisible: false,
         }
+
+        this.initBgMapRender()
     }
 
     exportSVG(geoms) {
@@ -150,6 +152,13 @@ class Cover extends React.Component {
         this.setState({ exportModalVisible })
     }
 
+    initBgMapRender = () => {
+        if (this.updateMapStyle(this.props.bgStyle)) console.log('started')
+        else
+            setTimeout(() => {
+                this.initBgMapRender()
+            }, 1500)
+    }
     updateMapStyle = style => {
         window.mapBgStyle = style
 
