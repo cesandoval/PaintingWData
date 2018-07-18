@@ -226,7 +226,7 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '75vw',
+                        width: 'calc(95vw - 280px)',
                         position: 'fixed',
                         overflow: 'hidden',
                         top: '15vh',
@@ -242,7 +242,7 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '80vw',
+                        width: 'calc(100vw - 280px)',
                         height: '300px',
                         position: 'fixed',
                         overflow: 'hidden',

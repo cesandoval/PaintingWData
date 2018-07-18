@@ -112,8 +112,8 @@ class Charts extends React.Component {
                                         height: '300px',
                                         width:
                                             chartLength <= 3
-                                                ? `calc(80vw / ${chartLength})`
-                                                : 'calc(80vw / 3)',
+                                                ? `calc((100vw - 280px) / ${chartLength})`
+                                                : 'calc((100vw - 280px) / 3)',
                                         margin: 'auto',
                                     },
                                 }}

@@ -305,7 +305,7 @@ class PCoords extends React.Component {
     style() {
         return {
             backgroundColor: 'white',
-            width: '80vw',
+            width: 'calc(100vw - 280px)',
             height: '300px',
             position: 'fixed',
             overflow: 'hidden',
