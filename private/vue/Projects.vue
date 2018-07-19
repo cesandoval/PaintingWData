@@ -100,7 +100,9 @@
               <a-menu slot="overlay">
                 <a-menu-item key="1" @click.native="handleDeleteClick(selectedProject)">Delete Project</a-menu-item>
                 <a-menu-item key="2" >
-                  <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox>
+                  <!-- <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox> -->
+                  <a-checkbox :default-checked="projectList[selectedIndex].public" @change="handlePublicity">Public</a-checkbox>
+
                 </a-menu-item>
               </a-menu>
               <a-button>
@@ -249,15 +251,15 @@ export default {
       // `req: {userId: integer, datavoxelId: integer, public: boolean}`
       // projectList[selectedIndex].public
 
-      // console.log(e.target.checked)
-
       let req = {
-        userId: this.id,
+        userId: +this.id,
         datavoxelId: this.selectedProject,
         public: e.target.checked,
       }
 
-      // TODO: this seems not working?
+      console.log(req)
+
+      // TODO: this is not working on the server side
       this.$http.post('/voxelPrivacy/', req).then(response => {
         console.log('publicity', req, response)
       })
