@@ -209,49 +209,49 @@ class Cover extends React.Component {
         const MapStyleMenu = (
             <Menu onClick={({ key }) => this.changeMapStyle(key)}>
                 <Menu.Item key="empty">
-                    <span>Empty </span>{' '}
+                    <span>Empty </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets">
-                    <span>Streets </span>{' '}
+                    <span>Streets </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.light">
-                    <span>Light </span>{' '}
+                    <span>Light </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.dark">
-                    <span>Dark </span>{' '}
+                    <span>Dark </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.satellite">
-                    <span>Satellite </span>{' '}
+                    <span>Satellite </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets-satellite">
-                    <span>Streets-Satellite </span>{' '}
+                    <span>Streets-Satellite </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.wheatpaste">
-                    <span>Wheatpaste </span>{' '}
+                    <span>Wheatpaste </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets-basic">
-                    <span>Streets-Basic </span>{' '}
+                    <span>Streets-Basic </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.comic">
-                    <span>Comic </span>{' '}
+                    <span>Comic </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.outdoors">
-                    <span>Outdoors </span>{' '}
+                    <span>Outdoors </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.run-bike-hike">
-                    <span>Run-Bike-Hike </span>{' '}
+                    <span>Run-Bike-Hike </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.pencil">
-                    <span>Pencil </span>{' '}
+                    <span>Pencil </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.pirates">
-                    <span>Pirates </span>{' '}
+                    <span>Pirates </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.emerald">
-                    <span>Emerald </span>{' '}
+                    <span>Emerald </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.high-contrast">
-                    <span>High-Contrast </span>{' '}
+                    <span>High-Contrast </span>
                 </Menu.Item>
             </Menu>
         )
