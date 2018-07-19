@@ -7,8 +7,7 @@ import * as Act from '../store/actions.js'
 
 import Slider from './Slider.js'
 import Panel from './Panel.js'
-import { ButtonGroup, DropdownButton, MenuItem } from 'react-bootstrap'
-import { Popover } from 'antd'
+import { Popover, Button, Menu, Dropdown } from 'antd'
 
 import * as NodeType from './nodeTypes'
 
@@ -1265,35 +1264,53 @@ class VPL extends React.Component {
 
     render() {
         const nodes = this.props.nodes
+
+        // /*
+        const NodeMenu = (
+            <Menu onClick={({ key }) => this.addNode(key)}>
+                {Object.entries(NodeType).map(
+                    ([key, node]) =>
+                        key != 'DATASET' ? (
+                            <Menu.Item key={key}>
+                                {node.fullName + ' Node'}
+                            </Menu.Item>
+                        ) : (
+                            ''
+                        )
+                )}
+            </Menu>
+        )
         return (
             <div className="pull-right col-md-10 vplContainer">
-                <div
-                    style={{ position: 'absolute', right: '80px', top: '30px' }}
-                    className="map-menu"
-                >
-                    <ButtonGroup>
-                        <DropdownButton
-                            title={'Add Node'}
-                            id={`add-node-dropdown`}
-                        >
-                            {Object.entries(NodeType).map(
-                                ([key, node]) =>
-                                    key != 'DATASET' ? (
-                                        <MenuItem
-                                            key={key}
-                                            onClick={() => {
-                                                this.addNode(key)
-                                            }}
-                                        >
-                                            {node.fullName + ' Node'}
-                                        </MenuItem>
-                                    ) : (
-                                        ''
-                                    )
-                            )}
-                        </DropdownButton>
-                    </ButtonGroup>
+                <div id="menuAddNode" className="map-menu">
+                    <Dropdown overlay={NodeMenu}>
+                        <Button icon="plus" size="large">
+                            Add Node
+                        </Button>
+                    </Dropdown>
                 </div>
+                <style jsx>{`
+                    #menuAddNode {
+                        position: absolute;
+                        right: 50px;
+                        top: 30px;
+
+                        :global(button) {
+                            margin: 10px;
+                            border-color: #00000030;
+                            background-color: #ffffffe0;
+                            &:hover {
+                                color: #e75332;
+                                border-color: #e75332;
+                            }
+                        }
+                    }
+                    :global(.ant-dropdown-menu-item) {
+                        &:hover {
+                            background-color: hsl(11, 79%, 98%);
+                        }
+                    }
+                `}</style>
 
                 <div className="row">
                     <svg
