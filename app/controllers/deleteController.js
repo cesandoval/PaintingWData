@@ -9,8 +9,9 @@ var previewBucket = process.env.NODE_ENV === 'production' ? 'data-voxel-preview-
  * @param {Object} res 
  */
 module.exports.deleteDataset = function(req, res){
-    // Array of dataFileIds
+    // dataFileId to be deleted
     let datafileId = req.body.datafileId
+    
     // delete relevant datafile
     Model.Datafile.update({
         deleted: true
@@ -19,7 +20,7 @@ module.exports.deleteDataset = function(req, res){
             id: datafileId
         }
     }).then(function(){
-        // delete relevant datalayers
+        // soft-delete relevant datalayers
         Model.Datalayer.update({
             deleted: true
         }, {
@@ -39,7 +40,7 @@ module.exports.deleteDataset = function(req, res){
  * @param {Object} res 
  */
 module.exports.deleteDataVoxel = function(req, res){
-    // Array of dataVoxelsIds
+    // dataVoxelsId to be deleted
     let datavoxelId = req.body.dataVoxelId
     // delete relevant datafile
     Model.Datavoxel.destroy({
