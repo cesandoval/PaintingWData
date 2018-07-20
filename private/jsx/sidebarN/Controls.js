@@ -15,7 +15,7 @@ class Controls extends React.Component {
     render() {
         return (
             <div id="sidebar-controls">
-                <p className="control-name"> MODIFICATIONS </p>
+                <p className="control-name"> ADJUSTMENTS </p>
                 <Modifications />
                 <p className="control-name"> PANELS </p>
                 <Panels />
