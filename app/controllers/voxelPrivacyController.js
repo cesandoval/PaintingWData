@@ -18,10 +18,14 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 		}).then(function(voxel) {
 			voxel.public = isPublic;
 			voxel.save().then(function(voxel){
-				voxel.Datavoxelimage.public = isPublic
-				voxel.Datavoxelimage.save().then(function(){
+				if (voxel.Datavoxelimage != null) { 
+					voxel.Datavoxelimage.public = isPublic
+					voxel.Datavoxelimage.save().then(function(){
+						res.json({voxelId:id, success:true})
+					})
+				} else {
 					res.json({voxelId:id, success:true})
-				})
+				}
 			})
 		}, function(error){
 			console.log(err);
