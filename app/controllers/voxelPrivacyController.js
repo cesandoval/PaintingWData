@@ -8,8 +8,8 @@ var Model = require('../models');
  * @param {*} res 
  */
 module.exports.setVoxelPublicOrPrivate = function(req, res) {
-	if(req.body.id && req.body.public) {
-		var id = req.body.id;
+	if(req.body.datavoxelId && req.body.public != null) {
+		var id = req.body.datavoxelId;
 		var isPublic = req.body.public;
 		console.log("Setting the voxelPrivacy", id, isPublic);
 		Model.Datavoxel.findOne({
@@ -18,11 +18,18 @@ module.exports.setVoxelPublicOrPrivate = function(req, res) {
 		}).then(function(voxel) {
 			voxel.public = isPublic;
 			voxel.save().then(function(voxel){
-				voxel.Datavoxelimage.public = isPublic
-				voxel.Datavoxelimage.save()
+				if (voxel.Datavoxelimage != null) { 
+					voxel.Datavoxelimage.public = isPublic
+					voxel.Datavoxelimage.save().then(function(){
+						res.json({voxelId:id, success:true})
+					})
+				} else {
+					res.json({voxelId:id, success:true})
+				}
 			})
 		}, function(error){
-            console.log(err);
+			console.log(err);
+			res.json({voxelId:id, success:false})
         });
 	} else {
 		res.status(400).send({

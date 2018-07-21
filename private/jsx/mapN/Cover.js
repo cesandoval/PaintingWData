@@ -13,6 +13,8 @@ class Cover extends React.Component {
         this.state = {
             exportModalVisible: false,
         }
+
+        this.initBgMapRender()
     }
 
     exportSVG(geoms) {
@@ -150,6 +152,13 @@ class Cover extends React.Component {
         this.setState({ exportModalVisible })
     }
 
+    initBgMapRender = () => {
+        if (this.updateMapStyle(this.props.bgStyle)) console.log('started')
+        else
+            setTimeout(() => {
+                this.initBgMapRender()
+            }, 1500)
+    }
     updateMapStyle = style => {
         window.mapBgStyle = style
 
@@ -200,56 +209,61 @@ class Cover extends React.Component {
         const MapStyleMenu = (
             <Menu onClick={({ key }) => this.changeMapStyle(key)}>
                 <Menu.Item key="empty">
-                    <span>Empty </span>{' '}
+                    <span>Empty </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets">
-                    <span>Streets </span>{' '}
+                    <span>Streets </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.light">
-                    <span>Light </span>{' '}
+                    <span>Light </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.dark">
-                    <span>Dark </span>{' '}
+                    <span>Dark </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.satellite">
-                    <span>Satellite </span>{' '}
+                    <span>Satellite </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets-satellite">
-                    <span>Streets-Satellite </span>{' '}
+                    <span>Streets-Satellite </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.wheatpaste">
-                    <span>Wheatpaste </span>{' '}
+                    <span>Wheatpaste </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.streets-basic">
-                    <span>Streets-Basic </span>{' '}
+                    <span>Streets-Basic </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.comic">
-                    <span>Comic </span>{' '}
+                    <span>Comic </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.outdoors">
-                    <span>Outdoors </span>{' '}
+                    <span>Outdoors </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.run-bike-hike">
-                    <span>Run-Bike-Hike </span>{' '}
+                    <span>Run-Bike-Hike </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.pencil">
-                    <span>Pencil </span>{' '}
+                    <span>Pencil </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.pirates">
-                    <span>Pirates </span>{' '}
+                    <span>Pirates </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.emerald">
-                    <span>Emerald </span>{' '}
+                    <span>Emerald </span>
                 </Menu.Item>
                 <Menu.Item key="mapbox.high-contrast">
-                    <span>High-Contrast </span>{' '}
+                    <span>High-Contrast </span>
                 </Menu.Item>
             </Menu>
         )
 
+        const mapButtonsInvisible = this.props.panelShow == 'VPL'
+
         return (
             <div>
-                <div id="mapButtons">
+                <div
+                    id="mapButtons"
+                    style={{ display: mapButtonsInvisible ? 'none' : '' }}
+                >
                     <div id="left-top">
                         <Dropdown overlay={MapStyleMenu}>
                             <Button
@@ -279,7 +293,7 @@ class Cover extends React.Component {
                     #left-top {
                         position: absolute;
                         top: 20px;
-                        left: calc(20vw + 30px);
+                        left: calc(280px + 30px);
                     }
                     #right-top {
                         position: absolute;
@@ -292,7 +306,7 @@ class Cover extends React.Component {
                             margin: 10px;
                             border-color: #00000030;
                             // border-width: 0px;
-                            background-color: #fffff0e0;
+                            background-color: #ffffffe0;
                             &:hover {
                                 color: #e75332;
                                 border-color: #e75332;
@@ -397,4 +411,5 @@ export default connect(s => ({
     bbox: s.map.bbox,
     vpl: s.vpl,
     bgStyle: s.options.bgStyle,
+    panelShow: s.interactions.panelShow,
 }))(Cover)

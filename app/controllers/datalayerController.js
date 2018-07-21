@@ -281,20 +281,6 @@ module.exports.showProjects= function(req, res) {
            },
 
            include: [{
-               model: Model.Datafile, 
-
-               include: [
-                    {
-                        model: Model.Datalayer,
-                        limit: 1
-                    },
-                    {
-                        model: Model.Datadbf,
-                        limit: 1
-                    },
-                ]                        
-
-                }, {
                 model: Model.Datavoxelimage
                 }, {
                     model: Model.Datajson,

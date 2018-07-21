@@ -327,7 +327,7 @@ class MapCanvas extends React.Component {
                         Zoom to Map{' '}
                     </Button>
                 </div>
-                <div className="map" id="mapCanvas" />
+                <div id="mapCanvas" />
                 <div id="pivot" />
                 <div id="grid" />
             </div>

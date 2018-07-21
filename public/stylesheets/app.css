@@ -15,7 +15,7 @@
 
 .sidebar {
     z-index: 2000;
-    width: 20vw;
+    width: 280px;
     background-color: white;
     overflow: auto;
     position: fixed;
@@ -28,8 +28,8 @@
     box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.2);
 }
 
-.map {
-    width: 80vw;
+#mapCanvas {
+    width: calc(100vw - 280px);
     position: fixed;
     right:0;
     top:50px;
@@ -37,7 +37,7 @@
     z-index:-1;
 }
 
-.map canvas {
+#mapCanvas canvas {
     position:fixed;
     right:0;
     top:50px;

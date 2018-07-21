@@ -35,6 +35,7 @@
         class = "dataset-list">
         <span
           v-for="(datafile,index) in datafileList"
+          v-if="datafile.deleted!==false"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -51,11 +52,6 @@
 
               </l-map>
             </div>
-            <!-- <img
-              slot="cover"
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            > -->
             <a-card-meta
               :title="datafile.filename"
               :description="parseTime(datafile.createdAt)"/>
@@ -79,22 +75,19 @@
       <div class = "datainfo-content">
 
         <div class = "col-sm-6 left-col">
-
-
           <a-dropdown class = "actions">
             <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
               <a-menu-item key="1" >Delete Dataset</a-menu-item>
             </a-menu>
             <a-button>
               Actions <a-icon type="down" />
-            </a-button>v-
+            </a-button>
           </a-dropdown>
 
           <div class = "info-cover-wrapper">
             <a-icon v-if="selectedGeometries==null" 
-                    type="loading" 
+                    type="loading"
                     class = "map-loading"/>
-            <!-- <img src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" class="info-cover"> -->
             <div class="map-thumbnail-preview">
               <l-map v-if="selectedGeometries!=null" 
                      :zoom="zoom" 
@@ -216,8 +209,6 @@ export default {
 
       zoom: 13,
       center: L.latLng(47.41322, -1.219482),
-      // url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      // url: 'http://tiles.mapc.org/basemap/{z}/{x}/{y}.png',
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -293,9 +284,6 @@ export default {
       console.log('query dataset ', datasetId)
 
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        // console.log(response.data.geoJSON.map(obj => obj.coordinates[0]))
-
-        // TODO: parse the result and set selectedGeometries
         this.selectedGeometries = response.data.geoJSON.map(obj =>
           obj.coordinates[0].map(item => [item[1], item[0]])
         )
@@ -321,7 +309,18 @@ export default {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)
     },
     handleDeleteClick(datasetId) {
-      console.log(datasetId)
+      let req = { userId: this.id, datafileId: datasetId }
+
+      this.$http.post('/delete/dataset/', req).then(response => {
+        console.log('deleted', req, response)
+        if (response.data.success) {
+          // deletion in the UI
+          this.unSqueezeTiles()
+          this.datafiles = this.datafiles.filter(item => item.id != datasetId)
+        } else {
+          // TODO: handle delete fail
+        }
+      })
     },
   },
 }
@@ -487,7 +486,7 @@ export default {
 
 .squeezedContainer {
   height: 0px;
-  min-height: 0px;
+  min-height: 0px !important;
 }
 
 .info-cover {

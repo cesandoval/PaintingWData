@@ -1,4 +1,7 @@
 var Model = require('../models')
+var s3Lib = require('../../lib/awsFs')
+var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-images-server2' : 'data-voxel-images';
+var previewBucket = process.env.NODE_ENV === 'production' ? 'data-voxel-preview-server' : 'data-voxel-preview';
 
 /**
  * Handles deletion of datasets or datalayers from the /datasets page.
@@ -6,28 +9,30 @@ var Model = require('../models')
  * @param {Object} res 
  */
 module.exports.deleteDataset = function(req, res){
-    // Array of dataFileIds
-    let dataFileIds = req.body.datalayerIds
+    // dataFileId to be deleted
+    let datafileId = req.body.datafileId
+    
     // delete relevant datafile
-    Model.Datafile.destroy({
+    Model.Datafile.update({
+        deleted: true
+    }, {
         where: {
-            id: dataFileIds
+            id: datafileId
         }
     }).then(function(){
-        // delete relevant datalayers
+        // soft-delete relevant datalayers
         Model.Datalayer.update({
+            deleted: true
+        }, {
             where: {
-                datafileId: dataFileIds
+                datafileId: datafileId
             }
-        }).then(function(){
-            if (dataFileIds.length == 1) {
-                req.flash('layerAlert', "Your layer has been deleted");
-            } else {
-                req.flash('layerAlert', "Your layers have been deleted");
-            }
+        }).then(function(result){
+            res.json({datafileId:datafileId, success: true});
         })
     })
 } 
+
 
 /**
  * Handles deletion of projects from the /projects page.
@@ -35,14 +40,31 @@ module.exports.deleteDataset = function(req, res){
  * @param {Object} res 
  */
 module.exports.deleteDataVoxel = function(req, res){
-    // Array of dataVoxelsIds
-    let dataVoxelIds = req.body.dataVoxelIds
+    // dataVoxelsId to be deleted
+    let datavoxelId = req.body.dataVoxelId
     // delete relevant datafile
     Model.Datavoxel.destroy({
         where: {
-            id: dataVoxelIds
+            id: datavoxelId
         }
     }).then(function(){
-        req.flash('voxelAlert', "Your Voxel has been deleted");
+        Model.Datajson.destroy({
+            where: {
+                datavoxelId: datavoxelId
+            }
+        }).then(function() {
+            Model.Datavoxelimage.destroy({
+                where: {
+                    DatavoxelId: datavoxelId
+                }
+            }).then(function() {
+                let bucketObj = {bucket: bucket, preview: previewBucket}
+                s3Lib.deleteDatavoxelImage(bucketObj, datavoxelId, function(datavoxelId){
+                    console.log('DatavoxelImage has been destroyed', datavoxelId)
+                    res.json({dataVoxelId:datavoxelId, success: true});
+                })
+            })
+        })
     })
 } 
+ 

@@ -63,6 +63,7 @@ class MapCanvas extends React.Component {
             })
             // Now we know that the map is initialized.
             this.setState({ mapInited: true })
+            Act.setLoading({ value: false })
         }
 
         // Initializes the sidebar options.
@@ -225,10 +226,10 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '75vw',
+                        width: 'calc(95vw - 280px)',
                         position: 'fixed',
                         overflow: 'hidden',
-                        top: '15vh',
+                        top: '170px',
                         right: '2.5vw',
                         zIndex: '100',
                         opacity: 0.9,
@@ -241,7 +242,7 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '80vw',
+                        width: 'calc(100vw - 280px)',
                         height: '300px',
                         position: 'fixed',
                         overflow: 'hidden',
