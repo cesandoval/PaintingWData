@@ -28,7 +28,7 @@
     <div v-if="datavoxels.length===0"
          class = "no-data"
     >
-      No Data Uploaded.
+      No Project Created.
     </div>
 
 
@@ -97,10 +97,12 @@
               {{ projectList[selectedIndex].voxelname?projectList[selectedIndex].voxelname:'Untitled' }}</div>
 
             <a-dropdown class = "actions">
-              <a-menu slot="overlay" @click="handleDeleteClick(selectedProject)">
-                <a-menu-item key="1" >Delete Project</a-menu-item>
+              <a-menu slot="overlay">
+                <a-menu-item key="1" @click.native="handleDeleteClick(selectedProject)">Delete Project</a-menu-item>
                 <a-menu-item key="2" >
-                  <a-checkbox :checked="projectList[selectedIndex].public">Public</a-checkbox>
+                  <!-- <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox> -->
+                  <a-checkbox :default-checked="projectList[selectedIndex].public" @change="handlePublicity">Public</a-checkbox>
+
                 </a-menu-item>
               </a-menu>
               <a-button>
@@ -231,9 +233,38 @@ export default {
       this.selectedProject = null
       this.selectedIndex = null
     },
-    handleDeleteClick(datasetId) {
-      console.log(datasetId)
+    handleDeleteClick(projectId) {
+      let req = { userId: this.id, dataVoxelId: projectId }
+      this.$http.post('/delete/project/', req).then(response => {
+        console.log('deleted', req, response)
+        if (response.data.success) {
+          // deletion in the UI
+          this.unselectProject()
+          this.datavoxels = this.datavoxels.filter(item => item.id != projectId)
+        } else {
+          // TODO: handle delete fail
+        }
+      })
     },
+
+    handlePublicity(e) {
+      // `req: {userId: integer, datavoxelId: integer, public: boolean}`
+      // projectList[selectedIndex].public
+
+      let req = {
+        userId: +this.id,
+        datavoxelId: this.selectedProject,
+        public: e.target.checked,
+      }
+
+      console.log(req)
+
+      // TODO: this is not working on the server side
+      this.$http.post('/voxelPrivacy/', req).then(response => {
+        console.log('publicity', req, response)
+      })
+    },
+
     openProject(projectId) {
       window.location = '/app/' + projectId
     },
