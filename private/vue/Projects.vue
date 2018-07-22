@@ -1,6 +1,6 @@
 <template>
   <div 
-    :class="{ squeezedContainer:selectedProject!=null, }"
+    :class="{ squeezedContainer:selectedProject!=null||makingProcess!=0, }"
     class = "mainContainer"
   
   >
@@ -14,7 +14,7 @@
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
                   size="small"
                   class = "switch"/>
-        <a-switch v-model="sortDown" 
+        <a-switch v-model="sortDown"
                   size="small"
                   class = "switch">
           <a-icon slot="checkedChildren" type="arrow-down"/>
@@ -175,6 +175,15 @@
           <a-icon type="close" />
         </span>
 
+        <div class="making1-wrapper">
+          <span class="making1-title">Create Project</span>
+          <span class="making1-desc">
+
+            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
+
+          </span>
+
+        </div>
 
 
       </div>
@@ -313,6 +322,21 @@ export default {
   top: 0px;
   bottom: 0px;
   right: 0px;
+  background-color: white;
+
+  z-index: 1000;
+}
+
+.making1-desc {
+}
+
+.making1-title {
+  text-align: center;
+  font-size: 26px;
+  display: inherit;
+  font-weight: 500;
+
+  margin-bottom: 50px;
 }
 
 .adding-icon {
@@ -399,9 +423,9 @@ export default {
 .project-info {
   position: absolute;
   top: 0px;
-  bottom: 0px;
   left: 0px;
   right: 0px;
+  height: 99%;
   background: white;
   z-index: 1000;
 }
@@ -620,5 +644,16 @@ export default {
       font-size: 12px;
     }
   }
+}
+
+.making1-wrapper {
+  padding: 20px;
+  width: 70%;
+  height: 70%;
+  min-width: 300px;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
