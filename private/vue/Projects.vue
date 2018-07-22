@@ -24,20 +24,22 @@
 
     </div>
 
-
-    <div v-if="datavoxels.length===0"
+    <!-- <div v-if="datavoxels.length===0"
          class = "no-data"
     >
       No Project Created.
-    </div>
+    </div> -->
 
+    <!-- project thumbnail list -->
     <transition>
       <div 
         class = "dataset-list">
 
         <!-- TODO: adding project btn -->
         <span class="card col-sm-4 adding-panel">
-          <a-icon type="plus" class="adding-icon"/>
+          <a-icon type="plus" class="adding-icon"
+                  @click="()=> {startMaking()}"
+          />
         </span>
 
         <span
@@ -77,10 +79,10 @@
     </transition>
 
 
+    <!-- project info pop-up -->
     <transition>
       <div v-if="selectedProject!=null"
            class = "project-info">
-
 
         <img
           v-if="projectList[selectedIndex].Datavoxelimage!=null"
@@ -161,6 +163,26 @@
         </div>
       </div>
     </transition>
+
+    <!-- project creation page 1 -->
+    <transition>
+      <div v-if="makingProcess==1"
+           class="making1">
+        
+        <span
+          class="unselectProject"
+          @click="()=> {unselectProject()}">
+          <a-icon type="close" />
+        </span>
+
+
+
+      </div>
+    </transition>
+
+
+
+
   </div>
 </template>
 
@@ -176,6 +198,7 @@ export default {
       sortDown: true,
       selectedProject: null,
       selectedIndex: null,
+      makingProcess: 0,
     })
   },
 
@@ -219,13 +242,8 @@ export default {
   methods: {
     setActiveDatasetId(id, index) {
       console.log('click ' + id)
-      // squeeze tile display
       this.selectedProject = id
       this.selectedIndex = index
-
-      // highlight selected tile
-
-      // display dataset info on the right side
     },
     parseTime(timeStr) {
       let timeLst = timeStr.split('T')
@@ -236,6 +254,7 @@ export default {
     unselectProject() {
       this.selectedProject = null
       this.selectedIndex = null
+      this.makingProcess = 0
     },
     handleDeleteClick(projectId) {
       let req = { userId: this.id, dataVoxelId: projectId }
@@ -278,12 +297,24 @@ export default {
         previewBase + ThumbnailId + '.jpg',
       ]
     },
+    startMaking() {
+      console.log('start making')
+      this.makingProcess = 1
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
+.making1 {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+}
+
 .adding-icon {
   left: 50%;
   position: absolute;
