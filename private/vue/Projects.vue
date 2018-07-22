@@ -31,11 +31,17 @@
       No Project Created.
     </div>
 
-
     <transition>
       <div 
         class = "dataset-list">
+
+        <!-- TODO: adding project btn -->
+        <span class="card col-sm-4 adding-panel">
+          <a-icon type="plus" class="adding-icon"/>
+        </span>
+
         <span
+
           v-for="(datafile,index) in projectList"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedProject}"
@@ -51,8 +57,6 @@
                 slot="cover"
                 :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
                 class = "thumbnail-img"
-
-                alt="example"
               >
               <div v-else>
                 <a-icon 
@@ -257,9 +261,6 @@ export default {
         public: e.target.checked,
       }
 
-      console.log(req)
-
-      // TODO: this is not working on the server side
       this.$http.post('/voxelPrivacy/', req).then(response => {
         console.log('publicity', req, response)
       })
@@ -283,6 +284,28 @@ export default {
 
 
 <style lang="scss" scoped>
+.adding-icon {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  border-radius: 0px;
+  transform: scale(3) translate(-50%, -50%);
+  transform-origin: 0% 0%;
+  padding: 15px;
+  opacity: 0.4;
+  border: 0.1px solid black;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.adding-icon:hover {
+  opacity: 1 !important;
+  cursor: pointer;
+}
+
+.adding-panel {
+  height: 269.5px;
+}
+
 .preview-ph {
   position: absolute;
   left: 50%;
@@ -554,7 +577,7 @@ export default {
 }
 
 .ant-list-item {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 12px;
   border-radius: 5px;
 
