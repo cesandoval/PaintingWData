@@ -1,10 +1,40 @@
 import * as Act from '../../private/jsx/store/actions'
 import * as t from '../../private/jsx/store/types'
+
 /**
  * The following unit tests are to check if the action matches with the type.
  * E.g.: the action "importDatasets" corresponds to "t.IMPORT_DATASETS".
  */
+
 describe("reducer actions", () => {
+    let addPayload = {
+        "type": "NODE_ADD",
+        "nodeKey": "1cgfa87pjt",
+        "node": {
+          "name": "Asthma_ED_Visit_4",
+          "type": "DATASET",
+          "options": {},
+          "filter": {
+            "max": 104096,
+            "min": 0,
+            "maxVal": 104096,
+            "minVal": 0
+          },
+          "position": {
+            "x": 50,
+            "y": 100
+          },
+          "color": "#bcbd22",
+          "opacity": 0.5,
+          "visibility": true,
+          "translate": {
+            "x": 50,
+            "y": 100
+          },
+          "nodeKey": "1cgfa87pjt"
+        }
+      }
+
     // importUserfile
     it("should importUserfile", () => {
         const payload = {}
@@ -35,6 +65,7 @@ describe("reducer actions", () => {
     })
     // mapInit
     it("should mapInit", () => {
+        // window.PaintGraph = jest.fn(() => new Promise(resolve => resolve()));
         const payload = {}
         const expectedAction = { 
             type: t.MAP_INIT, 
@@ -69,12 +100,11 @@ describe("reducer actions", () => {
             type: t.MAP_SET_KNN, 
             ...payload 
         }
-        
         expect(Act.mapSetKNN(payload)).toEqual(expectedAction);
     })
     // nodeAdd
     it("should nodeAdd", () => {
-        const payload = {}
+        const payload = {nodeKey: "1cgfa87pjt"}
         const expectedAction = { 
             type: t.NODE_ADD, 
             ...payload 
@@ -84,12 +114,13 @@ describe("reducer actions", () => {
     })
     // nodeRemove
     it("should nodeRemove", () => {
-        const payload = {}
+        Act.nodeAdd(addPayload)
+        // global.state = initialState
+        const payload = {nodeKey: "1cgfa87pjt"}
         const expectedAction = { 
             type: t.NODE_REMOVE, 
             ...payload 
         }
-        
         expect(Act.nodeRemove(payload)).toEqual(expectedAction);
     })
     // nodeUpdate
@@ -185,7 +216,7 @@ describe("reducer actions", () => {
     // saveUserFile
     it("should saveUserFile", () => {
         // Create a mock function for fetch
-        window.fetch = jest.fn(() => new Promise(resolve => resolve()));
+        global.fetch = jest.fn(() => new Promise(resolve => resolve()));
 
         const payload = {}
         const expectedAction = { 

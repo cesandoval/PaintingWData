@@ -51,7 +51,7 @@ export default (state = initialState, action) => {
 
         case t.NODE_ADD: {
             const { nodeKey, node } = action
-
+            
             return update(state, {
                 nodes: {
                     [nodeKey]: { $set: node },
@@ -60,7 +60,6 @@ export default (state = initialState, action) => {
         }
         case t.NODE_REMOVE: {
             const { nodeKey } = action
-
             // prevent to delete dataset node.
             if (state.nodes[nodeKey].type == 'DATASET') {
                 console.warn('deleteNode(): can not delete dataset node.')
