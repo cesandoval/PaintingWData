@@ -184,6 +184,9 @@ describe("reducer actions", () => {
     })
     // saveUserFile
     it("should saveUserFile", () => {
+        // Create a mock function for fetch
+        window.fetch = jest.fn(() => new Promise(resolve => resolve()));
+
         const payload = {}
         const expectedAction = { 
             type: t.SAVE_USERFILE, 
