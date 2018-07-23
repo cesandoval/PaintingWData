@@ -10,35 +10,30 @@ class Panels extends React.Component {
             panels: {
                 VPL: {
                     title: 'VPL',
-                    img:
-                        'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+                    img: 'https://s3.amazonaws.com/pwd-icons/vpl_2.jpg',
                     desc: 'Compute & Analyze Data With Visual Programming',
                     more:
                         'https://en.wikipedia.org/wiki/Visual_programming_language',
                 },
                 PCoords: {
                     title: 'Parallel Coordinates',
-                    img:
-                        'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+                    img: 'https://s3.amazonaws.com/pwd-icons/pcoords2.png',
                     desc: 'Filter Data with Parallel Coordinates',
                     more: 'https://github.com/syntagmatic/parallel-coordinates',
                 },
                 TABLE: {
                     title: 'Table',
-                    img:
-                        'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+                    img: 'https://s3.amazonaws.com/pwd-icons/table.png',
                     desc: 'Interact with the Values in Tabular Form',
                 },
                 'Chart:Bar': {
                     title: 'Bar Chart',
-                    img:
-                        'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+                    img: 'https://s3.amazonaws.com/pwd-icons/histogram.png',
                     desc: 'Visualize and Filter Data with a Bar Chart',
                 },
                 'Chart:Density': {
                     title: 'Density Chart',
-                    img:
-                        'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png',
+                    img: 'https://s3.amazonaws.com/pwd-icons/density.png',
                     desc: 'Visualize and Filter Data with a Density Chart',
                 },
             },
