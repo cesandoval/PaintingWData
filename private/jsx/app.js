@@ -1,9 +1,12 @@
 // /*global datavoxelId*/
 import React from 'react'
 // import * as Act from './store/actions.js'
-import Sidebar from './sidebar/sidebar'
-import Options from './options/options'
-import Map from './map/map'
+import Sidebar from './sidebarN/Sidebar' // origin is sidebar/sidebar
+// import Options from './options/options'
+import Map from './mapN/map'
+
+import Loading from './utils/Loading'
+
 /**
  * Summary. The main meat of the mapping service.
  *
@@ -59,7 +62,8 @@ export default class App extends React.Component {
     render() {
         return (
             <div className="mapMain">
-                <Options />
+                <Loading />
+                {/* <Options /> */}
                 <Sidebar />
                 <Map />
             </div>

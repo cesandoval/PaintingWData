@@ -1,0 +1,19 @@
+extends layoutSidePage
+
+block pageTitle
+
+  link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+
+block content
+  .container
+    #datasets
+
+  - const server = { datafiles, id, userSignedIn, user, layerAlert: layerAlert ? true : false}
+
+  script.
+    const server = !{JSON.stringify(server)}
+    console.log({server})
+
+  script(src="/javascripts/vue/Datasets.js")
+
+

@@ -20,7 +20,7 @@ html
     meta(name="description", content="")
     meta(name="author", content="")
     link(rel="icon", href="/images/pwd_logo.png")
-    link(rel='stylesheet', href='http://www.w3schools.com/lib/w3.css')
+    link(rel='stylesheet', href='/stylesheets/w3.css')
     style
       body { margin:0; padding:0; }
       .map { position:absolute; top:0; bottom:0; width:100%; }
@@ -37,31 +37,24 @@ html
     //- script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js')		
 
     
-    script(src='http://code.jquery.com/jquery-1.9.1.js')
-    script(src="http://code.jquery.com/ui/1.10.2/jquery-ui.js")
+    script(src='/javascripts/js/jquery-1.9.1.js')
+    script(src="/javascripts/js/jquery-ui.js")
     script(type='text/javascript', src="/javascripts/js/tether.min.js")
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/react-bootstrap/0.27.3/react-bootstrap.js")
+    script(src="/javascripts/js/react-bootstrap.js")
+    link(href='/stylesheets/mapbox.css', rel='stylesheet')
 
-    //- link(href='https://www.mapbox.com/base/latest/base.css', rel='stylesheet')
-    link(href='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.css', rel='stylesheet')
-
-    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap-theme.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap-theme.min.css')
     link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
     //- //reference our site-specific css
-    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/vprog.css')
     link(rel='stylesheet', href='/stylesheets/awesome-bootstrap-checkbox.css')
     link(rel='stylesheet', href='/stylesheets/build.css')
     link(rel='stylesheet', href='/stylesheets/login.css')
 
-    //- link(rel='stylesheet', href='/stylesheets/mystyle.css')
-
-
-
-
     //- // Mapbox Libraries
-    script(src='https://api.tiles.mapbox.com/mapbox.js/v2.1.9/mapbox.js')
+    script(src='/javascripts/js/mapbox.js')
 
     //- // D3 libs
     script(type='text/javascript', src="/javascripts/js/d3.js")
