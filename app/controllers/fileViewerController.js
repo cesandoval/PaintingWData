@@ -62,7 +62,9 @@ module.exports.saveShapes = function(req, res) {
 
 
 /**
- * 
+ * Return the Datafile of a given datafileId (stored in req.params.datafileId)
+ * Also returns datalayer and datadbf associated with the datafile
+ * Used in user_layer.js to help display maps
  * @param {*} req 
  * @param {*} res 
  */
@@ -88,6 +90,12 @@ module.exports.getDatalayers = function(req, res){
     });
 }
 
+/**
+ * Get Map data with specified datafileId (using loadViewerData and getGeoJSON from fileViewerHelper.js)
+ * Used in layers.js (as part of requestMap)
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.serveMapData = function(req, res) {
     async.waterfall([
         async.apply(fileViewerHelper.loadViewerData, req.params.id, req.body),
@@ -103,6 +111,12 @@ module.exports.serveMapData = function(req, res) {
     });
 }
 
+/**
+ * Get Thumbnail Data with specified datafileId (using loadDatalayers from fileViewerHelper.js)
+ * Used in map_thumbnail_viewer.js
+ * @param {*} req 
+ * @param {*} res 
+ */
 module.exports.serveThumbnailData = function(req, res) {
     async.waterfall([
         async.apply(fileViewerHelper.loadDatalayers, req.params.id, req.body),

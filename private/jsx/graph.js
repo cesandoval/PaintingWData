@@ -154,7 +154,7 @@ export default class Graph {
             let textFile = window.URL.createObjectURL(data)
 
             let link = document.createElement('a')
-            link.setAttribute('download', 'voxelExport.'.concat('png'))
+            link.setAttribute('download', 'projectExport.'.concat('png'))
             link.href = textFile
             document.body.appendChild(link)
             link.click()

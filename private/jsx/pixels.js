@@ -207,7 +207,7 @@ export default class Pixels {
                 '/' +
                 slashify(coords) +
                 res +
-                '?access_token=pk.eyJ1IjoibWF0dCIsImEiOiJTUHZkajU0In0.oB-OGTMFtpkga8vC48HjIg'
+                '?access_token=pk.eyJ1IjoiY3NhbmRvdmEiLCJhIjoiY2pqZWJjajY2NGxsczNrcDE0anZmY3A1MCJ9.Dq2Pukxp_L_o-j4Zz22srQ'
             )
         }
         // Initializes basePlane for "plane", the mesh.

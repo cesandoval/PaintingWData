@@ -1,0 +1,19 @@
+extends layoutSidePage
+
+block pageTitle
+
+  link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
+
+block content
+  .container
+    #projects
+
+  - const server = {id, datavoxels, userSignedIn, user, voxelAlert: voxelAlert ? true : false}
+
+  script.
+    const server = !{JSON.stringify(server)}
+    console.log({server})
+
+  script(src="/javascripts/vue/Projects.js")
+
+

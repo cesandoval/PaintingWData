@@ -33,7 +33,9 @@ module.exports.show = function(req, res) {
 
 
 /**
- * TODO: fill this out
+ * Find (up to) the 10 most recent public voxels.
+ * Display them on the home page.
+ * Render the index.jade page with the given screenshots.
  * @param {Object} req 
  * @param {Object} res 
  */
@@ -55,7 +57,8 @@ module.exports.getPublicVoxelScreenshots = function(req, res) {
 }
 
 /**
- * TODO: fill this out
+ * Upload a new screenshot to PaintingWithData?
+ * (Used in graph.js?)
  * @param {} req 
  * @param {*} res 
  */
@@ -87,7 +90,7 @@ module.exports.uploadScreenshot = function(req, res) {
             console.log('DatavoxelImage has been created', imageLink)
           });   
         });
-      } else if (voxel.Datavoxelimage.preview == null){
+      } else if (voxel.Datavoxelimage.preview == null || voxel.Datavoxelimage.preview === false){
         s3Lib.uploadBlobToBucket({buf: buf, previewBuf: previewBuf}, datavoxelId, {bucket: bucket, previewBucket:previewBucket}, function(imageLink) {
           voxel.Datavoxelimage.update({preview: true}).then(() => {
             console.log('DatavoxelImage has been upated with a Preview Image at', imageLink)
@@ -100,7 +103,8 @@ module.exports.uploadScreenshot = function(req, res) {
 }
 
 /**
- * TODO fill this out
+ * Check that screenshot exists?
+ * (Used in pixels.js?)
  * @param {*} req 
  * @param {*} res 
  */
@@ -123,7 +127,8 @@ module.exports.checkScreenshot = function(req, res) {
 }
 
 /**
- * TODO fill this out
+ * Find all datajsons with a specifid datavoxelId
+ * (Used in layers.js?)
  * @param {*} req 
  * @param {*} res 
  */
@@ -144,7 +149,7 @@ module.exports.getDatajsons = function(req, res){
 		  where: {id: req.params.datavoxelId }, 
 		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
-        if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null) {
+        if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null || voxel.Datavoxelimage.preview === false) {
           console.log('Screenshot needed on the backend!')
           //screenshot needed
           datajsons[0].dataValues.screenshot = true
