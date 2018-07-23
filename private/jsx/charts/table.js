@@ -15,6 +15,9 @@ export class Table extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
+        /*eslint-disable*/
+        debugger;
+        /*eslint-enable*/
         this.props = newProps
         const firstRowHeaders = Object.keys(this.props.tableData[0])
         const columns = firstRowHeaders.map(function(headerValue) {

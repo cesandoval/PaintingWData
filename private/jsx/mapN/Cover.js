@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { Modal, Button, Menu, Dropdown } from 'antd'
 
-class Cover extends React.Component {
+export class Cover extends React.Component {
     constructor(props) {
         super(props)
         this.state = {

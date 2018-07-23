@@ -2,15 +2,16 @@ import reducer from '../../private/jsx/store/reducers/interactions.js'
 import * as t from '../../private/jsx/store/types'
 import axios from 'axios'
 
-describe('REDUCER \"interactions.js\"', () => {
-    it('should ', () => {
+describe('REDUCER \"interactions.js\" SET_LOADING', () => {
+    it('should be true on null', () => {
         expect(
             reducer(undefined, {
                 type: t.SET_LOADING,
                 value: null,
             }).loading
-        ).toBeFalsy();
-
+        ).toBeTruthy();
+    })
+    it ('should be false when false', () => {
         expect(
             reducer(undefined, {
                 type: t.SET_LOADING,
@@ -18,6 +19,8 @@ describe('REDUCER \"interactions.js\"', () => {
             }).loading
         ).toBeFalsy();
 
+    })
+    it ("should be true on true", () => {
         expect(
             reducer(undefined, {
                 type: t.SET_LOADING,

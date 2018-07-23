@@ -65,7 +65,7 @@ describe("reducer actions", () => {
     })
     // mapInit
     it("should mapInit", () => {
-        // window.PaintGraph = jest.fn(() => new Promise(resolve => resolve()));
+        window.PaintGraph = jest.fn(() => new Promise(resolve => resolve()));
         const payload = {}
         const expectedAction = { 
             type: t.MAP_INIT, 

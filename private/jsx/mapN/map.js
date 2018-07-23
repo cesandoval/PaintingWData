@@ -16,7 +16,7 @@ import Cover from './Cover'
  * prices, or asthma rates, etc.
  * @author PaintingWithData
  */
-class MapCanvas extends React.Component {
+export class MapCanvas extends React.Component {
     /**
      * The constructor, which initializes the state of the Map component.
      * @param {Object} props
