@@ -5,6 +5,15 @@ import * as t from '../../private/jsx/store/types'
  * E.g.: the action "importDatasets" corresponds to "t.IMPORT_DATASETS".
  */
 describe("reducer actions", () => {
+    // importUserfile
+    it("should importUserfile", () => {
+        const payload = {}
+        const expectedAction = { 
+            type: t.IMPORT_USERFILE, 
+            ...payload 
+        }
+        expect(Act.importUserfile(payload)).toEqual(expectedAction);
+    })
     // importDatasets
     it("should create an action to add a dataset", () => {
         const payload = {}
