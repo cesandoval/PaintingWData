@@ -96,13 +96,18 @@
                 <l-tile-layer :url="url" :attribution="attribution"/>
 
                 <!-- polygons -->
-                <template>
-                  <l-polygon 
-                    v-for="(geometry,index) in selectedGeometries"
-                    :key="index"
-                    :lat-lngs="geometry" :weight="1" color="black" 
-                    fill-color="rgb(255,255,255)"/>
+                <template v-if="selectedGeoType=='Polygon'">
+                  <l-polygon v-for="(geometry,index) in selectedGeometries"
+                             :key="index"
+                             :lat-lngs="geometry" :weight="1" color="black" 
+                             fill-color="rgb(255,255,255)"/>
                 </template>
+
+                <template v-if="selectedGeoType=='Point'">
+                  <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
+                            :lat-lng="geometry"/>
+                </template>
+
 
               </l-map>
             </div>
@@ -127,7 +132,7 @@
             >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
             <div>Type of Geometry:  
               <span class = "info-digits"
-            >{{ datafiles[selectedIndex].geometryType }}</span></div>
+            >{{ datafileList[selectedIndex].geometryType }}</span></div>
           </div> 
         </div> 
 
@@ -176,7 +181,7 @@ import DatasetCard from '@/components/DatasetCard'
 import Vue2Leaflet from 'vue2-leaflet'
 import L from 'leaflet'
 
-let { LMap, LTileLayer, LPolygon } = Vue2Leaflet
+let { LMap, LTileLayer, LPolygon, LMarker } = Vue2Leaflet
 
 delete L.Icon.Default.prototype._getIconUrl
 
@@ -194,6 +199,7 @@ export default {
     LMap,
     LTileLayer,
     LPolygon,
+    LMarker,
   },
 
   data() {
@@ -215,6 +221,7 @@ export default {
 
       attribution: '',
       selectedGeometries: null,
+      selectedGeoType: null,
     })
   },
   computed: {
@@ -272,6 +279,7 @@ export default {
       this.squeezeTiles()
       this.selectedDataset = id
       this.selectedIndex = index
+      this.selectedGeoType = this.datafileList[index].geometryType
 
       this.queryMapGeometry(this.selectedDataset)
 
@@ -281,12 +289,22 @@ export default {
     },
 
     queryMapGeometry(datasetId) {
-      console.log('query dataset ', datasetId)
 
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        this.selectedGeometries = response.data.geoJSON.map(obj =>
-          obj.coordinates[0].map(item => [item[1], item[0]])
-        )
+        if (this.selectedGeoType == 'Polygon')
+          this.selectedGeometries = response.data.geoJSON.map(obj =>
+            obj.coordinates[0].map(item => [item[1], item[0]])
+          )
+        else if (this.selectedGeoType == 'Point') {
+
+          this.selectedGeometries = response.data.geoJSON.map(obj => [
+            obj.coordinates[1],
+            obj.coordinates[0],
+          ])
+        } else {
+          //TODO: Load map of other type of data
+        }
+
       })
     },
 
@@ -304,6 +322,7 @@ export default {
       this.selectedDataset = null
       this.selectedIndex = null
       this.selectedGeometries = null
+      this.selectedGeoType = null
     },
     parseCoord(coord) {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)
