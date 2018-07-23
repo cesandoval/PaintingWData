@@ -35,7 +35,7 @@
         class = "dataset-list">
         <span
           v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false"
+          v-if="datafile.deleted!==false&&datafile.Datalayers!= null"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -289,14 +289,12 @@ export default {
     },
 
     queryMapGeometry(datasetId) {
-
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
         if (this.selectedGeoType == 'Polygon')
           this.selectedGeometries = response.data.geoJSON.map(obj =>
             obj.coordinates[0].map(item => [item[1], item[0]])
           )
         else if (this.selectedGeoType == 'Point') {
-
           this.selectedGeometries = response.data.geoJSON.map(obj => [
             obj.coordinates[1],
             obj.coordinates[0],
@@ -304,7 +302,6 @@ export default {
         } else {
           //TODO: Load map of other type of data
         }
-
       })
     },
 
