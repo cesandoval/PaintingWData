@@ -35,7 +35,7 @@
         class = "dataset-list">
         <span
           v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false&&datafile.Datalayers!= null"
+          v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -280,6 +280,8 @@ export default {
       this.selectedDataset = id
       this.selectedIndex = index
       this.selectedGeoType = this.datafileList[index].geometryType
+
+      console.log(this.datafileList[index])
 
       this.queryMapGeometry(this.selectedDataset)
 
