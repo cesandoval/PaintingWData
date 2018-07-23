@@ -19,9 +19,7 @@ describe("reducer actions", () => {
             type: t.LOAD_TABLE_DATA, 
             ...payload 
         }
-        console.log(Act.loadTableData(payload))
         
         expect(Act.loadTableData(payload)).toEqual(expectedAction);
-
     })
 })
