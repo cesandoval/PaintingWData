@@ -1,5 +1,6 @@
 import * as Act from '../../private/jsx/store/actions'
 import * as t from '../../private/jsx/store/types'
+import update from 'immutability-helper'
 
 /**
  * The following unit tests are to check if the action matches with the type.
@@ -44,7 +45,7 @@ describe("reducer actions", () => {
         }
         expect(Act.importUserfile(payload)).toEqual(expectedAction);
     })
-    // importDatasets
+    // TODO: importDatasets (error: d3)
     it("should create an action to add a dataset", () => {
         const payload = {}
         const expectedAction = { 
@@ -63,7 +64,7 @@ describe("reducer actions", () => {
         }
         expect(Act.loadTableData(payload)).toEqual(expectedAction);
     })
-    // mapInit
+    // TODO: mapInit (error: cannot read property "buildmapbox" of undefined)
     it("should mapInit", () => {
         window.PaintGraph = jest.fn(() => new Promise(resolve => resolve()));
         const payload = {}
@@ -123,7 +124,7 @@ describe("reducer actions", () => {
         }
         expect(Act.nodeRemove(payload)).toEqual(expectedAction);
     })
-    // nodeUpdate
+    // TODO: nodeUpdate (error: line 97)
     it("should nodeUpdate", () => {
         const payload = {}
         const expectedAction = { 
@@ -133,7 +134,7 @@ describe("reducer actions", () => {
         
         expect(Act.nodeUpdate(payload)).toEqual(expectedAction);
     })
-    // nodeOptionUpdate
+    // TODO: nodeOptionUpdate (line 113)
     it("should nodeOptionUpdate", () => {
         const payload = {}
         const expectedAction = { 
@@ -173,7 +174,7 @@ describe("reducer actions", () => {
         
         expect(Act.linkRemove(payload)).toEqual(expectedAction);
     })
-    // setActiveNode
+    // TODO: setActiveNode (error: line 188, links)
     it("should setActiveNode", () => {
         const payload = {}
         const expectedAction = { 
