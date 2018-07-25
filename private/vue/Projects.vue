@@ -203,6 +203,19 @@
           </div>
 
         </div>
+      </div>
+    </transition>
+
+    <!-- project creation page 2 -->
+    <transition>
+      <div v-if="makingProcess==2"
+           class="making">
+        <span
+          class="unselectProject"
+          @click="()=> {unselectProject()}">
+          <a-icon type="close" />
+        </span>
+
 
 
 
