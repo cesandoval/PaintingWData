@@ -22,14 +22,16 @@ module.exports.computeVoxels = function(req, res){
     }
     else if  (req.body.datalayerIds !== ''){
         // parses into a datalayerIds list
+        // Wenzhe - this is what you will parse for the props
         var datalayerIds = [];
 
+        
         var datalayerIdsAndRasterValsObject = {};
-        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
+        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: ['OBJECT_ID','Asthma'], 4: 'MedHomeValue'}
         // Add a hash to each object property
         for (var key in unparsed) {
             var timestampHash = 0;
-            var properties = unparsed[key].split(";");
+            var properties = unparsed[key].split(";"); //proprties = ['OBJECT_ID','Asthma']
             console.log("properties: ", properties);
             for (var i = 0; i < properties.length; i++) {
                 datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
@@ -73,7 +75,9 @@ module.exports.computeVoxels = function(req, res){
                 })
             })
         } else {
+            // Wenzhe - this is the data sent from VUE to create the voxel
             // handles creating a voxel, using one or more datalayers, redirects to /voxels/ url after completed
+            // Send a JSON containing this data from vue
             var req = {
                 'user': 
                     {
@@ -84,7 +88,7 @@ module.exports.computeVoxels = function(req, res){
                         'voxelname': req.body.voxelname, 
                         'datalayerIds': req.body.datalayerIds, 
                         voxelDensity: req.body.voxelDensity, 
-                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject
+                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject // Wenzhe Parse on the controller or on vue directly. 
                     },
                 'voxelID': hash() // This is important for Datavoxel.voxelId
             };
@@ -109,6 +113,7 @@ module.exports.computeVoxels = function(req, res){
                 datalayerIds.push(datalayerId);
             }
     
+            // Send process to the worker
             // Processes each of the voxels.
             processVoxels([datalayerIds, req], function(){}); 
 
