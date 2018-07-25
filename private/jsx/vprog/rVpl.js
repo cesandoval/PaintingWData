@@ -92,7 +92,7 @@ class VPL extends React.Component {
                 x: 50,
                 y: 100 + 150 * index,
             }
-            datasetNode.name = layer.name
+            datasetNode.name = layer.propertyName
             datasetNode.color = layer.color1
 
             const min = layer.geojson.minMax[0]
