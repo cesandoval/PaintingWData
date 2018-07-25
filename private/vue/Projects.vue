@@ -173,7 +173,7 @@
           <a-icon type="close" />
         </span>
         <div class="making1-wrapper">
-          <span class="making1-title">Create Project</span>
+          <span class="making-title">Create Project</span>
           <span class="making1-desc">
             With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
           </span>
@@ -191,6 +191,20 @@
           @click="()=> {unselectProject()}">
           <a-icon type="close" />
         </span>
+
+        <div class="making2-wrapper">
+          <span class="making-title">Select Dataset</span>
+
+          <div class="container making2-cols">
+            <div class="col-sm-6 making2-section"/>
+            <div class="col-sm-6 making2-section"/>
+
+
+          </div>
+
+        </div>
+
+
 
 
 
@@ -351,7 +365,7 @@ export default {
 .making1-desc {
 }
 
-.making1-title {
+.making-title {
   text-align: center;
   font-size: 26px;
   display: inherit;
@@ -431,6 +445,7 @@ export default {
 }
 
 .unselectProject {
+  z-index: 1000;
   position: absolute;
   right: 10px;
   top: 90px;
@@ -676,5 +691,26 @@ export default {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+
+.making2-wrapper {
+  position: absolute;
+  top: 80px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+
+  padding: 50px;
+}
+
+.making2-section {
+  background-color: rgba(0, 0, 0, 0.01);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  height: 100%;
+}
+
+.making2-cols {
+  height: calc(100% - 150px);
 }
 </style>
