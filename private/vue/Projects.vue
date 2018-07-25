@@ -119,7 +119,6 @@
             <a-button class = "open-btn"
                       @click="openProject(selectedProject)"
             
-            
             >Open Project</a-button>
 
 
@@ -167,23 +166,32 @@
     <!-- project creation page 1 -->
     <transition>
       <div v-if="makingProcess==1"
-           class="making1">
-        
+           class="making">
+        <span
+          class="unselectProject"
+          @click="()=> {unselectProject()}">
+          <a-icon type="close" />
+        </span>
+        <div class="making1-wrapper">
+          <span class="making1-title">Create Project</span>
+          <span class="making1-desc">
+            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
+          </span>
+          <a-button type="primary" @click="() => {createProjectMode()}">Create Project</a-button>
+        </div>
+      </div>
+    </transition>
+
+    <!-- project creation page 2 -->
+    <transition>
+      <div v-if="makingProcess==2"
+           class="making">
         <span
           class="unselectProject"
           @click="()=> {unselectProject()}">
           <a-icon type="close" />
         </span>
 
-        <div class="making1-wrapper">
-          <span class="making1-title">Create Project</span>
-          <span class="making1-desc">
-
-            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
-
-          </span>
-
-        </div>
 
 
       </div>
@@ -310,13 +318,26 @@ export default {
       console.log('start making')
       this.makingProcess = 1
     },
+    createProjectMode() {
+      console.log('start create project')
+      this.makingProcess = 2
+    },
   },
 }
 </script>
 
 
 <style lang="scss" scoped>
-.making1 {
+.ant-btn-primary {
+  position: absolute;
+  background-color: #e75332;
+  border-color: #e75332;
+  left: 50%;
+  bottom: 70px;
+  transform: translate(-50%);
+}
+
+.making {
   position: absolute;
   left: 0px;
   top: 0px;

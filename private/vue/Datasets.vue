@@ -46,10 +46,10 @@
           >
 
             <div class="map-thumbnail">
+
               <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
                 <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
-
               </l-map>
             </div>
             <a-card-meta
