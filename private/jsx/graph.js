@@ -368,7 +368,7 @@ export default class Graph {
         const until = Math.ceil((this.renderUntil - Date.now()) / 1000)
         this.untilTime = until
 
-        if (until > 0) {
+        if (until > 0 && this.rendering == false) {
             this.rendering = true
             window.requestAnimationFrame(() => {
                 this.render()
