@@ -121,7 +121,6 @@ module.exports.serveThumbnailData = function(req, res) {
     async.waterfall([
         async.apply(fileViewerHelper.loadSimplifiedDatalayers, req.params.id, req.body),
     ], function (err, result) {
-        console.log(result)
         res.send({
             geoJSON: result[0],
             centroid: result[2],
