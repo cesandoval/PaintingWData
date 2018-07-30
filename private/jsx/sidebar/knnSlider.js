@@ -36,7 +36,7 @@ class KnnSlider extends React.Component {
         this.layersNeighbors = layersNeighbors
     }
 
-    handleSlide = e => {
+    handleSlider = e => {
         // let numberOfNeighbors = document.getElementById('knnSlider').value
         let numberOfNeighbors = e.target.value
 
@@ -205,7 +205,7 @@ class KnnSlider extends React.Component {
                             className="slider"
                             id="knnSlider"
                             type="range"
-                            onChange={this.handleSlide}
+                            onChange={this.handleSlider}
                             // value={this.props.knn}
                             min="0"
                             max="8"

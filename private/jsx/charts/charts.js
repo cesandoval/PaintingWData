@@ -13,7 +13,7 @@ import {
 var kernel = require('kernel-smooth')
 // var science = require('science')
 
-class Charts extends React.Component {
+export class Charts extends React.Component {
     constructor(props) {
         super(props)
 

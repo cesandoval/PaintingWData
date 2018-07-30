@@ -55,6 +55,7 @@ export default class App extends React.Component {
          *     Act.importUserfile({ data })
          */
     }
+
     /**
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */
