@@ -1,5 +1,5 @@
-import reducer from '../../private/jsx/store/reducers/interactions.js'
-import * as t from '../../private/jsx/store/types'
+import reducer from '../../../private/jsx/store/reducers/interactions.js'
+import * as t from '../../../private/jsx/store/types'
 import axios from 'axios'
 
 // SET_LOADING
