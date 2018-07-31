@@ -1,4 +1,4 @@
-import Graph from '../../private/jsx/graph'
+import Graph from '../../../private/jsx/graph'
 
 describe('Local State', () => {
   it('should parse a geoJSON to build pixels', () => {
