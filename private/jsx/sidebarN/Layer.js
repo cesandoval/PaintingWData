@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 /**
  * The sub-component of "Layers"; it depicts a single layer.
  */
-class Layer extends React.Component {
+export class Layer extends React.Component {
     constructor(props) {
         super(props)
         /**
