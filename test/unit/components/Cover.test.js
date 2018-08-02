@@ -5,22 +5,30 @@ import { Cover } from '../../../private/jsx/mapN/Cover'
 import * as Act from '../../../private/jsx/store/actions'
 import * as t from '../../../private/jsx/store/types'
 
+Enzyme.configure({ adapter: new Adapter() });
+
 describe ('updateMapStyle', () => {
     it("should be called when changeMapStyle is called", () => {
-        let wrapper = shallow(<Cover/>);
+        const wrapper = shallow(<Cover/>);
+        const instance = wrapper.instance();
         // Mock the updateMapStyle function.
-        wrapper.instance().updateMapStyle = jest.fn();
+        instance.updateMapStyle = jest.fn();
         wrapper.update();
         // Calling changeMapStyle should call updateMapStyle exactly once w/ the same parameters.
-        wrapper.instance().changeMapStyle("Dark");
-        expect(wrapper.instance().updateMapStyle.mock.calls.length).toEqual(1);
-        expect(wrapper.instance().updateMapStyle).toBeCalledWith("Dark");
+        instance.changeMapStyle("Dark");
+        expect(instance.updateMapStyle.mock.calls.length).toEqual(1);
+        expect(instance.updateMapStyle).toBeCalledWith("Dark");
     })
 
-    it("should return true when a valid map style is passed in", () => {
-        // This is actually kind of an integration test, and same for the one below.
-        let wrapper = shallow(<Cover/>);
-        
+    it("should return true only when a valid map style is passed in", () => {
+        const wrapper = shallow(<Cover/>);
+        const instance = wrapper.instance();
+        // Mock the window namespace.
+        Object.defineProperty(window, "refreshTiles", {value: () => ""});
+        Object.defineProperty(window, "updateTiles", {value: () => ""});
+        // This is actually kind of an integration test, and same for the one below
+        expect(instance.updateMapStyle("mapbox.streets")).toBe(true); 
+        expect(instance.updateMapStyle("mapbox.invalid_style")).toBe(false);
     })
 
     it("should return false when an invalid map style is passed in", () => {
@@ -29,19 +37,20 @@ describe ('updateMapStyle', () => {
 })
 
 describe ('exports', () => {
-    it("should do nothing if an invalid case is passed in", () => {
-        
-    })
-
     it("should call triggerDownload with a specified second argument", () => {
-        let wrapper = shallow(<Cover/>);
+        const wrapper = shallow(<Cover/>);
+        const instance = wrapper.instance();
         // Mocks triggerDownload by returning its second argument; the type.
-        wrapper.instance().triggerDownload = jest.fn((exportFile, exportType) => exportType);
-        wrapper.instance().exportSVG = jest.fn(geoms => "");
-        wrapper.instance().exportJSON = jest.fn(layers => "");
+        instance.triggerDownload = jest.fn((exportFile, exportType) => exportType);
+        instance.exportSVG = jest.fn(geoms => "");
+        instance.exportJSON = jest.fn(layers => "");
         wrapper.update();
-
-        expect(wrapper.instance().exportMap('SVG')).toEqual("svg");
-        expect(wrapper.instance().exportMap('GeoJSON')).toEqual("json");
+        // Now we test exportMap with different parameters.
+        instance.exportMap('SVG');
+        expect(instance.triggerDownload.mock.calls.length).toEqual(1);
+        expect(instance.triggerDownload.mock.calls[0][1]).toBe("svg");
+        instance.exportMap('GeoJSON');
+        expect(instance.triggerDownload.mock.calls.length).toEqual(2);
+        expect(instance.triggerDownload.mock.calls[1][1]).toBe("json");
     })
 })
