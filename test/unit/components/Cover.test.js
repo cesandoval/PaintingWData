@@ -30,18 +30,14 @@ describe ('updateMapStyle', () => {
         expect(instance.updateMapStyle("mapbox.streets")).toBe(true); 
         expect(instance.updateMapStyle("mapbox.invalid_style")).toBe(false);
     })
-
-    it("should return false when an invalid map style is passed in", () => {
-        let wrapper = shallow(<Cover/>);
-    })
 })
 
 describe ('exports', () => {
     it("should call triggerDownload with a specified second argument", () => {
         const wrapper = shallow(<Cover/>);
         const instance = wrapper.instance();
-        // Mocks triggerDownload by returning its second argument; the type.
-        instance.triggerDownload = jest.fn((exportFile, exportType) => exportType);
+        // Mocks triggerDownload, exportSVG and exportJSON.
+        instance.triggerDownload = jest.fn();
         instance.exportSVG = jest.fn(geoms => "");
         instance.exportJSON = jest.fn(layers => "");
         wrapper.update();
