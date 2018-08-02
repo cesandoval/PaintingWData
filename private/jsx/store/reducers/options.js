@@ -24,8 +24,10 @@ export default (state = initialOptionsState, action) => {
          */
         case t.MAP_SET_BGSTYLE: {
             const { value } = action
-            const bgStyle = { bgStyle: value }
-            return Object.assign({}, state, bgStyle)
+            if (typeof value == "string") {
+                const bgStyle = { bgStyle: value }
+                return Object.assign({}, state, bgStyle)
+            }
         }
         /**
          * Sets the opacity.
@@ -34,8 +36,10 @@ export default (state = initialOptionsState, action) => {
         case t.MAP_SET_OPACITY: {
             console.log(state)
             const { value } = action
-            const opacity = { opacity: value }
-            return Object.assign({}, state, opacity)
+            if (typeof value == "number" && 0 <= value && value <= 100) {
+                const opacity = { opacity: value }
+                return Object.assign({}, state, opacity)
+            }
         }
         /**
          * Sets the knnValue.
@@ -43,8 +47,10 @@ export default (state = initialOptionsState, action) => {
          */
         case t.MAP_SET_KNN: {
             const { value } = action
-            const knnValue = { knnValue: value }
-            return Object.assign({}, state, knnValue)
+            if (typeof value == "number" && 0 <= value && value <= 8) {
+                const knnValue = { knnValue: value }
+                return Object.assign({}, state, knnValue)
+            }
         }
 
         default:
