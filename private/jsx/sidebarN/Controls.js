@@ -5,7 +5,7 @@ import Modifications from './Modifications'
 import Panels from './Panels'
 // import * as Act from '../store/actions'
 
-class Controls extends React.Component {
+export class Controls extends React.Component {
     constructor(props) {
         super(props)
     }
