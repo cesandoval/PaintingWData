@@ -144,7 +144,7 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="Object.keys(datafiles[selectedIndex].Datalayers[0].properties)"
+                  :data-source="Object.keys(datafileList[selectedIndex].Datalayers[0].properties)"
                 >
                   <a-list-item slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta description="">
