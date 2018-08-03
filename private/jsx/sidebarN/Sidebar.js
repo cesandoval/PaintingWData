@@ -6,7 +6,7 @@ const TabPane = Tabs.TabPane
 import Layers from './Layers'
 import Controls from './Controls'
 
-export default class Sidebar extends React.Component {
+export class Sidebar extends React.Component {
     constructor(props) {
         super(props)
     }

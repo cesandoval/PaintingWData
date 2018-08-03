@@ -2,14 +2,14 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import * as Act from '@/store/actions'
+import * as Act from '../store/actions'
 import axios from 'axios'
 
 import Layer from './Layer'
 /**
  * The top 2/3rds of the sidebar, "Layers".
  */
-class Layers extends React.Component {
+export class Layers extends React.Component {
     constructor(props) {
         super(props)
         this.getLayers = this.getLayers.bind(this)

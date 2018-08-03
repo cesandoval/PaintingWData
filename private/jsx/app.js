@@ -15,7 +15,7 @@ import Loading from './utils/Loading'
  *
  * @author PaintingWithData
  */
-export default class App extends React.Component {
+export class App extends React.Component {
     /**
      * Summary. Loads a saved state if we've saved it before. By "saved it
      * before" we mean "clicked on `Save Userfile`" before closing out. Then,
