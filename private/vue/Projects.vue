@@ -48,7 +48,7 @@
           :key="datafile.id"
           :class="{selected:datafile.id===selectedProject}"
           class="card col-sm-4"
-          @click="()=> {setActiveDatasetId(datafile.id,index)}"
+          @click="()=> {setActiveProjId(datafile.id,index)}"
         >
           <a-card
             hoverable
@@ -166,7 +166,7 @@
     <!-- project creation page 1 -->
     <transition>
       <div v-if="makingProcess==1"
-           class="making">
+           class="making making1">
         <span
           class="unselectProject"
           @click="()=> {unselectProject()}">
@@ -184,8 +184,8 @@
 
     <!-- project creation page 2 -->
     <transition>
-      <div v-if="makingProcess==2"
-           class="making">
+      <div v-if="makingProcess>=2"
+           class="making making2">
         <span
           class="unselectProject"
           @click="()=> {unselectProject()}">
@@ -196,12 +196,38 @@
           <span class="making-title">Select Dataset</span>
 
           <div class="container making2-cols">
-            <div class="col-sm-6 making2-section"/>
-            <div class="col-sm-6 making2-section"/>
+            <div class="col-sm-6 making2-section">
+              <div class="col-header">
+                <span>Datasets</span>
+              </div>
 
+              <div v-if="mydataset && mydataset.length>0" class="dataset-wrapper"> 
+                <a-list
+                  :data-source="mydataset"
+                >
+                  <a-list-item slot="renderItem" slot-scope="item, index" 
+                               @click="()=> {datasetSelection(item)}">
+                    <a-list-item-meta description="">
+                      <a slot="title" :key="item.filename">{{ item.filename }}</a>
+                      <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
+                    </a-list-item-meta>
+                    <div/>
+                  </a-list-item>
+                <!-- <a-spin v-if="loading && !busy" class="demo-loading" /> -->
+                </a-list>
+              </div>
+              <div v-else>
+                <a-icon type="loading" class="loading"/>
+              </div>
+            </div>
+
+            <div class="col-sm-6 making2-section">
+              <div class="col-header">
+                <span>Selected Properties</span>
+              </div>
+            </div>
 
           </div>
-
         </div>
       </div>
     </transition>
@@ -217,13 +243,40 @@
         </span>
 
 
+    <!-- project creation page 3 -->
+    <transition>
+      <div v-if="makingProcess==3"
+           class="making making3">
+        <span
+          class="unselectProject"
+          @click="()=> {unselectProject(2)}">
+          <a-icon type="close" />
+        </span>
 
+        <div class="making3-wrapper">
+          <div class = "col-left">
+            <l-map v-if="selectedGeometries!=null" 
+                   :zoom="zoom" 
+                   :center="getMapCenter(mydataset[selectedDatasetIndex])"
+                   :bounds="getBbox(mydataset[selectedDatasetIndex])">
+              <l-tile-layer :url="url" :attribution="attribution"/>
 
+              <!-- polygons -->
+              <!-- <template>
+                  <l-polygon 
+                    v-for="(geometry,index) in selectedGeometries"
+                    :key="index"
+                    :lat-lngs="geometry" :weight="1" color="black" 
+                    fill-color="rgb(255,255,255)"/>
+                </template> -->
 
+            </l-map>
 
+          </div>
+          <div class = "col-right"/>
+        </div>
       </div>
     </transition>
-
 
 
 
@@ -231,10 +284,27 @@
 </template>
 
 <script>
+import Vue2Leaflet from 'vue2-leaflet'
+import L from 'leaflet'
+
+let { LMap, LTileLayer, LPolygon } = Vue2Leaflet
+
+delete L.Icon.Default.prototype._getIconUrl
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+})
+
 export default {
   name: 'Projects',
 
-  components: {},
+  components: {
+    LMap,
+    LTileLayer,
+    LPolygon,
+  },
   data() {
     return Object.assign(server, {
       maps: {},
@@ -242,7 +312,14 @@ export default {
       sortDown: true,
       selectedProject: null,
       selectedIndex: null,
+      selectedDatasetIndex: null,
       makingProcess: 0,
+      mydataset: null,
+      zoom: 13,
+      center: L.latLng(47.41322, -1.219482),
+      selectedGeometries: null,
+      url:
+        'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
     })
   },
 
@@ -284,7 +361,17 @@ export default {
     // console.log(this.datavoxels)
   },
   methods: {
-    setActiveDatasetId(id, index) {
+    getBbox(datafile) {
+      return datafile.bbox.coordinates[0].map(data => [data[1], data[0]])
+    },
+    getMapCenter(datafile) {
+      return L.latLng(
+        datafile.centroid.coordinates[1],
+        datafile.centroid.coordinates[0]
+      )
+    },
+
+    setActiveProjId(id, index) {
       console.log('click ' + id)
       this.selectedProject = id
       this.selectedIndex = index
@@ -295,10 +382,12 @@ export default {
       let time = timeLst[1].split('.')[0]
       return date + ' ' + time
     },
-    unselectProject() {
+    unselectProject(num) {
       this.selectedProject = null
       this.selectedIndex = null
-      this.makingProcess = 0
+      this.selectedDatasetIndex = null
+      this.makingProcess = num ? num : 0
+      this.selectedGeometries = null
     },
     handleDeleteClick(projectId) {
       let req = { userId: this.id, dataVoxelId: projectId }
@@ -341,13 +430,50 @@ export default {
         previewBase + ThumbnailId + '.jpg',
       ]
     },
+
+    // show project-making landing page
     startMaking() {
-      console.log('start making')
       this.makingProcess = 1
+      this.selectedDatasetIndex = null
+      this.mydataset = null
     },
+
+    // show project-making page
     createProjectMode() {
-      console.log('start create project')
       this.makingProcess = 2
+      this.selectedDatasetIndex = null
+      this.mydataset = null
+      this.queryDatasets()
+    },
+
+    // query dataset api
+    queryDatasets() {
+      if (!this.mydataset)
+        this.$http.get('/datasets/').then(response => {
+          console.log('layers', response)
+          this.mydataset = response.data.datafiles
+        })
+    },
+
+    // open up the dataset selection pop-up box
+    datasetSelection(data) {
+      this.makingProcess = 3
+      console.log(data)
+      this.selectedDatasetIndex = data.id
+
+      this.queryMapGeometry(data.id)
+    },
+
+    queryMapGeometry(datasetId) {
+      console.log('query dataset ', datasetId)
+
+      this.$http.get('/getThumbnailData/' + datasetId).then(response => {
+        this.selectedGeometries = response.data.geoJSON.map(obj =>
+          obj.coordinates[0].map(item => [item[1], item[0]])
+        )
+
+        console.log(this.selectedGeometries)
+      })
     },
   },
 }
@@ -384,7 +510,7 @@ export default {
   display: inherit;
   font-weight: 500;
 
-  margin-bottom: 50px;
+  margin-bottom: 0px;
 }
 
 .adding-icon {
@@ -676,6 +802,15 @@ export default {
   width: 100%;
   text-align: center;
 }
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: scale(3) translate(-50%, -50%);
+  transform-origin: 0% 0%;
+}
+
 .demo-infinite-container {
   height: auto;
 }
@@ -724,6 +859,33 @@ export default {
 }
 
 .making2-cols {
-  height: calc(100% - 150px);
+  height: calc(100% - 50px);
+}
+
+.col-header {
+  font-size: 20px;
+  margin: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.dataset-wrapper {
+  height: calc(100% - 50px);
+
+  /deep/ {
+    .ant-list-item:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+}
+
+.col-left {
+  width: 50%;
+  float: left;
+}
+.col-right {
+  width: 50%;
+  float: left;
 }
 </style>
