@@ -63,6 +63,7 @@ var passport = require('passport'),
 
   // Wenzhe
   // Middleware for getting datasets
+  router.get('/datasets/', isAuthenticated, datalayerController.getDatasets);
   router.get('/datasets/:id', isAuthenticated, datalayerController.showDatasets);
   router.get('/datasets/:id/:datafileId', isAuthenticated, datalayerController.showDatasets);
   // Wenzhe

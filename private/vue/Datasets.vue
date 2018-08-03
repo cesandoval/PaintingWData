@@ -212,10 +212,7 @@ export default {
       busy: false,
       sortDate: true,
       sortDown: true,
-
       zoom: 13,
-      center: L.latLng(47.41322, -1.219482),
-
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
 

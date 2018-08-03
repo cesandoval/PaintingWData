@@ -200,13 +200,14 @@
               <div class="col-header">
                 <span>Datasets</span>
               </div>
-
               <div v-if="mydataset && mydataset.length>0" class="dataset-wrapper"> 
                 <a-list
                   :data-source="mydataset"
                 >
-                  <a-list-item slot="renderItem" slot-scope="item, index" 
-                               @click="()=> {datasetSelection(item)}">
+                  <a-list-item 
+                    v-if="item.deleted!==false&&item.Datalayers.length!=0" slot="renderItem" 
+                    slot-scope="item, index"
+                    @click="()=> {datasetSelection(item,index)}">
                     <a-list-item-meta description="">
                       <a slot="title" :key="item.filename">{{ item.filename }}</a>
                       <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
@@ -232,62 +233,95 @@
       </div>
     </transition>
 
-    <!-- project creation page 2 -->
+
+
+    <!-- project creation page 3 -->
     <transition>
-      <div v-if="makingProcess==2"
-           class="making">
+      <div v-if="makingProcess==3"
+           class="making making3">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="()=> {unselectProject(2)}">
           <a-icon type="close" />
         </span>
 
+        <div class="making3-wrapper">
+          <div class = "col-left">
+            <a-icon 
+              v-if="true" 
+              type="loading"
+              class = "loading"/>
 
-        <!-- project creation page 3 -->
-        <transition>
-          <div v-if="makingProcess==3"
-               class="making making3">
-            <span
-              class="unselectProject"
-              @click="()=> {unselectProject(2)}">
-              <a-icon type="close" />
-            </span>
+            <l-map 
+              v-if="selectedGeometries!=null"
+              :zoom="zoom" 
+              :center="getMapCenter(mydataset[selectedDatasetIndex])"
+              :bounds="getBbox(mydataset[selectedDatasetIndex])">
+              <l-tile-layer :url="url" :attribution="attribution"/>
 
-            <div class="making3-wrapper">
-              <div class = "col-left">
-                <l-map v-if="selectedGeometries!=null" 
-                       :zoom="zoom" 
-                       :center="getMapCenter(mydataset[selectedDatasetIndex])"
-                       :bounds="getBbox(mydataset[selectedDatasetIndex])">
-                  <l-tile-layer :url="url" :attribution="attribution"/>
+              <!-- polygons -->
+              <template v-if="selectedGeoType=='Polygon'">
+                <l-polygon v-for="(geometry,index) in selectedGeometries"
+                           :key="index"
+                           :lat-lngs="geometry" :weight="1" color="black" 
+                           fill-color="rgb(255,255,255)"/>
+              </template>
 
-                  <!-- polygons -->
-                  <!-- <template>
-                  <l-polygon 
-                    v-for="(geometry,index) in selectedGeometries"
-                    :key="index"
-                    :lat-lngs="geometry" :weight="1" color="black" 
-                    fill-color="rgb(255,255,255)"/>
-                </template> -->
+              <template v-if="selectedGeoType=='Point'">
+                <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
+                          :lat-lng="geometry"/>
+              </template>
 
-                </l-map>
+            </l-map>
 
-              </div>
-              <div class = "col-right"/>
-            </div>
           </div>
-        </transition>
+          <div class = "col-right">
+            <div class="col-right-title"><strong>Select Property</strong></div>
+            <div class="property-wrapper">
+              <!-- <template>
+                <div 
+                  class="demo-infinite-container"
+                >
+                  <a-list
+                    :data-source="Object.keys(mydataset[selectedDatasetIndex].Datalayers[0].properties)"
+                  >
+                    <a-list-item slot="renderItem" slot-scope="item, index">
+                      <a-list-item-meta description="">
+                        <a slot="title" :key="item">{{ item }}</a>
+                        <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
+                      </a-list-item-meta>
+                      <div/>
+                    </a-list-item>
+                  </a-list>
+                </div>
+              </template> -->
+
+              <template>
+                <a-table 
+                  :row-selection="rowSelection"
+                  :columns="columns" :data-source="formatProperties(mydataset[selectedDatasetIndex].Datalayers[0].properties)" :pagination ="false">
+                  <a slot="name" slot-scope="text" href="#">{{ text }}</a>
+                </a-table>
+              </template>
+
+
+            </div>
+
+
+          </div>
+        </div>
+    </div></transition>
 
 
 
-      </div>
-</transition></div></template>
+
+</div></template>
 
 <script>
 import Vue2Leaflet from 'vue2-leaflet'
 import L from 'leaflet'
 
-let { LMap, LTileLayer, LPolygon } = Vue2Leaflet
+let { LMap, LTileLayer, LPolygon, LMarker } = Vue2Leaflet
 
 delete L.Icon.Default.prototype._getIconUrl
 
@@ -297,6 +331,21 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 })
 
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    scopedSlots: { customRender: 'name' },
+  },
+  // {
+  //   title: 'Age',
+  //   dataIndex: 'age',
+  // }, {
+  //   title: 'Address',
+  //   dataIndex: 'address',
+  // }
+]
+
 export default {
   name: 'Projects',
 
@@ -304,6 +353,7 @@ export default {
     LMap,
     LTileLayer,
     LPolygon,
+    LMarker,
   },
   data() {
     return Object.assign(server, {
@@ -316,8 +366,11 @@ export default {
       makingProcess: 0,
       mydataset: null,
       zoom: 13,
-      center: L.latLng(47.41322, -1.219482),
       selectedGeometries: null,
+      selectedGeoType: null,
+      attribution: '',
+      columns: columns,
+
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
     })
@@ -355,6 +408,18 @@ export default {
         }
       }
     },
+
+    rowSelection() {
+      return {
+        onChange: (selectedRowKeys, selectedRows) => {
+          console.log(
+            `selectedRowKeys: ${selectedRowKeys}`,
+            'selectedRows: ',
+            selectedRows
+          )
+        },
+      }
+    },
   },
   created() {
     // console.log('created')
@@ -362,9 +427,17 @@ export default {
   },
   methods: {
     getBbox(datafile) {
+      console.log(datafile.bbox.coordinates[0].map(data => [data[1], data[0]]))
       return datafile.bbox.coordinates[0].map(data => [data[1], data[0]])
     },
     getMapCenter(datafile) {
+      console.log(
+        L.latLng(
+          datafile.centroid.coordinates[1],
+          datafile.centroid.coordinates[0]
+        )
+      )
+
       return L.latLng(
         datafile.centroid.coordinates[1],
         datafile.centroid.coordinates[0]
@@ -388,6 +461,7 @@ export default {
       this.selectedDatasetIndex = null
       this.makingProcess = num ? num : 0
       this.selectedGeometries = null
+      this.selectedGeoType = null
     },
     handleDeleteClick(projectId) {
       let req = { userId: this.id, dataVoxelId: projectId }
@@ -456,24 +530,37 @@ export default {
     },
 
     // open up the dataset selection pop-up box
-    datasetSelection(data) {
+    datasetSelection(data, index) {
       this.makingProcess = 3
-      console.log(data)
-      this.selectedDatasetIndex = data.id
+      console.log('selectedData', data)
+      this.selectedDatasetIndex = index
+      this.selectedGeoType = data.geometryType
 
       this.queryMapGeometry(data.id)
     },
 
     queryMapGeometry(datasetId) {
-      console.log('query dataset ', datasetId)
-
+      console.log('query', datasetId)
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        this.selectedGeometries = response.data.geoJSON.map(obj =>
-          obj.coordinates[0].map(item => [item[1], item[0]])
-        )
+        if (this.selectedGeoType == 'Polygon')
+          this.selectedGeometries = response.data.geoJSON.map(obj =>
+            obj.coordinates[0].map(item => [item[1], item[0]])
+          )
+        else if (this.selectedGeoType == 'Point') {
+          this.selectedGeometries = response.data.geoJSON.map(obj => [
+            obj.coordinates[1],
+            obj.coordinates[0],
+          ])
+        } else {
+          //TODO: Load map of other type of data
+        }
 
-        console.log(this.selectedGeometries)
+        console.log(response, this.selectedGeometries)
       })
+    },
+    formatProperties(properties) {
+      console.log(properties)
+      return Object.keys(properties).map(item => ({ name: item }))
     },
   },
 }
@@ -851,6 +938,15 @@ export default {
   padding: 50px;
 }
 
+.making3-wrapper {
+  position: absolute;
+  top: 80px;
+  left: 0px;
+  right: 0px;
+  bottom: 100px;
+  padding: 50px;
+}
+
 .making2-section {
   background-color: rgba(0, 0, 0, 0.01);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -883,9 +979,31 @@ export default {
 .col-left {
   width: 50%;
   float: left;
+  height: 100%;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .col-right {
   width: 50%;
   float: left;
+  height: 100%;
+  position: relative;
+
+  padding-left: 20px;
 }
+.col-right-title {
+  position: absolute;
+  z-index: 1;
+  left: 30px;
+}
+
+.property-wrapper {
+  height: calc(100% - 40px);
+  margin-top: 40px;
+  overflow-y: auto;
+}
+</style>
+
+<style>
+@import '~leaflet/dist/leaflet.css';
 </style>
