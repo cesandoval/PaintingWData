@@ -243,26 +243,26 @@
         </span>
 
 
-    <!-- project creation page 3 -->
-    <transition>
-      <div v-if="makingProcess==3"
-           class="making making3">
-        <span
-          class="unselectProject"
-          @click="()=> {unselectProject(2)}">
-          <a-icon type="close" />
-        </span>
+        <!-- project creation page 3 -->
+        <transition>
+          <div v-if="makingProcess==3"
+               class="making making3">
+            <span
+              class="unselectProject"
+              @click="()=> {unselectProject(2)}">
+              <a-icon type="close" />
+            </span>
 
-        <div class="making3-wrapper">
-          <div class = "col-left">
-            <l-map v-if="selectedGeometries!=null" 
-                   :zoom="zoom" 
-                   :center="getMapCenter(mydataset[selectedDatasetIndex])"
-                   :bounds="getBbox(mydataset[selectedDatasetIndex])">
-              <l-tile-layer :url="url" :attribution="attribution"/>
+            <div class="making3-wrapper">
+              <div class = "col-left">
+                <l-map v-if="selectedGeometries!=null" 
+                       :zoom="zoom" 
+                       :center="getMapCenter(mydataset[selectedDatasetIndex])"
+                       :bounds="getBbox(mydataset[selectedDatasetIndex])">
+                  <l-tile-layer :url="url" :attribution="attribution"/>
 
-              <!-- polygons -->
-              <!-- <template>
+                  <!-- polygons -->
+                  <!-- <template>
                   <l-polygon 
                     v-for="(geometry,index) in selectedGeometries"
                     :key="index"
@@ -270,18 +270,18 @@
                     fill-color="rgb(255,255,255)"/>
                 </template> -->
 
-            </l-map>
+                </l-map>
 
+              </div>
+              <div class = "col-right"/>
+            </div>
           </div>
-          <div class = "col-right"/>
-        </div>
+        </transition>
+
+
+
       </div>
-    </transition>
-
-
-
-  </div>
-</template>
+</transition></div></template>
 
 <script>
 import Vue2Leaflet from 'vue2-leaflet'
