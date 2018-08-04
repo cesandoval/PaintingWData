@@ -229,6 +229,9 @@
             </div>
 
           </div>
+
+          <a-button type="primary" @click="() => {projectInfoPage()}">Next</a-button>
+
         </div>
       </div>
     </transition>
@@ -247,55 +250,43 @@
 
         <div class="making3-wrapper">
           <div class = "col-left">
-            <a-icon 
-              v-if="true" 
-              type="loading"
-              class = "loading"/>
+            <div class="col-left-title"><strong>{{ mydataset[selectedDatasetIndex].filename }}</strong></div>
 
-            <l-map 
-              v-if="selectedGeometries!=null"
-              :zoom="zoom" 
-              :center="getMapCenter(mydataset[selectedDatasetIndex])"
-              :bounds="getBbox(mydataset[selectedDatasetIndex])">
-              <l-tile-layer :url="url" :attribution="attribution"/>
+            <div class="map-wrapper">
+              <a-icon 
+                v-if="true" 
+                type="loading"
+                class = "loading"/>
 
-              <!-- polygons -->
-              <template v-if="selectedGeoType=='Polygon'">
-                <l-polygon v-for="(geometry,index) in selectedGeometries"
-                           :key="index"
-                           :lat-lngs="geometry" :weight="1" color="black" 
-                           fill-color="rgb(255,255,255)"/>
-              </template>
+              <l-map 
+                v-if="selectedGeometries!=null"
+                :zoom="zoom" 
+                :center="getMapCenter(mydataset[selectedDatasetIndex])"
+                :bounds="getBbox(mydataset[selectedDatasetIndex])">
+                <l-tile-layer :url="url" :attribution="attribution"/>
 
-              <template v-if="selectedGeoType=='Point'">
-                <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
-                          :lat-lng="geometry"/>
-              </template>
+                <!-- polygons -->
+                <template v-if="selectedGeoType=='Polygon'">
+                  <l-polygon v-for="(geometry,index) in selectedGeometries"
+                             :key="index"
+                             :lat-lngs="geometry" :weight="1" color="black" 
+                             fill-color="rgb(255,255,255)"/>
+                </template>
 
-            </l-map>
+                <template v-if="selectedGeoType=='Point'">
+                  <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
+                            :lat-lng="geometry"/>
+                </template>
+
+              </l-map>
+            
+            </div>  
+            
 
           </div>
           <div class = "col-right">
             <div class="col-right-title"><strong>Select Property</strong></div>
             <div class="property-wrapper">
-              <!-- <template>
-                <div 
-                  class="demo-infinite-container"
-                >
-                  <a-list
-                    :data-source="Object.keys(mydataset[selectedDatasetIndex].Datalayers[0].properties)"
-                  >
-                    <a-list-item slot="renderItem" slot-scope="item, index">
-                      <a-list-item-meta description="">
-                        <a slot="title" :key="item">{{ item }}</a>
-                        <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
-                      </a-list-item-meta>
-                      <div/>
-                    </a-list-item>
-                  </a-list>
-                </div>
-              </template> -->
-
               <template>
                 <a-table 
                   :row-selection="rowSelection"
@@ -303,13 +294,11 @@
                   <a slot="name" slot-scope="text" href="#">{{ text }}</a>
                 </a-table>
               </template>
-
-
             </div>
-
-
           </div>
         </div>
+        <a-button type="primary" @click="() => {selectProperties()}">Add To Selection</a-button>
+
     </div></transition>
 
 
@@ -333,7 +322,7 @@ L.Icon.Default.mergeOptions({
 
 const columns = [
   {
-    title: 'Name',
+    title: 'Property',
     dataIndex: 'name',
     scopedSlots: { customRender: 'name' },
   },
@@ -370,6 +359,9 @@ export default {
       selectedGeoType: null,
       attribution: '',
       columns: columns,
+      selectedLayers: {},
+      currentDatasetId: null,
+      currentProperties: [],
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -412,32 +404,17 @@ export default {
     rowSelection() {
       return {
         onChange: (selectedRowKeys, selectedRows) => {
-          console.log(
-            `selectedRowKeys: ${selectedRowKeys}`,
-            'selectedRows: ',
-            selectedRows
-          )
+          this.currentProperties = selectedRows.map(item => item.name)
         },
       }
     },
   },
-  created() {
-    // console.log('created')
-    // console.log(this.datavoxels)
-  },
+  created() {},
   methods: {
     getBbox(datafile) {
-      console.log(datafile.bbox.coordinates[0].map(data => [data[1], data[0]]))
       return datafile.bbox.coordinates[0].map(data => [data[1], data[0]])
     },
     getMapCenter(datafile) {
-      console.log(
-        L.latLng(
-          datafile.centroid.coordinates[1],
-          datafile.centroid.coordinates[0]
-        )
-      )
-
       return L.latLng(
         datafile.centroid.coordinates[1],
         datafile.centroid.coordinates[0]
@@ -459,6 +436,8 @@ export default {
       this.selectedProject = null
       this.selectedIndex = null
       this.selectedDatasetIndex = null
+      this.currentProperties = []
+      this.currentDatasetId = null
       this.makingProcess = num ? num : 0
       this.selectedGeometries = null
       this.selectedGeoType = null
@@ -509,6 +488,8 @@ export default {
     startMaking() {
       this.makingProcess = 1
       this.selectedDatasetIndex = null
+      this.currentProperties = []
+      this.currentDatasetId = null
       this.mydataset = null
     },
 
@@ -516,6 +497,8 @@ export default {
     createProjectMode() {
       this.makingProcess = 2
       this.selectedDatasetIndex = null
+      this.currentProperties = []
+      this.currentDatasetId = null
       this.mydataset = null
       this.queryDatasets()
     },
@@ -524,7 +507,6 @@ export default {
     queryDatasets() {
       if (!this.mydataset)
         this.$http.get('/datasets/').then(response => {
-          console.log('layers', response)
           this.mydataset = response.data.datafiles
         })
     },
@@ -534,13 +516,20 @@ export default {
       this.makingProcess = 3
       console.log('selectedData', data)
       this.selectedDatasetIndex = index
+      this.currentProperties = []
+      this.currentDatasetId = data.id
       this.selectedGeoType = data.geometryType
 
       this.queryMapGeometry(data.id)
     },
 
+    selectProperties() {
+      console.log(this.currentDatasetId, this.currentProperties)
+    },
+
+    projectInfoPage() {},
+
     queryMapGeometry(datasetId) {
-      console.log('query', datasetId)
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
         if (this.selectedGeoType == 'Polygon')
           this.selectedGeometries = response.data.geoJSON.map(obj =>
@@ -554,12 +543,9 @@ export default {
         } else {
           //TODO: Load map of other type of data
         }
-
-        console.log(response, this.selectedGeometries)
       })
     },
     formatProperties(properties) {
-      console.log(properties)
       return Object.keys(properties).map(item => ({ name: item }))
     },
   },
@@ -955,7 +941,7 @@ export default {
 }
 
 .making2-cols {
-  height: calc(100% - 50px);
+  height: calc(100% - 120px);
 }
 
 .col-header {
@@ -981,7 +967,6 @@ export default {
   float: left;
   height: 100%;
   position: relative;
-  background-color: rgba(0, 0, 0, 0.1);
 }
 .col-right {
   width: 50%;
@@ -994,13 +979,27 @@ export default {
 .col-right-title {
   position: absolute;
   z-index: 1;
-  left: 30px;
+  left: 20px;
+}
+.col-left-title {
+  position: absolute;
+  z-index: 1;
+  left: 0px;
+  font-size: 20px;
 }
 
 .property-wrapper {
   height: calc(100% - 40px);
   margin-top: 40px;
   overflow-y: auto;
+}
+
+.map-wrapper {
+  position: absolute;
+  height: calc(100% - 40px);
+  width: 100%;
+  top: 40px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>
 
