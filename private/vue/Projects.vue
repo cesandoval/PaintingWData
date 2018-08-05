@@ -226,6 +226,41 @@
               <div class="col-header">
                 <span>Selected Properties</span>
               </div>
+              <div class="property-viewer">
+
+                <template>
+                  <div>
+                    <a-collapse 
+                      v-if="Object.keys(selectedLayers).length"
+                      @change="_onChange">
+
+                      <a-collapse-panel 
+                        v-for="(dataKey,index) in Object.keys(selectedLayers)"
+                        :key="index" :header="dataById(dataKey).filename">
+
+                        <a-list
+                          :data-source="selectedLayers[dataKey]"
+                        >
+                          <a-list-item slot="renderItem" slot-scope="item, index">
+                            <a-list-item-meta description="">
+                              <a slot="title" :key="item">{{ item }}</a>
+                              <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
+                            </a-list-item-meta>
+                            <div/>
+                          </a-list-item>
+                        </a-list>
+
+                      </a-collapse-panel>
+
+                    </a-collapse>
+                  </div>
+                </template>
+
+
+              </div>
+
+
+
             </div>
 
           </div>
@@ -365,6 +400,11 @@ export default {
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
+
+      text: `this is a test data
+        `,
+      customStyle:
+        'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden',
     })
   },
 
@@ -411,6 +451,10 @@ export default {
   },
   created() {},
   methods: {
+    _onChange(index) {
+      console.log(index)
+    },
+
     getBbox(datafile) {
       return datafile.bbox.coordinates[0].map(data => [data[1], data[0]])
     },
@@ -484,6 +528,12 @@ export default {
       ]
     },
 
+    dataById(id) {
+      let data = this.mydataset.filter(item => item.id == id)
+      console.log('data', data[0])
+      return data.length > 0 ? data[0] : null
+    },
+
     // show project-making landing page
     startMaking() {
       this.makingProcess = 1
@@ -514,7 +564,6 @@ export default {
     // open up the dataset selection pop-up box
     datasetSelection(data, index) {
       this.makingProcess = 3
-      console.log('selectedData', data)
       this.selectedDatasetIndex = index
       this.currentProperties = []
       this.currentDatasetId = data.id
@@ -524,7 +573,12 @@ export default {
     },
 
     selectProperties() {
-      console.log(this.currentDatasetId, this.currentProperties)
+      if (this.currentProperties.length > 0) {
+        this.selectedLayers[this.currentDatasetId] = this.currentProperties
+      }
+
+      this.unselectProject(2)
+      console.log(this.dataById(46), this.selectedLayers)
     },
 
     projectInfoPage() {},
@@ -900,6 +954,10 @@ export default {
     .ant-list-item-meta-description {
       font-size: 12px;
     }
+
+    .ant-list-item-meta-title {
+      margin-top: 5px;
+    }
   }
 }
 
@@ -1000,6 +1058,12 @@ export default {
   width: 100%;
   top: 40px;
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+.property-viewer {
+  overflow: auto;
+
+  height: calc(100% - 50px);
 }
 </style>
 
