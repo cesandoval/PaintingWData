@@ -232,22 +232,30 @@
                   <div>
                     <a-collapse 
                       v-if="Object.keys(selectedLayers).length"
+                      :active-key="Object.keys(selectedLayers)"
                       @change="_onChange">
 
                       <a-collapse-panel 
-                        v-for="(dataKey,index) in Object.keys(selectedLayers)"
-                        :key="index" :header="dataById(dataKey).filename">
+                        v-for="(dataKey) in Object.keys(selectedLayers)"
+                        :key="dataKey">
+                        <template slot="header">
+                          dataById(dataKey).filename<a-icon type="delete" class="delete-data"/>
+                        </template>
 
                         <a-list
                           :data-source="selectedLayers[dataKey]"
                         >
+
                           <a-list-item slot="renderItem" slot-scope="item, index">
                             <a-list-item-meta description="">
                               <a slot="title" :key="item">{{ item }}</a>
                               <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
                             </a-list-item-meta>
+                            <a-icon type="delete" class="delete-prop"/>
+
                             <div/>
                           </a-list-item>
+
                         </a-list>
 
                       </a-collapse-panel>
@@ -1062,8 +1070,12 @@ export default {
 
 .property-viewer {
   overflow: auto;
-
   height: calc(100% - 50px);
+}
+
+.delete-data {
+  display: inline-block;
+  width: 100%;
 }
 </style>
 
