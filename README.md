@@ -152,6 +152,25 @@ npm run dev
 - `post` method
     - data: `[...]`
 
+### `/datasets`
+- desc: create a new project by selecting property/properties of one or multiple datasets
+- `post` method
+   - data: 
+         ```
+        {
+            user:{
+              'id': req.user.id
+            },
+            body:  
+            { voxelname: 'name',
+              datalayerIds: '{"46":"OBJECTID","55":"OBJECTID;ALAND10"}',
+              voxelDensity: '11739',
+              layerButton: 'compute' 
+            }
+        }
+        
+        ```
+
 
 ## Frontend libraries and platforms:
 * [three.js](https://threejs.org/)
