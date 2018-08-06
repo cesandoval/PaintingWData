@@ -239,7 +239,10 @@
                         v-for="(dataKey) in Object.keys(selectedLayers)"
                         :key="dataKey">
                         <template slot="header">
-                          dataById(dataKey).filename<a-icon type="delete" class="delete-data"/>
+                          {{ dataById(dataKey).filename }}
+                          <a-icon type="delete" class="delete-data"
+                                  @click="()=> {deleteData(dataKey)}"
+                          />
                         </template>
 
                         <a-list
@@ -251,7 +254,8 @@
                               <a slot="title" :key="item">{{ item }}</a>
                               <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
                             </a-list-item-meta>
-                            <a-icon type="delete" class="delete-prop"/>
+                            <a-icon type="delete" class="delete-prop"
+                                    @click="()=> {deleteProp(dataKey,item)}"/>
 
                             <div/>
                           </a-list-item>
@@ -542,6 +546,23 @@ export default {
       return data.length > 0 ? data[0] : null
     },
 
+    deleteData(id) {
+      let dupSelectedLayers = Object.assign({}, this.selectedLayers)
+      delete dupSelectedLayers[id]
+      this.selectedLayers = dupSelectedLayers
+    },
+
+    deleteProp(dataid, prop) {
+      this.selectedLayers[dataid].splice(
+        this.selectedLayers[dataid].indexOf(prop),
+        1
+      )
+
+      if (this.selectedLayers[dataid].length == 0) {
+        this.deleteData(dataid)
+      }
+    },
+
     // show project-making landing page
     startMaking() {
       this.makingProcess = 1
@@ -589,7 +610,9 @@ export default {
       console.log(this.dataById(46), this.selectedLayers)
     },
 
-    projectInfoPage() {},
+    projectInfoPage() {
+      console.log(this.selectedLayers)
+    },
 
     queryMapGeometry(datasetId) {
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
@@ -1074,8 +1097,13 @@ export default {
 }
 
 .delete-data {
-  display: inline-block;
-  width: 100%;
+  position: absolute;
+  right: 29px;
+  top: 15px;
+}
+
+.delete-prop {
+  cursor: pointer;
 }
 </style>
 
