@@ -48,6 +48,7 @@ var passport = require('passport'),
     console.log("Upload viewer size: " + size);    
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
+  
   // Wenzhe
   // Actually saves the files into datalayers
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);

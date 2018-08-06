@@ -24,7 +24,6 @@ module.exports.computeVoxels = function(req, res){
         // parses into a datalayerIds list
         // Wenzhe - this is what you will parse for the props
         var datalayerIds = [];
-
         
         var datalayerIdsAndRasterValsObject = {};
         var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: ['OBJECT_ID','Asthma'], 4: 'MedHomeValue'}

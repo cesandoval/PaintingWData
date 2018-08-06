@@ -35,12 +35,18 @@
       <div 
         class = "dataset-list">
 
-        <!-- TODO: adding project btn -->
-        <span class="card col-sm-4 adding-panel">
+        <!-- adding project btn -->
+        <!-- <span class="card col-sm-4 adding-panel">
           <a-icon type="plus" class="adding-icon"
                   @click="()=> {startMaking()}"
           />
+        </span> -->
+        <span class="card col-sm-4 adding-panel">
+          <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
+            <a-icon type="plus" class="adding-icon"
+          /></a-button>
         </span>
+
 
         <span
 
@@ -277,7 +283,8 @@
 
           </div>
 
-          <a-button type="primary" @click="() => {projectInfoPage()}">Next</a-button>
+          <a-button v-if="Object.keys(selectedLayers).length>0" type="primary"
+                    @click="() => {projectInfoPage()}">Next</a-button>
 
         </div>
       </div>
@@ -345,8 +352,79 @@
           </div>
         </div>
         <a-button type="primary" @click="() => {selectProperties()}">Add To Selection</a-button>
+      
+      </div>
+    </transition>
 
-    </div></transition>
+    <!-- project creation page 4 -->
+    <transition>
+      <div v-if="makingProcess==4"
+           class="making making4">
+        <span
+          class="unselectProject"
+          @click="()=> {pageJumper(2)}">
+          <a-icon type="close" />
+        </span>
+      
+        <div class="making4-wrapper">
+
+          <template>
+            <a-form @submit="handleSubmit">
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                :field-decorator-options="{rules: [{ required: true, message: 'Please input your project name!' }]}"
+                label="Project Name"
+                field-decorator-id="name"
+              >
+                <a-input />
+              </a-form-item>
+
+
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                label="Publicity"
+                field-decorator-id="public"
+              >
+                <a-switch checked-children="Public" un-checked-children="Private"/>
+              </a-form-item>
+
+
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                label="Voxel Density"
+                field-decorator-id="density"
+              >
+                <a-col :span="12">
+                  <a-slider :min="10000" :max="40000" />
+                </a-col>
+
+
+              </a-form-item>
+
+
+
+
+
+              <a-form-item
+                :wrapper-col="{ span: 12, offset: 5 }"
+              >
+                <a-button type="danger" html-type="submit">
+                  Submit
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </template>
+
+
+        </div>
+
+
+
+      </div>
+    </transition>
 
 
 
@@ -463,6 +541,17 @@ export default {
   },
   created() {},
   methods: {
+    handleSubmit(e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', values)
+        }
+      })
+    },
+    handleSelectChange(value) {
+      console.log(value)
+    },
     _onChange(index) {
       console.log(index)
     },
@@ -497,6 +586,9 @@ export default {
       this.makingProcess = num ? num : 0
       this.selectedGeometries = null
       this.selectedGeoType = null
+    },
+    pageJumper(num) {
+      this.makingProcess = num
     },
     handleDeleteClick(projectId) {
       let req = { userId: this.id, dataVoxelId: projectId }
@@ -542,7 +634,6 @@ export default {
 
     dataById(id) {
       let data = this.mydataset.filter(item => item.id == id)
-      console.log('data', data[0])
       return data.length > 0 ? data[0] : null
     },
 
@@ -611,7 +702,9 @@ export default {
     },
 
     projectInfoPage() {
-      console.log(this.selectedLayers)
+      if (Object.keys(this.selectedLayers).length > 0) {
+        this.makingProcess = 4
+      }
     },
 
     queryMapGeometry(datasetId) {
@@ -639,6 +732,24 @@ export default {
 
 
 <style lang="scss" scoped>
+.ant-form {
+  position: absolute;
+  width: 500px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+a {
+  color: black;
+}
+
+.ant-btn-danger {
+  color: white;
+  background-color: #e75332;
+  border-color: #e75332;
+}
+
 .ant-btn-primary {
   position: absolute;
   background-color: #e75332;
@@ -680,8 +791,6 @@ export default {
   transform-origin: 0% 0%;
   padding: 15px;
   opacity: 0.4;
-  border: 0.1px solid black;
-  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .adding-icon:hover {
@@ -1022,6 +1131,15 @@ export default {
   padding: 50px;
 }
 
+.making4-wrapper {
+  position: absolute;
+  top: 80px;
+  left: 0px;
+  right: 0px;
+  bottom: 100px;
+  padding: 50px;
+}
+
 .making2-section {
   background-color: rgba(0, 0, 0, 0.01);
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1104,6 +1222,12 @@ export default {
 
 .delete-prop {
   cursor: pointer;
+}
+
+.adding-btn {
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  margin: 10px;
 }
 </style>
 
