@@ -387,7 +387,7 @@
                 label="Voxel Density"
                 field-decorator-id="density"
               >
-                <a-col :span="12">
+                <a-col :span="26">
                   <a-slider :min="10000" :max="40000" v-model="formDensity"/>
                 </a-col>
               </a-form-item>
