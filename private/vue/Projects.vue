@@ -369,7 +369,7 @@
         <div class="making4-wrapper">
 
           <template>
-            <a-form @submit="handleSubmit">
+            <a-form :auto-form-create="()=>{formInit()}" @submit="handleSubmit">
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
@@ -377,7 +377,19 @@
                 label="Project Name"
                 field-decorator-id="name"
               >
-                <a-input />
+                <a-input v-model="formName"/>
+
+              </a-form-item>
+
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                label="Voxel Density"
+                field-decorator-id="density"
+              >
+                <a-col :span="12">
+                  <a-slider :min="10000" :max="40000" v-model="formDensity"/>
+                </a-col>
               </a-form-item>
 
 
@@ -387,27 +399,8 @@
                 label="Publicity"
                 field-decorator-id="public"
               >
-                <a-switch checked-children="Public" un-checked-children="Private"/>
+                <a-switch v-model="formPublicity" checked-children="Public" un-checked-children="Private"/>
               </a-form-item>
-
-
-              <a-form-item
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 12 }"
-                label="Voxel Density"
-                field-decorator-id="density"
-              >
-                <a-col :span="12">
-                  <a-slider :min="10000" :max="40000" />
-                </a-col>
-
-
-              </a-form-item>
-
-
-
-
-
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
               >
@@ -487,6 +480,9 @@ export default {
       selectedLayers: {},
       currentDatasetId: null,
       currentProperties: [],
+      formName: null,
+      formPublicity: false,
+      formDensity: 10000,
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -541,17 +537,27 @@ export default {
   },
   created() {},
   methods: {
+    formInit() {
+      console.log('form created')
+    },
+
     handleSubmit(e) {
       e.preventDefault()
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          console.log('Received values of form: ', values)
-        }
-      })
+      console.log(this.formName)
+      console.log(this.formPublicity)
+      console.log(this.formDensity)
+
+      // this.form.validateFields((err, values) => {
+      //   if (!err) {
+      //     console.log('Received values of form: ', values)
+      //   }
+      // })
     },
-    handleSelectChange(value) {
-      console.log(value)
+
+    handleSelectChange(type, value) {
+      console.log(type, value)
     },
+
     _onChange(index) {
       console.log(index)
     },
