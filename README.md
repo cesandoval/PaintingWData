@@ -47,8 +47,7 @@ npm install -g gulp-cli
     * app/config/config.json
     `line:6     host: 'localhost'`
 * Local user login
-    * (CHRIS'S EDIT) Run `node setup.js` which creates a file called `.env`. You are to then edit this with the credentials that are given.
-    * Confirma you have the appropriate mail credentials on the path, otherwise, add the credentials to your path. 
+    * Confirm that you have the appropriate mail credentials on the path, otherwise, add the credentials to your path. 
     * `ECHO $USEREMAIL
     ECHO $EMAILPASSWORD`
 

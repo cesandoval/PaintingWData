@@ -7,7 +7,7 @@ import * as Act from '../store/actions'
 // 1.
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
-class PCoords extends React.Component {
+export class PCoords extends React.Component {
     // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
     // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
 
