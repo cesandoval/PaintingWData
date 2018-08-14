@@ -2,8 +2,6 @@ import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
 import { Cover } from '../../../private/jsx/mapN/Cover'
-import * as Act from '../../../private/jsx/store/actions'
-import * as t from '../../../private/jsx/store/types'
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -38,8 +36,8 @@ describe('exports', () => {
         const instance = wrapper.instance()
         // Mocks triggerDownload, exportSVG and exportJSON.
         instance.triggerDownload = jest.fn()
-        instance.exportSVG = jest.fn(geoms => '')
-        instance.exportJSON = jest.fn(layers => '')
+        instance.exportSVG = jest.fn(() => '') // jest.fn(geoms => '')
+        instance.exportJSON = jest.fn(() => '') // jest.fn(layers => '')
         wrapper.update()
         // Now we test exportMap with different parameters.
         instance.exportMap('SVG')

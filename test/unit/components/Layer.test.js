@@ -8,8 +8,6 @@ import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
 import { Layer } from '../../../private/jsx/sidebarN/Layer'
-import * as Act from '../../../private/jsx/store/actions'
-import * as t from '../../../private/jsx/store/types'
 
 Enzyme.configure({ adapter: new Adapter() })
 
@@ -25,7 +23,7 @@ describe('render', () => {
 describe('inputs: handleCheckedEvent and changeColor', () => {
     it('should have two input nodes', () => {
         const wrapper = shallow(<Layer />)
-        const instance = wrapper.instance()
+        // const instance = wrapper.instance()
         // Check if there are two inputs, corresponding to handleCheckedEvent and changeColor.
         expect(wrapper.find('input').length).toEqual(2)
     })

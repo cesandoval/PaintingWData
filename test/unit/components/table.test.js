@@ -31,7 +31,8 @@ describe('Table components', () => {
     })
 
     it('add new columns to the table', () => {
-        const { enzymeWrapper, props } = setup()
+        // const { enzymeWrapper, props } = setup()
+        const { enzymeWrapper } = setup()
 
         // Attach the table component
         let tableProps = enzymeWrapper.find('ReactTable').props()

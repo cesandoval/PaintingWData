@@ -1,5 +1,3 @@
-import Exporter from '../../../private/jsx/exporter'
-
 describe('Local State', () => {
     it('should parse a geoJSON to build pixels', () => {
         // console.log(Pixels.parseDataJSON({}), 8383838338383)

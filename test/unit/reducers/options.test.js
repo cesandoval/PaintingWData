@@ -1,6 +1,5 @@
 import reducer from '../../../private/jsx/store/reducers/options.js'
 import * as t from '../../../private/jsx/store/types'
-import axios from 'axios'
 
 const DEFAULT_BGSTYLE = 'mapbox.light'
 const DEFAULT_OPACITY = 50

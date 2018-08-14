@@ -1,6 +1,5 @@
 import * as Act from '../../../private/jsx/store/actions'
 import * as t from '../../../private/jsx/store/types'
-import update from 'immutability-helper'
 
 /**
  * The following unit tests are to check if the action matches with the type.
