@@ -3,3 +3,4 @@
 !test/
 !gulpfile.js
 **/Vpl.js
+test/unit/test-files/

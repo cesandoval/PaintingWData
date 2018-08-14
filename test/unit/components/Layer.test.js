@@ -6,28 +6,26 @@ TODO: Tests to implement.
  */
 import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-15' 
+import Adapter from 'enzyme-adapter-react-15'
 import { Layer } from '../../../private/jsx/sidebarN/Layer'
-import * as Act from '../../../private/jsx/store/actions'
-import * as t from '../../../private/jsx/store/types'
 
-Enzyme.configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() })
 
-describe("render", () => {
-    it("should render nothing iff this.props.showSidebar == false", () => {
-        let wrapper = shallow(<Layer showSidebar={false}/>);
-        expect(wrapper.html()).toEqual(null);
-        wrapper = shallow(<Layer showSidebar={true}/>);
-        expect(wrapper.hasClass("layers__single")).toBe(true);
+describe('render', () => {
+    it('should render nothing iff this.props.showSidebar == false', () => {
+        let wrapper = shallow(<Layer showSidebar={false} />)
+        expect(wrapper.html()).toEqual(null)
+        wrapper = shallow(<Layer showSidebar={true} />)
+        expect(wrapper.hasClass('layers__single')).toBe(true)
     })
 })
 
-describe("inputs: handleCheckedEvent and changeColor", () => {
-    it("should have two input nodes", () => {   
-        const wrapper = shallow(<Layer />);
-        const instance = wrapper.instance();
+describe('inputs: handleCheckedEvent and changeColor', () => {
+    it('should have two input nodes', () => {
+        const wrapper = shallow(<Layer />)
+        // const instance = wrapper.instance()
         // Check if there are two inputs, corresponding to handleCheckedEvent and changeColor.
-        expect(wrapper.find("input").length).toEqual(2);
+        expect(wrapper.find('input').length).toEqual(2)
     })
     /*
     // Functionality of changeColor.
