@@ -33,7 +33,7 @@ const style = {
         topOffset: 5,
         fontSize: {
             // px unit
-            nodeName: 16,
+            nodeName: 14,
             propertyName: 10,
             plugName: 14,
         },
@@ -92,7 +92,7 @@ class VPL extends React.Component {
                 x: 50,
                 y: 100 + 150 * index,
             }
-            datasetNode.name = layer.name
+            datasetNode.name = layer.propertyName
             datasetNode.color = layer.color1
 
             const min = layer.geojson.minMax[0]
@@ -1105,7 +1105,9 @@ class VPL extends React.Component {
                             cursor: 'help',
                         }}
                     >
-                        {nodeName}
+                        {nodeName.length > 10
+                            ? `${nodeName.substr(0, 13)}...`
+                            : nodeName}
                     </text>
                 </Popover>
 
