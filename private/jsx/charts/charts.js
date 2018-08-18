@@ -236,7 +236,8 @@ export class Charts extends React.Component {
                                         ]}
                                     />
                                 )}
-                            </VictoryChart>)
+                            </VictoryChart>
+                            )
                         </span>
                     )
                 })}

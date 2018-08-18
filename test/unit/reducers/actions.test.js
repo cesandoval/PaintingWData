@@ -1,4 +1,5 @@
 import * as Act from '../../../private/jsx/store/actions'
+import store from '../../../private/jsx/store/store'
 import * as t from '../../../private/jsx/store/types'
 import update from 'immutability-helper'
 
@@ -6,6 +7,10 @@ import update from 'immutability-helper'
  * The following unit tests are to check if the action matches with the type.
  * E.g.: the action "importDatasets" corresponds to "t.IMPORT_DATASETS".
  */
+
+beforeEach(() => {
+    store.dispatch = jest.fn().mockImplementation(payload => payload);
+})
 
 describe("reducer actions", () => {
     let addPayload = {
