@@ -24,4 +24,3 @@ describe("style()", () => {
         expect(wrapper.instance().style()).toEqual(expected);
     })
 })
-
