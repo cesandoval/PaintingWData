@@ -1166,6 +1166,7 @@ a {
 
 .dataset-wrapper {
   height: calc(100% - 50px);
+  overflow-y: auto;
 
   /deep/ {
     .ant-list-item:hover {
