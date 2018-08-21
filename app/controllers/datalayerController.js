@@ -26,6 +26,7 @@ module.exports.computeVoxels = function(req, res){
         var datalayerIds = [];
         
         var datalayerIdsAndRasterValsObject = {};
+        console.log("PWZ DEBUG",req.body.datalayerIds);
         var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: ['OBJECT_ID','Asthma'], 4: 'MedHomeValue'}
         // Add a hash to each object property
         for (var key in unparsed) {

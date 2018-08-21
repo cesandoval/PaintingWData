@@ -404,7 +404,7 @@
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
               >
-                <a-button type="danger" html-type="submit">
+                <a-button v-if="formName!=null && formName!=''" type="danger" html-type="submit">
                   Submit
                 </a-button>
               </a-form-item>
@@ -534,6 +534,15 @@ export default {
         },
       }
     },
+
+    encodedLayers() {
+      let output = {}
+      Object.keys(this.selectedLayers).forEach(k => {
+        output[k] = this.selectedLayers[k].join(';')
+      })
+
+      return JSON.stringify(output)
+    },
   },
   created() {},
   methods: {
@@ -543,15 +552,32 @@ export default {
 
     handleSubmit(e) {
       e.preventDefault()
-      console.log(this.formName)
-      console.log(this.formPublicity)
-      console.log(this.formDensity)
+      // console.log(this.formPublicity)
 
-      // this.form.validateFields((err, values) => {
-      //   if (!err) {
-      //     console.log('Received values of form: ', values)
-      //   }
-      // })
+      // let req = {
+      //   user: {
+      //     id: this.user.id,
+      //   },
+      //   body: {
+      //     voxelname: this.formName,
+      //     datalayerIds: this.encodedLayers,
+      //     voxelDensity: this.formDensity,
+      //     layerButton: 'compute',
+      //   },
+      // }
+      let req = {
+        voxelname: this.formName,
+        datalayerIds: this.encodedLayers,
+        voxelDensity: this.formDensity,
+        layerButton: 'compute',
+      }
+
+      console.log(req)
+
+      this.$http.post('/datasets', req).then(response => {
+        console.log('submitted', req, response)
+        document.location.reload()
+      })
     },
 
     handleSelectChange(type, value) {
@@ -593,9 +619,9 @@ export default {
       num ? null : (this.selectedLayers = {})
       this.selectedGeometries = null
       this.selectedGeoType = null
-      ;(this.formName = null),
-        (this.formPublicity = false),
-        (this.formDensity = 10000)
+      this.formName = null
+      this.formPublicity = false
+      this.formDensity = 10000
     },
     pageJumper(num) {
       this.makingProcess = num
