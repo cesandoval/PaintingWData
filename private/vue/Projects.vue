@@ -590,8 +590,12 @@ export default {
       this.currentProperties = []
       this.currentDatasetId = null
       this.makingProcess = num ? num : 0
+      num ? null : (this.selectedLayers = {})
       this.selectedGeometries = null
       this.selectedGeoType = null
+      ;(this.formName = null),
+        (this.formPublicity = false),
+        (this.formDensity = 10000)
     },
     pageJumper(num) {
       this.makingProcess = num
