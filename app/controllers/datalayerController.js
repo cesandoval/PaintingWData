@@ -88,7 +88,8 @@ module.exports.computeVoxels = function(req, res){
                         'voxelname': req.body.voxelname, 
                         'datalayerIds': req.body.datalayerIds, 
                         voxelDensity: req.body.voxelDensity, 
-                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject // Wenzhe Parse on the controller or on vue directly. 
+                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject, // Wenzhe Parse on the controller or on vue directly. 
+                        public: public
                     },
                 'voxelID': hash() // This is important for Datavoxel.voxelId
             };
@@ -115,9 +116,12 @@ module.exports.computeVoxels = function(req, res){
     
             // Send process to the worker
             // Processes each of the voxels.
-            processVoxels([datalayerIds, req], function(){}); 
+            processVoxels([datalayerIds, req], function(json){
+                console.log('doneeeeeee', json)
+                res.json({completed: true})
+            }); 
 
-            res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
+            // res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
     } 
 

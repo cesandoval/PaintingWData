@@ -576,7 +576,7 @@ export default {
 
       this.$http.post('/datasets', req).then(response => {
         console.log('submitted', req, response)
-        document.location.reload()
+        // document.location.reload()
       })
     },
 

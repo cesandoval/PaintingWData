@@ -62,6 +62,7 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
                     mailer.sendVoxelEmail(user.email, user.id);
                     // res.send({completed: true})
                 }).then(function(){
+                    console.log('sending calllbackkkkkkkkkkkk')
                     callback({name: datavoxel.voxelname});
                 })    
             })
