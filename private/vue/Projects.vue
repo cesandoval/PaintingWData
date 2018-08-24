@@ -552,30 +552,19 @@ export default {
 
     handleSubmit(e) {
       e.preventDefault()
-      // console.log(this.formPublicity)
 
-      // let req = {
-      //   user: {
-      //     id: this.user.id,
-      //   },
-      //   body: {
-      //     voxelname: this.formName,
-      //     datalayerIds: this.encodedLayers,
-      //     voxelDensity: this.formDensity,
-      //     layerButton: 'compute',
-      //   },
-      // }
       let req = {
         voxelname: this.formName,
         datalayerIds: this.encodedLayers,
         voxelDensity: this.formDensity,
+        public: this.formPublicity,
         layerButton: 'compute',
       }
 
-      console.log(req)
-
       this.$http.post('/datasets', req).then(response => {
         console.log('submitted', req, response)
+
+        // TODO: add refresh after the callback is made after backend computation
         // document.location.reload()
       })
     },
@@ -957,7 +946,7 @@ a {
 
 .card {
   padding: 0px !important;
-     height: 269.5px !important;
+  height: 269.5px !important;
 }
 
 .dataset-list {
