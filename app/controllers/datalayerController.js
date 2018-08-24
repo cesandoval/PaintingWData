@@ -89,7 +89,7 @@ module.exports.computeVoxels = function(req, res){
                         'datalayerIds': req.body.datalayerIds, 
                         voxelDensity: req.body.voxelDensity, 
                         'datalayerIdsAndProps': datalayerIdsAndRasterValsObject, // Wenzhe Parse on the controller or on vue directly. 
-                        public: public
+                        public: req.body.public
                     },
                 'voxelID': hash() // This is important for Datavoxel.voxelId
             };
