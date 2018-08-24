@@ -835,7 +835,7 @@ a {
 }
 
 .adding-panel {
-  height: 269.5px;
+  // height: 269.5px;
 }
 
 .preview-ph {
@@ -957,6 +957,7 @@ a {
 
 .card {
   padding: 0px !important;
+     height: 269.5px !important;
 }
 
 .dataset-list {
