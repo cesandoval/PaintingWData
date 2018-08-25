@@ -200,7 +200,7 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
     newDatavoxel.voxelId = req.voxelID;
-    newDatavoxel.public = false;
+    newDatavoxel.public = req.body.public;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
