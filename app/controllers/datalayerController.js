@@ -4,7 +4,10 @@ var Model = require('../models'),
     request = require('request'),
     app = require('../../app'),
     Channel = require('../../worker/channel');
-    processVoxels = require('../../worker/worker2').processVoxels;
+    processVoxels = require('../../worker/worker2').processVoxels,
+    queue = require('../../worker/worker2').queue;
+
+var proc = require('../../worker/fileProcessor').processDatalayer;
 
 /**
  * Handles creation of voxels from the datalayers that the user selects.
@@ -113,15 +116,37 @@ module.exports.computeVoxels = function(req, res){
             for (datalayerId in datalayerIdsAndRasterValsObject){
                 datalayerIds.push(datalayerId);
             }
-    
-            // Send process to the worker
-            // Processes each of the voxels.
-            processVoxels([datalayerIds, req], function(json){
-                console.log('doneeeeeee', json)
-                res.json({completed: true})
-            }); 
-
-            // res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
+            
+            job = queue.create('computeVoxel', [datalayerIds, req])
+                .priority('critical')
+                .attempts(2)
+                .backoff(true)
+                .removeOnComplete(true)
+                .save((err) => {
+                if (err) {
+                    console.error(err);
+                }
+                if (!err) {
+                    console.log('Voxel Added to the Queue');
+                }
+                });
+            
+            job.on('complete', function(){
+                console.log('job completed!!!!')
+                res.json({completed: true}); 
+            });
+            
+            queue.process('computeVoxel', 3, (job, done) => {  
+                var data = job.data;
+                var datalayerIds = data[0];
+                var req = data[1];
+                
+                proc(datalayerIds, req, function (message) {
+                    console.log(message, '----------------')
+                    done();
+                });
+            
+            });
         }
     } 
 
