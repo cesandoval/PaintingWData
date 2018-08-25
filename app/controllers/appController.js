@@ -150,7 +150,7 @@ module.exports.getDatajsons = function(req, res){
     }).then(function(datajsons){
       Model.Datavoxel.findOne({
 		  where: {id: req.params.datavoxelId }, 
-		  include: [{model: Model.Datavoxelimage]}]
+		  include: [{model: Model.Datavoxelimage}]
       }).then(function(voxel) {
         if (voxel.Datavoxelimage === null || voxel.Datavoxelimage.preview === null || voxel.Datavoxelimage.preview === false) {
           console.log('Screenshot needed on the backend!')
