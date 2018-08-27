@@ -368,7 +368,7 @@
       
         <div class="making4-wrapper">
 
-          <template>
+          <template v-if="!submitting">
             <a-form :auto-form-create="()=>{formInit()}" @submit="handleSubmit">
               <a-form-item
                 :label-col="{ span: 5 }"
@@ -404,11 +404,15 @@
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
               >
-                <a-button v-if="formName!=null && formName!=''" type="danger" html-type="submit">
+                <a-button v-if="formName!=null && formName!='' && !submitting" type="danger" html-type="submit">
                   Submit
                 </a-button>
               </a-form-item>
             </a-form>
+          </template>
+
+          <template v-if="submitting">
+            <a-icon type="loading" class="loading"/>
           </template>
 
 
@@ -483,6 +487,7 @@ export default {
       formName: null,
       formPublicity: false,
       formDensity: 10000,
+      submitting: false,
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -561,11 +566,12 @@ export default {
         layerButton: 'compute',
       }
 
+      this.submitting = true
       this.$http.post('/datasets', req).then(response => {
         console.log('submitted', req, response)
 
         // TODO: add refresh after the callback is made after backend computation
-        // document.location.reload()
+        document.location.reload()
       })
     },
 
