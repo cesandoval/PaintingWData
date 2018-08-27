@@ -62,7 +62,7 @@ module.exports.saveShapes = function(req, res) {
             res.redirect('/uploadViewer/'+ req.body.datafileId + '$$' + req.body.size); 
         }
     })
-}
+}//
 
 
 /**
