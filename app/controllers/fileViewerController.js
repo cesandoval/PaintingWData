@@ -16,6 +16,8 @@ var Model = require('../models'),
  * @param {Object} res 
  */
 module.exports.saveShapes = function(req, res) {
+    // Wenzhe - this is the JSON from the uploadViewer page from VUE
+    // JSON to send to the backend
     var newReq = {
         body: {
             rasterProperty: req.body.rasterProperty,
@@ -50,8 +52,10 @@ module.exports.saveShapes = function(req, res) {
                 uploadsSize: uploadsSize + parseFloat(req.body.size)
             }).then(function() {
                 // Save layer and then redirect to /layers page
+                // Sends a process to a worker
                 processShapes(newReq, function(){});
-                res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
+                // You shouldn't have to redirect
+                res.redirect('/datasets/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {
             console.log('TESTING-----------------------')
@@ -121,7 +125,7 @@ module.exports.serveMapData = function(req, res) {
  */
 module.exports.serveThumbnailData = function(req, res) {
     async.waterfall([
-        async.apply(fileViewerHelper.loadDatalayers, req.params.id, req.body),
+        async.apply(fileViewerHelper.loadSimplifiedDatalayers, req.params.id, req.body),
     ], function (err, result) {
         res.send({
             geoJSON: result[0],
