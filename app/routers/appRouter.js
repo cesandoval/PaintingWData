@@ -33,12 +33,8 @@ var passport = require('passport'),
 
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
-  // Wenzhe
-  // Upload SHP files
   router.post('/upload', fileUploadController.upload);
 
-  // Wenzhe 
-  // Gets the information sent by the uploader and renders a map
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     var stringParse = req.params.id
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
@@ -48,11 +44,7 @@ var passport = require('passport'),
     console.log("Upload viewer size: " + size);    
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
-  
-  // Wenzhe
-  // Actually saves the files into datalayers
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
-
   router.post('/voxelPrivacy', isAuthenticated, voxelPrivacy.setVoxelPublicOrPrivate);
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
@@ -62,13 +54,8 @@ var passport = require('passport'),
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
-  // Wenzhe
-  // Middleware for getting datasets
-  router.get('/datasets/', isAuthenticated, datalayerController.getDatasets);
   router.get('/datasets/:id', isAuthenticated, datalayerController.showDatasets);
   router.get('/datasets/:id/:datafileId', isAuthenticated, datalayerController.showDatasets);
-  // Wenzhe
-  // Middleware for creating voxels
   router.post('/datasets', isAuthenticated, datalayerController.computeVoxels);
 
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);

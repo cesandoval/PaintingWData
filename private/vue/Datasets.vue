@@ -35,7 +35,7 @@
         class = "dataset-list">
         <span
           v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
+          v-if="datafile.deleted!==false"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedDataset}"
           class="card col-sm-4"
@@ -46,10 +46,10 @@
           >
 
             <div class="map-thumbnail">
-
               <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
                 <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
+
               </l-map>
             </div>
             <a-card-meta
@@ -96,18 +96,13 @@
                 <l-tile-layer :url="url" :attribution="attribution"/>
 
                 <!-- polygons -->
-                <template v-if="selectedGeoType=='Polygon'">
-                  <l-polygon v-for="(geometry,index) in selectedGeometries"
-                             :key="index"
-                             :lat-lngs="geometry" :weight="1" color="black" 
-                             fill-color="rgb(255,255,255)"/>
+                <template>
+                  <l-polygon 
+                    v-for="(geometry,index) in selectedGeometries"
+                    :key="index"
+                    :lat-lngs="geometry" :weight="1" color="black" 
+                    fill-color="rgb(255,255,255)"/>
                 </template>
-
-                <template v-if="selectedGeoType=='Point'">
-                  <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
-                            :lat-lng="geometry"/>
-                </template>
-
 
               </l-map>
             </div>
@@ -132,7 +127,7 @@
             >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
             <div>Type of Geometry:  
               <span class = "info-digits"
-            >{{ datafileList[selectedIndex].geometryType }}</span></div>
+            >{{ datafiles[selectedIndex].geometryType }}</span></div>
           </div> 
         </div> 
 
@@ -144,7 +139,7 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="Object.keys(datafileList[selectedIndex].Datalayers[0].properties)"
+                  :data-source="Object.keys(datafiles[selectedIndex].Datalayers[0].properties)"
                 >
                   <a-list-item slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta description="">
@@ -181,7 +176,7 @@ import DatasetCard from '@/components/DatasetCard'
 import Vue2Leaflet from 'vue2-leaflet'
 import L from 'leaflet'
 
-let { LMap, LTileLayer, LPolygon, LMarker } = Vue2Leaflet
+let { LMap, LTileLayer, LPolygon } = Vue2Leaflet
 
 delete L.Icon.Default.prototype._getIconUrl
 
@@ -199,7 +194,6 @@ export default {
     LMap,
     LTileLayer,
     LPolygon,
-    LMarker,
   },
 
   data() {
@@ -212,13 +206,15 @@ export default {
       busy: false,
       sortDate: true,
       sortDown: true,
+
       zoom: 13,
+      center: L.latLng(47.41322, -1.219482),
+
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
 
       attribution: '',
       selectedGeometries: null,
-      selectedGeoType: null,
     })
   },
   computed: {
@@ -276,9 +272,6 @@ export default {
       this.squeezeTiles()
       this.selectedDataset = id
       this.selectedIndex = index
-      this.selectedGeoType = this.datafileList[index].geometryType
-
-      console.log(this.datafileList[index])
 
       this.queryMapGeometry(this.selectedDataset)
 
@@ -288,19 +281,12 @@ export default {
     },
 
     queryMapGeometry(datasetId) {
+      console.log('query dataset ', datasetId)
+
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
-        if (this.selectedGeoType == 'Polygon')
-          this.selectedGeometries = response.data.geoJSON.map(obj =>
-            obj.coordinates[0].map(item => [item[1], item[0]])
-          )
-        else if (this.selectedGeoType == 'Point') {
-          this.selectedGeometries = response.data.geoJSON.map(obj => [
-            obj.coordinates[1],
-            obj.coordinates[0],
-          ])
-        } else {
-          //TODO: Load map of other type of data
-        }
+        this.selectedGeometries = response.data.geoJSON.map(obj =>
+          obj.coordinates[0].map(item => [item[1], item[0]])
+        )
       })
     },
 
@@ -318,7 +304,6 @@ export default {
       this.selectedDataset = null
       this.selectedIndex = null
       this.selectedGeometries = null
-      this.selectedGeoType = null
     },
     parseCoord(coord) {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)

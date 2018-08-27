@@ -4,10 +4,7 @@ var Model = require('../models'),
     request = require('request'),
     app = require('../../app'),
     Channel = require('../../worker/channel');
-    processVoxels = require('../../worker/worker2').processVoxels,
-    queue = require('../../worker/worker2').queue;
-
-var proc = require('../../worker/fileProcessor').processDatalayer;
+    processVoxels = require('../../worker/worker2').processVoxels;
 
 /**
  * Handles creation of voxels from the datalayers that the user selects.
@@ -25,16 +22,14 @@ module.exports.computeVoxels = function(req, res){
     }
     else if  (req.body.datalayerIds !== ''){
         // parses into a datalayerIds list
-        // Wenzhe - this is what you will parse for the props
         var datalayerIds = [];
-        
+
         var datalayerIdsAndRasterValsObject = {};
-        console.log("PWZ DEBUG",req.body.datalayerIds);
-        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: ['OBJECT_ID','Asthma'], 4: 'MedHomeValue'}
+        var unparsed = JSON.parse(req.body.datalayerIds); // ex: {3: 'OBJECT_ID', 4: 'MedHomeValue'}
         // Add a hash to each object property
         for (var key in unparsed) {
             var timestampHash = 0;
-            var properties = unparsed[key].split(";"); //proprties = ['OBJECT_ID','Asthma']
+            var properties = unparsed[key].split(";");
             console.log("properties: ", properties);
             for (var i = 0; i < properties.length; i++) {
                 datalayerIdsAndRasterValsObject[ key + ".." + timestampHash ] = properties[i];
@@ -78,9 +73,7 @@ module.exports.computeVoxels = function(req, res){
                 })
             })
         } else {
-            // Wenzhe - this is the data sent from VUE to create the voxel
             // handles creating a voxel, using one or more datalayers, redirects to /voxels/ url after completed
-            // Send a JSON containing this data from vue
             var req = {
                 'user': 
                     {
@@ -91,8 +84,7 @@ module.exports.computeVoxels = function(req, res){
                         'voxelname': req.body.voxelname, 
                         'datalayerIds': req.body.datalayerIds, 
                         voxelDensity: req.body.voxelDensity, 
-                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject, // Wenzhe Parse on the controller or on vue directly. 
-                        public: req.body.public
+                        'datalayerIdsAndProps': datalayerIdsAndRasterValsObject
                     },
                 'voxelID': hash() // This is important for Datavoxel.voxelId
             };
@@ -116,37 +108,11 @@ module.exports.computeVoxels = function(req, res){
             for (datalayerId in datalayerIdsAndRasterValsObject){
                 datalayerIds.push(datalayerId);
             }
-            
-            job = queue.create('computeVoxel', [datalayerIds, req])
-                .priority('critical')
-                .attempts(2)
-                .backoff(true)
-                .removeOnComplete(true)
-                .save((err) => {
-                if (err) {
-                    console.error(err);
-                }
-                if (!err) {
-                    console.log('Voxel Added to the Queue');
-                }
-                });
-            
-            job.on('complete', function(){
-                console.log('job completed!!!!')
-                res.json({completed: true}); 
-            });
-            
-            queue.process('computeVoxel', 3, (job, done) => {  
-                var data = job.data;
-                var datalayerIds = data[0];
-                var req = data[1];
-                
-                proc(datalayerIds, req, function (message) {
-                    console.log(message, '----------------')
-                    done();
-                });
-            
-            });
+    
+            // Processes each of the voxels.
+            processVoxels([datalayerIds, req], function(){}); 
+
+            res.redirect('/projects/'+ req.user.id + '/' + req['voxelID'] + "$$" + datalayerIds.join("$$"));
         }
     } 
 
@@ -199,23 +165,6 @@ module.exports.showDatasets = function(req, res) {
             res.render('datasets', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
         });
 }
-
-
-module.exports.getDatasets = function(req, res) {
-    Model.Datafile.findAll({
-        where : {
-            userId : req.user.id,
-            deleted: {$not: true}
-        },
-        include: [{
-            model: Model.Datalayer,
-            limit: 1}]
-        }).then(function(datafiles){
-
-            res.json({id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, });
-        });
-}
-
 
 /* TODO(CreateProject)
 module.exports.showDatasets = function(req, res) {

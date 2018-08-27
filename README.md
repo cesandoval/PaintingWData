@@ -131,47 +131,6 @@ npm run dev
 
 ```
 
-## Middlewares (a part of, to be confirmed)
-### `/upload`
-- desc: upload a dataset, this function verifies the zip file, checks the projections and creates `Datafiles`. It checks the size of the uploaded file and adds that to the object. A lot of the functionality of this controller is handled by `public/javascripts/fileUpload.js`. 
-- `post` When data is posted, it is redirected to `/uploadViewer`, where the user has the capacity to name the dataset. 
-    - data: `{string} filepath`
-    - res: `res.send({id: d.id+'$$'+size})`
-
-### `/uploadViewer/:id`
-- desc: Once a zip file has been uploaded and a `Datafile` has been created, prompt the user for some extra information to save the dataset and create `Datalayers`. 
-- `get` method
-    - data: `{object} req` Contains the `id` if the `Datafile`, and is parsed to get the `fileSize`
-    - res: `res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});`
-- `post` Saves the shapes by triggering a worker that iteratively parses and saves every geometry into a `Datalayer` and a `DataDBF`. 
-    - data: `{object} req` Contains `req.body.rasterProperty`, `req.body.datafileId`, `req.body.layername`, `req.body.description`, `req.body.location`, `req.body.epsg`
-    - res: `res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});`
-
-### `/layers`
-- desc: create a new project by selecting property/properties of one or multiple datasets
-- `post` method
-    - data: `[...]`
-
-### `/datasets`
-- desc: create a new project by selecting property/properties of one or multiple datasets
-- `post` method
-   - data: 
-```
-  {
-      user:{
-        'id': req.user.id
-      },
-      body:  
-      { voxelname: 'name',
-        datalayerIds: '{"46":"OBJECTID","55":"OBJECTID;ALAND10"}',
-        voxelDensity: '11739',
-        layerButton: 'compute' 
-      }
-  }
-
-```
-
-
 ## Frontend libraries and platforms:
 * [three.js](https://threejs.org/)
 * [D3](https://d3js.org/)
