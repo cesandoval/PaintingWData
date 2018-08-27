@@ -55,6 +55,7 @@ module.exports.upload = function(req, res, next) {
         }
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
+          // Extract a zipfile and return a path where it was extacted, trigger errors if file formats are messed up.
           fileUploadHelper.extractZip(zipDir, function(err, targetName, targetPath){
             if(err){
               console.log("Error 1: ", err);
@@ -65,6 +66,7 @@ module.exports.upload = function(req, res, next) {
               });
             }
             else{
+              // Check if the zip file contains all the extensions
               fileUploadHelper.verifyFiles(targetPath, function(err, targetPath){
                 if(err){
                     //if file is messed up, file doesn't contain one of the extensions required
@@ -86,13 +88,16 @@ module.exports.upload = function(req, res, next) {
                       });
                     }
                     else{
+                      // returns the size of the extracted file
                       getSize(targetPath, function(err, size) {
                         if (err) { 
                           console.log('File Sie Error:', err)
                           throw err; }
                         var size = (size / 1024 / 1024).toFixed(2);
                         var size = '' + size;
+                        // uses the GDAL library to obtain a layer name, an EPSG code, a centroid, a bbox, and the geometry type
                         fileUploadHelper.getEPSG(targetPath, function(err, epsg, bbox, centroid, geomType){
+                          // Creates a new model of Datafile
                           var dataFile = Models.Datafile.build();
                           console.log("This increments up by 1. It is now: " + dataFile.id);
                           dataFile.userId = req.user.id;
@@ -102,6 +107,7 @@ module.exports.upload = function(req, res, next) {
                           dataFile.centroid = centroid;
                           dataFile.bbox = bbox;
                           dataFile.geometryType = geomType;
+                          // Saves the function and sends a route for the uploadViewer to parse
                           dataFile.save().then(function(d){
                             res.send({id: d.id+'$$'+size});
                           });

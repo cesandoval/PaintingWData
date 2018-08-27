@@ -54,33 +54,39 @@ queue.on('error', (err) => {
 
 //data -> datalayerIds, and req
 //done is callback
-function processVoxels(data, done) {
-  queue.create('computeVoxel', data)
-    .priority('critical')
-    .attempts(2)
-    .backoff(true)
-    .removeOnComplete(true)
-    .save((err) => {
-      if (err) {
-        console.error(err);
-        done(err);
-      }
-      if (!err) {
-        done();
-      }
-    });
-}
+// function processVoxels(data, done) {
+//   job = queue.create('computeVoxel', data)
+//     .priority('critical')
+//     .attempts(2)
+//     .backoff(true)
+//     .removeOnComplete(true)
+//     .save((err) => {
+//       if (err) {
+//         console.error(err);
+//         done(err);
+//       }
+//       if (!err) {
+//         done('Voxel Added to the Queue');
+//       }
+//     });
+//   var res = data[2];
+//   job.on('complete', function(){
+//     console.log('yayayayayaay')
+//     // res.json({completed: true}); 
+//   });
+// }
 
-queue.process('computeVoxel', 3, (job, done) => {  
-  var data = job.data;
-  var datalayerIds = data[0];
-  var req = data[1];
+// queue.process('computeVoxel', 3, (job, done) => {  
+//   var data = job.data;
+//   var datalayerIds = data[0];
+//   var req = data[1];
 
-  proc(datalayerIds, req, function (message) {
-    console.log(message);
-  });
-  done();
-});
+//   proc(datalayerIds, req, function (message) {
+//     console.log(message, 222222222222, '----------------')
+//     done();
+//   });
+  
+// });
 
 
 function processShapes(data, done) {
@@ -115,6 +121,7 @@ queue.process('saveLayer', 5, (job, done) => {
 });
 
 module.exports = {
-  processVoxels: processVoxels,
-  processShapes: processShapes
+  // processVoxels: processVoxels,
+  processShapes: processShapes,
+  queue: queue
 }
