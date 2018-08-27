@@ -55,7 +55,7 @@ module.exports.saveShapes = function(req, res) {
                 // Sends a process to a worker
                 processShapes(newReq, function(){});
                 // You shouldn't have to redirect
-                res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
+                res.redirect('/datasets/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {
             req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
