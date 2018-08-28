@@ -569,8 +569,6 @@ export default {
       this.submitting = true
       this.$http.post('/datasets', req).then(response => {
         console.log('submitted', req, response)
-
-        // TODO: add refresh after the callback is made after backend computation
         document.location.reload()
       })
     },
@@ -809,7 +807,6 @@ a {
   font-size: 26px;
   display: inherit;
   font-weight: 500;
-
   margin-bottom: 0px;
 }
 

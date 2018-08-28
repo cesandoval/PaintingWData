@@ -16,7 +16,7 @@ p {
     font-family: "Roboto", Helvetica, Arial, sans-serif;
     color: rgba(0,0,0,1);
     font-size: 12pt;
-    text-align: left;
+    /* text-align: left; */
     font-weight: 300;
 }
 
