@@ -211,6 +211,7 @@
         <div class="making-wrapper">
           <template v-if="!submitting">
             <a-form @submit="handleSubmit">
+
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
@@ -219,13 +220,69 @@
                 field-decorator-id="name"
               >
                 <a-input v-model="formName"/>
+              </a-form-item>
 
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                :field-decorator-options="{rules: [{ required: true, message: 'Please input your dataset description!' }]}"
+                label="Description"
+                field-decorator-id="desc"
+              >
+                <a-textarea v-model="formDesc" :rows="2" placeholder="Data Description"/>
+              </a-form-item>
+
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                label="Keywords"
+
+              >
+                <template>
+                  <div>
+                    <template v-for="(tag, index) in tags">
+                      <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
+                        <a-tag :key="tag" :closable="true" @afterClose="() => handleCloseTag(tag)">
+                          {{ `${tag.slice(0, 20)}...` }}
+                        </a-tag>
+                      </a-tooltip>
+                      <a-tag v-else :key="tag" :closable="true" @afterClose="() => handleCloseTag(tag)">
+                        {{ tag }}
+                      </a-tag>
+                    </template>
+                    <a-input
+                      v-if="inputVisible"
+                      ref="input"
+                      :style="{ width: '78px' }"
+                      :value="inputValue"
+                      type="text"
+                      size="small"
+                      @change="handleInputChange"
+                      @blur="handleInputConfirm"
+                      @keyup.enter="handleInputConfirm"
+                    />
+                    <a-tag v-else style="background: #fff; borderStyle: dashed;" @click="showInput">
+                      <a-icon type="plus" /> New Tag
+                    </a-tag>
+                  </div>
+                </template>
+              </a-form-item>
+
+              <a-form-item
+                :label-col="{ span: 5 }"
+                :wrapper-col="{ span: 12 }"
+                label="Publicity"
+                field-decorator-id="public"
+              >
+                <a-switch v-model="formPublicity" checked-children="Public" un-checked-children="Private"/>
               </a-form-item>
 
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
                 label="Dataset"
+                field-decorator-id="zipfile"
+
               >
                 <div class="dropbox">
 
@@ -247,7 +304,6 @@
 
                 </div>
               </a-form-item>
-
               
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
@@ -326,8 +382,13 @@ export default {
       selectedGeoType: null,
       uploadProcess: 0,
       formName: '',
+      formDesc: '',
       submitting: false,
       file: null,
+      formPublicity: false,
+      tags: [],
+      inputVisible: false,
+      inputValue: '',
     })
   },
   computed: {
@@ -370,6 +431,36 @@ export default {
     // })
   },
   methods: {
+    handleCloseTag(removedTag) {
+      const tags = this.tags.filter(tag => tag !== removedTag)
+      console.log(tags)
+      this.tags = tags
+    },
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(function() {
+        this.$refs.input.focus()
+      })
+    },
+
+    handleInputChange(e) {
+      this.inputValue = e.target.value
+    },
+
+    handleInputConfirm() {
+      const inputValue = this.inputValue
+      let tags = this.tags
+      if (inputValue && tags.indexOf(inputValue) === -1) {
+        tags = [...tags, inputValue]
+      }
+      console.log(tags)
+      Object.assign(this, {
+        tags,
+        inputVisible: false,
+        inputValue: '',
+      })
+    },
+
     handleRemove(file) {
       this.file = null
     },
@@ -389,6 +480,10 @@ export default {
 
       const { file } = this
       console.log('file', file)
+      console.log('dataset_name', this.formName)
+      console.log('dataset_desc', this.formDesc)
+      console.log('dataset_public', this.formPublicity)
+      console.log('tags', this.tags)
 
       let formData = new FormData()
       formData.append('file', file)
@@ -397,6 +492,9 @@ export default {
         Additional POST Data
       */
       formData.append('dataset_name', this.formName)
+      formData.append('dataset_desc', this.formDesc)
+      formData.append('dataset_public', this.formPublicity)
+      formData.append('dataset_tags', this.tags)
 
       console.log('formData', formData)
 

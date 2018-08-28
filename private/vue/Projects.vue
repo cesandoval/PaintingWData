@@ -392,7 +392,6 @@
                 </a-col>
               </a-form-item>
 
-
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
@@ -401,6 +400,7 @@
               >
                 <a-switch v-model="formPublicity" checked-children="Public" un-checked-children="Private"/>
               </a-form-item>
+
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
               >
