@@ -17,8 +17,6 @@ append content
     link(rel="stylesheet", href="/stylesheets/fontawesome-5.css")
     link(rel="stylesheet", href="/stylesheets/fontawesome-regular-5.css")
 
-    script(src="/javascripts/js/bootstrap-slider.js")
-
     script(id="vertexShader", type="x-shader/x-vertex").
         precision mediump float;
 
@@ -84,10 +82,6 @@ append content
         gl_FragColor = vec4(modColor, transparency);
 
         }
-
-    script.
-        var mySlider = $("input.slider").bootstrapSlider();
-        var value = mySlider.bootstrapSlider('getValue');
 
     //- script(src='/javascripts/js/three.js')
     //- script(src='/javascripts/js/OrbitControls.js')
