@@ -5,7 +5,7 @@ import Sidebar from './sidebar/Sidebar' // origin is sidebar/sidebar
 // import Options from './options/options'
 import Map from './map/map'
 
-import Loading from './utils/Loading'
+import Loading from './components/Loading'
 
 /**
  * Summary. The main meat of the mapping service.
