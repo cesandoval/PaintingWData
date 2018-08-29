@@ -1279,7 +1279,7 @@ class VPL extends React.Component {
                 {Object.entries(nodeTypeGroupByClass).map(
                     ([key, types]) =>
                         key != 'dataset' ? (
-                            <Menu.SubMenu title={key.toUpperCase()}>
+                            <Menu.SubMenu title={key.toUpperCase()} key={key}>
                                 {types.map(({ fullName, typeKey }) => (
                                     <Menu.Item key={typeKey}>
                                         {fullName + ' Node'}
