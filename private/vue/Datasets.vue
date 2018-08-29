@@ -496,13 +496,13 @@ export default {
       formData.append('dataset_public', this.formPublicity)
       formData.append('dataset_tags', this.tags)
 
-      console.log('formData', formData)
+      console.log('formData', formData, formData.getAll('file'))
 
       // TODO: call api to upload data
-      // this.$http.post('/DATASET_UPLOAD_ROUTER', formData).then(response => {
-      //   console.log('submitted', req, response)
-      //   document.location.reload()
-      // })
+      this.$http.post('/upload', formData).then(response => {
+        console.log('submitted', response) //req
+        // document.location.reload()
+      })
     },
 
     startUploading() {
