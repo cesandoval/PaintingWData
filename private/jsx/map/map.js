@@ -8,8 +8,8 @@ import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
 import Charts from '../charts/charts'
 import Table from '../charts/table'
-import { DropdownButton, MenuItem } from 'react-bootstrap'
-import Button from 'react-bootstrap/lib/Button'
+import Cover from './Cover'
+
 /**
  * The Map component. Contains a draggable, zoomable map, with voxels as concentric circles
  * representing the data points. This can be used to correlate two variables, such as home
@@ -63,6 +63,7 @@ class MapCanvas extends React.Component {
             })
             // Now we know that the map is initialized.
             this.setState({ mapInited: true })
+            Act.setLoading({ value: false })
         }
 
         // Initializes the sidebar options.
@@ -79,6 +80,7 @@ class MapCanvas extends React.Component {
         // }
     }
 
+    /* 
     exportSVG(geoms) {
         // let layer = Object.values(this.props.layers)[0]
         let centroid = this.props.map.camera.position
@@ -110,7 +112,7 @@ class MapCanvas extends React.Component {
         let textFile = window.URL.createObjectURL(data)
 
         let link = document.createElement('a')
-        link.setAttribute('download', 'projectExport.'.concat(exportType))
+        link.setAttribute('download', 'voxelExport.'.concat(exportType))
         link.href = textFile
         document.body.appendChild(link)
         link.click()
@@ -148,19 +150,19 @@ class MapCanvas extends React.Component {
             }
         }
     }
-
+    
     getScreenShot() {
         window.getScreenShot()
     }
-
-    /**
-     * Zooms the map back to its original location.
-     */
+    
+    // Zooms the map back to its original location.
     zoomMap() {
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()
     }
+    */
+
     //TODO: Pass in the appropriate parameters!
     saveFile() {
         //Gets the voxel ID.
@@ -224,10 +226,10 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '75vw',
+                        width: 'calc(95vw - 280px)',
                         position: 'fixed',
                         overflow: 'hidden',
-                        top: '15vh',
+                        top: '170px',
                         right: '2.5vw',
                         zIndex: '100',
                         opacity: 0.9,
@@ -240,11 +242,11 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '80vw',
+                        width: 'calc(100vw - 280px)',
                         height: '300px',
                         position: 'fixed',
                         overflow: 'hidden',
-                        bottom: '30px',
+                        bottom: '0px',
                         right: '0',
                         zIndex: '100',
                         opacity: 0.5,
@@ -266,6 +268,25 @@ class MapCanvas extends React.Component {
                         opacity: ${PCoordsShow ? 1 : 0};
                     }
                 `}</style>
+
+                <div id="Cover">
+                    <Cover />
+                </div>
+                <style jsx>{`
+                    #Cover {
+                        width: 100%;
+                        height: 100%;
+                    }
+                `}</style>
+                {/* 
+                <Button
+                    id={`save-userfile`}
+                    onClick={() => {
+                        this.saveFile()
+                    }}
+                >
+                    Save Userfile
+                </Button>
                 <div
                     style={{
                         position: 'absolute',
@@ -308,15 +329,6 @@ class MapCanvas extends React.Component {
                                 IMAGE
                             </MenuItem>
                         </DropdownButton>
-
-                        {/* <Button
-                            id={`save-userfile`}
-                            onClick={() => {
-                                this.saveFile()
-                            }}
-                        >
-                            Save Userfile
-                        </Button> */}
                     </div>
                     <Button
                         id="zoomShow"
@@ -327,9 +339,12 @@ class MapCanvas extends React.Component {
                         Zoom to Map{' '}
                     </Button>
                 </div>
-                <div id="mapCanvas" />
+                */}
+                <div className="map" id="mapCanvas" />
+                {/* 
                 <div id="pivot" />
                 <div id="grid" />
+                */}
             </div>
         )
     }

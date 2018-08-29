@@ -1,9 +1,9 @@
 // /*global datavoxelId*/
 import React from 'react'
 // import * as Act from './store/actions.js'
-import Sidebar from './sidebarN/Sidebar' // origin is sidebar/sidebar
+import Sidebar from './sidebar/Sidebar' // origin is sidebar/sidebar
 // import Options from './options/options'
-import Map from './mapN/map'
+import Map from './map/map'
 
 import Loading from './utils/Loading'
 

@@ -2,10 +2,10 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import * as act from '../store/actions'
+import * as Act from '@/store/actions'
 import axios from 'axios'
 
-import Layer from './layer'
+import Layer from './Layer'
 /**
  * The top 2/3rds of the sidebar, "Layers".
  */
@@ -40,7 +40,7 @@ class Layers extends React.Component {
                     return dataset
                 })
                 // With "datasets", we'll add a transformed version of this to the Redux state.
-                act.importDatasets({ datasets })
+                Act.importDatasets({ datasets })
             })
             .catch(e => console.log('getLayers() error', e))
     }
