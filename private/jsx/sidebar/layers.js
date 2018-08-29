@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import * as Act from '@/store/actions'
 import axios from 'axios'
 
+import hashKey from '@/utils/hashKey'
+
 import Layer from './Layer'
 /**
  * The top 2/3rds of the sidebar, "Layers".
@@ -31,11 +33,9 @@ class Layers extends React.Component {
                  */
                 let datasets = data.map(dataset => {
                     // The hash function.
-                    const hashKey =
-                        (+new Date()).toString(32) +
-                        Math.floor(Math.random() * 36).toString(36)
+                    const layerHashKey = hashKey()
                     if (!dataset.layerKey) {
-                        dataset.layerKey = hashKey
+                        dataset.layerKey = layerHashKey
                     }
                     return dataset
                 })
