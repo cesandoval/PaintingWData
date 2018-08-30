@@ -28,6 +28,7 @@ export default (state = initialOptionsState, action) => {
                 const bgStyle = { bgStyle: value }
                 return Object.assign({}, state, bgStyle)
             }
+            break;
         }
         /**
          * Sets the opacity.
@@ -40,6 +41,7 @@ export default (state = initialOptionsState, action) => {
                 const opacity = { opacity: value }
                 return Object.assign({}, state, opacity)
             }
+            break;
         }
         /**
          * Sets the knnValue.
@@ -51,6 +53,7 @@ export default (state = initialOptionsState, action) => {
                 const knnValue = { knnValue: value }
                 return Object.assign({}, state, knnValue)
             }
+            break;
         }
         default:
             return state

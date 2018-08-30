@@ -15,6 +15,7 @@ export default (state = initialInteractionsState, action) => {
                 const loading = { loading: value }
                 return Object.assign({}, state, loading)
             }
+            break;
         }
         case t.SET_PANELSHOW: {
             const { value } = action
@@ -22,6 +23,7 @@ export default (state = initialInteractionsState, action) => {
                 const panelShow = { panelShow: value }
                 return Object.assign({}, state, panelShow)
             }
+            break;
         }
         case t.SET_ACTIVENODE: {
             const { value } = action
@@ -29,6 +31,7 @@ export default (state = initialInteractionsState, action) => {
                 const activeNode = { activeNode: value }
                 return Object.assign({}, state, activeNode)
             }
+            break;
         }
         case t.SET_REFRESHVOXELS: {
             const { value } = action
@@ -36,6 +39,7 @@ export default (state = initialInteractionsState, action) => {
                 const refreshVoxels = { refreshVoxels: value }
                 return Object.assign({}, state, refreshVoxels)
             }
+            break;
         }
         default:
             return state
