@@ -9,6 +9,8 @@ import Slider from './Slider.js'
 import Panel from './Panel.js'
 import { Popover, Button, Menu, Dropdown } from 'antd'
 
+import hashKey from '@/utils/hashKey'
+
 import * as NodeType from './nodeTypes'
 
 // import { Nodes, Links } from './mockData' // deprecated
@@ -1174,9 +1176,7 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
-        const nodeHashKey =
-            (+new Date()).toString(32) +
-            Math.floor(Math.random() * 36).toString(36)
+        const nodeHashKey = hashKey()
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
