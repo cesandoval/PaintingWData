@@ -225,9 +225,9 @@ module.exports.upload = function(req, res, next) {
                                             // console.log(data)
                                             // console.log(JSON.parse(data))
                                             pushShapes(req, function (message) {
-                                              console.log(message);
+                                              console.log(message, '-----------------');
+                                              done();
                                             });
-                                            done();
                                           });
 
                                           // processShapes(newReq, function(){});
