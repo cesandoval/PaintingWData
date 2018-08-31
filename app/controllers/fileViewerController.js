@@ -16,6 +16,8 @@ var Model = require('../models'),
  * @param {Object} res 
  */
 module.exports.saveShapes = function(req, res) {
+    // Wenzhe - this is the JSON from the uploadViewer page from VUE
+    // JSON to send to the backend
     var newReq = {
         body: {
             rasterProperty: req.body.rasterProperty,
@@ -50,7 +52,9 @@ module.exports.saveShapes = function(req, res) {
                 uploadsSize: uploadsSize + parseFloat(req.body.size)
             }).then(function() {
                 // Save layer and then redirect to /layers page
+                // Sends a process to a worker
                 processShapes(newReq, function(){});
+
                 res.redirect('/datasets/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {
@@ -58,7 +62,7 @@ module.exports.saveShapes = function(req, res) {
             res.redirect('/uploadViewer/'+ req.body.datafileId + '$$' + req.body.size); 
         }
     })
-}
+}//
 
 
 /**

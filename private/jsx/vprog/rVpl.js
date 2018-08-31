@@ -1267,15 +1267,19 @@ class VPL extends React.Component {
     render() {
         const nodes = this.props.nodes
 
-        // /*
+        const nodeTypeGroupByClass = _.groupBy(Object.values(NodeType), 'class')
         const NodeMenu = (
             <Menu onClick={({ key }) => this.addNode(key)}>
-                {Object.entries(NodeType).map(
-                    ([key, node]) =>
-                        key != 'DATASET' ? (
-                            <Menu.Item key={key}>
-                                {node.fullName + ' Node'}
-                            </Menu.Item>
+                {Object.entries(nodeTypeGroupByClass).map(
+                    ([key, types]) =>
+                        key != 'dataset' ? (
+                            <Menu.SubMenu title={key.toUpperCase()}>
+                                {types.map(({ fullName }) => (
+                                    <Menu.Item key={fullName}>
+                                        {fullName + ' Node'}
+                                    </Menu.Item>
+                                ))}
+                            </Menu.SubMenu>
                         ) : (
                             ''
                         )

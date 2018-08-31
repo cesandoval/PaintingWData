@@ -41,8 +41,8 @@ module.exports.show = function(req, res) {
  */
 module.exports.getPublicVoxelScreenshots = function(req, res) {
   Model.Datavoxelimage.findAll({
-    limit: 10,
-    order:[['createdAt', 'ASC']],
+    limit: 12,
+    order:[['createdAt', 'DESC']],
     where: {public: true}
   }).then(function(screenshotLinks) {
     var images = [];

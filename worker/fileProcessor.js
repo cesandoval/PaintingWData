@@ -57,7 +57,10 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
                     // send user an email
+                    // Wenzhe - this is the callback for vue
+                    // Callback for project creation......
                     mailer.sendVoxelEmail(user.email, user.id);
+                    // res.send({completed: true})
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
@@ -98,12 +101,17 @@ function startShapeWorker(req, callback) {
     ], function (err, result) {
         // Send Layer complete user email
         Model.User.findById(req.user.id).then(function(user){
+            // Wenzhe - this is the callback for vue
+            // This will be the callback to vue.
+            // res.send({completed: true})
             mailer.sendLayerEmail(user.email ,req.user.id);
         },
         function(err){
             console.log(err)
         }
-        );       
+        ).then(function(){
+            callback({uploaded: true});
+        });       
     });
 }
 
@@ -193,7 +201,7 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
     newDatavoxel.voxelId = req.voxelID;
-    newDatavoxel.public = false;
+    newDatavoxel.public = req.body.public;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
