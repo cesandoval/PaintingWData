@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import { Tabs } from 'antd'
 const TabPane = Tabs.TabPane
@@ -31,3 +32,7 @@ export class Sidebar extends React.Component {
         )
     }
 }
+
+export default connect(s => ({
+    loading: s.interactions.loading,
+}))(Sidebar)
