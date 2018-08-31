@@ -51,7 +51,7 @@ module.exports.saveShapes = function(req, res) {
             }).then(function() {
                 // Save layer and then redirect to /layers page
                 processShapes(newReq, function(){});
-                res.redirect('/layers/' + req.user.id+ '/' + newReq.body.datafileId);
+                res.redirect('/datasets/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {
             req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
