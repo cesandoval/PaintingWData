@@ -8,10 +8,10 @@ import * as t from '../../../private/jsx/store/types'
  */
 
 beforeEach(() => {
-    store.dispatch = jest.fn().mockImplementation(payload => payload);
+    store.dispatch = jest.fn().mockImplementation(payload => payload)
 })
 
-describe("reducer actions", () => {
+describe('reducer actions', () => {
     let addPayload = {
         type: 'NODE_ADD',
         nodeKey: '1cgfa87pjt',
