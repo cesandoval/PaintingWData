@@ -831,7 +831,7 @@ class VPL extends React.Component {
             const originScale = dataMax - dataMin
             const newScale = node.remap.max - dataMin
 
-            const remap = x => (x ? (x * newScale) / originScale + dataMin : 0)
+            const remap = x => (x ? x * newScale / originScale + dataMin : 0)
             // if (x != 0) {
             //     return valDiff * ((x - min) / (max - min)) + dataMin
             // } else {
