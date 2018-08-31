@@ -89,39 +89,39 @@ queue.on('error', (err) => {
 // });
 
 
-function processShapes(data, done) {
-  queue.create('saveLayer', data)
-    .priority('critical')
-    .attempts(2)
-    .backoff(true)
-    .removeOnComplete(true)
-    .save((err) => {
-      if (err) {
-        // console.log(util.inspect(data))
-        // console.log(done)
-        console.error(err);
-        done(err);
-      }
-      if (!err) {
-        done();
-      }
-    });
-}
+// function processShapes(data, done) {
+//   queue.create('saveLayer', data)
+//     .priority('critical')
+//     .attempts(2)
+//     .backoff(true)
+//     .removeOnComplete(true)
+//     .save((err) => {
+//       if (err) {
+//         // console.log(util.inspect(data))
+//         // console.log(done)
+//         console.error(err);
+//         done(err);
+//       }
+//       if (!err) {
+//         done();
+//       }
+//     });
+// }
 
-queue.process('saveLayer', 5, (job, done) => { 
-  var data = job.data;
-  var req = data;
-  // var res = data[1];
-  // console.log(data)
-  // console.log(JSON.parse(data))
-  pushShapes(req, function (message) {
-    console.log(message);
-  });
-  done();
-});
+// queue.process('saveLayer', 5, (job, done) => { 
+//   var data = job.data;
+//   var req = data;
+//   // var res = data[1];
+//   // console.log(data)
+//   // console.log(JSON.parse(data))
+//   pushShapes(req, function (message) {
+//     console.log(message);
+//   });
+//   done();
+// });
 
 module.exports = {
   // processVoxels: processVoxels,
-  processShapes: processShapes,
+  // processShapes: processShapes,
   queue: queue
 }

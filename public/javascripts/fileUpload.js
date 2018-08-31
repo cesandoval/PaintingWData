@@ -30,10 +30,16 @@ function upload(e)
     var data = new FormData();
     $.each(files, function(key, value)
     {
+        console.log(key, value, 99999)
         data.append(key, value);
     });
 
     var flashHandler = $('#flashes');
+    console.log(data)
+    // Display the keys
+    for (var key of data.keys()) {
+        console.log(key); 
+    }
 
     flashHandler.on('flash', function(event, message){
         var flash = $('<div class="flash">');
@@ -73,6 +79,8 @@ function upload(e)
         contentType: false,
         success: function(data, textStatus, jqXHR)
         {
+            console.log(data)
+            debugger
             if(typeof data.error === 'undefined')
             {
 
