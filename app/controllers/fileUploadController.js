@@ -6,7 +6,9 @@ var fileUploadHelper = require('../../lib/fileUploadHelper'),
     fs_extra = require('fs-extra'),
     processShapes = require('../../worker/worker2').processShapes,
     getSize = require('get-folder-size'),
-    express = require('express');
+    express = require('express'),
+    queue = require('../../worker/worker2').queue,
+    pushShapes = require('../../worker/fileProcessor').pushShapes;
 
 /**
  * Displays upload.jade for /upload page
@@ -195,11 +197,44 @@ module.exports.upload = function(req, res, next) {
                                       }).then(function() {
                                           // Save layer and then redirect to /layers page
                                           // Sends a process to a worker
-                                          processShapes(newReq, function(){});
+                                          var job = queue.create('saveLayer', newReq)
+                                              .priority('critical')
+                                              .attempts(2)
+                                              .backoff(true)
+                                              .removeOnComplete(true)
+                                              .save((err) => {
+                                                if (err) {
+                                                  // console.log(util.inspect(data))
+                                                  // console.log(done)
+                                                  console.error(err);
+                                                  console.log(err);
+                                                }
+                                                if (!err) {
+                                                  console.log('Shapes added to the queue');
+                                                }
+                                              });
+                                          job.on('complete', function(){
+                                            console.log('job completed!!!!')
+                                            res.json({completed: true}); 
+                                          });
+                                          
+                                          queue.process('saveLayer', 5, (job, done) => { 
+                                            var data = job.data;
+                                            var req = data;
+                                            // var res = data[1];
+                                            // console.log(data)
+                                            // console.log(JSON.parse(data))
+                                            pushShapes(req, function (message) {
+                                              console.log(message);
+                                            });
+                                            done();
+                                          });
+
+                                          // processShapes(newReq, function(){});
 
                                           // TODO: maybe this pard should be added as a callback of processShapes?
                                           // now it is called too early, before shapes are processed.
-                                          res.json({completed: true}); 
+                                          // res.json({completed: true}); 
                                       })
                                   } else {
                                       res.json({

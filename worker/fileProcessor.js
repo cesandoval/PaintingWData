@@ -109,7 +109,9 @@ function startShapeWorker(req, callback) {
         function(err){
             console.log(err)
         }
-        );       
+        ).then(function(){
+            callback({uploaded: true});
+        });       
     });
 }
 
