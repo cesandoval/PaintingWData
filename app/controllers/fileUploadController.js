@@ -35,10 +35,16 @@ module.exports.upload = function(req, res, next) {
     form.on('error', function(err) {
       console.log('Error while uploading file: \n' + err);
 
-      req.flash('uploadAlert', 'Error while uploading file: \n' + err);
-      res.status(400).send({
-        message: 'Errors with the upload.'
+      res.json({
+        completed:false,
+        alert:'Error while uploading file: \n' + err,
+        alertType:"uploadAlert",
       });
+
+      // req.flash('uploadAlert', 'Error while uploading file: \n' + err);
+      // res.status(400).send({
+      //   message: 'Errors with the upload.'
+      // });
     });
     
     var fields = {}
@@ -54,10 +60,16 @@ module.exports.upload = function(req, res, next) {
         if(err){
           console.log("something went wrong! " + err);
 
-          req.flash('uploadAlert', "Error unzipping. Upload a Different File.");
-          res.status(400).send({
-            message: 'Errors with the upload.'
+          res.json({
+            completed:false,
+            alert:"Error unzipping. Upload a Different File.",
+            alertType:"uploadAlert",
           });
+
+          // req.flash('uploadAlert', "Error unzipping. Upload a Different File.");
+          // res.status(400).send({
+          //   message: 'Errors with the upload.'
+          // });
         }
         else{
           var zipDir = path.join(path.dirname(file.path), file.name);
@@ -66,10 +78,16 @@ module.exports.upload = function(req, res, next) {
             if(err){
               console.log("Error 1: ", err);
 
-              req.flash('uploadAlert', "Error with the File Format. Upload a Different File.");
-              res.status(400).send({
-                message: 'Errors with the upload.'
+              res.json({
+                completed:false,
+                alert:"Error with the File Format. Upload a Different File.",
+                alertType:"uploadAlert",
               });
+
+              // req.flash('uploadAlert', "Error with the File Format. Upload a Different File.");
+              // res.status(400).send({
+              //   message: 'Errors with the upload.'
+              // });
             }
             else{
               // Check if the zip file contains all the extensions
@@ -78,20 +96,31 @@ module.exports.upload = function(req, res, next) {
                     //if file is messed up, file doesn't contain one of the extensions required
                     console.log("Error 2: ", err);
 
-                    req.flash('uploadAlert', "Error with your upload, it might be missing some required files. Upload a Different File.");
-                    res.status(400).send({
-                      message: 'Errors with the upload.'
+                    res.json({
+                      completed:false,
+                      alert:"Error with your upload, it might be missing some required files. Upload a Different File.",
+                      alertType:"uploadAlert",
                     });
+
+                    // req.flash('uploadAlert', "Error with your upload, it might be missing some required files. Upload a Different File.");
+                    // res.status(400).send({
+                    //   message: 'Errors with the upload.'
+                    // });
                 }
                 else{
                   fileUploadHelper.getShapeFiles(targetPath, function(err, shapeFiles){
                     if(err){
                       // geometry is messed up
-
-                      req.flash('uploadAlert', "Problems with geometry.. Upload a Different File.");
-                      res.status(400).send({
-                        message: 'Errors with the upload.'
+                      res.json({
+                        completed:false,
+                        alert:"Problems with geometry.. Upload a Different File.",
+                        alertType:"uploadAlert",
                       });
+
+                      //req.flash('uploadAlert', "Problems with geometry.. Upload a Different File.");
+                      // res.status(400).send({
+                      //   message: 'Errors with the upload.'
+                      // });
                     }
                     else{
                       // returns the size of the extracted file
@@ -167,11 +196,18 @@ module.exports.upload = function(req, res, next) {
                                           // Save layer and then redirect to /layers page
                                           // Sends a process to a worker
                                           processShapes(newReq, function(){});
-                                          // You shouldn't have to redirect
+
+                                          // TODO: maybe this pard should be added as a callback of processShapes?
+                                          // now it is called too early, before shapes are processed.
                                           res.json({completed: true}); 
                                       })
                                   } else {
-                                      req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
+                                      res.json({
+                                                completed:false,
+                                                alert:"Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account.",
+                                                alertType:"accountAlert",
+                                              });
+                                      //req.flash('accountAlert', "Your account has reached the upload storage limit. Check back soon to sign up for a Premium Account");
                                   }
                               })
                             })                       

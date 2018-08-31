@@ -1237,6 +1237,8 @@ p {
     height: 250px;
     width: 100%;
     position: relative;
+
+    margin-top: 20px;
 }
 
 .home_icon {

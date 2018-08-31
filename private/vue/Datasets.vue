@@ -240,7 +240,7 @@
               >
                 <template>
                   <div>
-                    <template v-for="(tag, index) in tags">
+                    <template v-for="(tag) in tags">
                       <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
                         <a-tag :key="tag" :closable="true" @afterClose="() => handleCloseTag(tag)">
                           {{ `${tag.slice(0, 20)}...` }}
@@ -305,6 +305,15 @@
                 </div>
               </a-form-item>
               
+              <a-form-item
+                :wrapper-col="{ span: 12, offset: 5 }"
+              >
+                <div>
+                  <a-alert v-if="errorMessage.length!=0" type="error" message="Error text" banner />
+                </div>
+              </a-form-item>
+
+
               <a-form-item
                 :wrapper-col="{ span: 12, offset: 5 }"
               >
@@ -389,6 +398,7 @@ export default {
       tags: [],
       inputVisible: false,
       inputValue: '',
+      errorMessage: '',
     })
   },
   computed: {
@@ -466,6 +476,7 @@ export default {
     },
     beforeUpload(file) {
       this.file = file
+      this.errorMessage = ''
       return false
     },
 
@@ -477,6 +488,7 @@ export default {
     handleSubmit(e) {
       e.preventDefault()
       this.submitting = true
+      this.errorMessage = ''
 
       const { file } = this
       console.log('file', file)
@@ -498,10 +510,18 @@ export default {
 
       console.log('formData', formData, formData.getAll('file'))
 
-      // TODO: call api to upload data
       this.$http.post('/upload', formData).then(response => {
         console.log('submitted', response) //req
-        // document.location.reload()
+
+        if (response.data.completed) {
+          document.location.reload()
+        } else {
+          this.errorMessage = response.data.alert
+          this.file = null
+          this.submitting = false
+
+          // need to indicate errors
+        }
       })
     },
 
