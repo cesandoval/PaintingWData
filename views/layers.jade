@@ -4,11 +4,9 @@ block pageTitle
   link(rel="stylesheet", href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css")
   link(rel="stylesheet", href="/stylesheets/font-awesome.min.css")
   link(rel="stylesheet", href="/stylesheets/layers.css")
-  link(rel="stylesheet", href="/stylesheets/bootstrap-slider.css")
   link(rel="stylesheet", href="/stylesheets/dropdown-checklist.css")
   script(src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js")
   script(src="/javascripts/layers.js")
-  script(src="/javascripts/js/bootstrap-slider.js")
   script.
   
   .container(style = "margin-top: 10px; margin-left: 0; width: 100vw;").spacing-large
@@ -158,15 +156,6 @@ block pageTitle
     
     div.spacing-large
     
-  script.
-    var mySlider = $("input.slider").bootstrapSlider();
-    var value = mySlider.bootstrapSlider('getValue');
-
-    // For non-getter methods, you can chain together commands
-    //- mySlider
-    //-     .bootstrapSlider('setValue', 5)
-    //-     .bootstrapSlider('setValue', 7);
-
   script(src="/javascripts/map_thumbnail_viewer.js")
   script(src="/javascripts/user_layer.js")
   // script(src="/javascripts/layer_viewer.js") 
