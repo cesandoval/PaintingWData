@@ -54,7 +54,7 @@ module.exports.saveShapes = function(req, res) {
                 // Save layer and then redirect to /layers page
                 // Sends a process to a worker
                 processShapes(newReq, function(){});
-                // You shouldn't have to redirect
+
                 res.redirect('/datasets/' + req.user.id+ '/' + newReq.body.datafileId);
             })
         } else {

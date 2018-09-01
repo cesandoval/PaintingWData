@@ -104,12 +104,15 @@ function startShapeWorker(req, callback) {
             // Wenzhe - this is the callback for vue
             // This will be the callback to vue.
             // res.send({completed: true})
+            console.log('sending email! ------')
             mailer.sendLayerEmail(user.email ,req.user.id);
         },
         function(err){
             console.log(err)
         }
-        );       
+        ).then(function(){
+            callback({uploaded: true});
+        });       
     });
 }
 

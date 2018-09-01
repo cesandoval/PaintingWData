@@ -9,6 +9,8 @@ import Slider from './Slider.js'
 import Panel from './Panel.js'
 import { Popover, Button, Menu, Dropdown } from 'antd'
 
+import hashKey from '@/utils/hashKey'
+
 import * as NodeType from './nodeTypes'
 // console.log('NodeType', Object.keys(NodeType))
 
@@ -1200,10 +1202,7 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
-        const nodes = this.state.Nodes
-        const nodeHashKey =
-            (+new Date()).toString(32) +
-            Math.floor(Math.random() * 36).toString(36)
+        const nodeHashKey = hashKey()
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
@@ -1294,15 +1293,21 @@ class VPL extends React.Component {
     render() {
         const nodes = this.props.nodes
 
-        const nodeTypeGroupByClass = _.groupBy(Object.values(NodeType), 'class')
+        const nodeTypeGroupByClass = _.groupBy(
+            Object.entries(NodeType).map(([typeKey, val]) => ({
+                ...val,
+                typeKey,
+            })),
+            'class'
+        )
         const NodeMenu = (
             <Menu onClick={({ key }) => this.addNode(key)}>
                 {Object.entries(nodeTypeGroupByClass).map(
                     ([key, types]) =>
                         key != 'dataset' ? (
-                            <Menu.SubMenu title={key.toUpperCase()}>
-                                {types.map(({ fullName }) => (
-                                    <Menu.Item key={fullName}>
+                            <Menu.SubMenu title={key.toUpperCase()} key={key}>
+                                {types.map(({ fullName, typeKey }) => (
+                                    <Menu.Item key={typeKey}>
                                         {fullName + ' Node'}
                                     </Menu.Item>
                                 ))}
