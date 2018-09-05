@@ -5,9 +5,13 @@
     <div class = "page-title-section">
       <h1 class = "page-title">Datasets</h1>
 
+
+
+
       <div v-if="datafiles.length>0"
            class = "sorting-switches"
       >
+
         <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
                   size="small" class = "switch"/>
@@ -16,8 +20,14 @@
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
+
       </div>
 
+      <a-input-search
+        placeholder="input search text"
+        style="width: 200px"
+        @search="onSearch"
+      />
     </div>
 
 
@@ -399,19 +409,21 @@ export default {
       inputVisible: false,
       inputValue: '',
       errorMessage: '',
+      searchKey: '',
     })
   },
   computed: {
     datafileList() {
+      let tempData = null
       if (this.sortDate) {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
           ]).reverse()
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
@@ -419,18 +431,28 @@ export default {
         }
       } else {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ])
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ]).reverse()
         }
+      }
+
+      if (this.searchKey.length == 0) return tempData
+      else {
+        return tempData.filter(item => {
+          return (
+            item.filename.toLowerCase().indexOf(this.searchKey.toLowerCase()) >
+            -1
+          )
+        })
       }
     },
   },
@@ -441,6 +463,10 @@ export default {
     // })
   },
   methods: {
+    onSearch(value) {
+      console.log('searching', value)
+      this.searchKey = value
+    },
     handleCloseTag(removedTag) {
       const tags = this.tags.filter(tag => tag !== removedTag)
       console.log(tags)
@@ -956,6 +982,11 @@ export default {
 
 .ant-upload-drag-icon .anticon {
   color: #e75332 !important;
+}
+
+.ant-input-search {
+  float: right;
+  margin-top: 22px;
 }
 </style>
 

@@ -21,7 +21,11 @@
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
       </div>
-
+      <a-input-search
+        placeholder="input search text"
+        style="width: 200px"
+        @search="onSearch"
+      />
     </div>
 
     <!-- <div v-if="datavoxels.length===0"
@@ -488,6 +492,7 @@ export default {
       formPublicity: false,
       formDensity: 10000,
       submitting: false,
+      searchKey: '',
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -501,15 +506,16 @@ export default {
 
   computed: {
     projectList() {
+      let tempList = null
       if (this.sortDate) {
         if (this.sortDown) {
-          return _.sortBy(this.datavoxels, [
+          tempList = _.sortBy(this.datavoxels, [
             function(o) {
               return o.createdAt
             },
           ]).reverse()
         } else {
-          return _.sortBy(this.datavoxels, [
+          tempList = _.sortBy(this.datavoxels, [
             function(o) {
               return o.createdAt
             },
@@ -517,18 +523,28 @@ export default {
         }
       } else {
         if (this.sortDown) {
-          return _.sortBy(this.datavoxels, [
+          tempList = _.sortBy(this.datavoxels, [
             function(o) {
               return o.voxelname[0]
             },
           ])
         } else {
-          return _.sortBy(this.datavoxels, [
+          tempList = _.sortBy(this.datavoxels, [
             function(o) {
               return o.voxelname[0]
             },
           ]).reverse()
         }
+      }
+
+      if (this.searchKey.length == 0) return tempList
+      else {
+        return tempList.filter(item => {
+          return (
+            item.voxelname.toLowerCase().indexOf(this.searchKey.toLowerCase()) >
+            -1
+          )
+        })
       }
     },
 
@@ -551,6 +567,11 @@ export default {
   },
   created() {},
   methods: {
+    onSearch(value) {
+      console.log('searching', value)
+      this.searchKey = value
+    },
+
     formInit() {
       console.log('form created')
     },
@@ -1258,6 +1279,11 @@ a {
   width: calc(100% - 20px);
   height: calc(100% - 20px);
   margin: 10px;
+}
+
+.ant-input-search {
+  float: right;
+  margin-top: 22px;
 }
 </style>
 
