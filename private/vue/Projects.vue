@@ -40,11 +40,6 @@
         class = "dataset-list">
 
         <!-- adding project btn -->        
-        <!-- <span class="card col-sm-4 adding-panel">
-          <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
-            <a-icon type="plus" class="adding-icon"
-          /></a-button>
-        </span> -->
 
         <a-list
           :grid="{ gutter: 1, column: 3 }"
@@ -53,6 +48,13 @@
           class="proj-list"
 
         >
+
+          <span class="card col-sm-4 adding-panel">
+            <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
+              Create A New Project
+            </a-button>
+          </span>
+
           <a-list-item slot="renderItem" slot-scope="datafile, index">
 
             <span
@@ -1353,9 +1355,8 @@ a {
 }
 
 .adding-btn {
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
-  margin: 10px;
+  width: calc(100%);
+  height: calc(100%);
 }
 
 .ant-input-search {
