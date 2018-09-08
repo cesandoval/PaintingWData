@@ -39,21 +39,59 @@
       <div 
         class = "dataset-list">
 
-        <!-- adding project btn -->
+        <!-- adding project btn -->        
         <!-- <span class="card col-sm-4 adding-panel">
-          <a-icon type="plus" class="adding-icon"
-                  @click="()=> {startMaking()}"
-          />
-        </span> -->
-        <span class="card col-sm-4 adding-panel">
           <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
             <a-icon type="plus" class="adding-icon"
           /></a-button>
-        </span>
+        </span> -->
+
+        <a-list
+          :grid="{ gutter: 1, column: 3 }"
+          :data-source="projectList"
+          :pagination="pagination"
+          class="proj-list"
+
+        >
+          <a-list-item slot="renderItem" slot-scope="datafile, index">
+
+            <span
+              :class="{selected:datafile.id===selectedProject}"
+              class="card"
+              @click="()=> {setActiveProjId(datafile.id,index)}"
+            >
+              <a-card
+                hoverable
+              >
+                <div class="card-images">
+                  <img
+                    v-if="datafile.Datavoxelimage!=null"
+                    slot="cover"
+                    :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
+                    class = "thumbnail-img"
+                  >
+                  <div v-else>
+                    <a-icon
+                      type="picture"
+                      class="preview-ph"
+                    />
+                    <span class="preview-ph-text">Preview not available yet.</span>
+                  </div>
+                </div>
+                <a-card-meta
+                  :title="datafile.voxelname?datafile.voxelname:'Untitled'"
+                  :description="parseTime(datafile.createdAt)"/>
+              </a-card>
+            </span> 
 
 
-        <span
+          </a-list-item>
+        </a-list>
 
+
+
+
+        <!-- <span
           v-for="(datafile,index) in projectList"
           :key="datafile.id"
           :class="{selected:datafile.id===selectedProject}"
@@ -71,20 +109,21 @@
                 class = "thumbnail-img"
               >
               <div v-else>
-                <a-icon 
+                <a-icon
                   type="picture"
                   class="preview-ph"
                 />
                 <span class="preview-ph-text">Preview not available yet.</span>
               </div>
-
             </div>
             <a-card-meta
               :title="datafile.voxelname?datafile.voxelname:'Untitled'"
               :description="parseTime(datafile.createdAt)"/>
-              
           </a-card>
-        </span>
+        </span> -->
+
+
+
       </div>
     </transition>
 
@@ -153,6 +192,7 @@
               >
                 <a-list
                   :data-source="projectList[selectedIndex].Datajsons"
+                  class="prop-list"
                 >
 
                   <a-list-item slot="renderItem" slot-scope="item, index"
@@ -163,9 +203,11 @@
                       <a slot="title" :key="item.datafileId">{{ item.layername }}</a>
                       <a-button slot="avatar" shape="circle">{{ item.layername.charAt(0).toUpperCase() }}</a-button>
                     </a-list-item-meta>
-                    <div/>
                   </a-list-item>
+
+
                 </a-list>
+
               </div>
             </template>
           </div>
@@ -493,6 +535,12 @@ export default {
       formDensity: 10000,
       submitting: false,
       searchKey: '',
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 6,
+      },
 
       url:
         'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
@@ -977,6 +1025,8 @@ a {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+
+  overflow-x: hidden;
   float: left;
 }
 
@@ -1005,7 +1055,7 @@ a {
   width: 60%;
 }
 
-.card {
+.ant-card {
   /deep/ {
     .ant-card-body {
       padding: 10px;
@@ -1132,21 +1182,48 @@ a {
   height: auto;
 }
 
-.ant-list-item {
-  background-color: rgba(255, 255, 255, 0.7);
-  padding: 12px;
-  border-radius: 5px;
-
+.proj-list {
   /deep/ {
-    .ant-list-item-meta-content {
-    }
+    .ant-list-item {
+      background-color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1px;
+      background-color: rgba(255, 255, 255, 0.7);
 
-    .ant-list-item-meta-description {
-      font-size: 12px;
-    }
+      /deep/ {
+        .ant-list-item-meta-content {
+        }
 
-    .ant-list-item-meta-title {
-      margin-top: 5px;
+        .ant-list-item-meta-description {
+          font-size: 12px;
+        }
+
+        .ant-list-item-meta-title {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+}
+
+.prop-list {
+  /deep/ {
+    .ant-list-item {
+      background-color: rgba(255, 255, 255, 0.7);
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 12px;
+
+      /deep/ {
+        .ant-list-item-meta-content {
+        }
+
+        .ant-list-item-meta-description {
+          font-size: 12px;
+        }
+
+        .ant-list-item-meta-title {
+          margin-top: 5px;
+        }
+      }
     }
   }
 }
