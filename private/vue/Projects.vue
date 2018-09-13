@@ -46,7 +46,6 @@
           :data-source="projectList"
           :pagination="pagination"
           class="proj-list"
-
         >
 
           <span class="card col-sm-4 adding-panel">

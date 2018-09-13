@@ -44,13 +44,59 @@
         :class="{ squeezeddatasetlist: isSqueezed, }"
         class = "dataset-list">
 
-        <span class="card col-sm-4 adding-panel">
+        <!-- <span class="card col-sm-4 adding-panel">
           <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
             <a-icon type="plus" class="adding-icon"
           /></a-button>
-        </span>
+        </span> -->
 
-        <span
+
+        <a-list
+          :grid="{ gutter: 1, column: 3 }"
+          :data-source="datafileList"
+          :pagination="pagination"
+          class="proj-list"
+
+        >
+
+          <span class="card col-sm-4 adding-panel">
+            <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
+              Upload A New Dataset
+            </a-button>
+          </span>
+
+          <a-list-item slot="renderItem" slot-scope="datafile, index">
+
+            <span
+              :class="{selected:datafile.id===selectedProject}"
+              class="card"
+              @click="()=> {setActiveDatasetId(datafile.id,index)}"
+            >
+              <a-card
+                hoverable
+              >
+
+                <div class="map-thumbnail">
+
+                  <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
+                    <l-tile-layer :url="url" :attribution="attribution"/>
+                    <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
+                  </l-map>
+                </div>
+                <a-card-meta
+                  :title="datafile.filename"
+                  :description="parseTime(datafile.createdAt)"/>
+                
+              </a-card>
+            </span> 
+
+
+          </a-list-item>
+        </a-list>
+
+
+
+        <!-- <span
           v-for="(datafile,index) in datafileList"
           v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
           :key="datafile.id"
@@ -74,7 +120,9 @@
               :description="parseTime(datafile.createdAt)"/>
               
           </a-card>
-        </span>
+        </span> -->
+
+
       </div>
     </transition>
 
@@ -410,6 +458,12 @@ export default {
       inputValue: '',
       errorMessage: '',
       searchKey: '',
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 6,
+      },
     })
   },
   computed: {
@@ -716,6 +770,8 @@ export default {
   height: 100%;
   overflow-y: auto;
   float: left;
+
+  overflow-x: hidden;
 }
 
 .left-col {
@@ -901,9 +957,8 @@ export default {
 }
 
 .adding-btn {
-  width: calc(100% - 20px);
+  width: 100%;
   height: calc(100% - 20px);
-  margin: 10px;
 }
 
 .making {
@@ -987,6 +1042,29 @@ export default {
 .ant-input-search {
   float: right;
   margin-top: 22px;
+}
+
+.proj-list {
+  /deep/ {
+    .ant-list-item {
+      background-color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1px;
+      background-color: rgba(255, 255, 255, 0.7);
+
+      /deep/ {
+        .ant-list-item-meta-content {
+        }
+
+        .ant-list-item-meta-description {
+          font-size: 12px;
+        }
+
+        .ant-list-item-meta-title {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
 }
 </style>
 
