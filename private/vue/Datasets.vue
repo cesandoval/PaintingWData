@@ -244,10 +244,6 @@
           <span class="making1-desc">
             Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
           </span>
-          <span class="making1-desc">
-            Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
-          </span>
-
 
           <a-button type="primary" @click="() => {unselectProject(2)}">Upload Data</a-button>
         </div>
