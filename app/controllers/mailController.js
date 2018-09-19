@@ -56,7 +56,7 @@ module.exports.sendVoxelEmail = function(email, userId) {
 		to: email, 
     	subject: 'Done Processing Voxels', 
     	text: 'Done Processing Voxels', 
-    	html: 'Done processing voxels access them here: http://paintingwithdata.com/voxels/' + userId
+    	html: 'Done processing voxels access them here: http://paintingwithdata.com/projects/' + userId
    	};
 
    	transporter.sendMail(mailOptions, function(error, info) {
@@ -104,7 +104,7 @@ module.exports.sendLayerEmail = function(email, userId) {
     to: email, 
       subject: 'Done Uploading Layer', 
       text: 'Done Uploading Layer', 
-      html: 'Done uploading layer access it here: http://paintingwithdata.com/layers/' + userId
+      html: 'Done uploading layer access it here: http://paintingwithdata.com/datasets/' + userId
     };
 
     transporter.sendMail(mailOptions, function(error, info) {
