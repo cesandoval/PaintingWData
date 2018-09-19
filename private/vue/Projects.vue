@@ -48,15 +48,16 @@
           class="proj-list"
         >
 
-          <span class="card col-sm-4 adding-panel">
+          <!-- <span class="card col-sm-4 adding-panel">
             <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
               Create A New Project
             </a-button>
-          </span>
+          </span> -->
 
           <a-list-item slot="renderItem" slot-scope="datafile, index">
 
             <span
+              v-if="datafile.label!='adding'"
               :class="{selected:datafile.id===selectedProject}"
               class="card"
               @click="()=> {setActiveProjId(datafile.id,index)}"
@@ -84,6 +85,12 @@
                   :description="parseTime(datafile.createdAt)"/>
               </a-card>
             </span> 
+            <span v-else
+                  class="card col-sm-12 adding-panel">
+              <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
+                Create A New Project
+              </a-button>
+            </span>
 
 
           </a-list-item>
@@ -586,14 +593,20 @@ export default {
         }
       }
 
-      if (this.searchKey.length == 0) return tempList
+      if (this.searchKey.length == 0)
+        return this.addAddingItem(this.removeDeleted(tempList))
       else {
-        return tempList.filter(item => {
-          return (
-            item.voxelname.toLowerCase().indexOf(this.searchKey.toLowerCase()) >
-            -1
+        return this.addAddingItem(
+          this.removeDeleted(
+            tempList.filter(item => {
+              return (
+                item.voxelname
+                  .toLowerCase()
+                  .indexOf(this.searchKey.toLowerCase()) > -1
+              )
+            })
           )
-        })
+        )
       }
     },
 
@@ -616,6 +629,22 @@ export default {
   },
   created() {},
   methods: {
+    addAddingItem(dataList) {
+      let item = Object.assign({}, dataList[0])
+      item.label = 'adding'
+      dataList.unshift(item)
+
+      // console.log(dataList)
+      return dataList
+    },
+
+    removeDeleted(dataList) {
+      return dataList
+      // return dataList.filter(item => {
+      //   return item.deleted !== false && item.Datalayers.length != 0
+      // })
+    },
+
     onSearch(value) {
       console.log('searching', value)
       this.searchKey = value
@@ -1019,7 +1048,7 @@ a {
 
 .card {
   padding: 0px !important;
-  height: 269.5px !important;
+  height: 268.5px !important;
 }
 
 .dataset-list {

@@ -44,13 +44,6 @@
         :class="{ squeezeddatasetlist: isSqueezed, }"
         class = "dataset-list">
 
-        <!-- <span class="card col-sm-4 adding-panel">
-          <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
-            <a-icon type="plus" class="adding-icon"
-          /></a-button>
-        </span> -->
-
-
         <a-list
           :grid="{ gutter: 1, column: 3 }"
           :data-source="datafileList"
@@ -59,15 +52,13 @@
 
         >
 
-          <span class="card col-sm-4 adding-panel">
-            <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
-              Upload A New Dataset
-            </a-button>
-          </span>
 
-          <a-list-item slot="renderItem" slot-scope="datafile, index">
+          <a-list-item slot="renderItem"
+                       slot-scope="datafile, index"
+          >
 
             <span
+              v-if="datafile.label!='adding'"
               :class="{selected:datafile.id===selectedProject}"
               class="card"
               @click="()=> {setActiveDatasetId(datafile.id,index)}"
@@ -89,39 +80,16 @@
                 
               </a-card>
             </span> 
+            <span v-else
+                  class="card col-sm-12 adding-panel">
+              <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
+                Upload A New Dataset
+              </a-button>
+            </span>
 
 
           </a-list-item>
         </a-list>
-
-
-
-        <!-- <span
-          v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
-          :key="datafile.id"
-          :class="{selected:datafile.id===selectedDataset}"
-          class="card col-sm-4"
-          @click="()=> {setActiveDatasetId(datafile.id,index)}"
-        >
-          <a-card
-            hoverable
-          >
-
-            <div class="map-thumbnail">
-
-              <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
-                <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
-              </l-map>
-            </div>
-            <a-card-meta
-              :title="datafile.filename"
-              :description="parseTime(datafile.createdAt)"/>
-              
-          </a-card>
-        </span> -->
-
 
       </div>
     </transition>
@@ -495,14 +463,20 @@ export default {
         }
       }
 
-      if (this.searchKey.length == 0) return tempData
+      if (this.searchKey.length == 0)
+        return this.addAddingItem(this.removeDeleted(tempData))
       else {
-        return tempData.filter(item => {
-          return (
-            item.filename.toLowerCase().indexOf(this.searchKey.toLowerCase()) >
-            -1
+        return this.addAddingItem(
+          this.removeDeleted(
+            tempData.filter(item => {
+              return (
+                item.filename
+                  .toLowerCase()
+                  .indexOf(this.searchKey.toLowerCase()) > -1
+              )
+            })
           )
-        })
+        )
       }
     },
   },
@@ -512,7 +486,23 @@ export default {
     //   console.log(response)
     // })
   },
+
   methods: {
+    addAddingItem(dataList) {
+      let item = Object.assign({}, dataList[0])
+      item.label = 'adding'
+      dataList.unshift(item)
+
+      // console.log(dataList)
+      return dataList
+    },
+
+    removeDeleted(dataList) {
+      return dataList.filter(item => {
+        return item.deleted !== false && item.Datalayers.length != 0
+      })
+    },
+
     onSearch(value) {
       console.log('searching', value)
       this.searchKey = value
@@ -758,7 +748,7 @@ export default {
 .card {
   padding: 0px !important;
 
-  height: 269.5px;
+  height: 268.5px;
 }
 
 .dataset-list {
@@ -954,7 +944,7 @@ export default {
 
 .adding-btn {
   width: 100%;
-  height: calc(100% - 20px);
+  height: 100%;
 }
 
 .making {
@@ -1046,6 +1036,7 @@ export default {
       background-color: rgba(255, 255, 255, 0.7);
       margin-bottom: 1px;
       background-color: rgba(255, 255, 255, 0.7);
+      border-bottom: none;
 
       /deep/ {
         .ant-list-item-meta-content {
