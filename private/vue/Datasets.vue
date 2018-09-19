@@ -5,9 +5,13 @@
     <div class = "page-title-section">
       <h1 class = "page-title">Datasets</h1>
 
+
+
+
       <div v-if="datafiles.length>0"
            class = "sorting-switches"
       >
+
         <span class = "switch">Sort By</span>
         <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
                   size="small" class = "switch"/>
@@ -16,8 +20,14 @@
           <a-icon slot="checkedChildren" type="arrow-down"/>
           <a-icon slot="unCheckedChildren" type="arrow-up"/>
         </a-switch>
+
       </div>
 
+      <a-input-search
+        placeholder="input search text"
+        style="width: 200px"
+        @search="onSearch"
+      />
     </div>
 
 
@@ -34,37 +44,53 @@
         :class="{ squeezeddatasetlist: isSqueezed, }"
         class = "dataset-list">
 
-        <span class="card col-sm-4 adding-panel">
-          <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
-            <a-icon type="plus" class="adding-icon"
-          /></a-button>
-        </span>
+        <a-list
+          :grid="{ gutter: 1, column: 3 }"
+          :data-source="datafileList"
+          :pagination="pagination"
+          class="proj-list"
 
-        <span
-          v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
-          :key="datafile.id"
-          :class="{selected:datafile.id===selectedDataset}"
-          class="card col-sm-4"
-          @click="()=> {setActiveDatasetId(datafile.id,index)}"
         >
-          <a-card
-            hoverable
+
+
+          <a-list-item slot="renderItem"
+                       slot-scope="datafile, index"
           >
 
-            <div class="map-thumbnail">
+            <span
+              v-if="datafile.label!='adding'"
+              :class="{selected:datafile.id===selectedProject}"
+              class="card"
+              @click="()=> {setActiveDatasetId(datafile.id,index)}"
+            >
+              <a-card
+                hoverable
+              >
 
-              <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
-                <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
-              </l-map>
-            </div>
-            <a-card-meta
-              :title="datafile.filename"
-              :description="parseTime(datafile.createdAt)"/>
-              
-          </a-card>
-        </span>
+                <div class="map-thumbnail">
+
+                  <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
+                    <l-tile-layer :url="url" :attribution="attribution"/>
+                    <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
+                  </l-map>
+                </div>
+                <a-card-meta
+                  :title="datafile.filename"
+                  :description="parseTime(datafile.createdAt)"/>
+                
+              </a-card>
+            </span> 
+            <span v-else
+                  class="card col-sm-12 adding-panel">
+              <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
+                Upload A New Dataset
+              </a-button>
+            </span>
+
+
+          </a-list-item>
+        </a-list>
+
       </div>
     </transition>
 
@@ -186,10 +212,6 @@
           <span class="making1-desc">
             Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
           </span>
-          <span class="making1-desc">
-            Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
-          </span>
-
 
           <a-button type="primary" @click="() => {unselectProject(2)}">Upload Data</a-button>
         </div>
@@ -399,19 +421,27 @@ export default {
       inputVisible: false,
       inputValue: '',
       errorMessage: '',
+      searchKey: '',
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 6,
+      },
     })
   },
   computed: {
     datafileList() {
+      let tempData = null
       if (this.sortDate) {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
           ]).reverse()
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
@@ -419,18 +449,34 @@ export default {
         }
       } else {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ])
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ]).reverse()
         }
+      }
+
+      if (this.searchKey.length == 0)
+        return this.addAddingItem(this.removeDeleted(tempData))
+      else {
+        return this.addAddingItem(
+          this.removeDeleted(
+            tempData.filter(item => {
+              return (
+                item.filename
+                  .toLowerCase()
+                  .indexOf(this.searchKey.toLowerCase()) > -1
+              )
+            })
+          )
+        )
       }
     },
   },
@@ -440,7 +486,27 @@ export default {
     //   console.log(response)
     // })
   },
+
   methods: {
+    addAddingItem(dataList) {
+      let item = Object.assign({}, dataList[0])
+      item.label = 'adding'
+      dataList.unshift(item)
+
+      // console.log(dataList)
+      return dataList
+    },
+
+    removeDeleted(dataList) {
+      return dataList.filter(item => {
+        return item.deleted !== false && item.Datalayers.length != 0
+      })
+    },
+
+    onSearch(value) {
+      console.log('searching', value)
+      this.searchKey = value
+    },
     handleCloseTag(removedTag) {
       const tags = this.tags.filter(tag => tag !== removedTag)
       console.log(tags)
@@ -682,7 +748,7 @@ export default {
 .card {
   padding: 0px !important;
 
-  height: 269.5px;
+  height: 268.5px;
 }
 
 .dataset-list {
@@ -690,6 +756,8 @@ export default {
   height: 100%;
   overflow-y: auto;
   float: left;
+
+  overflow-x: hidden;
 }
 
 .left-col {
@@ -875,9 +943,8 @@ export default {
 }
 
 .adding-btn {
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
-  margin: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 .making {
@@ -956,6 +1023,35 @@ export default {
 
 .ant-upload-drag-icon .anticon {
   color: #e75332 !important;
+}
+
+.ant-input-search {
+  float: right;
+  margin-top: 22px;
+}
+
+.proj-list {
+  /deep/ {
+    .ant-list-item {
+      background-color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-bottom: none;
+
+      /deep/ {
+        .ant-list-item-meta-content {
+        }
+
+        .ant-list-item-meta-description {
+          font-size: 12px;
+        }
+
+        .ant-list-item-meta-title {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
 }
 </style>
 
