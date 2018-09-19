@@ -142,8 +142,8 @@
            class = "project-info">
 
         <img
-          v-if="projectList[selectedIndex].Datavoxelimage!=null"
-          :src="parsePreviewImg(projectList[selectedIndex].Datavoxelimage.DatavoxelId)[1]"
+          v-if="selectedItem.Datavoxelimage!=null"
+          :src="parsePreviewImg(selectedItem.Datavoxelimage.DatavoxelId)[1]"
           class = "preview-img"
         >
 
@@ -157,14 +157,14 @@
 
           <div class = "col-sm-6 info-text-left">
             <div class = "info-title">
-              {{ projectList[selectedIndex].voxelname?projectList[selectedIndex].voxelname:'Untitled' }}</div>
+              {{ selectedItem.voxelname?selectedItem.voxelname:'Untitled' }}</div>
 
             <a-dropdown class = "actions">
               <a-menu slot="overlay">
                 <a-menu-item key="1" @click.native="handleDeleteClick(selectedProject)">Delete Project</a-menu-item>
                 <a-menu-item key="2" >
                   <!-- <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox> -->
-                  <a-checkbox :default-checked="projectList[selectedIndex].public" @change="handlePublicity">Public</a-checkbox>
+                  <a-checkbox :default-checked="selectedItem.public" @change="handlePublicity">Public</a-checkbox>
 
                 </a-menu-item>
               </a-menu>
@@ -183,10 +183,10 @@
 
               <div>Created at:  
                 <span class = "info-time"
-              >{{ parseTime(projectList[selectedIndex].createdAt) }}</span></div>
+              >{{ parseTime(selectedItem.createdAt) }}</span></div>
               <div>Last updated at:  
                 <span class = "info-digits"
-              >{{ parseTime(projectList[selectedIndex].updatedAt) }}</span></div>
+              >{{ parseTime(selectedItem.updatedAt) }}</span></div>
 
             </div>
             <br>
@@ -199,7 +199,7 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="projectList[selectedIndex].Datajsons"
+                  :data-source="selectedItem.Datajsons"
                   class="prop-list"
                 >
 
@@ -626,6 +626,12 @@ export default {
 
       return JSON.stringify(output)
     },
+
+    selectedItem() {
+      return this.projectList.filter(item => {
+        return item.id == this.selectedProject
+      })[0]
+    },
   },
   created() {},
   methods: {
@@ -692,6 +698,8 @@ export default {
 
     setActiveProjId(id, index) {
       console.log('click ' + id)
+      console.log('selectedIndex ' + index)
+
       this.selectedProject = id
       this.selectedIndex = index
     },

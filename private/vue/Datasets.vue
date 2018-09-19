@@ -59,7 +59,7 @@
 
             <span
               v-if="datafile.label!='adding'"
-              :class="{selected:datafile.id===selectedProject}"
+              :class="{selected:datafile.id===selectedDataset}"
               class="card"
               @click="()=> {setActiveDatasetId(datafile.id,index)}"
             >
@@ -124,8 +124,8 @@
             <div class="map-thumbnail-preview">
               <l-map v-if="selectedGeometries!=null" 
                      :zoom="zoom" 
-                     :center="getMapCenter(datafileList[selectedIndex])"
-                     :bounds="getBbox(datafileList[selectedIndex])">
+                     :center="getMapCenter(selectedItem)"
+                     :bounds="getBbox(selectedItem)">
                 <l-tile-layer :url="url" :attribution="attribution"/>
 
                 <!-- polygons -->
@@ -149,23 +149,23 @@
           <div class = "info-text bottom-info">
             <div class = "info-title">File name:  
               <span class = "info-digits"
-            >{{ datafileList[selectedIndex].filename.split(".")[0] }}</span></div>
+            >{{ selectedItem.filename.split(".")[0] }}</span></div>
             <div>Created at:  
               <span class = "info-time"
-            >{{ parseTime(datafileList[selectedIndex].createdAt) }}</span></div>
+            >{{ parseTime(selectedItem.createdAt) }}</span></div>
             <br>
             <div>Last updated at:  
               <span class = "info-digits"
-            >{{ parseTime(datafileList[selectedIndex].updatedAt) }}</span></div>
+            >{{ parseTime(selectedItem.updatedAt) }}</span></div>
             <div>Latitude:  
               <span class = "info-digits"
-            >{{ (datafileList[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
+            >{{ (selectedItem.centroid.coordinates[0].toFixed(2)) }}</span></div>
             <div>Longitude:  
               <span class = "info-digits"
-            >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
+            >{{ (selectedItem.centroid.coordinates[1].toFixed(2)) }}</span></div>
             <div>Type of Geometry:  
               <span class = "info-digits"
-            >{{ datafileList[selectedIndex].geometryType }}</span></div>
+            >{{ selectedItem.geometryType }}</span></div>
           </div> 
         </div> 
 
@@ -177,7 +177,7 @@
                 class="demo-infinite-container"
               >
                 <a-list
-                  :data-source="Object.keys(datafileList[selectedIndex].Datalayers[0].properties)"
+                  :data-source="Object.keys(selectedItem.Datalayers[0].properties)"
                 >
                   <a-list-item slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta description="">
@@ -478,6 +478,12 @@ export default {
           )
         )
       }
+    },
+
+    selectedItem() {
+      return this.datafileList.filter(item => {
+        return item.id == this.selectedDataset
+      })[0]
     },
   },
   created() {
