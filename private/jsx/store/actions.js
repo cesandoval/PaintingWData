@@ -114,3 +114,9 @@ export const saveUserFile = payload =>
         type: t.SAVE_USERFILE,
         ...payload,
     })
+
+export const loadMemory = payload =>
+    store.dispatch({
+        type: t.LOAD_MEMORY,
+        ...payload,
+    })

@@ -15,7 +15,6 @@ export default (state = initialOptionsState, action) => {
          */
         case t.LOAD_MEMORY: {
             const { options } = action
-            // Merges the options' properties together. The later arguments' properties take precedence.
             return Object.assign({}, state, options)
         }
         /**

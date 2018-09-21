@@ -44,7 +44,6 @@ export default (state = initialState, action) => {
         case t.LOAD_MEMORY: {
             const { vpl } = action
 
-            // Merges the options' properties together. The later arguments' properties take precedence.
             return Object.assign({}, state, vpl)
         }
 

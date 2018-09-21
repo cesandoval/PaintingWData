@@ -2,8 +2,6 @@
  * @author PaintingWithData
  * Contains all of the type constants. To be exported to reducer methods.
  */
-// app
-export const IMPORT_USERFILE = 'IMPORT_USERFILE'
 
 // datasets
 export const IMPORT_DATASETS = 'IMPORT_DATASETS'
