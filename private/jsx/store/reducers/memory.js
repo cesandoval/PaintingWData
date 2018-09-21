@@ -3,16 +3,13 @@ Saves the given map/options as a Datauserfile.
 */
 import * as t from '../types'
 
-const initialMapState = {
-    instance: {},
-    geometries: {},
-    started: false,
-    loaded: false,
-    bbox: {},
-}
+const initialMapState = {}
 
 export default (state = initialMapState, action) => {
     switch (action.type) {
+        case t.LOAD_MEMORY: {
+            return Object.assign({}, state)
+        }
         case t.SAVE_USERFILE: {
             //const { instance, info } = action
 
@@ -24,13 +21,9 @@ export default (state = initialMapState, action) => {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    state: action.info,
-                    userId: action.userId,
-                    voxelId: action.voxelId,
-                }),
+                body: JSON.stringify(action),
             })
-            return state
+            return Object.assign({}, state)
         }
         default:
             return state
