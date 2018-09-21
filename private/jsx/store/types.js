@@ -30,5 +30,7 @@ export const LINK_REMOVE = 'LINK_REMOVE'
 export const SET_ACTIVENODE = 'SET_ACTIVENODE'
 export const SET_LOADING = 'SET_LOADING'
 export const SET_PANELSHOW = 'SET_PANELSHOW'
-export const SAVE_USERFILE = 'SAVE_USERFILE'
 export const SET_REFRESHVOXELS = 'SET_REFRESHVOXELS'
+
+// memory
+export const SAVE_USERFILE = 'SAVE_USERFILE'
