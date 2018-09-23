@@ -31,5 +31,4 @@ export const SET_PANELSHOW = 'SET_PANELSHOW'
 export const SET_REFRESHVOXELS = 'SET_REFRESHVOXELS'
 
 // memory
-export const SAVE_USERFILE = 'SAVE_USERFILE'
 export const LOAD_MEMORY = 'LOAD_MEMORY'

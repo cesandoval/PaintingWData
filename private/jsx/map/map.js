@@ -1,5 +1,3 @@
-/* global datavoxelId */
-
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
@@ -161,16 +159,6 @@ class MapCanvas extends React.Component {
         window.updateTiles()
     }
     */
-
-    saveFile() {
-        //Save everything in one JSON -- pass variable "info" to the request handler.
-        var file = {}
-
-        Act.saveUserFile({
-            voxelId: datavoxelId, //replace with user Id
-            ...file,
-        })
-    }
 
     render() {
         const panelShow = this.props.panelShow

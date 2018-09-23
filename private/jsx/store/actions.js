@@ -108,13 +108,7 @@ export const setRefreshVoxels = payload =>
         ...payload,
     })
 
-// save/import stuff
-export const saveUserFile = payload =>
-    store.dispatch({
-        type: t.SAVE_USERFILE,
-        ...payload,
-    })
-
+// memory
 export const loadMemory = payload =>
     store.dispatch({
         type: t.LOAD_MEMORY,
