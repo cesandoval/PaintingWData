@@ -104,5 +104,5 @@ var passport = require('passport'),
 
   // These are save/load files for a map's state, i.e. how the user exited it.
   router.post('/saveUserfile/', isAuthenticated, saveUserfile.save);
-  router.get('/getUserfile/:datavoxelId', isAuthenticated, saveUserfile.get);
+  router.get('/getUserfile/:datavoxelId', saveUserfile.get);
 module.exports = router;

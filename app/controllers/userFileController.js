@@ -19,7 +19,7 @@ module.exports.save = function(req, res){
                 }
             }).then(updatedDatauserFile => {
                 console.log("Userfile has been saved.", updatedDatauserFile.id)
-                res.json({result: success})
+                res.json({result: 'success'})
             })
         // Otherwise create it
         } else {
@@ -28,7 +28,7 @@ module.exports.save = function(req, res){
                 datavoxelId: req.body.voxelId,
             }).then(newDatauserFile => {
                 console.log("Userfile has been updated.", newDatauserFile.id)
-                res.json({result: success})
+                res.json({result: 'success'})
             })
         }
     })
@@ -45,8 +45,9 @@ module.exports.get = function(req, res){
         }
     }).then(datauserFile => {
         // returns as an array ?!
-        var data = datauserFile.dataValues.data;
-        console.log(data)
+        const data = {}
+        if(datauserFile) 
+            data = datauserFile.dataValues.data;
         res.json(data);
     })
 }
