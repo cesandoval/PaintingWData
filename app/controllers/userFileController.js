@@ -11,23 +11,19 @@ module.exports.save = function(req, res){
     }).then(datauserFile => {
         // if there is already a Datauserfile, just update it
         if (datauserFile != null) {
-            Model.Datauserfile.update({
-                data: req.body.data
-            }, {
-                where: {
-                    datavoxelId: req.body.voxelId
-                }
+            datauserFile.update({
+                data: req.body
             }).then(updatedDatauserFile => {
-                console.log("Userfile has been saved.", updatedDatauserFile.id)
+                console.log("Userfile has been updated.", updatedDatauserFile.id)
                 res.json({result: 'success'})
             })
         // Otherwise create it
         } else {
             Model.Datauserfile.create({
-                data: req.body.data,
+                data: req.body,
                 datavoxelId: req.body.voxelId,
             }).then(newDatauserFile => {
-                console.log("Userfile has been updated.", newDatauserFile.id)
+                console.log("Userfile has been saved.", newDatauserFile.id)
                 res.json({result: 'success'})
             })
         }
