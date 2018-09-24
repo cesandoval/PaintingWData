@@ -32,3 +32,4 @@ export const SET_REFRESHVOXELS = 'SET_REFRESHVOXELS'
 
 // memory
 export const LOAD_MEMORY = 'LOAD_MEMORY'
+export const SET_MODIFIED = 'SET_MODIFIED'

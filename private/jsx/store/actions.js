@@ -109,6 +109,12 @@ export const setRefreshVoxels = payload =>
     })
 
 // memory
+export const setModified = payload =>
+    store.dispatch({
+        type: t.SET_MODIFIED,
+        ...payload,
+    })
+
 export const loadMemory = payload =>
     store.dispatch({
         type: t.LOAD_MEMORY,

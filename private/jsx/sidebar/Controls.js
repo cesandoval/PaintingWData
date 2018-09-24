@@ -3,6 +3,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import * as Act from '../store/actions.js'
+
 import { Button } from 'antd'
 
 import Modifications from './Modifications'
@@ -45,8 +47,8 @@ class Controls extends React.Component {
         })
             .then(res => {
                 console.log('saveMemory success', { res })
+                Act.setModified({ value: false })
             })
-
             .catch(e => console.error(e))
             .then(() => {
                 setTimeout(() => {
@@ -75,7 +77,10 @@ class Controls extends React.Component {
                         font-family: 'Karla', sans-serif;
                     }
                 `}</style>
-                <div id="save">
+                <div
+                    id="save"
+                    className={this.props.modified ? 'modified' : ''}
+                >
                     <Button
                         loading={this.state.saving}
                         icon="save"
@@ -90,9 +95,10 @@ class Controls extends React.Component {
                         width: 100%;
                         text-align: center;
 
-                        .unsave {
+                        &.modified :global(button) {
                             border-left-color: #32e781;
                             border-left-width: 4px;
+                            transition-duration: 1s;
                         }
 
                         :global(.ant-btn) {
@@ -111,6 +117,7 @@ const mapStateToProps = s => {
         panelShow: s.interactions.panelShow,
         vpl: s.vpl,
         options: s.options,
+        modified: s.memory.modified,
     }
 }
 
