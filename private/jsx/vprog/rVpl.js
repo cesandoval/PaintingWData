@@ -114,9 +114,10 @@ class VPL extends React.Component {
             })
         })
 
-        this.checkMemory()
+        const datasetsLoaded = !_.isEmpty(layers)
+        if (datasetsLoaded) this.checkMemory()
 
-        return !_.isEmpty(layers)
+        return datasetsLoaded
     }
 
     checkMemory = () => {
@@ -129,12 +130,11 @@ class VPL extends React.Component {
                 // console.log('checkmemory', { testFile })
                 // data = testFile
 
-                if (data.datasets) this.loadMemory(data)
+                if (data.voxelId) this.loadMemory(data)
             })
     }
 
     loadMemory = data => {
-        console.log('loadMemory()')
         Act.loadMemory(data)
         setTimeout(() => {
             Act.setRefreshVoxels({ value: true })
