@@ -35,13 +35,13 @@ module.exports.save = function(req, res){
 * to front-end.
 */
 module.exports.get = function(req, res){
+
     Model.Datauserfile.findOne({
         where: {
-            datavoxelId: req.params.voxelId,
+            datavoxelId: req.params.datavoxelId,
         }
     }).then(datauserFile => {
-        // returns as an array ?!
-        const data = {}
+        let data = {}
         if(datauserFile) 
             data = datauserFile.dataValues.data;
         res.json(data);
