@@ -1,4 +1,5 @@
 /*global datavoxelId*/
+/*global userSignedIn */
 
 import React from 'react'
 import { connect } from 'react-redux'
@@ -80,6 +81,7 @@ class Controls extends React.Component {
                 <div
                     id="save"
                     className={this.props.modified ? 'modified' : ''}
+                    style={{ display: userSignedIn ? '' : 'none' }}
                 >
                     <Button
                         loading={this.state.saving}
