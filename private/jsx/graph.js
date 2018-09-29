@@ -280,9 +280,13 @@ export default class Graph {
 
         window.renderSec = this.renderSec.bind(this)
 
+        let renderPer2Sec = ''
+
         window.setInterval(() => {
             if (!this.rendering) {
-                window.requestAnimationFrame(() => {
+                cancelAnimationFrame(renderPer2Sec)
+                renderPer2Sec = window.requestAnimationFrame(() => {
+                    console.log('regularly render per 2 secs')
                     window.render()
                 })
             }
@@ -350,6 +354,7 @@ export default class Graph {
      * @param {String} label Unused.
      */
     renderSec(sec = 1) {
+        console.log(`renderSec(${sec})`, this.rendering)
         // "sec" seconds into the future
         const untilTime = Date.now() + sec * 1000
         // "this.renderUntil" is at least as far back as untilTime.
@@ -362,17 +367,20 @@ export default class Graph {
     }
 
     render() {
+        this.rendering = true
         this.renderer.render(this.scene, this.camera)
 
         const until = Math.ceil((this.renderUntil - Date.now()) / 1000)
 
-        if (until > 0 && this.rendering == false) {
-            this.rendering = true
+        console.log('render', until)
+
+        if (until >= 1) {
             window.requestAnimationFrame(() => {
                 this.render()
             })
         } else {
             this.rendering = false
+            console.log('render end', this.rendering)
         }
     }
 }
