@@ -66,7 +66,6 @@ export default class Graph {
         this.startTime = new Date().getTime()
 
         this.renderUntil = Date.now()
-        this.untilTime = this.renderUntil - Date.now()
         /**
          * Are we rendering or not?
          * @member {Boolean}
@@ -366,7 +365,6 @@ export default class Graph {
         this.renderer.render(this.scene, this.camera)
 
         const until = Math.ceil((this.renderUntil - Date.now()) / 1000)
-        this.untilTime = until
 
         if (until > 0 && this.rendering == false) {
             this.rendering = true
