@@ -1,7 +1,10 @@
+/*global datavoxelId*/
+
 import React from 'react'
 import { connect } from 'react-redux'
 import Rx from 'rxjs/Rx'
 import _ from 'lodash'
+import axios from 'axios'
 
 import * as Act from '../store/actions.js'
 
@@ -12,6 +15,8 @@ import { Popover, Button, Menu, Dropdown } from 'antd'
 import hashKey from '@/utils/hashKey'
 
 import * as NodeType from './nodeTypes'
+
+// import testFile from '../store/test_userFile.json'
 
 // import { Nodes, Links } from './mockData' // deprecated
 
@@ -109,7 +114,31 @@ class VPL extends React.Component {
             })
         })
 
-        return !_.isEmpty(layers)
+        const datasetsLoaded = !_.isEmpty(layers)
+        if (datasetsLoaded) this.checkMemory()
+
+        return datasetsLoaded
+    }
+
+    checkMemory = () => {
+        axios
+            .get('/getUserfile/' + datavoxelId, { options: {} })
+            .then(({ data }) => {
+                console.log('checkmemory', { data })
+
+                // Test
+                // console.log('checkmemory', { testFile })
+                // data = testFile
+
+                if (data.voxelId) this.loadMemory(data)
+            })
+    }
+
+    loadMemory = data => {
+        Act.loadMemory(data)
+        setTimeout(() => {
+            Act.setRefreshVoxels({ value: true })
+        }, 500)
     }
 
     newNodeObj = type => {
@@ -536,12 +565,14 @@ class VPL extends React.Component {
 
             // const srcNodeDOM = this['node_' + srcNode]
             const outputPlugDOM = this[`${srcNode}_plug_output`]
+            if (!outputPlugDOM) return ''
 
             // console.log('srcNodeDOM', srcNodeDOM)
 
             return Object.entries(input).map(([toNode, inputKey]) => {
                 // const toNodeDOM = this['node_' + toNode]
                 const inputPlugDOM = this[`${toNode}_plug_input_${inputKey}`]
+                if (!inputPlugDOM) return ''
 
                 const linkKey = `${srcNode}_${toNode}`
                 const linkInfo = { srcNode, toNode }

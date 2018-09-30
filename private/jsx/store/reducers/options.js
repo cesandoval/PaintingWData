@@ -13,9 +13,8 @@ export default (state = initialOptionsState, action) => {
          * @param {Object} options An Object containing bgStyle, opacity and knnValue properties
          * from the saved userfile.
          */
-        case t.IMPORT_USERFILE: {
+        case t.LOAD_MEMORY: {
             const { options } = action
-            // Merges the options' properties together. The later arguments' properties take precedence.
             return Object.assign({}, state, options)
         }
         /**

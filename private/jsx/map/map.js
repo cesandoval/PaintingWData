@@ -1,6 +1,3 @@
-/* global project */
-/* global datavoxelId */
-
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
@@ -163,55 +160,6 @@ class MapCanvas extends React.Component {
     }
     */
 
-    //TODO: Pass in the appropriate parameters!
-    saveFile() {
-        //Gets the voxel ID.
-        /*
-        var temp = window.location.toString().split('/')
-        var voxelId = parseInt(temp[temp.length - 1])
-        */
-        //This is horrible coding, copying from exportSVG... lolrip
-        let _centroid = this.props.map.camera.position
-        let bbox = this.props.bbox[0]
-        let projectedMin = project([bbox[0][0], bbox[0][1]])
-        let projectedMax = project([bbox[2][0], bbox[2][1]])
-
-        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
-        let _bounds = [
-            Math.abs(projectedMax.x + _translation[0]),
-            Math.abs(projectedMax.z + (0 - projectedMin.z)),
-        ]
-        //Save everything in one JSON -- pass variable "info" to the request handler.
-        var _info = {
-            // It's just the "map" attribute that we have to fix. "options" and "vpl" correspond to the correct properties.
-            map: {
-                translation: _translation,
-                centroid: _centroid,
-                bounds: _bounds,
-                /*
-                instance: {
-                  // ThreeJS Graph Object
-                  renderFunc,
-                },
-                loaded: false,
-                geometries: {
-                  [layer$key]: {
-
-                  },
-                },
-                // layers: [], // ???
-                */
-            },
-            options: this.props.options,
-            vpl: this.props.vpl,
-        }
-        Act.saveUserFile({
-            userId: 1, //replace with user Id
-            voxelId: datavoxelId,
-            info: _info,
-        })
-    }
-
     render() {
         const panelShow = this.props.panelShow
         const activeNodeType = this.props.activeNode
@@ -278,73 +226,7 @@ class MapCanvas extends React.Component {
                         height: 100%;
                     }
                 `}</style>
-                {/* 
-                <Button
-                    id={`save-userfile`}
-                    onClick={() => {
-                        this.saveFile()
-                    }}
-                >
-                    Save Userfile
-                </Button>
-                <div
-                    style={{
-                        position: 'absolute',
-                        width: '80vw',
-                        right: '0px',
-                    }}
-                >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '40px',
-                            top: '20px',
-                            display: panelShow == 'VPL' ? 'none' : '',
-                        }}
-                        className="map-menu"
-                    >
-                        <DropdownButton title={'Export'} id={`export-dropdown`}>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('SVG')
-                                }}
-                            >
-                                SVG
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('GeoJSON')
-                                }}
-                            >
-                                GeoJSON
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('SHP')
-                                }}
-                            >
-                                SHP
-                            </MenuItem>
-                            <MenuItem onClick={this.getScreenShot}>
-                                IMAGE
-                            </MenuItem>
-                        </DropdownButton>
-                    </div>
-                    <Button
-                        id="zoomShow"
-                        className="buttons zoomText btn buttonsText"
-                        onClick={() => this.zoomMap()}
-                    >
-                        {' '}
-                        Zoom to Map{' '}
-                    </Button>
-                </div>
-                */}
                 <div className="map" id="mapCanvas" />
-                {/* 
-                <div id="pivot" />
-                <div id="grid" />
-                */}
             </div>
         )
     }

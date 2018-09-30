@@ -27,33 +27,6 @@ export default class App extends React.Component {
      *
      * TODO: When the user closes out, automatically save.
      */
-    componentDidMount() {
-        /*
-         * Promises. Fetches the saved state, and then updates the Redux variables
-         * accordingly.
-         */
-        // fetch(`/importuserfile/${datavoxelId}`, {
-        //     method: 'GET',
-        //     credentials: 'include',
-        // })
-        //     .then(data => data.json())
-        //     .then(newState => {
-        //         Act.importUserfile(newState)
-        //     })
-        //     .catch(e => console.log('importUserfile() error', e))
-        /*
-         * TODO: The following should be ran when we don't have anything yet to
-         * import.
-         *     const data = {
-         *         options: {
-         *             opacity: 10, // 0 ~ 100
-         *             knnValue: 1, // 0 ~ 8
-         *             bgStyle: 'mapbox.dark',
-         *         },
-         *     }
-         *     Act.importUserfile({ data })
-         */
-    }
     /**
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */

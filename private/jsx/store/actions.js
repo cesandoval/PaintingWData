@@ -1,13 +1,6 @@
 import store from './store'
 import * as t from './types'
 
-// app
-export const importUserfile = payload =>
-    store.dispatch({
-        type: t.IMPORT_USERFILE,
-        ...payload,
-    })
-
 // datasets
 export const importDatasets = payload =>
     store.dispatch({
@@ -115,9 +108,15 @@ export const setRefreshVoxels = payload =>
         ...payload,
     })
 
-// save/import stuff
-export const saveUserFile = payload =>
+// memory
+export const setModified = payload =>
     store.dispatch({
-        type: t.SAVE_USERFILE,
+        type: t.SET_MODIFIED,
+        ...payload,
+    })
+
+export const loadMemory = payload =>
+    store.dispatch({
+        type: t.LOAD_MEMORY,
         ...payload,
     })

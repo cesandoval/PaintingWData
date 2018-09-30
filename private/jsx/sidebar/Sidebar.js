@@ -26,6 +26,12 @@ export default class Sidebar extends React.Component {
                     :global(.ant-tabs-nav-scroll) {
                         text-align: center;
                     }
+
+                    .sidebar {
+                        :global(.ant-tabs) {
+                            height: 100%;
+                        }
+                    }
                 `}</style>
             </div>
         )

@@ -8,22 +8,30 @@ import axios from 'axios'
 import hashKey from '@/utils/hashKey'
 
 import Layer from './Layer'
+
 /**
  * The top 2/3rds of the sidebar, "Layers".
  */
 class Layers extends React.Component {
     constructor(props) {
         super(props)
-        this.getLayers = this.getLayers.bind(this)
-        this.getLayers() // NEED REFACTORING
+
+        this.initDatasets()
     }
+
     /**
      * Requests Datajsons, and then adds a transformed version to the Redux state.
      * Because of this, the last line will trigger "componentWillReceiveProps" in "../map/map.js".
      */
-    getLayers() {
+    initDatasets = () => {
+        console.log('initDatasets()')
+
+        // NEED REFACTORING
         // TODO: Change this when migrate to actual code
         // GET RID OF DATA... THIS SHOULD BE DONE ON THE FLY WITH A TRANSFORM
+
+        console.log({ datavoxelId })
+
         axios
             .get('/datajson/all/' + datavoxelId, { options: {} })
             .then(({ data }) => {
@@ -42,7 +50,7 @@ class Layers extends React.Component {
                 // With "datasets", we'll add a transformed version of this to the Redux state.
                 Act.importDatasets({ datasets })
             })
-            .catch(e => console.log('getLayers() error', e))
+            .catch(e => console.log('initDatasets() error', e))
     }
     /**
      * Renders the "Layers" component, which is the top 2/3rd of the sidebar on the left.
@@ -50,20 +58,26 @@ class Layers extends React.Component {
     render() {
         return (
             <div className="layers">
-                {Object.entries(this.props.layers).map(([i, layer]) => (
-                    <Layer
-                        key={i}
-                        layerKey={i}
-                        propName={layer.propertyName}
-                        userPropName={layer.userLayerName}
-                        name={layer.name}
-                        visible={layer.visible}
-                        showSidebar={layer.showSidebar}
-                    />
-                ))}
+                {Object.entries(this.props.datasets.layers).map(
+                    ([i, layer]) => (
+                        <Layer
+                            key={i}
+                            layerKey={i}
+                            propName={layer.propertyName}
+                            userPropName={layer.userLayerName}
+                            name={layer.name}
+                            visible={layer.visible}
+                            showSidebar={layer.showSidebar}
+                        />
+                    )
+                )}
             </div>
         )
     }
 }
 
-export default connect(s => ({ layers: s.datasets.layers }))(Layers)
+export default connect(s => ({
+    datasets: s.datasets,
+    vpl: s.vpl,
+    options: s.options,
+}))(Layers)
