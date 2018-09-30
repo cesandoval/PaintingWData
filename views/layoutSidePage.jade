@@ -245,6 +245,44 @@ script.
 script(src="/javascripts/progressWidget.js", type="text/javascript")
 
 script.
+  $("#agreement").click(function(){
+    d3.selectAll(".signup-btn").classed("hidden-btn",!d3.select(this).property("checked"));
+  })
+
+    $("#show-terms").click(function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+
+        let surveyBack = d3.select("body").append("div").classed("surveyBack",true).on("click",function(){
+            d3.select(".surveyBack").remove();
+            d3.select(".surveyBox").remove();
+        });
+        let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
+        surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
+            d3.select(".surveyBack").remove();
+            d3.select(".surveyBox").remove();
+        });
+        let embeddingBox = surveyBox.append("div").classed("embedding-box",true);
+        embeddingBox.append("iframe").attr("src","/posts/terms/CopyofPaintingwithDataTermsofServiceDraft.html").classed("embedded",true)
+    })
+
+    $("#show-policy").click(function(){
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+
+        let surveyBack = d3.select("body").append("div").classed("surveyBack",true).on("click",function(){
+            d3.select(".surveyBack").remove();
+            d3.select(".surveyBox").remove();
+        });
+        let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
+        surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
+            d3.select(".surveyBack").remove();
+            d3.select(".surveyBox").remove();
+        });
+        let embeddingBox = surveyBox.append("div").classed("embedding-box",true);
+        embeddingBox.append("iframe").attr("src","/posts/terms/CopyofPaintingwithDataPrivacyPolicyDraft.html").classed("embedded",true)
+    })
+
 
   $("#trigger_survey").click(function(){
       d3.select(".surveyBack").remove();
