@@ -1360,6 +1360,11 @@ class VPL extends React.Component {
                         </g>
                     </svg>
                 </div>
+                <style jsx>{`
+                    svg.vpl :global(*) {
+                        user-select: none;
+                    }
+                `}</style>
             </div>
         )
     }
