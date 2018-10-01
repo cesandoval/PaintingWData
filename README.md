@@ -26,8 +26,6 @@ npm install -g gulp-cli
 * `git clone https://github.com/cesandoval/PaintingWithData_Riyadh.git`
 * `cd` into the webapp directory
 * `yarn` will install all the node and bower modules needed locally for development.
-
-* If modifying the `/Private` Code, run the command `gulp`. This task-runner will bundle all of the code that has changed.
 * Add the following environment variables to your system:
 ```
 export USEREMAIL=AKIAI4QPMNW3UXUB55YA
