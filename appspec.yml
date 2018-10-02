@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 hooks:
   BeforeInstall:
-    - location: /var/www/PaintingWithData_Riyadh/beforeinstall.sh
+    - location: beforeinstall.sh
       timeout: 300
   AfterInstall:
     - location: /var/www/PaintingWithData_Riyadh/install.sh
