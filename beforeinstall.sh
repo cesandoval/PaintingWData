@@ -1,2 +1,2 @@
-cd /var/www/PaintingWithData_Riyadh 
-sudo yarn
+# cd /var/www/PaintingWithData_Riyadh 
+sudo npm install

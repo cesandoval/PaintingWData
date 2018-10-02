@@ -5,5 +5,5 @@ hooks:
     - location: beforeinstall.sh
       timeout: 300
   AfterInstall:
-    - location: /var/www/PaintingWithData_Riyadh/install.sh
+    - location: install.sh
       timeout: 300

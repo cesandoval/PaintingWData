@@ -12,4 +12,4 @@ sudo chkconfig nginx on
 sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 fs-ec8164f5.efs.us-west-1.amazonaws.com:/ /var/www/PaintingWithData_Riyadh/lib/shape_files
 
 # CD into app 
-cd /var/www/PaintingWithData_Riyadh 
+# cd /var/www/PaintingWithData_Riyadh 
