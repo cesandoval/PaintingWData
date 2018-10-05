@@ -99,6 +99,12 @@ html
                 img.icon_link_img.mybtn.home_icon(src='/images/linkedin.png')
       div.contact-div.
         Have a quick question? Email our Support Team at support@paintingwithdata.com
+      div.terms-bar
+        span.terms(id="show-policy")
+            b privacy policy
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        span.terms(id="show-terms")
+            b terms and conditions
 
       p &copy; Painting with Data 2018. 
         span.
@@ -248,8 +254,7 @@ script.
   $("#agreement").click(function(){
     d3.selectAll(".signup-btn").classed("hidden-btn",!d3.select(this).property("checked"));
   })
-
-    $("#show-terms").click(function(){
+    d3.selectAll("#show-terms").on("click",function(){
         d3.select(".surveyBack").remove();
         d3.select(".surveyBox").remove();
 
@@ -257,7 +262,7 @@ script.
             d3.select(".surveyBack").remove();
             d3.select(".surveyBox").remove();
         });
-        let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
+        let surveyBox = d3.select("body").append("div").classed("surveyBox",true);
         surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
             d3.select(".surveyBack").remove();
             d3.select(".surveyBox").remove();
@@ -266,7 +271,8 @@ script.
         embeddingBox.append("iframe").attr("src","/posts/terms/CopyofPaintingwithDataTermsofServiceDraft.html").classed("embedded",true)
     })
 
-    $("#show-policy").click(function(){
+    d3.selectAll("#show-policy").on("click",function(){
+        console.log("yyy");
         d3.select(".surveyBack").remove();
         d3.select(".surveyBox").remove();
 
@@ -274,7 +280,7 @@ script.
             d3.select(".surveyBack").remove();
             d3.select(".surveyBox").remove();
         });
-        let surveyBox = d3.select("#signup_form").append("div").classed("surveyBox",true);
+        let surveyBox = d3.select("body").append("div").classed("surveyBox",true);
         surveyBox.append("p").classed("delete_surveybox",true).text("X").on("click",function(){
             d3.select(".surveyBack").remove();
             d3.select(".surveyBox").remove();

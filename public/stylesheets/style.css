@@ -1421,3 +1421,13 @@ p {
     border-radius: 10px;
     border: 1px solid rgba(0,0,0,0.1);
 }
+
+.terms-bar {
+    position: absolute;
+    width: 50%;
+    text-align: center;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(0,0,0,0.6);
+}
