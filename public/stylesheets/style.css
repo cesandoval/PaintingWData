@@ -1426,7 +1426,7 @@ p {
     position: absolute;
     width: 50%;
     text-align: center;
-    top: 10px;
+    bottom: 64px;
     left: 50%;
     transform: translateX(-50%);
     color: rgba(0,0,0,0.6);
