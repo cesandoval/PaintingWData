@@ -21,6 +21,7 @@ const NodeType = {
 */
 
 import _ from 'lodash'
+import regression from 'regression'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -249,5 +250,29 @@ export const NOT = {
     options: {},
     arithmetic: inputs => {
         return inputs[0].map(m => !m)
+    },
+}
+
+export const LIN_REG = {
+    fullName: 'Linear Regression',
+    class: 'statistics',
+    desc: `
+        Return the voxels for the linear regression for dependent variable Y on observed variable X.
+    `,
+    inputs: {
+        Input1: 'X',
+        Input2: 'Y',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: inputs => {
+        // Ask whether input[i] is a voxel or the third elem in voxel and whether indices match
+        const result = regression.linear(
+            inputs[0].map((x, i) => [x, inputs[1][i]])
+        )
+        console.log(inputs[0].map(x => result.predict(x)))
+        debugger
+        // What type of return is it
+        return inputs[0].map(x => result.predict(x)[1])
     },
 }
