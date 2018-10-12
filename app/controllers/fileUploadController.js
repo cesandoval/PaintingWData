@@ -78,7 +78,7 @@ function saveDatafileDatalayer(req, res, data){
             datafileId : datafileId,
             layername: data.fields['dataset_name'],
             filename: data.fields['dataset_name'],
-            targetPath: data.targetPath
+            targetPath: data.targetPath,
           },
           user: {id: req.user.id}
         }
