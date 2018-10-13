@@ -176,11 +176,6 @@ function saveDatafileDatalayer(req, res, data){
                       var req = job.data;
                       pushJSON(req, function (message) {
                         if (typeof message.message !== "undefined") {
-                          // res.json({
-                          //   completed:false,
-                          //   alert:"The coordinate reference system is not WGS84.",
-                          //   alertType:"uploadAlert",
-                          // });
                           done(new Error(message.message))
                         }
                         done();
