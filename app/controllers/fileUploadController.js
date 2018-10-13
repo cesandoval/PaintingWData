@@ -142,7 +142,7 @@ function saveDatafileDatalayer(req, res, data){
                     // Sends a process to a worker
                     var job = queue.create('saveJSON', newReq)
                         .priority('critical')
-                        .attempts(2)
+                        .attempts(1)
                         .backoff(true)
                         .removeOnComplete(true)
                         .save((err) => {
@@ -156,15 +156,33 @@ function saveDatafileDatalayer(req, res, data){
                             console.log('Shapes added to the queue');
                           }
                         });
-                    job.on('complete', function(){
+                    job.on('complete', function(result){
+                      console.log(result)
                       console.log('job completed!!!!')
                       res.json({completed: true}); 
                     });
+                    job.on('error', function(err){
+                      console.log(err)
+                      res.json({
+                        completed:false,
+                        alert:"The coordinate reference system is not WGS84.",
+                        alertType:"uploadAlert",
+                      });
+                      return
+
+                    })
                     
                     queue.process('saveJSON', 5, (job, done) => { 
                       var req = job.data;
                       pushJSON(req, function (message) {
-                        console.log(message, '-----------------');
+                        if (typeof message.message !== "undefined") {
+                          // res.json({
+                          //   completed:false,
+                          //   alert:"The coordinate reference system is not WGS84.",
+                          //   alertType:"uploadAlert",
+                          // });
+                          done(new Error(message.message))
+                        }
                         done();
                       });
                     });

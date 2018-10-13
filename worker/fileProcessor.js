@@ -99,6 +99,10 @@ function pushJSON(req, callback) {
         // },
         // pushDataRaster
     ], function (err, result) {
+        if (err) {
+            callback( new Error(err))
+            return
+        }
         // Send Layer complete user email
         Model.User.findById(req.user.id).then(function(user){
             // Wenzhe - this is the callback for vue
