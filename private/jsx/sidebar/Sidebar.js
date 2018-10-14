@@ -5,6 +5,7 @@ const TabPane = Tabs.TabPane
 
 import Layers from './Layers'
 import Controls from './Controls'
+import Share from './Share'
 
 export default class Sidebar extends React.Component {
     constructor(props) {
@@ -19,6 +20,9 @@ export default class Sidebar extends React.Component {
                     </TabPane>
                     <TabPane tab="Controls" key="2">
                         <Controls />
+                    </TabPane>
+                    <TabPane tab={<i className="fas fa-share-alt" />} key="3">
+                        <Share />
                     </TabPane>
                 </Tabs>
 
