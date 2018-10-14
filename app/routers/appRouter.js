@@ -88,9 +88,13 @@ var passport = require('passport'),
   // router.get('/createProject/:id', isAuthenticated, datalayerController.createProject);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
-
-  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
+  
+  // App route
   router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  // Embed route
+  router.get('/embed/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  
+  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
   router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
   router.get('/screenshot', appController.getPublicVoxelScreenshots);
