@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 // import * as Act from '../store/actions.js'
 
-import { Input, message } from 'antd'
+import { Input, Modal, message } from 'antd'
 
 message.config({
     top: 100,
@@ -14,9 +14,14 @@ message.config({
     maxCount: 1,
 })
 
-class Controls extends React.Component {
+class Share extends React.Component {
     constructor(props) {
         super(props)
+
+        this.state = {
+            snapshotModalVisible: false,
+            snapshotTaking: false,
+        }
     }
 
     componentWillReceiveProps() {}
@@ -36,6 +41,31 @@ class Controls extends React.Component {
         inputDom.select()
         document.execCommand('copy')
         message.success('Link is Copied')
+    }
+
+    takeSnapshot = e => {
+        console.log('takeSnapshot', e)
+        this.setState({
+            snapshotModalVisible: true,
+        })
+    }
+
+    handleSnapshotTaking = () => {
+        this.setState({
+            snapshotTaking: true,
+        })
+        setTimeout(() => {
+            this.setState({
+                snapshotModalVisible: false,
+                snapshotTaking: false,
+            })
+        }, 2000)
+    }
+
+    handleCancelSnapshotTaking = () => {
+        this.setState({
+            snapshotModalVisible: false,
+        })
     }
 
     render() {
@@ -68,6 +98,20 @@ class Controls extends React.Component {
                 {/* invisible input DOM only for copy function */}
                 <input id="snapshot-link" value="snapshotLink" readOnly />
 
+                <Modal
+                    wrapClassName="snapshot-taking-modal"
+                    title="Taking Snapshot"
+                    visible={this.state.snapshotModalVisible}
+                    onOk={this.handleSnapshotTaking}
+                    confirmLoading={this.state.snapshotTaking}
+                    onCancel={this.handleCancelSnapshotTaking}
+                >
+                    <img src={snapshotImage} />
+                    <div className="name">
+                        <Input addonBefore="Name" defaultValue="Case AbCd" />
+                    </div>
+                </Modal>
+
                 <div
                     className="snapshot"
                     style={{
@@ -86,7 +130,7 @@ class Controls extends React.Component {
                     </div>
                 </div>
 
-                <div className="snapshot add">
+                <div className="snapshot add" onClick={this.takeSnapshot}>
                     <i className="fas fa-plus fa-3x" />
                 </div>
 
@@ -170,6 +214,16 @@ class Controls extends React.Component {
                         }
                     }
                 `}</style>
+                <style jsx global>{`
+                    .snapshot-taking-modal {
+                        img {
+                            width: 100%;
+                        }
+                        .name {
+                            margin: 20px 0px;
+                        }
+                    }
+                `}</style>
             </div>
         )
     }
@@ -182,4 +236,4 @@ const mapStateToProps = s => {
     }
 }
 
-export default connect(mapStateToProps)(Controls)
+export default connect(mapStateToProps)(Share)
