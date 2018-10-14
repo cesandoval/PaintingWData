@@ -15,10 +15,10 @@ export default class Sidebar extends React.Component {
         return (
             <div className="sidebar">
                 <Tabs>
-                    <TabPane tab="Layers" key="1">
+                    <TabPane tab={<i className="fas fa-database" />} key="1">
                         <Layers />
                     </TabPane>
-                    <TabPane tab="Controls" key="2">
+                    <TabPane tab={<i className="fas fa-wrench" />} key="2">
                         <Controls />
                     </TabPane>
                     <TabPane tab={<i className="fas fa-share-alt" />} key="3">
