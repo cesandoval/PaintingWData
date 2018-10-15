@@ -88,7 +88,7 @@ class Share extends React.Component {
                         placeholder="embeddable link"
                         onClick={this.copyEmbedLink}
                         style={{ width: '80%' }}
-                        value={`paintingwithdata.com/embed/${datavoxelId}`}
+                        value={`${window.location.origin}/embed/${datavoxelId}`}
                         readOnly
                         addonAfter={<i className="fas fa-link" />}
                     />
