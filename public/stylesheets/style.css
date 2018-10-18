@@ -130,7 +130,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 /* link */
 .navbar-inverse .navbar-nav > li > a,
 .navbar-nav > li > ul > a {
-    color: white;
+    color: white !important;
     font-family: 'Roboto', sans-serif;
     font-size: 12pt;
     text-shadow: none;
@@ -139,7 +139,7 @@ nav navbar.navbar-inverse.navbar-fixed-top.container {
 }
 
 .navbar-nav > li.dropdown > a {
-    color: white;
+    color: white !important;
 }
 
 .navbar-nav a:hover {
