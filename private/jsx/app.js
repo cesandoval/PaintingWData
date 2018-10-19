@@ -25,7 +25,6 @@ export default class App extends React.Component {
      * The Datauserfile model, in `app/models/datauserfile.js`, is where the
      * necessary saved states are stored.
      *
-     * TODO: When the user closes out, automatically save.
      */
     /**
      * Summary. Renders the three components in App: Options, Sidebar, and Map.

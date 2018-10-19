@@ -174,7 +174,6 @@ class Modifications extends React.Component {
 
     /*
     changeKNN(e) {
-        // TODO: is this function useless?
 
         this.setState({ knn: e.target.value })
         // for (var geo in this.props.geometries) {
