@@ -1,4 +1,5 @@
 import axios from 'axios'
+let crypto = require('crypto')
 /**
  * Summary. (use period)
  *
@@ -158,12 +159,14 @@ export default class Graph {
             document.body.appendChild(link)
             link.click()
         }
+
         /**
          *
-         * @alias window~screenshotToS3
+         * @alias window~takeSnaptshot
          * @param {Number} datavoxelId
+         * @param {Boolean} snapshot
          */
-        window.screenshotToS3 = datavoxelId => {
+        window.takeSnaptshot = (datavoxelId, snapshot = false) => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
             let newHeight = 550
@@ -200,11 +203,29 @@ export default class Graph {
 
             let img = resizedCanvas.toDataURL('image/jpeg')
 
-            let request = { id: datavoxelId, data: img, preview: preview }
+            if (snapshot) {
+                let hash = crypto.randomBytes(20).toString('hex')
+                uploadSnapshot(
+                    {
+                        id: datavoxelId,
+                        data: img,
+                        preview: preview,
+                        hash: hash,
+                    },
+                    '/uploadSnapshot'
+                )
+            } else {
+                uploadSnapshot(
+                    { id: datavoxelId, data: img, preview: preview },
+                    '/screenshot'
+                )
+            }
+        }
 
+        const uploadSnapshot = (request, endpoint) => {
             axios({
                 method: 'post',
-                url: '/screenshot',
+                url: endpoint,
                 data: request,
             })
                 .then(function(response) {
