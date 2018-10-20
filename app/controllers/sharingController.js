@@ -55,17 +55,20 @@ module.exports.getSnapshots = function(req, res) {
 }
 
 module.exports.deleteSnapshots = function(req, res) {
-    // datavoxelIds is an array of ids
-    var datavoxelIds = req.body.datavoxelIds;
+    // hashes is an array of ids
+    var hashes = req.body.hashes;
 
     Model.Datasnapshot.findAll({
-      where: {datavoxelId: datavoxelIds }, 
+      where: { hash: hashes }, 
       }).then(function(datasnapshots) {
           if (datasnapshots !== null) {
             Model.Datasnapshot.destroy({
-              where: {datavoxelId: datavoxelIds },
+              where: { hash: hashes },
             }).then(() => {
-              res.json({destroyed: true})
+                s3Lib.deleteDatasnapshots(bucket, hashes, function(hashes){
+                    console.log('Datasnapshots have been destroyed', hashes)
+                    res.json({hashes:hashes, success: true});
+                })
             })   
           }
         })
