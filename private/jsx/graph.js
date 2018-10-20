@@ -166,7 +166,7 @@ export default class Graph {
          * @param {Number} datavoxelId
          * @param {Boolean} snapshot
          */
-        window.takeSnaptshot = (datavoxelId, snapshot = false) => {
+        window.takeSnaptshot = (datavoxelId, snapshot = false, name = '') => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
             let newHeight = 550
@@ -204,13 +204,13 @@ export default class Graph {
             let img = resizedCanvas.toDataURL('image/jpeg')
 
             if (snapshot) {
-                let hash = crypto.randomBytes(20).toString('hex')
+                let hash = crypto.randomBytes(8).toString('hex')
                 uploadSnapshot(
                     {
                         id: datavoxelId,
                         data: img,
-                        preview: preview,
                         hash: hash,
+                        name: name,
                     },
                     '/uploadSnapshot'
                 )
