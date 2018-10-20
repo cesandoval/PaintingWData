@@ -103,6 +103,8 @@ var passport = require('passport'),
 
   // Sharing Routers
   router.post('/uploadSnapshot', isAuthenticated, sharingController.uploadSnapshot);
+  router.post('/getSnapshots', isAuthenticated, sharingController.getSnapshots);
+  router.post('/deleteSnapshots', isAuthenticated, sharingController.deleteSnapshots);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 

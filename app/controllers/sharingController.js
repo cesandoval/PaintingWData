@@ -10,7 +10,7 @@ var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-snapshots-serve
  * @param {*} res 
  */
 module.exports.uploadSnapshot = function(req, res) {
-  //Update react state so we know if this user has opened this voxel before
+    //Update react state so we know if this user has opened this voxel before
     var img = req.body.data
     var hash = req.body.hash
     var name = req.body.name
@@ -38,5 +38,35 @@ module.exports.uploadSnapshot = function(req, res) {
           } else {
               console.log('Datasnapshot already exists')
           }  
+        })
+}
+
+module.exports.getSnapshots = function(req, res) {
+    var datavoxelId = req.body.id;
+
+    Model.Datasnapshot.findAll({
+      where: {datavoxelId: datavoxelId }, 
+      order:[['createdAt', 'ASC']],
+      }).then(function(datasnapshots) {
+          if (datasnapshots !== null) {
+              res.json({snapshots: datasnapshots})
+          }
+        })
+}
+
+module.exports.deleteSnapshots = function(req, res) {
+    // datavoxelIds is an array of ids
+    var datavoxelIds = req.body.datavoxelIds;
+
+    Model.Datasnapshot.findAll({
+      where: {datavoxelId: datavoxelIds }, 
+      }).then(function(datasnapshots) {
+          if (datasnapshots !== null) {
+            Model.Datasnapshot.destroy({
+              where: {datavoxelId: datavoxelIds },
+            }).then(() => {
+              res.json({destroyed: true})
+            })   
+          }
         })
 }
