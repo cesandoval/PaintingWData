@@ -1006,6 +1006,7 @@ class VPL extends React.Component {
         //const p = {x: 0, y: 0}
 
         const inputs = NodeType[type].inputs
+        const isStatistics = NodeType[type].class === 'statistics'
         const output = NodeType[type].output
 
         const typeOptions = NodeType[type].options
@@ -1042,7 +1043,16 @@ class VPL extends React.Component {
                     key={nodeKey}
                     className="background"
                     width={nodeWidth}
-                    height={nodeHeight}
+                    height={
+                        isStatistics
+                            ? nodeHeight +
+                              Math.max(
+                                  0,
+                                  Style.plug.height *
+                                      (Object.entries(inputs).length - 2)
+                              )
+                            : nodeHeight
+                    }
                     x="0"
                     y="0"
                     style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
@@ -1086,7 +1096,28 @@ class VPL extends React.Component {
                         </text>
                     </g>
                 ))}
-
+                {/* Adding more nodes */}
+                {isStatistics && (
+                    <foreignObject
+                        transform={`translate(${2}, ${Style.plug.height / 2 +
+                            Style.topOffset +
+                            Style.plug.marginTop *
+                                (Object.entries(inputs).length - 0.5)})`}
+                    >
+                        <img
+                            onClick={() => {
+                                const x_index =
+                                    Object.entries(inputs).length + 1
+                                inputs.Input2 = 'X1'
+                                inputs[`Input${x_index}`] = `X${x_index - 1}`
+                            }}
+                            title="add"
+                            style={{ cursor: 'pointer' }}
+                            src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUyIDUyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MiA1MjsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxwYXRoIGQ9Ik0yNiwwQzExLjY2NCwwLDAsMTEuNjYzLDAsMjZzMTEuNjY0LDI2LDI2LDI2czI2LTExLjY2MywyNi0yNlM0MC4zMzYsMCwyNiwweiBNMjYsNTBDMTIuNzY3LDUwLDIsMzkuMjMzLDIsMjYgICBTMTIuNzY3LDIsMjYsMnMyNCwxMC43NjcsMjQsMjRTMzkuMjMzLDUwLDI2LDUweiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTM4LjUsMjVIMjdWMTRjMC0wLjU1My0wLjQ0OC0xLTEtMXMtMSwwLjQ0Ny0xLDF2MTFIMTMuNWMtMC41NTIsMC0xLDAuNDQ3LTEsMXMwLjQ0OCwxLDEsMUgyNXYxMmMwLDAuNTUzLDAuNDQ4LDEsMSwxICAgczEtMC40NDcsMS0xVjI3aDExLjVjMC41NTIsMCwxLTAuNDQ3LDEtMVMzOS4wNTIsMjUsMzguNSwyNXoiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
+                        />
+                    </foreignObject>
+                )}
+                <Button type="primary" icon="cloud-download" />
                 {/* Output Plug */}
                 <g
                     ref={ref => (this[`${nodeKey}_plug_output`] = ref)}

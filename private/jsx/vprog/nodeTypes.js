@@ -21,7 +21,7 @@ const NodeType = {
 */
 
 import _ from 'lodash'
-import regression from 'regression'
+import * as tf from '@tensorflow/tfjs'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -260,19 +260,25 @@ export const LIN_REG = {
         Return the voxels for the linear regression for dependent variable Y on observed variable X.
     `,
     inputs: {
-        Input1: 'X',
-        Input2: 'Y',
+        Input1: 'Y',
+        Input2: 'X',
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        // Ask whether input[i] is a voxel or the third elem in voxel and whether indices match
-        const result = regression.linear(
-            inputs[0].map((x, i) => [x, inputs[1][i]])
-        )
-        console.log(inputs[0].map(x => result.predict(x)))
-        debugger
-        // What type of return is it
-        return inputs[0].map(x => result.predict(x)[1])
+    arithmetic: async inputs => {
+        // Define a model for linear regression.
+        const model = tf.sequential()
+        model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
+
+        // Prepare the model for training: Specify the loss and the optimizer.
+        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
+
+        // Generate some synthetic data for training.
+        const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
+        const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
+        console.log(xs, ys)
+        await model.fit(xs, ys)
+        console.log(model.predict(xs))
+        return inputs[0]
     },
 }
