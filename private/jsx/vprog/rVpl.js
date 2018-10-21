@@ -841,16 +841,17 @@ class VPL extends React.Component {
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
 
-        let sizeArray = Promise.resolve(mathFunction(geomArray, options)).then(
-            result => {
-                console.log(result)
-                debugger
-                return result.map(x => (x > 0 ? x : 0))
-            }
-        )
+        let sizeArray = mathFunction(geomArray, options)
+        // let sizeArray = Promise.resolve(mathFunction(geomArray, options)).then(
+        //     result => {
+        //         console.log(result)
+        //         debugger
+        //         return result.map(x => (x > 0 ? x : 0))
+        //     }
+        // )
         console.log(this.props)
         console.log(sizeArray)
-        // sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
 
         const originDataMax = math.max(sizeArray)
         const originDataMin = math.min(sizeArray)
@@ -908,20 +909,6 @@ class VPL extends React.Component {
             sizeArray = sizeArray.map(x => (x ? trueValue : x))
         }
 
-        /*
-        const translationArray = new Float32Array(arraySize*3);
-        for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
-            translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
-            translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
-            translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-            if (allIndices.includes(j)) {
-                let hashedArray = Array(8);
-                hashedArray[3] = sizeArray[j];
-                hashedData[j] = hashedArray;
-            }
-        }
-        */
-
         const translationArray = new Float32Array(arraySize * amplifier)
         for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
             for (let k = amplifier - 1; k >= 0; k--) {
@@ -937,32 +924,6 @@ class VPL extends React.Component {
             }
         }
 
-        /*
-        let min = math.min(Array.from(sizeArray))
-        let max
-
-        if (node.type == 'DIVISION') {
-            max = math.max(
-                sizeArray.filter(item => item !== Number.POSITIVE_INFINITY)
-            )
-        } else {
-            max = math.max(sizeArray)
-        }
-
-        const valDiff = geometries[0].highBnd - geometries[0].lowBnd
-        const remap = function(x) {
-            if (x != 0) {
-                return (
-                    valDiff * ((x - min) / (max - min)) + geometries[0].lowBnd
-                )
-            } else {
-                return 0
-            }
-        }
-
-        let remapOriginalSize = sizeArray.map(remap)
-        */
-
         let props = {
             // size: remapOriginalSize,
             size: sizeArray,
@@ -975,24 +936,15 @@ class VPL extends React.Component {
         let geometry = {
             minMax: this.newProps.datasets.minMax,
             addressArray: firstGeometry.addresses,
-            // addressArray: this.newProps.map.geometries[
-            //     Object.keys(this.newProps.map.geometries)[0]
-            // ].addresses,
             properties: props,
-            // cols: this.newProps.layers[0].rowsCols.cols,
-            // rows: this.newProps.layers[0].rowsCols.rows,
-            // bounds: this.newProps.layers[0].bounds,
-            // shaderText: this.newProps.layers[0].shaderText,
             cols: firstLayer.rowsCols.cols,
             rows: firstLayer.rowsCols.rows,
             bounds: newBounds,
             shaderText: firstLayer.shaderText,
-            // n: this.newProps.layers.length + 1,
             n: _.size(this.newProps.layers) + 1,
             name: node.name,
             type: node.type,
             layerName: node.nodeKey,
-            // length: Math.max(geometry1.numElements, geometry2.numElements),
             length: Math.max(...geometries.map(g => g.numElements)),
             hashedData: hashedData,
             allIndices: allIndices,

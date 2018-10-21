@@ -276,7 +276,7 @@ export const LIN_REG = {
         // Generate some synthetic data for training.
         const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
         const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
-        console.log(xs, ys)
+        console.log('training', xs, ys)
         return model.fit(xs, ys).then(() => {
             console.log(model.predict(xs))
             return inputs[0]
