@@ -841,9 +841,16 @@ class VPL extends React.Component {
 
         // let sizeArray = mathFunction(geomArray1, geomArray2);
 
-        let sizeArray = mathFunction(geomArray, options)
-
-        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+        let sizeArray = Promise.resolve(mathFunction(geomArray, options)).then(
+            result => {
+                console.log(result)
+                debugger
+                return result.map(x => (x > 0 ? x : 0))
+            }
+        )
+        console.log(this.props)
+        console.log(sizeArray)
+        // sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
 
         const originDataMax = math.max(sizeArray)
         const originDataMin = math.min(sizeArray)

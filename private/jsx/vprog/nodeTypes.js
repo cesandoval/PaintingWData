@@ -277,8 +277,9 @@ export const LIN_REG = {
         const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
         const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
         console.log(xs, ys)
-        await model.fit(xs, ys)
-        console.log(model.predict(xs))
-        return inputs[0]
+        return model.fit(xs, ys).then(() => {
+            console.log(model.predict(xs))
+            return inputs[0]
+        })
     },
 }
