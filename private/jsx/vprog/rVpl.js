@@ -849,8 +849,6 @@ class VPL extends React.Component {
         //         return result.map(x => (x > 0 ? x : 0))
         //     }
         // )
-        console.log(this.props)
-        console.log(sizeArray)
         sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
 
         const originDataMax = math.max(sizeArray)
@@ -952,7 +950,7 @@ class VPL extends React.Component {
             color1: node.color,
             color2: node.color,
         }
-        this.addVoxelGeometry(geometry)
+        this.addVoxelGeometry(geometry, sizeArray)
     }
 
     decideNodeType(node) {
@@ -1223,7 +1221,7 @@ class VPL extends React.Component {
         )
     }
 
-    addVoxelGeometry = geometry => {
+    addVoxelGeometry = (geometry, sizeArray = []) => {
         // TODO: adding Geometry function should be more simple
         const map = this.newProps.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
@@ -1275,7 +1273,10 @@ class VPL extends React.Component {
         Action.mapAddLayer(layer)
         */
 
-        this.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
+        this.nodeOutput({
+            nodeKey: geometry.layerName,
+            geometry: { ...P, values: sizeArray },
+        })
     }
 
     nodeOutput = ({ nodeKey, geometry }) => {

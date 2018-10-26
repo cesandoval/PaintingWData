@@ -21,7 +21,8 @@ const NodeType = {
 */
 
 import _ from 'lodash'
-import * as tf from '@tensorflow/tfjs'
+// import * as tf from '@tensorflow/tfjs'
+import regression from 'regression'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -265,21 +266,33 @@ export const LIN_REG = {
     },
     output: 'Output',
     options: {},
-    arithmetic: async inputs => {
-        // Define a model for linear regression.
-        const model = tf.sequential()
-        model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
-
-        // Prepare the model for training: Specify the loss and the optimizer.
-        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
-
-        // Generate some synthetic data for training.
-        const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
-        const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
-        console.log('training', xs, ys)
-        return model.fit(xs, ys).then(() => {
-            console.log(model.predict(xs))
-            return inputs[0]
-        })
+    arithmetic: inputs => {
+        // Ask whether input[i] is a voxel or the third elem in voxel and whether indices match
+        const result = regression.linear(
+            inputs[1].map((x, i) => [x, inputs[0][i]]),
+            {
+                precision: 10,
+            }
+        )
+        console.log('regression', result)
+        // What type of return is it
+        return inputs[1].map(x => result.predict(x)[1])
     },
+    // arithmetic: async inputs => {
+    //     // Define a model for linear regression.
+    //     const model = tf.sequential()
+    //     model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
+
+    //     // Prepare the model for training: Specify the loss and the optimizer.
+    //     model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
+
+    //     // Generate some synthetic data for training.
+    //     const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
+    //     const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
+    //     console.log('training', xs, ys)
+    //     return model.fit(xs, ys).then(() => {
+    //         console.log(model.predict(xs))
+    //         return inputs[0]
+    //     })
+    // },
 }

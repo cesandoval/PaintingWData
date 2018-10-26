@@ -3,7 +3,9 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
-
+import _ from 'lodash'
+import { VictoryLine, VictoryChart, VictoryTheme } from 'victory'
+// import RegressionGraph from './regressionGraph'
 import * as NodeType from './nodeTypes'
 
 class Panel extends React.Component {
@@ -223,14 +225,77 @@ class Panel extends React.Component {
                 />
             </div>
         )
+
         // const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
         const hasFilter = NodeType[type].class !== 'logic'
 
         const isStatistics = NodeType[type].class === 'statistics'
 
+        const chartLength = _.get(
+            this.props,
+            `geometries.${this.props.index}.values`,
+            []
+        ).length
+
+        let data = []
+        // TODO delete
         if (isStatistics) {
             console.log(this.props)
+            console.log(chartLength)
+            const observed_node = _.get(
+                this.props,
+                `links.inputs.${this.props.index}.Input2`
+            )
+            const node_values = _.get(
+                this.props,
+                `geometries.${this.props.index}.values`,
+                []
+            )
+            const observed_values = _.get(
+                this.props,
+                `geometries.${observed_node}.values`,
+                []
+            )
+            if (node_values.length > 0 && observed_values.length > 0) {
+                const data_map = observed_values.reduce(
+                    (computedData, value, index) => {
+                        computedData[value] = node_values[index]
+                        return computedData
+                    },
+                    {}
+                )
+                const sorted_keys = [...Object.keys(data_map)].sort()
+                data = sorted_keys.reduce((computedData, key) => {
+                    computedData.push({ x: key, y: data_map[key] })
+                    return computedData
+                }, [])
+            }
         }
+
+        console.log(data)
+
+        // Why can't this be a component???
+        const regressionGraph = (
+            <div>
+                <VictoryChart theme={VictoryTheme.material}>
+                    <VictoryLine
+                        interpolation="bundle"
+                        style={{
+                            data: { stroke: '#c43a31' },
+                            parent: {
+                                height: '300px',
+                                width:
+                                    chartLength <= 3
+                                        ? `calc((100vw - 280px) / ${chartLength})`
+                                        : 'calc((100vw - 280px) / 3)',
+                                margin: 'auto',
+                            },
+                        }}
+                        data={data}
+                    />
+                </VictoryChart>
+            </div>
+        )
 
         return (
             <g>
@@ -312,6 +377,7 @@ class Panel extends React.Component {
                             <Popover
                                 placement="bottom"
                                 title="Graph"
+                                content={regressionGraph}
                                 trigger="click"
                             >
                                 <img
