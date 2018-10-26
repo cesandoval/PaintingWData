@@ -238,43 +238,9 @@ class Panel extends React.Component {
         ).length
 
         let data = []
-        // TODO delete
-        if (isStatistics) {
-            console.log(this.props)
-            console.log(chartLength)
-            const observed_node = _.get(
-                this.props,
-                `links.inputs.${this.props.index}.Input2`
-            )
-            const node_values = _.get(
-                this.props,
-                `geometries.${this.props.index}.values`,
-                []
-            )
-            const observed_values = _.get(
-                this.props,
-                `geometries.${observed_node}.values`,
-                []
-            )
-            if (node_values.length > 0 && observed_values.length > 0) {
-                const data_map = observed_values.reduce(
-                    (computedData, value, index) => {
-                        computedData[value] = node_values[index]
-                        return computedData
-                    },
-                    {}
-                )
-                const sorted_keys = [...Object.keys(data_map)].sort()
-                data = sorted_keys.reduce((computedData, key) => {
-                    computedData.push({ x: key, y: data_map[key] })
-                    return computedData
-                }, [])
-            }
-        }
 
-        console.log(data)
+        console.log('Node', node)
 
-        // Why can't this be a component???
         const regressionGraph = (
             <div>
                 <VictoryChart theme={VictoryTheme.material}>

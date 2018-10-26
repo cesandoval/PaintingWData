@@ -165,10 +165,19 @@ class VPL extends React.Component {
                 y: 0,
             }
         }
+
+        // Options for node inherit to class.
+        const classOptions = {
+            increaseInput:
+                NodeType[type] !== NodeType.DATASET &&
+                NodeType[type] !== NodeType.LOG,
+        }
         const newNode = {
             name: type,
             type: type,
+            classOptions,
             options: {},
+            inputs: { ...NodeType[type].inputs },
             filter: {
                 max: 1,
                 min: 0,
@@ -430,8 +439,7 @@ class VPL extends React.Component {
     }
 
     deleteNode = nodeKey => {
-        console.log(`deleteNode(${nodeKey})`)
-
+        // console.log(`deleteNode(${nodeKey})`)['DATASET']
         /*
         Action.vlangRemoveNode(nodeKey)
         // force remove the node geometry on the map.
@@ -678,7 +686,7 @@ class VPL extends React.Component {
 
         Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
             const toNode = nodes[toNodeKey]
-            const toNodeTypeInputs = Object.keys(NodeType[toNode.type].inputs)
+            const toNodeTypeInputs = Object.keys(toNode.inputs)
 
             const toNodeInputs = toNodeTypeInputs.map(
                 input => inputsSrcNode[input]
@@ -954,16 +962,23 @@ class VPL extends React.Component {
     }
 
     decideNodeType(node) {
-        // console.log(`decideNodeType()`, node)
+        console.log(`decideNodeType()`, node)
         return this.nodeSVG(node)
     }
 
-    nodeSVG = ({ color, name, type, nodeKey, options }) => {
-        // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
-        //const p = {x: 0, y: 0}
-
-        const inputs = NodeType[type].inputs
-        const isStatistics = NodeType[type].class === 'statistics'
+    nodeSVG = ({
+        color,
+        name,
+        type,
+        nodeKey,
+        options,
+        inputs,
+        classOptions,
+    }) => {
+        // const inputs = NodeType[type].inputs
+        if (inputs === undefined) {
+            inputs = NodeType[type].inputs
+        }
         const output = NodeType[type].output
 
         const typeOptions = NodeType[type].options
@@ -1001,14 +1016,12 @@ class VPL extends React.Component {
                     className="background"
                     width={nodeWidth}
                     height={
-                        isStatistics
-                            ? nodeHeight +
-                              Math.max(
-                                  0,
-                                  Style.plug.height *
-                                      (Object.entries(inputs).length - 2)
-                              )
-                            : nodeHeight
+                        nodeHeight +
+                        Math.max(
+                            0,
+                            Style.plug.marginTop *
+                                (Object.entries(inputs).length - 2)
+                        )
                     }
                     x="0"
                     y="0"
@@ -1054,7 +1067,7 @@ class VPL extends React.Component {
                     </g>
                 ))}
                 {/* Adding more nodes */}
-                {isStatistics && (
+                {_.get(classOptions, 'increaseInput', false) && (
                     <foreignObject
                         transform={`translate(${2}, ${Style.plug.height / 2 +
                             Style.topOffset +
@@ -1065,8 +1078,15 @@ class VPL extends React.Component {
                             onClick={() => {
                                 const x_index =
                                     Object.entries(inputs).length + 1
-                                inputs.Input2 = 'X1'
-                                inputs[`Input${x_index}`] = `X${x_index - 1}`
+                                Act.nodeUpdate({
+                                    nodeKey,
+                                    attr: 'inputs',
+                                    value: {
+                                        ...inputs,
+                                        Input2: 'X1',
+                                        [`Input${x_index}`]: `X${x_index - 1}`,
+                                    },
+                                })
                             }}
                             title="add"
                             style={{ cursor: 'pointer' }}
@@ -1132,7 +1152,14 @@ class VPL extends React.Component {
                     </text>
                 </Popover>
 
-                <g className="control">
+                <g
+                    className="control"
+                    transform={`translate(0, ${Math.max(
+                        0,
+                        Style.plug.marginTop *
+                            (Object.entries(inputs).length - 2)
+                    )})`}
+                >
                     {/* TODO: modify slider width */}
                     <Slider index={nodeKey} />
                     <Panel
