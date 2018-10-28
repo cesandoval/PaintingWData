@@ -22,9 +22,40 @@ class Share extends React.Component {
             snapshotModalVisible: false,
             snapshotTaking: false,
         }
+
+        this.checked = {
+            snapshotsLoaded: false,
+        }
+
+        console.log('<Share/> start')
+        this.getSnapshots()
     }
 
-    componentWillReceiveProps() {}
+    getSnapshots = () => {
+        console.log('getSnapshots start')
+
+        fetch('/getSnapshots/', {
+            //Important: I don't know why this isn't authenticating, but I'll ask Carlos...
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                id: datavoxelId,
+            }),
+        })
+            .then(res => {
+                console.log('getSnapshots success', { res })
+                this.checked.snapshotsLoaded = true
+            })
+            .catch(e => console.error(e))
+    }
+
+    componentWillReceiveProps() {
+        if (!this.checked.snapshotsLoaded) this.getSnapshots()
+    }
 
     copyEmbedLink = () => {
         const inputDom = document.querySelector('#project-embeddable-link')
