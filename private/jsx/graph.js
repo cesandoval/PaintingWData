@@ -205,7 +205,7 @@ export default class Graph {
 
             if (snapshot) {
                 let hash = crypto.randomBytes(8).toString('hex')
-                uploadSnapshot(
+                return uploadSnapshot(
                     {
                         id: datavoxelId,
                         data: img,
@@ -215,7 +215,7 @@ export default class Graph {
                     '/uploadSnapshot'
                 )
             } else {
-                uploadSnapshot(
+                return uploadSnapshot(
                     { id: datavoxelId, data: img, preview: preview },
                     '/screenshot'
                 )
@@ -223,19 +223,14 @@ export default class Graph {
         }
 
         const uploadSnapshot = (request, endpoint) => {
-            axios({
+            return axios({
                 method: 'post',
                 url: endpoint,
                 data: request,
+            }).then(function(response) {
+                //handle success
+                console.log(response)
             })
-                .then(function(response) {
-                    //handle success
-                    console.log(response)
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                })
         }
 
         return renderer
