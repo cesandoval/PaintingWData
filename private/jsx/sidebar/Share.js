@@ -21,6 +21,7 @@ class Share extends React.Component {
         this.state = {
             snapshotModalVisible: false,
             snapshotTaking: false,
+            snapshotPreviewImg: '',
         }
 
         this.checked = {
@@ -79,30 +80,55 @@ class Share extends React.Component {
         this.setState({
             snapshotModalVisible: true,
         })
+
+        const mapCanvas = document.querySelector('#mapCanvas canvas')
+
+        const snapshotPreviewImg = {
+            snapshotPreviewImg: mapCanvas.toDataURL('image/png'),
+        }
+        this.setState(snapshotPreviewImg)
     }
 
     handleSnapshotTaking = () => {
         this.setState({
             snapshotTaking: true,
         })
-        setTimeout(() => {
-            this.setState({
-                snapshotModalVisible: false,
-                snapshotTaking: false,
+
+        const snapshotName =
+            document.querySelector('#snapshotTakingName').value ||
+            `${datavoxelId}-${Date.now()}`
+
+        // if (Date.now() > 0) return true
+        window
+            .takeSnaptshot(datavoxelId, true, snapshotName)
+            .then(() => {
+                this.setState({
+                    snapshotModalVisible: false,
+                    snapshotTaking: false,
+                })
             })
-        }, 2000)
+            .catch(e => {
+                console.error(e)
+                this.setState({
+                    snapshotTaking: false,
+                })
+            })
     }
 
     handleCancelSnapshotTaking = () => {
         this.setState({
             snapshotModalVisible: false,
+            snapshotTaking: false,
         })
     }
 
     render() {
         // /* Testing snapshot UI */
-        const snapshotImage =
-            'https://s3.amazonaws.com/data-voxel-images/18.jpg'
+        const snapshotImage = `https://s3.amazonaws.com/data-voxel-images/${datavoxelId}.jpg`
+
+        const snapshotPreviewImg =
+            this.state.snapshotPreviewImg ||
+            `https://s3.amazonaws.com/data-voxel-images/${datavoxelId}.jpg`
 
         const snapshotLink = 'https://s3.amazonaws.com/data-voxel-images/18.jpg'
 
@@ -137,9 +163,13 @@ class Share extends React.Component {
                     confirmLoading={this.state.snapshotTaking}
                     onCancel={this.handleCancelSnapshotTaking}
                 >
-                    <img src={snapshotImage} />
+                    <img src={snapshotPreviewImg} />
                     <div className="name">
-                        <Input addonBefore="Name" defaultValue="Case AbCd" />
+                        <Input
+                            id="snapshotTakingName"
+                            addonBefore="Name"
+                            defaultValue="Case AbCd"
+                        />
                     </div>
                 </Modal>
 
