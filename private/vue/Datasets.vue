@@ -75,7 +75,7 @@
                   </l-map>
                 </div>
                 <a-card-meta
-                  :title="datafile.filename"
+                  :title="datafile.userFileName ? datafile.userFileName:datafile.filename"
                   :description="parseTime(datafile.createdAt)"/>
                 
               </a-card>
@@ -311,6 +311,7 @@
                   <a-upload-dragger 
                     :file="file"
                     :before-upload="beforeUpload"
+                    :multiple="false"
                     name="file"
                     action=""
                     items=""
