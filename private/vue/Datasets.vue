@@ -109,8 +109,9 @@
 
         <div class = "col-sm-6 left-col">
           <a-dropdown class = "actions">
-            <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
-              <a-menu-item key="1" >Delete Dataset</a-menu-item>
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click.native="handleDeleteClick(selectedDataset)">Delete Dataset</a-menu-item>
+              <a-menu-item key="2" >Edit</a-menu-item>
             </a-menu>
             <a-button>
               Actions <a-icon type="down" />
@@ -166,6 +167,12 @@
             <div>Type of Geometry:  
               <span class = "info-digits"
             >{{ selectedItem.geometryType }}</span></div>
+            <br>
+            <div>Description:  
+              <span class = "info-digits"
+            >{{ selectedItem.description }}</span></div>
+
+
           </div> 
         </div> 
 
@@ -471,7 +478,7 @@ export default {
           this.removeDeleted(
             tempData.filter(item => {
               return (
-                item.filename
+                (item.userFileName ? item.userFileName : item.filename)
                   .toLowerCase()
                   .indexOf(this.searchKey.toLowerCase()) > -1
               )
