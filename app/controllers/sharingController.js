@@ -35,9 +35,9 @@ module.exports.uploadSnapshot = function(req, res) {
                     newDatasnapshot.image =  'https://s3.amazonaws.com/' + bucket + '/' + imageLink
                     newDatasnapshot.hash = hash
                     newDatasnapshot.name = name
-                    newDatasnapshot.save().then(function(){
+                    newDatasnapshot.save().then(function(snapshot){
                         console.log('Datasnapshot has been created', imageLink)
-                        res.json({success:true})
+                        res.json({success:true, url: snapshot.image})
                     }); 
                   }  
               });
