@@ -62,7 +62,7 @@ class Share extends React.Component {
 
     deleteSnapshot = hash => {
         console.log('deleteSnapshots start')
-        const hashs = [hash]
+        const hashes = [hash]
 
         fetch('/deleteSnapshots/', {
             //Important: I don't know why this isn't authenticating, but I'll ask Carlos...
@@ -73,7 +73,7 @@ class Share extends React.Component {
             },
             credentials: 'include',
             body: JSON.stringify({
-                hashs,
+                hashes,
             }),
         })
             .then(res => res.json())
