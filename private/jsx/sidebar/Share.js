@@ -22,6 +22,7 @@ class Share extends React.Component {
             snapshotModalVisible: false,
             snapshotTaking: false,
             snapshotPreviewImg: '',
+            snapshots: [],
         }
 
         this.checked = {
@@ -47,9 +48,37 @@ class Share extends React.Component {
                 id: datavoxelId,
             }),
         })
-            .then(res => {
-                console.log('getSnapshots success', { res })
+            .then(res => res.json())
+            .then(({ snapshots }) => {
+                console.log('getSnapshots res', { snapshots })
                 this.checked.snapshotsLoaded = true
+
+                this.setState({
+                    snapshots,
+                })
+            })
+            .catch(e => console.error(e))
+    }
+
+    deleteSnapshot = hash => {
+        console.log('deleteSnapshots start')
+        const hashs = [hash]
+
+        fetch('/deleteSnapshots/', {
+            //Important: I don't know why this isn't authenticating, but I'll ask Carlos...
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                hashs,
+            }),
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log('deleteSnapshots res', { res })
             })
             .catch(e => console.error(e))
     }
@@ -63,9 +92,10 @@ class Share extends React.Component {
         this.execCopy(inputDom)
     }
 
-    copySnapshotLink = snapshotLink => {
+    copySnapshotLink = hash => {
+        const shareLink = `https://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`
         const inputDom = document.querySelector('#snapshot-link')
-        inputDom.value = snapshotLink
+        inputDom.value = shareLink
         this.execCopy(inputDom)
     }
 
@@ -122,15 +152,104 @@ class Share extends React.Component {
         })
     }
 
+    snapshotDOM = ({ name, hash, image, createdAt }) => {
+        const createAtDate = new Date(createdAt).toDateString()
+
+        return (
+            <div
+                className="snapshot"
+                style={{
+                    backgroundImage: `url('${image}')`,
+                }}
+                key={hash}
+            >
+                <span className="snapshot-tool">
+                    <i
+                        className="fas fa-trash"
+                        onClick={() => this.deleteSnapshot(hash)}
+                    />
+                    <i
+                        className="fas fa-link"
+                        onClick={() => this.copySnapshotLink(hash)}
+                    />
+                </span>
+                <div className="desc">
+                    <span className="name">{name}</span>
+                    <span className="time">{createAtDate}</span>
+                </div>
+
+                <style jsx>{`
+                    .snapshot {
+                        $sh: 140px;
+                        margin: 10px 10px;
+                        width: 260px;
+                        height: $sh + 2px;
+
+                        $r: 5px;
+                        border: 1px solid #ccc;
+                        border-radius: $r;
+                        cursor: pointer;
+
+                        background-size: cover;
+                        background-position: center center;
+
+                        --snapshot-tool-opacity: 0;
+                        &:hover {
+                            --snapshot-tool-opacity: 1;
+                        }
+
+                        .snapshot-tool {
+                            position: absolute;
+                            right: 0;
+                            margin-right: 20px;
+                            margin-top: 6px;
+                            opacity: var(--snapshot-tool-opacity);
+                            transition: 0.5s opacity ease-out;
+
+                            cursor: pointer;
+
+                            > i + i {
+                                margin-left: 12px;
+                            }
+                        }
+
+                        .desc {
+                            $h: 34px;
+                            bottom: 0px;
+                            background: #ffffff8c;
+                            height: $h;
+                            margin-top: $sh - $h;
+                            border-radius: 0px 0px $r $r;
+                            border: 0px solid #ccc;
+                            border-top-width: 1px;
+
+                            span {
+                                line-height: $h;
+                            }
+
+                            .name {
+                                float: left;
+                                margin-left: $r;
+                            }
+
+                            .time {
+                                float: right;
+                                margin-right: $r;
+                            }
+                        }
+                    }
+                `}</style>
+            </div>
+        )
+    }
+
     render() {
         // /* Testing snapshot UI */
-        const snapshotImage = `https://s3.amazonaws.com/data-voxel-images/${datavoxelId}.jpg`
+        // const snapshotImage = `https://s3.amazonaws.com/data-voxel-images/${datavoxelId}.jpg`
 
         const snapshotPreviewImg =
             this.state.snapshotPreviewImg ||
             `https://s3.amazonaws.com/data-voxel-images/${datavoxelId}.jpg`
-
-        const snapshotLink = 'https://s3.amazonaws.com/data-voxel-images/18.jpg'
 
         return (
             <div id="sidebar-share">
@@ -173,26 +292,20 @@ class Share extends React.Component {
                     </div>
                 </Modal>
 
-                <div
-                    className="snapshot"
-                    style={{
-                        backgroundImage: `url('${snapshotImage}')`,
-                    }}
-                >
-                    <span
-                        className="share-link"
-                        onClick={() => this.copySnapshotLink(snapshotLink)}
-                    >
-                        <i className="fas fa-link" />
-                    </span>
-                    <div className="desc">
-                        <span className="name">Case ABCDEFG</span>
-                        <span className="time">2018 Aug 20</span>
+                <div className="snapshots">
+                    {this.state.snapshots.map(
+                        ({ name, hash, image, createdAt }) => {
+                            return this.snapshotDOM({
+                                name,
+                                hash,
+                                image,
+                                createdAt,
+                            })
+                        }
+                    )}
+                    <div className="snapshot add" onClick={this.takeSnapshot}>
+                        <i className="fas fa-plus fa-3x" />
                     </div>
-                </div>
-
-                <div className="snapshot add" onClick={this.takeSnapshot}>
-                    <i className="fas fa-plus fa-3x" />
                 </div>
 
                 <style jsx>{`
@@ -213,7 +326,12 @@ class Share extends React.Component {
                             user-select: none;
                         }
 
-                        .snapshot {
+                        .snapshots {
+                            overflow-y: scroll;
+                            height: 500px;
+                        }
+
+                        .snapshot.add {
                             $sh: 140px;
                             margin: 10px 10px;
                             width: 260px;
@@ -224,53 +342,9 @@ class Share extends React.Component {
                             border-radius: $r;
                             cursor: pointer;
 
-                            background-size: cover;
-                            background-position: center center;
-
-                            --share-link-opacity: 0;
-                            &:hover {
-                                --share-link-opacity: 1;
-                            }
-
-                            .share-link {
-                                position: absolute;
-                                right: 0;
-                                margin-right: 20px;
-                                margin-top: 6px;
-                                opacity: var(--share-link-opacity);
-                                transition: 0.5s opacity ease-out;
-                            }
-
-                            .desc {
-                                $h: 34px;
-                                bottom: 0px;
-                                background: #ffffff8c;
-                                height: $h;
-                                margin-top: $sh - $h;
-                                border-radius: 0px 0px $r $r;
-                                border: 0px solid #ccc;
-                                border-top-width: 1px;
-
-                                span {
-                                    line-height: $h;
-                                }
-
-                                .name {
-                                    float: left;
-                                    margin-left: $r;
-                                }
-
-                                .time {
-                                    float: right;
-                                    margin-right: $r;
-                                }
-                            }
-
-                            &.add {
-                                text-align: center;
-                                i {
-                                    line-height: 140px;
-                                }
+                            text-align: center;
+                            i {
+                                line-height: 140px;
                             }
                         }
                     }
