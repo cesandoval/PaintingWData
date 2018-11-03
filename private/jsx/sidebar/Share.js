@@ -117,6 +117,14 @@ class Share extends React.Component {
             snapshotPreviewImg: mapCanvas.toDataURL('image/png'),
         }
         this.setState(snapshotPreviewImg)
+
+        // refresh the previewImg
+        setTimeout(() => {
+            const snapshotPreviewImg = {
+                snapshotPreviewImg: mapCanvas.toDataURL('image/png'),
+            }
+            this.setState(snapshotPreviewImg)
+        }, 2000)
     }
 
     handleSnapshotTaking = () => {
