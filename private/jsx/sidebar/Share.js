@@ -194,8 +194,9 @@ class Share extends React.Component {
                 <style jsx>{`
                     .snapshot {
                         $sh: 140px;
+                        $sw: 260px;
                         margin: 10px 10px;
-                        width: 260px;
+                        width: $sw;
                         height: $sh + 2px;
 
                         $r: 5px;
@@ -243,11 +244,18 @@ class Share extends React.Component {
                             .name {
                                 float: left;
                                 margin-left: $r;
+                                overflow: hidden;
+                                width: $sw * 0.6;
+                                height: $h;
+                                text-align: left;
                             }
 
                             .time {
+                                text-align: right;
                                 float: right;
+                                width: $sw * 0.35;
                                 margin-right: $r;
+                                font-size: 12px;
                             }
                         }
                     }
