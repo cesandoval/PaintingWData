@@ -1,5 +1,6 @@
 var passport = require('passport'),
     appController = require('../controllers/appController.js'),
+    sharingController = require('../controllers/sharingController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
     datalayerController = require('../controllers/datalayerController.js'),
@@ -99,6 +100,11 @@ var passport = require('passport'),
   router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
   router.get('/screenshot', appController.getPublicVoxelScreenshots);
   router.post('/checkScreenshot', appController.checkScreenshot);
+
+  // Sharing Routers
+  router.post('/uploadSnapshot', isAuthenticated, sharingController.uploadSnapshot);
+  router.post('/getSnapshots', sharingController.getSnapshots);
+  router.post('/deleteSnapshots', isAuthenticated, sharingController.deleteSnapshots);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
