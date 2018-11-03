@@ -79,6 +79,8 @@ class Share extends React.Component {
             .then(res => res.json())
             .then(res => {
                 console.log('deleteSnapshots res', { res })
+                this.getSnapshots()
+                message.success(`Snapshot Has Been Deleted`)
             })
             .catch(e => console.error(e))
     }
@@ -144,6 +146,9 @@ class Share extends React.Component {
                     snapshotModalVisible: false,
                     snapshotTaking: false,
                 })
+
+                this.getSnapshots()
+                message.success(`Created Snapshot ${snapshotName}`)
             })
             .catch(e => {
                 console.error(e)
