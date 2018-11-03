@@ -102,7 +102,7 @@ class Share extends React.Component {
     execCopy = inputDom => {
         inputDom.select()
         document.execCommand('copy')
-        message.success('Link Has Been Copied')
+        message.success('Public Link Has Been Copied')
     }
 
     takeSnapshot = e => {
