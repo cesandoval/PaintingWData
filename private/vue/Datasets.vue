@@ -643,6 +643,7 @@ export default {
 
     queryMapGeometry(datasetId) {
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
+        console.log(response)
         if (this.selectedGeoType == 'Polygon')
           this.selectedGeometries = response.data.geoJSON.map(obj =>
             obj.coordinates[0].map(item => [item[1], item[0]])
