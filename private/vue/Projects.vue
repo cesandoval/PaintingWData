@@ -269,7 +269,7 @@
                     slot-scope="item, index"
                     @click="()=> {datasetSelection(item,index)}">
                     <a-list-item-meta description="">
-                      <a slot="title" :key="item.filename">{{ item.filename }}</a>
+                      <a slot="title" :key="item.filename">{{ item.userFileName ? item.userFileName : item.filename }}</a>
                       <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
                     </a-list-item-meta>
                     <div/>

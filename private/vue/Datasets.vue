@@ -75,7 +75,7 @@
                   </l-map>
                 </div>
                 <a-card-meta
-                  :title="datafile.filename"
+                  :title="datafile.userFileName ? datafile.userFileName:datafile.filename"
                   :description="parseTime(datafile.createdAt)"/>
                 
               </a-card>
@@ -109,8 +109,9 @@
 
         <div class = "col-sm-6 left-col">
           <a-dropdown class = "actions">
-            <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
-              <a-menu-item key="1" >Delete Dataset</a-menu-item>
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click.native="handleDeleteClick(selectedDataset)">Delete Dataset</a-menu-item>
+              <a-menu-item key="2" >Edit</a-menu-item>
             </a-menu>
             <a-button>
               Actions <a-icon type="down" />
@@ -166,6 +167,12 @@
             <div>Type of Geometry:  
               <span class = "info-digits"
             >{{ selectedItem.geometryType }}</span></div>
+            <br>
+            <div>Description:  
+              <span class = "info-digits"
+            >{{ selectedItem.description }}</span></div>
+
+
           </div> 
         </div> 
 
@@ -311,6 +318,7 @@
                   <a-upload-dragger 
                     :file="file"
                     :before-upload="beforeUpload"
+                    :multiple="false"
                     name="file"
                     action=""
                     items=""
@@ -470,7 +478,7 @@ export default {
           this.removeDeleted(
             tempData.filter(item => {
               return (
-                item.filename
+                (item.userFileName ? item.userFileName : item.filename)
                   .toLowerCase()
                   .indexOf(this.searchKey.toLowerCase()) > -1
               )
@@ -635,6 +643,7 @@ export default {
 
     queryMapGeometry(datasetId) {
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
+        console.log(response)
         if (this.selectedGeoType == 'Polygon')
           this.selectedGeometries = response.data.geoJSON.map(obj =>
             obj.coordinates[0].map(item => [item[1], item[0]])
