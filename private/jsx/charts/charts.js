@@ -107,16 +107,16 @@ class Charts extends React.Component {
                     return (
                         <span className="layer-chart" key={key}>
                             <VictoryChart
-                                style={{
-                                    parent: {
-                                        height: '300px',
-                                        width:
-                                            chartLength <= 3
-                                                ? `calc((100vw - 280px) / ${chartLength})`
-                                                : 'calc((100vw - 280px) / 3)',
-                                        margin: 'auto',
-                                    },
-                                }}
+                                // style={{
+                                //     parent: {
+                                //         height: '300px',
+                                //         width:
+                                //             chartLength <= 3
+                                //                 ? `calc((100vw - 280px) / ${chartLength})`
+                                //                 : 'calc((100vw - 280px) / 3)',
+                                //         margin: 'auto',
+                                //     },
+                                // }}
                                 events={[
                                     {
                                         target: 'parent',
@@ -158,7 +158,7 @@ class Charts extends React.Component {
                                         defaultBrushArea="disable"
                                         brushStyle={{
                                             stroke: 'rgba(0, 0, 0, 0.6)',
-                                            fill: 'rgba(255, 255, 255, 0.1)',
+                                            fill: 'rgba(255, 255, 255,0.1)',
                                         }}
                                     />
                                 }
@@ -172,15 +172,15 @@ class Charts extends React.Component {
                                             ? this.props.nodes[key].name
                                             : ''
                                     }
-                                    style={{
-                                        fontSize: 14,
-                                        fontFamily: 'sans-serif',
-                                        fontStyle: 'normal',
-                                        fontVariant: 'normal',
-                                        fontWeight: 'normal',
-                                        fontStretch: 'normal',
-                                        lineHeight: 'normal',
-                                    }}
+                                    // style={{
+                                    //     fontSize: 14,
+                                    //     fontFamily: 'sans-serif',
+                                    //     fontStyle: 'normal',
+                                    //     fontVariant: 'normal',
+                                    //     fontWeight: 'normal',
+                                    //     fontStretch: 'normal',
+                                    //     lineHeight: 'normal',
+                                    // }}
                                 />
                                 {this.props.panelShow == 'Chart:Density' && (
                                     <VictoryLine
@@ -253,6 +253,26 @@ class Charts extends React.Component {
                         flex: 1;
                         display: flex;
                         text-align: center;
+                    }
+
+                    VictoryChart {
+                        parent: {
+                            height: 300px;
+                            width: ${chartLength <= 3
+                                ? `calc((100vw - 280px) / ${chartLength})`
+                                : 'calc((100vw - 280px) / 3)'};
+                            margin: auto;
+                        }
+                    }
+
+                    VictoryLabel {
+                        font-size: 14;
+                        font-family: sans-serif;
+                        font-style: normal;
+                        font-variant: normal;
+                        font-weight: normal;
+                        font-stretch: normal;
+                        line-height: normal;
                     }
                 `}</style>
             </div>

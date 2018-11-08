@@ -237,13 +237,14 @@ class Panel extends React.Component {
                     style={{ cursor: 'pointer' }}
                 >
                     <div
-                        style={{
-                            position: 'fixed',
-                            display: 'flex',
-                            width: '157px',
-                            justifyContent: 'space-around',
-                            alignItems: 'center',
-                        }}
+                        id="foreignObjectdiv"
+                        // style={{
+                        //     position: 'fixed',
+                        //     display: 'flex',
+                        //     width: '157px',
+                        //     justifyContent: 'space-around',
+                        //     alignItems: 'center',
+                        // }}
                     >
                         <input
                             type="color"
@@ -297,6 +298,17 @@ class Panel extends React.Component {
                             />
                         )}
                     </div>
+                    <style jsx>
+                        {`
+                            #foreignObjectdiv {
+                                position: fixed;
+                                display: flex;
+                                width: 157px;
+                                justifycontent: space-around;
+                                alignitems: center;
+                            }
+                        `}
+                    </style>
                 </foreignObject>
             </g>
         )

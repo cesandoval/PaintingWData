@@ -9,7 +9,7 @@
 
 /*General Components*/
 
-.mapMain {
+/* .mapMain {
     position: relative;
 }
 
@@ -35,7 +35,7 @@
     top:50px;
     bottom: 0;
     z-index:-1;
-}
+} */
 
 #mapCanvas canvas {
     position:fixed;
@@ -77,12 +77,13 @@
     padding:1em;
 }
 */
-
+/* 
 .layers__single {
     background-color: white;
-    /*border: 1px solid #f16752;*/
+    border: 1px solid #f16752;
     border-bottom: 2px solid #eee;
-    /*border-top: 4px solid #f16752;*/
+    border-top: 4px solid #f16752;
+
     margin: 0;
     padding-top: 15px;
     padding-bottom: 10px;
@@ -111,7 +112,7 @@
     font-family: 'Karla', sans-serif;
     padding: 0;
     text-transform: none;
-}
+} */
 
 .sidebar__box {
     height: 70%;

@@ -84,13 +84,11 @@ class MapCanvas extends React.Component {
         let bbox = this.props.bbox[0]
         let projectedMin = project([bbox[0][0], bbox[0][1]])
         let projectedMax = project([bbox[2][0], bbox[2][1]])
-
         let translation = [0 - projectedMin.x, 0 - projectedMax.z]
         let bounds = [
             Math.abs(projectedMax.x + translation[0]),
             Math.abs(projectedMax.z + (0 - projectedMin.z)),
         ]
-
         return PaintGraph.Exporter.exportSVG(
             geoms,
             translation,
@@ -98,51 +96,40 @@ class MapCanvas extends React.Component {
             bounds
         )
     }
-
     triggerDownload(exportFile, exportType) {
         var data = new Blob([exportFile], { type: 'text/plain' })
-
         if (textFile !== null) {
             window.URL.revokeObjectURL(textFile)
         }
-
         let textFile = window.URL.createObjectURL(data)
-
         let link = document.createElement('a')
         link.setAttribute('download', 'voxelExport.'.concat(exportType))
         link.href = textFile
         document.body.appendChild(link)
         link.click()
     }
-
     exportJSON(geoms) {
         return PaintGraph.Exporter.exportJSON(geoms)
     }
-
     exportSHP(geoms) {
         return PaintGraph.Exporter.exportSHP(geoms)
     }
-
     exportMap(type) {
         console.log(`exportMap(${type})`)
-
         let geoms = this.props.geometries
         switch (type) {
             case 'SVG': {
                 let svgExport = this.exportSVG(geoms)
                 this.triggerDownload(svgExport, 'svg')
-
                 break
             }
             case 'GeoJSON': {
                 let jsonExport = this.exportJSON(this.props.layers)
                 this.triggerDownload(jsonExport, 'json')
-
                 break
             }
             case 'SHP': {
                 this.exportSHP(this.props.layers)
-
                 break
             }
         }
@@ -173,37 +160,75 @@ class MapCanvas extends React.Component {
         return (
             <div>
                 <div
-                    style={{
-                        backgroundColor: 'white',
-                        width: 'calc(95vw - 280px)',
-                        position: 'fixed',
-                        overflow: 'hidden',
-                        top: '170px',
-                        right: '2.5vw',
-                        zIndex: '100',
-                        opacity: 0.9,
-                        display: panelShow == 'TABLE' ? '' : 'none',
-                        border: 'none',
-                    }}
+                    id="table"
+                    // style={{
+                    //     backgroundColor: 'white',
+                    //     width: 'calc(95vw - 280px)',
+                    //     position: 'fixed',
+                    //     overflow: 'hidden',
+                    //     top: '170px',
+                    //     right: '2.5vw',
+                    //     zIndex: '100',
+                    //     opacity: 0.9,
+                    //     display: panelShow == 'TABLE' ? '' : 'none',
+                    //     border: 'none',
+                    // }}
                 >
                     <Table />
                 </div>
+                <style jsx>
+                    {`
+                        #table {
+                            background-color: white;
+                            width: calc(95vw - 280px);
+                            position: fixed;
+                            overflow: hidden;
+                            top: 170px;
+                            right: 2.5vw;
+                            zindex: 100;
+                            opacity: 0.9;
+                            display: ${panelShow == 'TABLE' ? '' : 'none'};
+                            border: none;
+                        }
+                    `}
+                </style>
+
                 <div
-                    style={{
-                        backgroundColor: 'white',
-                        width: 'calc(100vw - 280px)',
-                        height: '300px',
-                        position: 'fixed',
-                        overflow: 'hidden',
-                        bottom: '0px',
-                        right: '0',
-                        zIndex: '100',
-                        opacity: 0.5,
-                        display: panelShow.includes('Chart') ? '' : 'none',
-                    }}
+                    id="charts"
+                    // style={{
+                    //     backgroundColor: 'white',
+                    //     width: 'calc(100vw - 280px)',
+                    //     height: '300px',
+                    //     position: 'fixed',
+                    //     overflow: 'hidden',
+                    //     bottom: '0px',
+                    //     right: '0',
+                    //     zIndex: '100',
+                    //     opacity: 0.5,
+                    //     display: panelShow.includes('Chart') ? '' : 'none',
+                    // }}
                 >
                     <Charts />
                 </div>
+                <style jsx>
+                    {`
+                        #charts {
+                            background-color: white;
+                            width: calc(100vw - 280px);
+                            height: 300px;
+                            position: fixed;
+                            overflow: hidden;
+                            bottom: 0px;
+                            right: 0;
+                            zindex: 100;
+                            opacity: 0.5;
+                            display: ${panelShow.includes('Chart')
+                                ? ''
+                                : 'none'};
+                        }
+                    `}
+                </style>
+
                 <div style={{ display: panelShow == 'VPL' ? '' : 'none' }}>
                     <VPL />
                 </div>
@@ -228,6 +253,18 @@ class MapCanvas extends React.Component {
                     }
                 `}</style>
                 <div className="map" id="mapCanvas" />
+                <style jsx>
+                    {`
+                        #mapCanvas {
+                            width: calc(100vw - 280px);
+                            position: fixed;
+                            right: 0;
+                            top: 50px;
+                            bottom: 0;
+                            z-index: -1;
+                        }
+                    `}
+                </style>
             </div>
         )
     }

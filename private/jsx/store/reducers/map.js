@@ -1,4 +1,5 @@
 import update from 'immutability-helper'
+// import Pixels from ''
 
 import * as t from '../types'
 

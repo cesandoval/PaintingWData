@@ -71,6 +71,13 @@ class Layers extends React.Component {
                         />
                     )
                 )}
+                <style jsx>
+                    {`
+                        .layers {
+                            height: 50vh;
+                        }
+                    `}
+                </style>
             </div>
         )
     }

@@ -4,9 +4,9 @@ import { Provider } from 'react-redux'
 import store from './store/store'
 import App from './app'
 
-import Pixels from './pixels'
-import Graph from './graph'
-import Exporter from './exporter'
+// import Pixels from './pixels'
+// import Graph from './graph'
+// import Exporter from './exporter'
 
 /**
  * The main entry point for the mapping service.
@@ -22,25 +22,25 @@ import Exporter from './exporter'
  */
 
 // Defines the PaintGraph namespace.
-if (window.PaintGraph !== undefined) {
-    console.error('window.PaintGraph object already exists')
-} else {
-    /**
-     * The PaintGraph namespace contains various helper methods for
-     * map rendering, from three classes: Pixels, Graph and Exporter.
-     *
-     * @namespace PaintGraph
-     *
-     * @property class Pixels TODO.
-     * @property class Graph TODO.
-     * @property class Exporter TODO
-     */
-    window.PaintGraph = {
-        Pixels: Pixels,
-        Graph: Graph,
-        Exporter: Exporter,
-    }
-}
+// if (window.PaintGraph !== undefined) {
+//     console.error('window.PaintGraph object already exists')
+// } else {
+//     /**
+//      * The PaintGraph namespace contains various helper methods for
+//      * map rendering, from three classes: Pixels, Graph and Exporter.
+//      *
+//      * @namespace PaintGraph
+//      *
+//      * @property class Pixels TODO.
+//      * @property class Graph TODO.
+//      * @property class Exporter TODO
+//      */
+//     window.PaintGraph = {
+//         Pixels: Pixels,
+//         Graph: Graph,
+//         Exporter: Exporter,
+//     }
+// }
 /*
  * Under the Hot Module Replacement (HMR) protocol, we accept any updated webpack
  * modules.

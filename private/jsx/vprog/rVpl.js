@@ -1045,8 +1045,18 @@ class VPL extends React.Component {
                     height={nodeHeight}
                     x="0"
                     y="0"
-                    style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
-                />
+                    // style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
+                >
+                    <style jsx>
+                        {`
+                            rect {
+                                fill: #ecf0f1;
+                                stroke: #ccc;
+                                rx: 2px;
+                            }
+                        `}
+                    </style>
+                </rect>
 
                 {/* input Plugs */}
                 {Object.entries(inputs).map(([input, abbr], index) => (
@@ -1075,15 +1085,25 @@ class VPL extends React.Component {
                             x={Style.plug.width / 2}
                             y={0}
                             fontSize={Style.fontSize.plugName}
-                            style={{
-                                textAnchor: 'middle',
-                                fontFamily: 'Monospace',
-                                fill: '#4a4a4a',
-                                dominantBaseline: 'central',
-                            }}
+                            // style={{
+                            //     textAnchor: 'middle',
+                            //     fontFamily: 'Monospace',
+                            //     fill: '#4a4a4a',
+                            //     dominantBaseline: 'central',
+                            // }}
                         >
                             {abbr}
                         </text>
+                        <style jsx>
+                            {`
+                                text {
+                                    text-anchor: middle;
+                                    font-family: Monospace;
+                                    fill: #4a4a4a;
+                                    dominant-baseline: central;
+                                }
+                            `}
+                        </style>
                     </g>
                 ))}
 
@@ -1110,15 +1130,25 @@ class VPL extends React.Component {
                         x={Style.plug.width / 2}
                         y={0}
                         fontSize={Style.fontSize.plugName}
-                        style={{
-                            textAnchor: 'middle',
-                            fontFamily: 'Monospace',
-                            fill: '#4a4a4a',
-                            dominantBaseline: 'central',
-                        }}
+                        // style={{
+                        //     textAnchor: 'middle',
+                        //     fontFamily: 'Monospace',
+                        //     fill: '#4a4a4a',
+                        //     dominantBaseline: 'central',
+                        // }}
                     >
                         {output[0]}
                     </text>
+                    <style jsx>
+                        {`
+                            text {
+                                text-anchor: middle;
+                                font-family: Monospace;
+                                fill: #4a4a4a;
+                                dominant-baseline: central;
+                            }
+                        `}
+                    </style>
                 </g>
 
                 <Popover
@@ -1131,17 +1161,27 @@ class VPL extends React.Component {
                         x={nodeWidth / 2}
                         y="25"
                         fontSize={Style.fontSize.nodeName + 'px'}
-                        style={{
-                            textAnchor: 'middle',
-                            fontFamily: 'Monospace',
-                            fill: '#536469',
-                            cursor: 'help',
-                        }}
+                        // style={{
+                        //     textAnchor: 'middle',
+                        //     fontFamily: 'Monospace',
+                        //     fill: '#536469',
+                        //     cursor: 'help',
+                        // }}
                     >
                         {nodeName.length > 10
                             ? `${nodeName.substr(0, 13)}...`
                             : nodeName}
                     </text>
+                    <style jsx>
+                        {`
+                            text {
+                                text-anchor: middle;
+                                font-family: Monospace;
+                                fill: #536469;
+                                cursor: help;
+                            }
+                        `}
+                    </style>
                 </Popover>
 
                 <g className="control">
@@ -1182,13 +1222,23 @@ class VPL extends React.Component {
                                 x={nodeWidth / 2}
                                 y={43 + index * 13}
                                 fontSize={Style.fontSize.propertyName + 'px'}
-                                style={{
-                                    cursor: 'pointer',
-                                    textAnchor: 'middle',
-                                    fontFamily: 'Monospace',
-                                    fill: '#b3b3b3',
-                                }}
+                                // style={{
+                                //     cursor: 'pointer',
+                                //     textAnchor: 'middle',
+                                //     fontFamily: 'Monospace',
+                                //     fill: '#b3b3b3',
+                                // }}
                             >
+                                <style jsx>
+                                    {`
+                                        text {
+                                            cursor: pointer;
+                                            text-anchor: middle;
+                                            font-family: Monospace;
+                                            fill: #b3b3b3;
+                                        }
+                                    `}
+                                </style>
                                 {_.startCase(attr)} :{' '}
                                 {String(value).substring(0, 6)}
                                 <title>Click to edit it</title>

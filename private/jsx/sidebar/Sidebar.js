@@ -28,6 +28,19 @@ export default class Sidebar extends React.Component {
                     }
 
                     .sidebar {
+                        z-index: 2000;
+                        width: 280px;
+                        background-color: white;
+                        overflow: auto;
+                        position: fixed;
+                        left: 0;
+                        top: 80px;
+                        bottom: 0;
+
+                        -webkit-box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.2);
+                        -moz-box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.2);
+                        box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.2);
+
                         :global(.ant-tabs) {
                             height: 100%;
                         }

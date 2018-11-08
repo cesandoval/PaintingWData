@@ -37,6 +37,13 @@ export default class App extends React.Component {
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />
+                <style jsx>
+                    {`
+                        .mapMain {
+                            position: relative;
+                        }
+                    `}
+                </style>
             </div>
         )
     }

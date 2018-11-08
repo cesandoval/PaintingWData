@@ -1,4 +1,6 @@
-.parcoords > svg, .parcoords > canvas { 
+/* These are all in pcoords.js */
+
+/* .parcoords > svg, .parcoords > canvas { 
   font: 14px sans-serif;
   position: absolute;
   z-index:3;
@@ -46,4 +48,4 @@
 	-ms-user-select: none;
 	user-select: none;
     background-color: white;
-}
+} */

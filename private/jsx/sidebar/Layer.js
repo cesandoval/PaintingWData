@@ -80,17 +80,18 @@ class Layer extends React.Component {
                         <div className="col-md-6">
                             <div className="text-right">
                                 <input
+                                    id="checkbox"
                                     type="checkbox"
                                     checked={this.state.node.visibility}
                                     onChange={this.handleCheckedEvent}
                                     name={this.props.name}
-                                    style={{
-                                        appearance: 'checkbox',
-                                        WebkitAppearance: 'checkbox',
-                                        height: '17px',
-                                        width: '16px',
-                                        margin: '0px 5px',
-                                    }}
+                                    // style={{
+                                    //     appearance: 'checkbox',
+                                    //     WebkitAppearance: 'checkbox',
+                                    //     height: '17px',
+                                    //     width: '16px',
+                                    //     margin: '0px 5px',
+                                    // }}
                                 />
                                 <input
                                     type="color"
@@ -102,6 +103,44 @@ class Layer extends React.Component {
                             </div>
                         </div>
                     </div>
+                    <style jsx>
+                        {`
+                            .layers__single {
+                                background-color: white;
+                                /*border: 1px solid #f16752;*/
+                                border-bottom: 2px solid #eee;
+                                /*border-top: 4px solid #f16752;*/
+                                margin: 0;
+                                padding-top: 15px;
+                                padding-bottom: 10px;
+                                padding-left: 10px;
+
+                                font-size: 11pt;
+                            }
+
+                            .layer-label {
+                                font-size: 11pt;
+                                font-family: 'Karla', sans-serif;
+                                padding: 0;
+                                text-transform: none;
+                            }
+
+                            .layer-label-small {
+                                font-size: 9pt;
+                                font-family: 'Karla', sans-serif;
+                                padding: 0;
+                                text-transform: none;
+                            }
+
+                            #checkbox {
+                                appearance: checkbox;
+                                webkitappearance: checkbox;
+                                height: 17px;
+                                width: 16px;
+                                margin: 0px;
+                            }
+                        `}
+                    </style>
                 </div>
             )
         else return null
