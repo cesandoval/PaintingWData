@@ -291,7 +291,7 @@ export default class Graph {
                 })
             }
         }, 2000)
-        // TODO: Comment on these event handlers.
+
         // default mouseUp to renderSec(1)
         document.body.addEventListener('mouseup', () => {
             this.renderSec(1)

@@ -27,8 +27,18 @@ server.open(err => {
 
 var app = express()
 
+function requireHTTPS(req, res, next) {
+    if((!req.secure) && (req.get('X-Forwarded-Proto') !== 'https')) {
+        //FYI this should work for local development as well
+        return res.redirect('https://' + req.get('host') + req.url)
+    } else {
+        next()
+    }
+}
+
 if ('production' == app.get('env')) {
     // just for production code
+    app.use(requireHTTPS);
 }
 
 if ('development' == app.get('env')) {

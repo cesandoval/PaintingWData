@@ -88,14 +88,12 @@ class VPL extends React.Component {
 
         this.geometries = {}
 
-        // TODO: should be stored in the redux when start
+        // TODO: should be stored in the redux when  start
         this.originDatasetArray = {}
     }
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
-        // TODO: should get dataset layers from props.
-
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
@@ -122,7 +120,6 @@ class VPL extends React.Component {
 
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
-            // TODO: use layerKey as nodeKey of layers node
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -765,7 +762,7 @@ class VPL extends React.Component {
         outputOrder = _.uniq(_.flatten(outputOrder))
         // console.log({ outputOrder })
 
-        // TODO: save computed data to this state
+        // TODO: cache the same computed data result to this.state
         const computeNodeThenAddVoxel = (node, inputNodes) => {
             const mapGeometries = this.geometries
             const mathFunction = NodeType[node.type].arithmetic
@@ -840,7 +837,6 @@ class VPL extends React.Component {
         )
     }
 
-    // TODO: refactoring this function.
     evalArithmeticNode = ({ node, mathFunction, options, geometries }) => {
         console.log({ node })
 
@@ -1170,7 +1166,6 @@ class VPL extends React.Component {
                 </Popover>
 
                 <g className="control">
-                    {/* TODO: modify slider width */}
                     <Slider index={nodeKey} />
                     <Panel
                         color={color}
