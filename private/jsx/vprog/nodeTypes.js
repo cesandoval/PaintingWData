@@ -308,14 +308,8 @@ export const LIN_REG = {
             })
             .then(data => {
                 console.log('Outputs', inputs[0])
-                const dataReformatted = Array.from(data).map(value => {
-                    if (value < 0) {
-                        return 0
-                    }
-                    return value
-                })
-                console.log('Predictions', Array.from(dataReformatted))
-                return Array.from(dataReformatted) //inputs[0]
+                console.log('Predictions', Array.from(data))
+                return Array.from(data) //inputs[0]
             })
     },
 }

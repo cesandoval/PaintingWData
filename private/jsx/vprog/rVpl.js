@@ -452,7 +452,7 @@ class VPL extends React.Component {
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
-        console.log('linkNode()', srcNode, toNode, toInput)
+        // console.log('linkNode()', srcNode, toNode, toInput)
 
         // const inputs = {
         //   [toNode]: {
@@ -603,13 +603,15 @@ class VPL extends React.Component {
                         svgRect.top,
                 }
 
+                // console.log('Add link', linkKey, linkInfo, from, to)
+
                 return this.createLink({ linkKey, linkInfo, from, to })
             })
         })
     }
 
     computeNodes = () => {
-        console.log('Compute Nodes')
+        console.log('Computing the Nodes')
 
         const nodes = this.props.nodes
 
@@ -652,7 +654,7 @@ class VPL extends React.Component {
         })
 
         const datasetPreprocessCallback = cb => {
-            console.log(cb)
+            console.log('Callback', cb)
             const outputs = this.props.links.outputs
             const inputs = this.props.links.inputs
 
@@ -677,7 +679,7 @@ class VPL extends React.Component {
                 }
             })
 
-            // console.log({ nodeInputsFromNode })
+            console.log({ nodeInputsFromNode })
 
             // getting a output Tree Structure to check the order of output.
             const nodeOutputTree = {}
@@ -699,7 +701,7 @@ class VPL extends React.Component {
                 }
             })
 
-            // console.log({ nodeOutputTree })
+            console.log({ nodeOutputTree })
 
             let outputOrder = [[]]
 
@@ -743,7 +745,6 @@ class VPL extends React.Component {
                 )
 
                 let voxelComputed = null
-
                 if (
                     inputGeometries.filter(f => f).length == inputNodes.length
                 ) {
@@ -763,19 +764,21 @@ class VPL extends React.Component {
                     this.nodeOutput({ nodeKey, geometry: null })
             })
 
-            const voxelsComputed = outputOrder.map(nodeKey => {
-                const node = nodes[nodeKey]
-                if (node.type != 'DATASET') {
-                    const inputNodes = Object.values(
-                        nodeInputsFromNode[nodeKey]
-                    )
-                    computeNodeThenAddVoxel(node, inputNodes)
-                }
-            })
+            const voxelsComputed = outputOrder.reduce((promise, nodeKey) => {
+                return promise.then(() => {
+                    const node = nodes[nodeKey]
+                    if (node.type != 'DATASET') {
+                        const inputNodes = Object.values(
+                            nodeInputsFromNode[nodeKey]
+                        )
+                        return computeNodeThenAddVoxel(node, inputNodes)
+                    }
+                    return Promise.resolve(null)
+                })
+            }, Promise.resolve(null))
 
-            Promise.all(voxelsComputed).then(result => {
-                console.log(result)
-                return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+            return voxelsComputed.then(() => {
+                nodeInputsFromNode, nodeOutputTree, outputOrder
             })
         }
 
@@ -923,13 +926,12 @@ class VPL extends React.Component {
             this.addVoxelGeometry(geometry)
         }
 
-        Promise.resolve(mathFunction(geomArray, options)).then(result =>
+        return Promise.resolve(mathFunction(geomArray, options)).then(result =>
             mathCallback(result)
         )
     }
 
     decideNodeType(node) {
-        console.log(`decideNodeType()`, node)
         return this.nodeSVG(node)
     }
 

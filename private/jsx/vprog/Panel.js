@@ -239,7 +239,7 @@ class Panel extends React.Component {
 
         // let data = []
 
-        console.log('Node', node)
+        // console.log('Node', node)
 
         // const regressionGraph = (
         //     <div>
