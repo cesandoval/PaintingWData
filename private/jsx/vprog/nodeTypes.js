@@ -21,8 +21,8 @@ const NodeType = {
 */
 
 import _ from 'lodash'
-// import * as tf from '@tensorflow/tfjs'
-import regression from 'regression'
+import * as tf from '@tensorflow/tfjs'
+// import regression from 'regression'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -35,7 +35,7 @@ export const DATASET = {
     },
     output: 'Output',
     options: {},
-    arithmetic() {},
+    arithmetic: async () => {},
 }
 
 export const LOG = {
@@ -52,7 +52,7 @@ export const LOG = {
         maximumInterval: 10, // 'valDiff'
         base: Math.E,
     },
-    arithmetic: (inputs, options = {}) => {
+    arithmetic: async (inputs, options = {}) => {
         const { maximumInterval, base } = options
         // console.log('log.arithmetic()', {inputs, options})
 
@@ -96,7 +96,7 @@ export const SUB = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.subtract(...inputs)
     },
 }
@@ -113,7 +113,7 @@ export const DIV = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.dotDivide(...inputs)
     },
 }
@@ -131,7 +131,7 @@ export const MULT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.dotMultiply(...inputs)
     },
 }
@@ -148,7 +148,7 @@ export const ADD = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.add(...inputs)
     },
 }
@@ -165,7 +165,7 @@ export const MIN = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.min(voxel))
     },
 }
@@ -182,7 +182,7 @@ export const MAX = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.max(voxel))
     },
 }
@@ -199,7 +199,7 @@ export const AND = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.and(...inputs).map(m => (m ? 1 : 0))
     },
 }
@@ -216,7 +216,7 @@ export const OR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
@@ -233,7 +233,7 @@ export const XOR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.xor(...inputs).map(m => (m ? 1 : 0))
     },
 }
@@ -249,7 +249,7 @@ export const NOT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return inputs[0].map(m => !m)
     },
 }
@@ -266,33 +266,56 @@ export const LIN_REG = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        // Ask whether input[i] is a voxel or the third elem in voxel and whether indices match
-        const result = regression.linear(
-            inputs[1].map((x, i) => [x, inputs[0][i]]),
-            {
-                precision: 10,
-            }
-        )
-        console.log('regression', result)
-        // What type of return is it
-        return inputs[1].map(x => result.predict(x)[1])
+    arithmetic: async inputs => {
+        // Define a model for linear regression.
+        const model = tf.sequential()
+        model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
+
+        // Prepare the model for training: Specify the loss and the optimizer.
+        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
+
+        // const findZero = (accum, value, index) => {
+        //     if (value === 0) {
+        //         accum.add(index)
+        //     }
+        //     return accum
+        // }
+        // // Generate some synthetic data for training.
+        // let filteredInput = inputs[1].reduce(findZero, new Set())
+        // filteredInput = inputs[0].reduce(findZero, filteredInput)
+
+        const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
+        const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
+
+        // const zeroFilter = (_, index) => !filteredInput.has(index)
+        // const xs = tf.tensor2d(inputs[1].filter(zeroFilter), [
+        //     inputs[1].length - filteredInput.size,
+        //     1,
+        // ])
+        // const ys = tf.tensor2d(inputs[0].filter(zeroFilter), [
+        //     inputs[0].length - filteredInput.size,
+        //     1,
+        // ])
+        const xReal = tf.tensor2d(inputs[1], [inputs[1].length, 1])
+        console.log(ys)
+        return model
+            .fit(xs, ys, {
+                validationSplit: 0.8,
+            })
+            .then(() => {
+                console.log(model.predict(xReal))
+                return model.predict(xReal).data()
+            })
+            .then(data => {
+                console.log('Outputs', inputs[0])
+                const dataReformatted = Array.from(data).map(value => {
+                    if (value < 0) {
+                        return 0
+                    }
+                    return value
+                })
+                console.log('Predictions', Array.from(dataReformatted))
+                return Array.from(dataReformatted) //inputs[0]
+            })
     },
-    // arithmetic: async inputs => {
-    //     // Define a model for linear regression.
-    //     const model = tf.sequential()
-    //     model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
-
-    //     // Prepare the model for training: Specify the loss and the optimizer.
-    //     model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
-
-    //     // Generate some synthetic data for training.
-    //     const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
-    //     const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
-    //     console.log('training', xs, ys)
-    //     return model.fit(xs, ys).then(() => {
-    //         console.log(model.predict(xs))
-    //         return inputs[0]
-    //     })
-    // },
 }

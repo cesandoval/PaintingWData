@@ -3,8 +3,8 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
-import _ from 'lodash'
-import { VictoryLine, VictoryChart, VictoryTheme } from 'victory'
+// import _ from 'lodash'
+// import { VictoryLine, VictoryChart, VictoryTheme } from 'victory'
 // import RegressionGraph from './regressionGraph'
 import * as NodeType from './nodeTypes'
 
@@ -229,39 +229,39 @@ class Panel extends React.Component {
         // const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
         const hasFilter = NodeType[type].class !== 'logic'
 
-        const isStatistics = NodeType[type].class === 'statistics'
+        // const isStatistics = NodeType[type].class === 'statistics'
 
-        const chartLength = _.get(
-            this.props,
-            `geometries.${this.props.index}.values`,
-            []
-        ).length
+        // const chartLength = _.get(
+        //     this.props,
+        //     `geometries.${this.props.index}.values`,
+        //     []
+        // ).length
 
-        let data = []
+        // let data = []
 
         console.log('Node', node)
 
-        const regressionGraph = (
-            <div>
-                <VictoryChart theme={VictoryTheme.material}>
-                    <VictoryLine
-                        interpolation="bundle"
-                        style={{
-                            data: { stroke: '#c43a31' },
-                            parent: {
-                                height: '300px',
-                                width:
-                                    chartLength <= 3
-                                        ? `calc((100vw - 280px) / ${chartLength})`
-                                        : 'calc((100vw - 280px) / 3)',
-                                margin: 'auto',
-                            },
-                        }}
-                        data={data}
-                    />
-                </VictoryChart>
-            </div>
-        )
+        // const regressionGraph = (
+        //     <div>
+        //         <VictoryChart theme={VictoryTheme.material}>
+        //             <VictoryLine
+        //                 interpolation="bundle"
+        //                 style={{
+        //                     data: { stroke: '#c43a31' },
+        //                     parent: {
+        //                         height: '300px',
+        //                         width:
+        //                             chartLength <= 3
+        //                                 ? `calc((100vw - 280px) / ${chartLength})`
+        //                                 : 'calc((100vw - 280px) / 3)',
+        //                         margin: 'auto',
+        //                     },
+        //                 }}
+        //                 data={data}
+        //             />
+        //         </VictoryChart>
+        //     </div>
+        // )
 
         return (
             <g>
@@ -325,7 +325,7 @@ class Panel extends React.Component {
                                 />
                             </Popover>
                         )}
-                        {isStatistics && (
+                        {/* {isStatistics && (
                             <Popover
                                 placement="bottom"
                                 title="Inspect"
@@ -338,8 +338,8 @@ class Panel extends React.Component {
                                     src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBoZWlnaHQ9IjE2cHgiIHZpZXdCb3g9IjAgLTIxIDUxMiA1MTIiIHdpZHRoPSIxNnB4Ij48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Im02NS4yODEyNSAxNTkuNTM1MTU2aDg0LjI0NjA5NGM1LjUyNzM0NCAwIDEwLjAwNzgxMi00LjQ4MDQ2OCAxMC4wMDc4MTItMTAuMDA3ODEydi04NC4yNDYwOTRjMC01LjUyMzQzOC00LjQ4MDQ2OC0xMC4wMDM5MDYtMTAuMDA3ODEyLTEwLjAwMzkwNmgtODQuMjQ2MDk0Yy01LjUyMzQzOCAwLTEwLjAwMzkwNiA0LjQ4MDQ2OC0xMC4wMDM5MDYgMTAuMDAzOTA2djg0LjI0NjA5NGMtLjAwMzkwNiA1LjUyNzM0NCA0LjQ3NjU2MiAxMC4wMDc4MTIgMTAuMDAzOTA2IDEwLjAwNzgxMnptMTAuMDA3ODEyLTg0LjI0NjA5NGg2NC4yMzA0Njl2NjQuMjMwNDY5aC02NC4yMzA0Njl6bTAgMCIgZmlsbD0iIzAwMDAwMCIvPjxwYXRoIGQ9Im02NS4yODEyNSAyMDEuNjU2MjVoMTgwLjYyNWM1LjUyNzM0NCAwIDEwLjAwMzkwNi00LjQ4MDQ2OSAxMC4wMDM5MDYtMTAuMDAzOTA2IDAtNS41MjczNDQtNC40NzY1NjItMTAuMDA3ODEzLTEwLjAwMzkwNi0xMC4wMDc4MTNoLTE4MC42MjVjLTUuNTIzNDM4IDAtMTAuMDAzOTA2IDQuNDgwNDY5LTEwLjAwMzkwNiAxMC4wMDc4MTMtLjAwMzkwNiA1LjUyMzQzNyA0LjQ3NjU2MiAxMC4wMDM5MDYgMTAuMDAzOTA2IDEwLjAwMzkwNnptMCAwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0ibTY1LjI4MTI1IDI0My43NzczNDRoMTcxLjE4MzU5NGM1LjUyNzM0NCAwIDEwLjAwNzgxMi00LjQ3NjU2MyAxMC4wMDc4MTItMTAuMDAzOTA2IDAtNS41MjczNDQtNC40ODA0NjgtMTAuMDA3ODEzLTEwLjAwNzgxMi0xMC4wMDc4MTNoLTE3MS4xODM1OTRjLTUuNTIzNDM4IDAtMTAuMDAzOTA2IDQuNDgwNDY5LTEwLjAwMzkwNiAxMC4wMDc4MTMtLjAwMzkwNiA1LjUyNzM0MyA0LjQ3NjU2MiAxMC4wMDM5MDYgMTAuMDAzOTA2IDEwLjAwMzkwNnptMCAwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0ibTE4Ny45MTAxNTYgMTU5LjUzNTE1Nmg3Ny45ODA0NjljNS41MjM0MzcgMCAxMC4wMDM5MDYtNC40ODA0NjggMTAuMDAzOTA2LTEwLjAwNzgxMiAwLTUuNTIzNDM4LTQuNDc2NTYyLTEwLjAwMzkwNi0xMC4wMDM5MDYtMTAuMDAzOTA2aC03Ny45ODA0NjljLTUuNTI3MzQ0IDAtMTAuMDA3ODEyIDQuNDgwNDY4LTEwLjAwNzgxMiAxMC4wMDM5MDYgMCA1LjUyNzM0NCA0LjQ4MDQ2OCAxMC4wMDc4MTIgMTAuMDA3ODEyIDEwLjAwNzgxMnptMCAwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0ibTE4Ny45MTAxNTYgNzUuMjg5MDYyaDkyLjk0NTMxM2M1LjUyNzM0MyAwIDEwLjAwNzgxMi00LjQ4MDQ2OCAxMC4wMDc4MTItMTAuMDA3ODEyIDAtNS41MjM0MzgtNC40ODA0NjktMTAuMDAzOTA2LTEwLjAwNzgxMi0xMC4wMDM5MDZoLTkyLjk0NTMxM2MtNS41MjczNDQgMC0xMC4wMDc4MTIgNC40ODA0NjgtMTAuMDA3ODEyIDEwLjAwMzkwNiAwIDUuNTI3MzQ0IDQuNDgwNDY4IDEwLjAwNzgxMiAxMC4wMDc4MTIgMTAuMDA3ODEyem0wIDAiIGZpbGw9IiMwMDAwMDAiLz48cGF0aCBkPSJtMTg3LjkxMDE1NiAxMTcuNDEwMTU2aDkyLjk0NTMxM2M1LjUyNzM0MyAwIDEwLjAwNzgxMi00LjQ4MDQ2OCAxMC4wMDc4MTItMTAuMDAzOTA2IDAtNS41MjczNDQtNC40ODA0NjktMTAuMDA3ODEyLTEwLjAwNzgxMi0xMC4wMDc4MTJoLTkyLjk0NTMxM2MtNS41MjczNDQgMC0xMC4wMDc4MTIgNC40ODA0NjgtMTAuMDA3ODEyIDEwLjAwNzgxMiAwIDUuNTIzNDM4IDQuNDgwNDY4IDEwLjAwMzkwNiAxMC4wMDc4MTIgMTAuMDAzOTA2em0wIDAiIGZpbGw9IiMwMDAwMDAiLz48cGF0aCBkPSJtMjgwLjg1NTQ2OSAzOTIuMjg1MTU2aC0yMTUuNTc0MjE5Yy01LjUyMzQzOCAwLTEwLjAwMzkwNiA0LjQ4MDQ2OS0xMC4wMDM5MDYgMTAuMDA3ODEzIDAgNS41MjM0MzcgNC40ODA0NjggMTAuMDAzOTA2IDEwLjAwMzkwNiAxMC4wMDM5MDZoMjE1LjU3NDIxOWM1LjUyNzM0MyAwIDEwLjAwNzgxMi00LjQ4MDQ2OSAxMC4wMDc4MTItMTAuMDAzOTA2IDAtNS41MjczNDQtNC40ODA0NjktMTAuMDA3ODEzLTEwLjAwNzgxMi0xMC4wMDc4MTN6bTAgMCIgZmlsbD0iIzAwMDAwMCIvPjxwYXRoIGQ9Im01NS4yNzM0MzggMzYwLjE2Nzk2OWMwIDUuNTI3MzQzIDQuNDgwNDY4IDEwLjAwNzgxMiAxMC4wMDc4MTIgMTAuMDA3ODEyaDIxNS41NzQyMTljNS41MjczNDMgMCAxMC4wMDM5MDYtNC40ODA0NjkgMTAuMDAzOTA2LTEwLjAwNzgxMiAwLTUuNTIzNDM4LTQuNDc2NTYzLTEwLjAwMzkwNy0xMC4wMDM5MDYtMTAuMDAzOTA3aC0yMTUuNTc0MjE5Yy01LjUyNzM0NCAwLTEwLjAwNzgxMiA0LjQ4MDQ2OS0xMC4wMDc4MTIgMTAuMDAzOTA3em0wIDAiIGZpbGw9IiMwMDAwMDAiLz48cGF0aCBkPSJtNjUuMjgxMjUgMzI4LjA1NDY4OGgxOTguNDgwNDY5YzUuNTI3MzQzIDAgMTAuMDA3ODEyLTQuNDgwNDY5IDEwLjAwNzgxMi0xMC4wMDc4MTMgMC01LjUyMzQzNy00LjQ4MDQ2OS0xMC4wMDM5MDYtMTAuMDA3ODEyLTEwLjAwMzkwNmgtMTk4LjQ4MDQ2OWMtNS41MjM0MzggMC0xMC4wMDM5MDYgNC40ODA0NjktMTAuMDAzOTA2IDEwLjAwMzkwNi0uMDAzOTA2IDUuNTI3MzQ0IDQuNDc2NTYyIDEwLjAwNzgxMyAxMC4wMDM5MDYgMTAuMDA3ODEzem0wIDAiIGZpbGw9IiMwMDAwMDAiLz48cGF0aCBkPSJtNjUuMjgxMjUgMjg1LjkwMjM0NGgxNzguMjQyMTg4YzUuNTI3MzQzIDAgMTAuMDA3ODEyLTQuNDgwNDY5IDEwLjAwNzgxMi0xMC4wMDc4MTMgMC01LjUyMzQzNy00LjQ4MDQ2OS0xMC4wMDM5MDYtMTAuMDA3ODEyLTEwLjAwMzkwNmgtMTc4LjI0MjE4OGMtNS41MjM0MzggMC0xMC4wMDM5MDYgNC40ODA0NjktMTAuMDAzOTA2IDEwLjAwMzkwNiAwIDUuNTI3MzQ0IDQuNDc2NTYyIDEwLjAwNzgxMyAxMC4wMDM5MDYgMTAuMDA3ODEzem0wIDAiIGZpbGw9IiMwMDAwMDAiLz48cGF0aCBkPSJtNTEyIDIzNi43MDcwMzFjMC0zMi40Mzc1LTEyLjYzMjgxMi02Mi45Mjk2ODctMzUuNTY2NDA2LTg1Ljg2MzI4MS0yMi45MzM1OTQtMjIuOTM3NS01My40MjU3ODItMzUuNTY2NDA2LTg1Ljg2MzI4Mi0zNS41NjY0MDYtMTcuNTM1MTU2IDAtMzQuNTAzOTA2IDMuNjk5MjE4LTUwLjAxNTYyNCAxMC43MTQ4NDR2LTExNS45ODQzNzZjMC01LjUyNzM0My00LjQ4MDQ2OS0xMC4wMDc4MTItMTAuMDA3ODEzLTEwLjAwNzgxMmgtMzIwLjUzOTA2M2MtNS41MjczNDMgMC0xMC4wMDc4MTIgNC40ODA0NjktMTAuMDA3ODEyIDEwLjAwNzgxMnY0NDkuNTQyOTY5YzAgNS41MjczNDQgNC40ODA0NjkgMTAuMDA3ODEzIDEwLjAwNzgxMiAxMC4wMDc4MTNoMzIwLjUzOTA2M2M1LjUyNzM0NCAwIDEwLjAwNzgxMy00LjQ4MDQ2OSAxMC4wMDc4MTMtMTAuMDA3ODEzdi0xMTIuMTM2NzE5YzEyLjU0Mjk2OCA1LjY3NTc4MiAyNi4wNDI5NjggOS4xNzE4NzYgNDAuMDIzNDM3IDEwLjMwNDY4OHYxMDEuODMyMDMxYzAgNS41MjczNDQgNC40ODA0NjkgMTAuMDA3ODEzIDEwLjAwNzgxMyAxMC4wMDc4MTMgNS41MjM0MzcgMCAxMC4wMDM5MDYtNC40ODA0NjkgMTAuMDAzOTA2LTEwLjAwNzgxM3YtMTAxLjgzMjAzMWMyOC42ODM1OTQtMi4zMjAzMTIgNTUuMzE2NDA2LTE0LjU4OTg0NCA3NS44NDM3NS0zNS4xNDg0MzggMjIuOTM3NS0yMi45MzM1OTMgMzUuNTY2NDA2LTUzLjQyNTc4MSAzNS41NjY0MDYtODUuODYzMjgxem0tMTIxLjQxNDA2MiAxMDEuNDEwMTU3Yy0xOS41NTA3ODIgMC0zOC4yNTM5MDctNS40ODgyODItNTQuMzQzNzUtMTUuNzM0Mzc2LS4xMDU0NjktLjA3NDIxOC0uMjE0ODQ0LS4xNDA2MjQtLjMyNDIxOS0uMjEwOTM3LTYuMDkzNzUtMy45MTQwNjMtMTEuODE2NDA3LTguNTA3ODEzLTE3LjA1ODU5NC0xMy43NS0xMC4yNzM0MzctMTAuMjczNDM3LTE4LjA3MDMxMy0yMi4zNDc2NTYtMjMuMTY3OTY5LTM1Ljg4MjgxMy0xLjk0OTIxOC01LjE3MTg3NC03LjcyMjY1Ni03Ljc4NTE1Ni0xMi44OTA2MjUtNS44MzU5MzctNS4xNzE4NzUgMS45NDkyMTktNy43ODUxNTYgNy43MTg3NS01LjgzNTkzNyAxMi44OTA2MjUgNi4xMDkzNzUgMTYuMjE4NzUgMTUuNDQxNDA2IDMwLjY3OTY4OCAyNy43NDIxODcgNDIuOTc2NTYyIDQuOTQ1MzEzIDQuOTQ1MzEzIDEwLjI0MjE4OCA5LjQxMDE1NyAxNS44MzIwMzEgMTMuMzcxMDk0djExMy42MDU0NjloLTMwMC41MjczNDN2LTQyOS41MzUxNTZoMzAwLjUzMTI1djExNy40NjA5MzdjLTUuNTkzNzUgMy45NjA5MzgtMTAuODkwNjI1IDguNDI1NzgyLTE1LjgzNTkzOCAxMy4zNzEwOTQtMTIuMzAwNzgxIDEyLjI5Njg3NS0yMS42MzI4MTIgMjYuNzU3ODEyLTI3Ljc0MjE4NyA0Mi45NzY1NjItMS45NDkyMTkgNS4xNzE4NzYuNjY0MDYyIDEwLjk0NTMxMyA1LjgzNTkzNyAxMi44OTA2MjYgNS4xNzU3ODEgMS45NDkyMTggMTAuOTQxNDA3LS42NjQwNjMgMTIuODkwNjI1LTUuODM1OTM4IDUuMTAxNTYzLTEzLjUzNTE1NiAxMi44OTQ1MzItMjUuNjA5Mzc1IDIzLjE2Nzk2OS0zNS44Nzg5MDYgMzkuNTQyOTY5LTM5LjU0Njg3NSAxMDMuODgyODEzLTM5LjU0Mjk2OSAxNDMuNDI1NzgxIDAgMTkuMTU2MjUgMTkuMTUyMzQ0IDI5LjcwMzEyNSA0NC42MjEwOTQgMjkuNzAzMTI1IDcxLjcxMDkzNyAwIDI3LjA4OTg0NC0xMC41NDY4NzUgNTIuNTU4NTk0LTI5LjcwNzAzMSA3MS43MTg3NS0xOS4xMjEwOTQgMTkuMTQ0NTMxLTQ0LjU4NTkzOCAyOS42OTE0MDctNzEuNjk1MzEyIDI5LjY5MTQwN3ptMCAwIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0ibTI3OS4xNTYyNSAyMjYuNzE0ODQ0Yy01LjUgMC0xMC4wMDc4MTIgNC40ODA0NjgtMTAuMDA3ODEyIDEwLjAwNzgxMiAwIDUuNDk2MDk0IDQuNTA3ODEyIDkuOTc2NTYzIDEwLjAwNzgxMiA5Ljk3NjU2M3MxMC4wMDM5MDYtNC40ODA0NjkgMTAuMDAzOTA2LTkuOTc2NTYzYzAtNS41MzEyNS00LjUwMzkwNi0xMC4wMDc4MTItMTAuMDAzOTA2LTEwLjAwNzgxMnptMCAwIiBmaWxsPSIjMDAwMDAwIi8+PC9nPjwvc3ZnPgo="
                                 />
                             </Popover>
-                        )}
-                        {isStatistics && (
+                        )} */}
+                        {/* {isStatistics && (
                             <Popover
                                 placement="bottom"
                                 title="Graph"
@@ -352,7 +352,7 @@ class Panel extends React.Component {
                                     src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUwMi42NjQgNTAyLjY2NCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTAyLjY2NCA1MDIuNjY0OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCI+CjxnPgoJPGc+CgkJPGc+CgkJCTxwYXRoIGQ9Ik00NzIuMDc3LDI1LjQzMkgzMC42MDlDMTMuNzYyLDI1LjQzMiwwLDM5LjIxNiwwLDU2LjAxOXYzMTcuNDE0ICAgICBjMCwxNi43ODIsMTMuNzYyLDMwLjU4NywzMC42MDksMzAuNTg3aDQ0MS40NjhjMTYuODI1LDAsMzAuNTg3LTEzLjgwNSwzMC41ODctMzAuNTg3VjU2LjAxOSAgICAgQzUwMi42NjQsMzkuMjE2LDQ4OC45MDIsMjUuNDMyLDQ3Mi4wNzcsMjUuNDMyeiBNNDY0LjM3NiwzNTAuOTM1SDM4LjI4OFY2OC4zMzZoNDI2LjA4OFYzNTAuOTM1eiIgZmlsbD0iIzAwMDAwMCIvPgoJCQk8cG9seWdvbiBwb2ludHM9IjE5NC42OTgsNDE4LjUzOCAxMzYuOTMxLDQ3Ny4yMzIgMzY2LjU3NCw0NzcuMjMyIDMwOC44MDcsNDE4LjUzOCAgICAiIGZpbGw9IiMwMDAwMDAiLz4KCQkJPHBhdGggZD0iTTEwMy4zNDYsMjk0LjI2OWMxMS4yODIsMCwyMC40NzEtOS4xNjgsMjAuNDcxLTIwLjQ0OWMwLTIuMDQ5LTAuNjA0LTMuOTA0LTEuMTY1LTUuNzgxICAgICBjMjYuMTY1LTIxLjA5Niw3Mi4zOTItNTguMjg0LDkzLjQ2Ni03NC41MjdjMy4zMjIsMi4zNTEsNy4xODMsNC4wMzQsMTEuNTYyLDQuMDM0YzMuNjQ1LDAsNi44ODEtMS4yMDgsOS44MzYtMi44NjkgICAgIGMxMy41NDYsMTEuNTE5LDM2LjU4NCwzMS4xMDUsNTIuOTM1LDQ1LjAxOGMtMC4yMTYsMS4xODYtMC42OSwyLjI0My0wLjY5LDMuNDk0YzAsMTEuMzAzLDkuMTg5LDIwLjQ3MSwyMC40OTIsMjAuNDcxICAgICBzMjAuNDkyLTkuMTY4LDIwLjQ5Mi0yMC40NzFjMC0yLjAwNi0wLjYwNC0zLjg0LTEuMTQzLTUuNjczbDUyLjkzNS00Ny44MDFjMi44NDcsMS40ODgsNS45MSwyLjU0NSw5LjM2MiwyLjU0NSAgICAgYzExLjMwMywwLDIwLjQ3MS05LjE2OCwyMC40NzEtMjAuNDcxcy05LjE2OC0yMC40NzEtMjAuNDcxLTIwLjQ3MXMtMjAuNDQ5LDkuMTY4LTIwLjQ0OSwyMC40OTJjMCwyLjY5NiwwLjU4Miw1LjI2MywxLjUzMSw3LjYxNCAgICAgYy0xNC43OTgsMTMuMzUyLTM3LjYxOSwzMy45NzQtNTEuODU2LDQ2LjgzYy0zLjE3MS0yLjA0OS02Ljc1Mi0zLjU1OS0xMC44NS0zLjU1OWMtNC44MzIsMC05LjA2LDEuOTItMTIuNTU0LDQuNzAyICAgICBjLTEzLjUyNS0xMS40OTctMzUuMzk4LTMwLjA5MS01MC45NS00My4zMTRjMC44Mi0yLjIsMS40MDItNC41MDgsMS40MDItNy4wMWMwLTExLjMwMy05LjE2OC0yMC40NzEtMjAuNDcxLTIwLjQ3MSAgICAgcy0yMC40NzEsOS4xNjgtMjAuNDcxLDIwLjQ3MWMwLDIuNTAyLDAuNjA0LDQuODMyLDEuNDI0LDcuMDMybC05My45NjIsNzMuMTAzYy0zLjI3OS0yLjI0My03LjA1NC0zLjg4My0xMS4zMjUtMy44ODMgICAgIGMtMTEuMzAzLDAtMjAuNDcxLDkuMTY4LTIwLjQ3MSwyMC40NzFDODIuODc1LDI4NS4xMDEsOTIuMDQzLDI5NC4yNjksMTAzLjM0NiwyOTQuMjY5eiIgZmlsbD0iIzAwMDAwMCIvPgoJCTwvZz4KCTwvZz4KCTxnPgoJPC9nPgoJPGc+Cgk8L2c+Cgk8Zz4KCTwvZz4KCTxnPgoJPC9nPgoJPGc+Cgk8L2c+Cgk8Zz4KCTwvZz4KCTxnPgoJPC9nPgoJPGc+Cgk8L2c+Cgk8Zz4KCTwvZz4KCTxnPgoJPC9nPgoJPGc+Cgk8L2c+Cgk8Zz4KCTwvZz4KCTxnPgoJPC9nPgoJPGc+Cgk8L2c+Cgk8Zz4KCTwvZz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
                                 />
                             </Popover>
-                        )}
+                        )} */}
                         {this.props.type !== 'DATASET' && (
                             <img
                                 onClick={this.deleteNode}

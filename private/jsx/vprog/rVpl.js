@@ -609,33 +609,7 @@ class VPL extends React.Component {
     }
 
     computeNodes = () => {
-        /*
-        inputs: { // for arithmetic iterate
-          // [toNode]: {
-          //   [toInput]: srcNode,
-          // },
-          '$nodeC':{
-            'Minuend': '$nodeA',
-            'Subtrahend': '$nodeB',
-          },
-          '$nodeD':{
-            'Numerator': '$nodeB',
-            'Denominator': '',
-          },
-        },
-        outputs: { // for checking the limitation of links
-          // [srcNode]: {
-          //   [toNode]: toInput,
-          // },
-          '$nodeA':{
-            '$nodeC': 'Minuend',
-          },
-          '$nodeB':{
-            '$nodeC': 'Subtrahend',
-            '$nodeD': 'Numerator',
-          },
-        },
-        */
+        console.log('Compute Nodes')
 
         const nodes = this.props.nodes
 
@@ -644,7 +618,7 @@ class VPL extends React.Component {
             .map(([key]) => key)
 
         // Datasets Preprocess
-        datasetNodes.map(datasetKey => {
+        const datasetPreprocess = datasetNodes.map(datasetKey => {
             const geometry = this.geometries[datasetKey]
 
             if (!this.originDatasetArray[datasetKey]) {
@@ -667,124 +641,145 @@ class VPL extends React.Component {
 
             this.nodeOutput({ nodeKey: datasetKey, geometry: null })
 
-            this.evalArithmeticNode({
-                node,
-                mathFunction: arr => arr[0],
-                options: {},
-                geometries: [geometry],
-            })
-        })
-
-        // const outputs = _.cloneDeep(this.props.links.outputs)
-        // const inputs = _.cloneDeep(this.props.links.inputs)
-
-        const outputs = this.props.links.outputs
-        const inputs = this.props.links.inputs
-
-        // collect node inputs if inputs enough like node type setting
-        const nodeInputsFromNode = {}
-
-        Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
-            const toNode = nodes[toNodeKey]
-            const toNodeTypeInputs = Object.keys(toNode.inputs)
-
-            const toNodeInputs = toNodeTypeInputs.map(
-                input => inputsSrcNode[input]
+            return Promise.resolve(
+                this.evalArithmeticNode({
+                    node,
+                    mathFunction: arr => arr[0],
+                    options: {},
+                    geometries: [geometry],
+                })
             )
-            if (toNodeInputs.filter(f => f).length == toNodeTypeInputs.length) {
-                // console.log(toNodeKey, 'enough input')
-                nodeInputsFromNode[toNodeKey] = inputsSrcNode
-            } else {
-                // console.log(toNodeKey, 'less input')
-            }
         })
 
-        // console.log({ nodeInputsFromNode })
+        const datasetPreprocessCallback = cb => {
+            console.log(cb)
+            const outputs = this.props.links.outputs
+            const inputs = this.props.links.inputs
 
-        // getting a output Tree Structure to check the order of output.
-        const nodeOutputTree = {}
+            // collect node inputs if inputs enough like node type setting
+            const nodeInputsFromNode = {}
 
-        const getOutputToNode = output => {
-            Object.keys(output).map(toNodeKey => {
-                if (outputs[toNodeKey]) {
-                    output[toNodeKey] = _.clone(outputs[toNodeKey])
-                    getOutputToNode(output[toNodeKey])
-                } else output[toNodeKey] = true
-            })
-        }
+            Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
+                const toNode = nodes[toNodeKey]
+                const toNodeTypeInputs = Object.keys(toNode.inputs)
 
-        datasetNodes.map(datasetNodeKey => {
-            if (outputs[datasetNodeKey]) {
-                const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
-                nodeOutputTree[datasetNodeKey] = datasetNodeOutput
-                getOutputToNode(nodeOutputTree[datasetNodeKey])
-            }
-        })
-
-        // console.log({ nodeOutputTree })
-
-        let outputOrder = [[]]
-
-        const getOutputOrder = (tree, depth) => {
-            // console.log(`S getOutputOrder(${depth})`, tree)
-            let depthNodes = []
-            let deepDepth = depth + 1
-
-            Object.entries(tree).map(([nodeKey, value]) => {
-                if (nodeInputsFromNode[nodeKey]) {
-                    depthNodes.push(nodeKey)
-                    getOutputOrder(value, deepDepth)
+                const toNodeInputs = toNodeTypeInputs.map(
+                    input => inputsSrcNode[input]
+                )
+                if (
+                    toNodeInputs.filter(f => f).length ==
+                    toNodeTypeInputs.length
+                ) {
+                    // console.log(toNodeKey, 'enough input')
+                    nodeInputsFromNode[toNodeKey] = inputsSrcNode
+                } else {
+                    // console.log(toNodeKey, 'less input')
                 }
             })
 
-            // console.log(`E getOutputOrder(${depth})`, tree, depthNodes)
-            outputOrder[depth] = outputOrder[depth]
-                ? [...outputOrder[depth], ...depthNodes]
-                : [...depthNodes]
-        }
+            // console.log({ nodeInputsFromNode })
 
-        Object.entries(nodeOutputTree).map(([nodeKey, value]) => {
-            outputOrder[0].push(nodeKey)
-            getOutputOrder(value, 1)
-        })
+            // getting a output Tree Structure to check the order of output.
+            const nodeOutputTree = {}
 
-        outputOrder = _.uniq(_.flatten(outputOrder))
-        // console.log({ outputOrder })
-
-        // TODO: save computed data to this state
-        const computeNodeThenAddVoxel = (node, inputNodes) => {
-            const mapGeometries = this.geometries
-            const mathFunction = NodeType[node.type].arithmetic
-            const options = Object.assign(
-                NodeType[node.type].options,
-                node.options
-            )
-
-            let inputGeometries = inputNodes.map(index => mapGeometries[index])
-
-            if (inputGeometries.filter(f => f).length == inputNodes.length)
-                this.evalArithmeticNode({
-                    node,
-                    mathFunction,
-                    options,
-                    geometries: inputGeometries,
+            const getOutputToNode = output => {
+                Object.keys(output).map(toNodeKey => {
+                    if (outputs[toNodeKey]) {
+                        output[toNodeKey] = _.clone(outputs[toNodeKey])
+                        getOutputToNode(output[toNodeKey])
+                    } else output[toNodeKey] = true
                 })
+            }
+
+            datasetNodes.map(datasetNodeKey => {
+                if (outputs[datasetNodeKey]) {
+                    const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
+                    nodeOutputTree[datasetNodeKey] = datasetNodeOutput
+                    getOutputToNode(nodeOutputTree[datasetNodeKey])
+                }
+            })
+
+            // console.log({ nodeOutputTree })
+
+            let outputOrder = [[]]
+
+            const getOutputOrder = (tree, depth) => {
+                // console.log(`S getOutputOrder(${depth})`, tree)
+                let depthNodes = []
+                let deepDepth = depth + 1
+
+                Object.entries(tree).map(([nodeKey, value]) => {
+                    if (nodeInputsFromNode[nodeKey]) {
+                        depthNodes.push(nodeKey)
+                        getOutputOrder(value, deepDepth)
+                    }
+                })
+
+                // console.log(`E getOutputOrder(${depth})`, tree, depthNodes)
+                outputOrder[depth] = outputOrder[depth]
+                    ? [...outputOrder[depth], ...depthNodes]
+                    : [...depthNodes]
+            }
+
+            Object.entries(nodeOutputTree).map(([nodeKey, value]) => {
+                outputOrder[0].push(nodeKey)
+                getOutputOrder(value, 1)
+            })
+
+            outputOrder = _.uniq(_.flatten(outputOrder))
+            // console.log({ outputOrder })
+
+            // TODO: save computed data to this state
+            const computeNodeThenAddVoxel = (node, inputNodes) => {
+                const mapGeometries = this.geometries
+                const mathFunction = NodeType[node.type].arithmetic
+                const options = Object.assign(
+                    NodeType[node.type].options,
+                    node.options
+                )
+
+                let inputGeometries = inputNodes.map(
+                    index => mapGeometries[index]
+                )
+
+                let voxelComputed = null
+
+                if (
+                    inputGeometries.filter(f => f).length == inputNodes.length
+                ) {
+                    voxelComputed = this.evalArithmeticNode({
+                        node,
+                        mathFunction,
+                        options,
+                        geometries: inputGeometries,
+                    })
+                }
+
+                return Promise.resolve(voxelComputed)
+            }
+
+            Object.entries(nodes).map(([nodeKey, node]) => {
+                if (node.type != 'DATASET')
+                    this.nodeOutput({ nodeKey, geometry: null })
+            })
+
+            const voxelsComputed = outputOrder.map(nodeKey => {
+                const node = nodes[nodeKey]
+                if (node.type != 'DATASET') {
+                    const inputNodes = Object.values(
+                        nodeInputsFromNode[nodeKey]
+                    )
+                    computeNodeThenAddVoxel(node, inputNodes)
+                }
+            })
+
+            Promise.all(voxelsComputed).then(result => {
+                console.log(result)
+                return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+            })
         }
 
-        Object.entries(nodes).map(([nodeKey, node]) => {
-            if (node.type != 'DATASET')
-                this.nodeOutput({ nodeKey, geometry: null })
-        })
-
-        outputOrder.map(nodeKey => {
-            const node = nodes[nodeKey]
-            if (node.type != 'DATASET') {
-                const inputNodes = Object.values(nodeInputsFromNode[nodeKey])
-                computeNodeThenAddVoxel(node, inputNodes)
-            }
-        })
-
-        return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+        Promise.all(datasetPreprocess).then(cb => datasetPreprocessCallback(cb))
     }
 
     diagonal(source, target) {
@@ -835,130 +830,102 @@ class VPL extends React.Component {
 
         const amplifier = 3
 
-        // let transArray1 = geometry1.geometry.attributes.translation.array;
-        // let transArray2 = geometry2.geometry.attributes.translation.array;
         let transArray = geometries.map(
             geometry => geometry.geometry.attributes.translation.array
         )
 
-        // let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
-        // let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
         let geomArray = geometries.map(geometry =>
             Array.from(geometry.geometry.attributes.size.array)
         )
 
-        // let sizeArray = mathFunction(geomArray1, geomArray2);
-
-        let sizeArray = mathFunction(geomArray, options)
-        // let sizeArray = Promise.resolve(mathFunction(geomArray, options)).then(
-        //     result => {
-        //         console.log(result)
-        //         debugger
-        //         return result.map(x => (x > 0 ? x : 0))
-        //     }
-        // )
-        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
-
-        const originDataMax = math.max(sizeArray)
-        const originDataMin = math.min(sizeArray)
-        const newBounds = [originDataMin, originDataMax]
-
-        // console.log(node.type, { originDataMax, originDataMin })
-
-        Act.nodeUpdate({
-            nodeKey: node.nodeKey,
-            attr: 'max',
-            value: originDataMax,
-        })
-
-        if (node.remap) {
-            const dataMax = math.max(sizeArray)
-            // const dataMin = math.min(sizeArray)
-            const dataMin = 0 // always be zero.
-            const originScale = dataMax - dataMin
-            const newScale = node.remap.max - dataMin
-
-            const remap = x => (x ? x * newScale / originScale + dataMin : 0)
-            // if (x != 0) {
-            //     return valDiff * ((x - min) / (max - min)) + dataMin
-            // } else {
-            //     return 0
-            // }
-
-            if (originScale > 0) sizeArray = sizeArray.map(remap)
-
-            // console.log('[remap] after', {
-            //     max: math.max(sizeArray),
-            //     min: math.min(sizeArray),
-            // })
-        }
-
-        // new: filter feature (2017 Nov. )
-        if (node.filter) {
-            const dataMax = math.max(sizeArray)
-            // const dataMin = math.min(sizeArray)
-            const dataMin = 0 // should be zero
-
-            let { min, max } = node.filter
-            // console.log('[filter]', { min, max })
-            const range = dataMax - dataMin
-
-            // console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
-            min = dataMin + min * range
-            max = dataMin + max * range
-            sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-            // console.log('[filter] After', { min, max }, sizeArray)
-        }
-
-        if (NodeType[node.type].class == 'logic') {
-            const trueValue = this.props.datasets.bounds[1]
-            sizeArray = sizeArray.map(x => (x ? trueValue : x))
-        }
-
-        const translationArray = new Float32Array(arraySize * amplifier)
-        for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
-            for (let k = amplifier - 1; k >= 0; k--) {
-                // `.find(f=> f != 0) || 0` replace `getNotZero()`
-                translationArray[i + k] =
-                    transArray.map(ta => ta[i + k]).find(f => f != 0) || 0
-            }
-
-            if (allIndices.includes(j)) {
-                let hashedArray = Array(8)
-                hashedArray[3] = sizeArray[j]
-                hashedData[j] = hashedArray
-            }
-        }
-
-        let props = {
-            // size: remapOriginalSize,
-            size: sizeArray,
-            translation: translationArray,
-        }
-
         const firstLayer = Object.values(this.newProps.layers)[0]
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
-        let geometry = {
-            minMax: this.newProps.datasets.minMax,
-            addressArray: firstGeometry.addresses,
-            properties: props,
-            cols: firstLayer.rowsCols.cols,
-            rows: firstLayer.rowsCols.rows,
-            bounds: newBounds,
-            shaderText: firstLayer.shaderText,
-            n: _.size(this.newProps.layers) + 1,
-            name: node.name,
-            type: node.type,
-            layerName: node.nodeKey,
-            length: Math.max(...geometries.map(g => g.numElements)),
-            hashedData: hashedData,
-            allIndices: allIndices,
-            // propVals: names, // CHECK: is this necessary?
-            color1: node.color,
-            color2: node.color,
+        const mathCallback = sizeArray => {
+            sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+            const originDataMax = math.max(sizeArray)
+            const originDataMin = math.min(sizeArray)
+            const newBounds = [originDataMin, originDataMax]
+
+            Act.nodeUpdate({
+                nodeKey: node.nodeKey,
+                attr: 'max',
+                value: originDataMax,
+            })
+
+            if (node.remap) {
+                const dataMax = math.max(sizeArray)
+                const dataMin = 0 // always be zero.
+                const originScale = dataMax - dataMin
+                const newScale = node.remap.max - dataMin
+
+                const remap = x =>
+                    x ? x * newScale / originScale + dataMin : 0
+
+                if (originScale > 0) sizeArray = sizeArray.map(remap)
+            }
+
+            // new: filter feature (2017 Nov. )
+            if (node.filter) {
+                const dataMax = math.max(sizeArray)
+                const dataMin = 0 // should be zero
+
+                let { min, max } = node.filter
+                const range = dataMax - dataMin
+
+                min = dataMin + min * range
+                max = dataMin + max * range
+                sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
+            }
+
+            if (NodeType[node.type].class == 'logic') {
+                const trueValue = this.props.datasets.bounds[1]
+                sizeArray = sizeArray.map(x => (x ? trueValue : x))
+            }
+
+            const translationArray = new Float32Array(arraySize * amplifier)
+            for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
+                for (let k = amplifier - 1; k >= 0; k--) {
+                    translationArray[i + k] =
+                        transArray.map(ta => ta[i + k]).find(f => f != 0) || 0
+                }
+
+                if (allIndices.includes(j)) {
+                    let hashedArray = Array(8)
+                    hashedArray[3] = sizeArray[j]
+                    hashedData[j] = hashedArray
+                }
+            }
+
+            let props = {
+                size: sizeArray,
+                translation: translationArray,
+            }
+
+            let geometry = {
+                minMax: this.newProps.datasets.minMax,
+                addressArray: firstGeometry.addresses,
+                properties: props,
+                cols: firstLayer.rowsCols.cols,
+                rows: firstLayer.rowsCols.rows,
+                bounds: newBounds,
+                shaderText: firstLayer.shaderText,
+                n: _.size(this.newProps.layers) + 1,
+                name: node.name,
+                type: node.type,
+                layerName: node.nodeKey,
+                length: Math.max(...geometries.map(g => g.numElements)),
+                hashedData: hashedData,
+                allIndices: allIndices,
+                color1: node.color,
+                color2: node.color,
+            }
+            this.addVoxelGeometry(geometry)
         }
-        this.addVoxelGeometry(geometry, sizeArray)
+
+        Promise.resolve(mathFunction(geomArray, options)).then(result =>
+            mathCallback(result)
+        )
     }
 
     decideNodeType(node) {
@@ -1078,13 +1045,18 @@ class VPL extends React.Component {
                             onClick={() => {
                                 const x_index =
                                     Object.entries(inputs).length + 1
+                                console.log(
+                                    'Input',
+                                    Object.entries(inputs)[x_index - 2]
+                                )
                                 Act.nodeUpdate({
                                     nodeKey,
                                     attr: 'inputs',
                                     value: {
                                         ...inputs,
-                                        Input2: 'X1',
-                                        [`Input${x_index}`]: `X${x_index - 1}`,
+                                        [`Input${x_index}`]: Object.entries(
+                                            inputs
+                                        )[x_index - 2][1], //`I${x_index - 1}`,
                                     },
                                 })
                             }}
@@ -1248,7 +1220,7 @@ class VPL extends React.Component {
         )
     }
 
-    addVoxelGeometry = (geometry, sizeArray = []) => {
+    addVoxelGeometry = geometry => {
         // TODO: adding Geometry function should be more simple
         const map = this.newProps.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
@@ -1302,7 +1274,7 @@ class VPL extends React.Component {
 
         this.nodeOutput({
             nodeKey: geometry.layerName,
-            geometry: { ...P, values: sizeArray },
+            geometry: P,
         })
     }
 
