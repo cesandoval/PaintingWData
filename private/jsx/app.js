@@ -30,12 +30,27 @@ export default class App extends React.Component {
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */
     render() {
+        const isEmbedUrl = window.location.pathname.split('/')[1] == 'embed'
+
         return (
             <div className="mapMain">
                 <Loading />
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />
+                <style jsx global>{`
+                    .sidebar,
+                    #PCoords,
+                    #Cover,
+                    body > nav {
+                        display: ${isEmbedUrl ? 'none' : ''};
+                    }
+
+                    #mapCanvas {
+                        width: ${isEmbedUrl ? '100vw !important' : ''};
+                        top: ${isEmbedUrl ? '0 !important' : ''};
+                    }
+                `}</style>
             </div>
         )
     }

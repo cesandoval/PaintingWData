@@ -1,5 +1,6 @@
 var passport = require('passport'),
     appController = require('../controllers/appController.js'),
+    sharingController = require('../controllers/sharingController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
     datalayerController = require('../controllers/datalayerController.js'),
@@ -88,13 +89,22 @@ var passport = require('passport'),
   // router.get('/createProject/:id', isAuthenticated, datalayerController.createProject);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
-
-  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
+  
+  // App route
   router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  // Embed route
+  router.get('/embed/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  
+  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
   router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
   router.get('/screenshot', appController.getPublicVoxelScreenshots);
   router.post('/checkScreenshot', appController.checkScreenshot);
+
+  // Sharing Routers
+  router.post('/uploadSnapshot', isAuthenticated, sharingController.uploadSnapshot);
+  router.post('/getSnapshots', sharingController.getSnapshots);
+  router.post('/deleteSnapshots', isAuthenticated, sharingController.deleteSnapshots);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
