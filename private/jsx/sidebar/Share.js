@@ -176,16 +176,18 @@ class Share extends React.Component {
                 }}
                 key={hash}
             >
-                <span className="snapshot-tool">
-                    <i
-                        className="fas fa-trash"
-                        onClick={() => this.deleteSnapshot(hash)}
-                    />
-                    <i
-                        className="fas fa-link"
-                        onClick={() => this.copySnapshotLink(hash)}
-                    />
-                </span>
+                <div className="display">
+                    <span className="snapshot-tool">
+                        <i
+                            className="fas fa-trash"
+                            onClick={() => this.deleteSnapshot(hash)}
+                        />
+                        <i
+                            className="fas fa-link"
+                            onClick={() => this.copySnapshotLink(hash)}
+                        />
+                    </span>
+                </div>
                 <div className="desc">
                     <span className="name">{name}</span>
                     <span className="time">{createAtDate}</span>
@@ -195,6 +197,8 @@ class Share extends React.Component {
                     .snapshot {
                         $sh: 140px;
                         $sw: 260px;
+                        $descHeight: 34px;
+
                         margin: 10px 10px;
                         width: $sw;
                         height: $sh + 2px;
@@ -212,27 +216,30 @@ class Share extends React.Component {
                             --snapshot-tool-opacity: 1;
                         }
 
-                        .snapshot-tool {
-                            position: absolute;
-                            right: 0;
-                            margin-right: 20px;
-                            margin-top: 6px;
-                            opacity: var(--snapshot-tool-opacity);
-                            transition: 0.5s opacity ease-out;
+                        .display {
+                            height: $sh - $descHeight;
 
-                            cursor: pointer;
+                            .snapshot-tool {
+                                margin-right: 12px;
+                                margin-top: 6px;
+                                float: right;
+                                text-shadow: #ffffff80 1px 1px 3px;
+                                opacity: var(--snapshot-tool-opacity);
+                                transition: 0.5s opacity ease-out;
 
-                            > i + i {
-                                margin-left: 12px;
+                                cursor: pointer;
+
+                                > i + i {
+                                    margin-left: 12px;
+                                }
                             }
                         }
 
                         .desc {
-                            $h: 34px;
+                            $h: $descHeight;
                             bottom: 0px;
                             background: #ffffff8c;
                             height: $h;
-                            margin-top: $sh - $h;
                             border-radius: 0px 0px $r $r;
                             border: 0px solid #ccc;
                             border-top-width: 1px;
