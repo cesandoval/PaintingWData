@@ -326,16 +326,18 @@ class Share extends React.Component {
                     <div className="snapshot add" onClick={this.takeSnapshot}>
                         <i className="fas fa-plus fa-3x" />
                     </div>
-                    {this.state.snapshots.map(
-                        ({ name, hash, image, createdAt }) => {
-                            return this.snapshotDOM({
-                                name,
-                                hash,
-                                image,
-                                createdAt,
-                            })
-                        }
-                    )}
+                    {_.orderBy(
+                        this.state.snapshots,
+                        ['createdAt'],
+                        ['desc']
+                    ).map(({ name, hash, image, createdAt }) => {
+                        return this.snapshotDOM({
+                            name,
+                            hash,
+                            image,
+                            createdAt,
+                        })
+                    })}
                 </div>
 
                 <style jsx>{`
