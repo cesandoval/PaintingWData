@@ -80,7 +80,7 @@ class Share extends React.Component {
             .then(res => {
                 console.log('deleteSnapshots res', { res })
                 this.getSnapshots()
-                message.success(`Snapshot Has Been Deleted`)
+                message.success(`The Snapshot has been deleted`)
             })
             .catch(e => console.error(e))
     }
@@ -104,7 +104,7 @@ class Share extends React.Component {
     execCopy = inputDom => {
         inputDom.select()
         document.execCommand('copy')
-        message.success('Public Link Has Been Copied')
+        message.success('The link has been copied to the clipboard')
     }
 
     takeSnapshot = e => {
@@ -283,7 +283,7 @@ class Share extends React.Component {
 
         return (
             <div id="sidebar-share">
-                <p>Embed Link</p>
+                <p>Share Your Model</p>
                 <div
                     style={{ marginBottom: 16 }}
                     className="embed-link"
@@ -299,14 +299,14 @@ class Share extends React.Component {
                         addonAfter={<i className="fas fa-link" />}
                     />
                 </div>
-                <p>Snapshots</p>
+                <p>Model Snapshots</p>
 
                 {/* invisible input DOM only for copy function */}
                 <input id="snapshot-link" value="snapshotLink" readOnly />
 
                 <Modal
                     wrapClassName="snapshot-taking-modal"
-                    title="Taking Snapshot"
+                    title="Save your Model Snapshot"
                     visible={this.state.snapshotModalVisible}
                     onOk={this.handleSnapshotTaking}
                     confirmLoading={this.state.snapshotTaking}
@@ -317,7 +317,7 @@ class Share extends React.Component {
                         <Input
                             id="snapshotTakingName"
                             addonBefore="Name"
-                            defaultValue="Case AbCd"
+                            defaultValue=""
                         />
                     </div>
                 </Modal>
