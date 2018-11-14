@@ -349,7 +349,7 @@ class Share extends React.Component {
 
                         .snapshots {
                             overflow-y: scroll;
-                            height: 500px;
+                            height: calc(100vh - 260px);
                         }
 
                         .snapshot.add {
