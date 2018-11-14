@@ -1,7 +1,7 @@
 var Model = require('../models');
 var s3Lib = require('../../lib/awsFs');
 var Datasnapshot = require('../models').Datasnapshot;
-var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-snapshots-server' : 'data-voxel-snapshots';
+var bucket = process.env.NODE_ENV === 'production' ? 'data-voxel-snapshots' : 'data-voxel-snapshots';
 
 /**
  * Upload a new screenshot to PaintingWithData?
