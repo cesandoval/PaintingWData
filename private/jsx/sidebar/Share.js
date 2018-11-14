@@ -245,15 +245,17 @@ class Share extends React.Component {
                                 float: left;
                                 margin-left: $r;
                                 overflow: hidden;
-                                width: $sw * 0.6;
+                                width: $sw * 0.5;
                                 height: $h;
                                 text-align: left;
+                                text-overflow: ellipsis;
                             }
 
                             .time {
+                                white-space: nowrap;
                                 text-align: right;
                                 float: right;
-                                width: $sw * 0.35;
+                                width: $sw * 0.38;
                                 margin-right: $r;
                                 font-size: 12px;
                             }
