@@ -323,6 +323,9 @@ class Share extends React.Component {
                 </Modal>
 
                 <div className="snapshots">
+                    <div className="snapshot add" onClick={this.takeSnapshot}>
+                        <i className="fas fa-plus fa-3x" />
+                    </div>
                     {this.state.snapshots.map(
                         ({ name, hash, image, createdAt }) => {
                             return this.snapshotDOM({
@@ -333,9 +336,6 @@ class Share extends React.Component {
                             })
                         }
                     )}
-                    <div className="snapshot add" onClick={this.takeSnapshot}>
-                        <i className="fas fa-plus fa-3x" />
-                    </div>
                 </div>
 
                 <style jsx>{`
