@@ -318,6 +318,7 @@ class Share extends React.Component {
                             id="snapshotTakingName"
                             addonBefore="Name"
                             defaultValue=""
+                            placeholder="Snapshot Name"
                         />
                     </div>
                 </Modal>
