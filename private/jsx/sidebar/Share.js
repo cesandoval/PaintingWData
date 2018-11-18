@@ -186,6 +186,14 @@ class Share extends React.Component {
                             className="fas fa-link"
                             onClick={() => this.copySnapshotLink(hash)}
                         />
+                        <i>
+                            <a
+                                href={`https://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`}
+                                download={`${name}-${createdAt}`}
+                            >
+                                <i className="fas fa-download" />
+                            </a>
+                        </i>
                     </span>
                 </div>
                 <div className="desc">
@@ -231,6 +239,10 @@ class Share extends React.Component {
 
                                 > i + i {
                                     margin-left: 12px;
+                                }
+
+                                a {
+                                    color: inherit !important;
                                 }
                             }
                         }
