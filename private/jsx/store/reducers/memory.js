@@ -11,7 +11,6 @@ export default (state = initialMapState, action) => {
     const modifiedRegExp = RegExp('(NODE_+)|(MAP_SET_*)|(LINK_+)')
 
     if (modifiedRegExp.test(action.type)) {
-        console.log(action.type)
         action.type = 'modified'
     }
 

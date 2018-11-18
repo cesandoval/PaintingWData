@@ -71,6 +71,7 @@ class VPL extends React.Component {
                 y: 0,
             },
             hover: '',
+            hasNodeUpdated: {},
         }
 
         this.checked = {
@@ -451,20 +452,28 @@ class VPL extends React.Component {
         this.refreshVoxels = true // this.computeNodes()
     }
 
+    markNodesForUpdate = node => {
+        const { hasNodeUpdated } = this.state
+        const { outputs } = this.props.links
+        const nodesToUpdate = [node]
+        while (nodesToUpdate.length > 0) {
+            let currentNode = nodesToUpdate.shift()
+            if (!hasNodeUpdated[currentNode]) {
+                hasNodeUpdated[currentNode] = true
+                for (let child in outputs[node]) {
+                    nodesToUpdate.push(child)
+                }
+            }
+        }
+        this.setState({
+            hasNodeUpdated,
+        })
+    }
+
     linkNode = ({ srcNode, toNode, toInput }) => {
-        // console.log('linkNode()', srcNode, toNode, toInput)
-
-        // const inputs = {
-        //   [toNode]: {
-        //     [toInput]: srcNode,
-        //   },
-        // }
-        // const outputs = {
-        //   [srcNode]: {
-        //     [toNode]: toInput,
-        //   },
-        // }
-
+        // const { hasNodeUpdated } = this.state
+        // hasNodeUpdated[toNode] = true
+        this.markNodesForUpdate(toNode)
         Act.linkAdd({ srcNode, toNode, toInput })
     }
 
@@ -611,8 +620,7 @@ class VPL extends React.Component {
     }
 
     computeNodes = () => {
-        console.log('Computing the Nodes')
-
+        const { hasNodeUpdated } = this.state
         const nodes = this.props.nodes
 
         const datasetNodes = Object.entries(nodes)
@@ -653,8 +661,7 @@ class VPL extends React.Component {
             )
         })
 
-        const datasetPreprocessCallback = cb => {
-            console.log('Callback', cb)
+        const datasetPreprocessCallback = () => {
             const outputs = this.props.links.outputs
             const inputs = this.props.links.inputs
 
@@ -678,9 +685,6 @@ class VPL extends React.Component {
                     // console.log(toNodeKey, 'less input')
                 }
             })
-
-            console.log({ nodeInputsFromNode })
-
             // getting a output Tree Structure to check the order of output.
             const nodeOutputTree = {}
 
@@ -700,8 +704,6 @@ class VPL extends React.Component {
                     getOutputToNode(nodeOutputTree[datasetNodeKey])
                 }
             })
-
-            console.log({ nodeOutputTree })
 
             let outputOrder = [[]]
 
@@ -729,7 +731,6 @@ class VPL extends React.Component {
             })
 
             outputOrder = _.uniq(_.flatten(outputOrder))
-            // console.log({ outputOrder })
 
             // TODO: save computed data to this state
             const computeNodeThenAddVoxel = (node, inputNodes) => {
@@ -759,26 +760,47 @@ class VPL extends React.Component {
                 return Promise.resolve(voxelComputed)
             }
 
+            // Clears geometry of nodes who need voxels updated
             Object.entries(nodes).map(([nodeKey, node]) => {
-                if (node.type != 'DATASET')
+                if (node.type != 'DATASET' && hasNodeUpdated[nodeKey])
                     this.nodeOutput({ nodeKey, geometry: null })
             })
 
-            const voxelsComputed = outputOrder.reduce((promise, nodeKey) => {
-                return promise.then(() => {
-                    const node = nodes[nodeKey]
-                    if (node.type != 'DATASET') {
+            // TODO: select better name for this
+            // Keeps track of promises of each node voxel status
+            const voxelStatus = {}
+
+            // Updates voxels for nodes once their input's voxels have been updated
+            const voxelsComputed = outputOrder.reduce(
+                async (promise, nodeKey) => {
+                    if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
+                        hasNodeUpdated[nodeKey] = false
+                        let canComplete = Promise.resolve(true)
                         const inputNodes = Object.values(
                             nodeInputsFromNode[nodeKey]
                         )
-                        return computeNodeThenAddVoxel(node, inputNodes)
+                        for (let i = 0; i < inputNodes.length; i++) {
+                            canComplete = canComplete.then(
+                                () => voxelStatus[inputNodes[i]]
+                            )
+                        }
+                        const node = nodes[nodeKey]
+                        voxelStatus[nodeKey] = canComplete.then(() =>
+                            computeNodeThenAddVoxel(node, inputNodes)
+                        )
+                        return promise.then(() => voxelStatus[nodeKey])
+                    } else {
+                        voxelStatus[nodeKey] = Promise.resolve(true)
                     }
-                    return Promise.resolve(null)
-                })
-            }, Promise.resolve(null))
+                    return promise
+                },
+                Promise.resolve(true)
+            )
+
+            this.setState({ hasNodeUpdated })
 
             return voxelsComputed.then(() => {
-                nodeInputsFromNode, nodeOutputTree, outputOrder
+                return { nodeInputsFromNode, nodeOutputTree, outputOrder }
             })
         }
 
@@ -824,9 +846,12 @@ class VPL extends React.Component {
     }
 
     // TODO: refactoring this function.
-    evalArithmeticNode = ({ node, mathFunction, options, geometries }) => {
-        console.log({ node })
-
+    evalArithmeticNode = async ({
+        node,
+        mathFunction,
+        options,
+        geometries,
+    }) => {
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.datasets.allIndices

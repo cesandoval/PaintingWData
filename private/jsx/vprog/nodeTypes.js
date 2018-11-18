@@ -297,18 +297,18 @@ export const LIN_REG = {
         //     1,
         // ])
         const xReal = tf.tensor2d(inputs[1], [inputs[1].length, 1])
-        console.log(ys)
+        // console.log(ys)
         return model
             .fit(xs, ys, {
                 validationSplit: 0.8,
             })
             .then(() => {
-                console.log(model.predict(xReal))
+                // console.log(model.predict(xReal))
                 return model.predict(xReal).data()
             })
             .then(data => {
-                console.log('Outputs', inputs[0])
-                console.log('Predictions', Array.from(data))
+                // console.log('Outputs', inputs[0])
+                // console.log('Predictions', Array.from(data))
                 return Array.from(data) //inputs[0]
             })
     },
