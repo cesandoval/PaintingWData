@@ -265,51 +265,71 @@ export const LIN_REG = {
         Input2: 'X',
     },
     output: 'Output',
-    options: {},
-    arithmetic: async inputs => {
-        // Define a model for linear regression.
-        const model = tf.sequential()
-        model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
+    options: {
+        training_epochs: 5,
+    },
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
+        const { training_epochs } = options
 
-        // Prepare the model for training: Specify the loss and the optimizer.
-        model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' })
+        let model
+        if (_.get(savedData, 'model')) {
+            model = _.get(savedData, 'model')
+        } else {
+            // Define a model for linear regression.
+            model = tf.sequential()
+            model.add(
+                tf.layers.dense({ units: 1, inputShape: [inputs.length - 1] })
+            )
 
-        // const findZero = (accum, value, index) => {
-        //     if (value === 0) {
-        //         accum.add(index)
-        //     }
-        //     return accum
-        // }
-        // // Generate some synthetic data for training.
-        // let filteredInput = inputs[1].reduce(findZero, new Set())
-        // filteredInput = inputs[0].reduce(findZero, filteredInput)
+            // Prepare the model for training: Specify the loss and the optimizer.
+            model.compile({
+                loss: 'meanSquaredError',
+                optimizer: 'sgd',
+                metrics: ['accuracy'],
+            })
+        }
 
-        const xs = tf.tensor2d(inputs[1], [inputs[1].length, 1])
-        const ys = tf.tensor2d(inputs[0], [inputs[0].length, 1])
+        const data = []
+        const maxes = []
+        for (let j = 1; j < inputs.length; j++) {
+            maxes.push(Math.max(...inputs[j]))
+        }
+        for (let i = 0; i < inputs[1].length; i++) {
+            const data_entry = []
+            for (let j = 1; j < inputs.length; j++) {
+                data_entry.push(inputs[j][i] / maxes[j - 1])
+            }
+            data.push(data_entry)
+        }
 
-        // const zeroFilter = (_, index) => !filteredInput.has(index)
-        // const xs = tf.tensor2d(inputs[1].filter(zeroFilter), [
-        //     inputs[1].length - filteredInput.size,
+        // const x_range = Math.max(...inputs[1])
+        const y_range = Math.max(...inputs[0])
+        console.log(maxes)
+        console.log(data)
+        // const xs = tf.tensor2d(inputs[1].map(x => x / x_range), [
+        //     inputs[1].length,
         //     1,
         // ])
-        // const ys = tf.tensor2d(inputs[0].filter(zeroFilter), [
-        //     inputs[0].length - filteredInput.size,
-        //     1,
-        // ])
-        const xReal = tf.tensor2d(inputs[1], [inputs[1].length, 1])
-        // console.log(ys)
+        const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
+        const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
+            inputs[0].length,
+            1,
+        ])
+
         return model
             .fit(xs, ys, {
                 validationSplit: 0.8,
+                // batchSize: 100,
+                epochs: Number(training_epochs),
+                // stepsPerEpoch: 10,
             })
             .then(() => {
-                // console.log(model.predict(xReal))
-                return model.predict(xReal).data()
+                savedData['model'] = model
+                return model.predict(xs).data()
             })
             .then(data => {
-                // console.log('Outputs', inputs[0])
-                // console.log('Predictions', Array.from(data))
-                return Array.from(data) //inputs[0]
+                const dataArray = Array.from(data).map(x => x * y_range)
+                return dataArray
             })
     },
 }
