@@ -6,6 +6,7 @@ import VPL from '../vprog/rVpl'
 import Charts from '../charts/charts'
 import Table from '../charts/table'
 import Cover from './Cover'
+import Graph from '../graph'
 
 /**
  * The Map component. Contains a draggable, zoomable map, with voxels as concentric circles
@@ -39,7 +40,7 @@ class MapCanvas extends React.Component {
         const gHeight = window.innerHeight
         const gWidth = gElement.clientWidth
         // Constructs a new PaintGraph.Graph based in "mapCanvas" and updates state.
-        const G = new PaintGraph.Graph(gElement, gHeight, gWidth)
+        const G = new Graph(gElement, gHeight, gWidth)
         G.start()
         this.setState({ instance: G })
     }

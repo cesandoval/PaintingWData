@@ -15,6 +15,7 @@ import { Popover, Button, Menu, Dropdown } from 'antd'
 import hashKey from '@/utils/hashKey'
 
 import * as NodeType from './nodeTypes'
+import Pixels from '../pixels'
 
 // import testFile from '../store/test_userFile.json'
 
@@ -1295,7 +1296,7 @@ class VPL extends React.Component {
         // let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
         // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
 
-        const P = new PaintGraph.Pixels(
+        const P = new Pixels(
             geometry.layerName,
             map,
             circle,

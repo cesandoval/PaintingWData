@@ -1,4 +1,5 @@
 import update from 'immutability-helper'
+import Pixels from '../../pixels'
 // import Pixels from ''
 
 import * as t from '../types'
@@ -23,7 +24,7 @@ export default (state = initialMapState, action) => {
             const bbox = state.bbox
 
             // Add the map to the canvas
-            PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
+            Pixels.buildMapbox(instance, bbox, state.getScreenshot)
 
             let geometries = Object.assign({}, state.geometries)
 
@@ -31,10 +32,10 @@ export default (state = initialMapState, action) => {
                 // Defined geometry
                 const circle = new THREE.CircleBufferGeometry(1, 20)
                 // Parses the layer
-                const out = PaintGraph.Pixels.parseDataJSON(layer)
+                const out = Pixels.parseDataJSON(layer)
 
                 // Creates the Pixels object
-                const P = new PaintGraph.Pixels(
+                const P = new Pixels(
                     layer.layerKey,
                     instance, // this.props.map,
                     circle,
