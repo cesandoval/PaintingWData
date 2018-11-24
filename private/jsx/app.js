@@ -25,18 +25,32 @@ export default class App extends React.Component {
      * The Datauserfile model, in `app/models/datauserfile.js`, is where the
      * necessary saved states are stored.
      *
-     * TODO: When the user closes out, automatically save.
      */
     /**
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */
     render() {
+        const isEmbedUrl = window.location.pathname.split('/')[1] == 'embed'
+
         return (
             <div className="mapMain">
                 <Loading />
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />
+                <style jsx global>{`
+                    .sidebar,
+                    #PCoords,
+                    #Cover,
+                    body > nav {
+                        display: ${isEmbedUrl ? 'none' : ''};
+                    }
+
+                    #mapCanvas {
+                        width: ${isEmbedUrl ? '100vw !important' : ''};
+                        top: ${isEmbedUrl ? '0 !important' : ''};
+                    }
+                `}</style>
             </div>
         )
     }

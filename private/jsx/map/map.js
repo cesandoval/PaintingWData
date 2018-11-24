@@ -167,7 +167,8 @@ class MapCanvas extends React.Component {
             : ''
 
         const PCoordsShow =
-            panelShow == 'PCoords' || activeNodeType == 'DATASET'
+            panelShow == 'PCoords' ||
+            (panelShow == 'VPL' && activeNodeType == 'DATASET')
 
         return (
             <div>

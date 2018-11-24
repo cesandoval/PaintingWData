@@ -31,7 +31,7 @@ module.exports = {
                     configFile: './private/vue/.eslintrc_vue.js',
                     ignorePath: '.gitignore',
                     fix: true,
-                    cache: true,
+                    // cache: true,
                 },
             },
             {

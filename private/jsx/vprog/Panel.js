@@ -66,7 +66,6 @@ class Panel extends React.Component {
     }
 
     componentDidMount() {
-        // TODO: color1 to color
         Act.nodeUpdate({
             nodeKey: this.props.index,
             attr: 'color',

@@ -31,9 +31,9 @@ if (window.PaintGraph !== undefined) {
      *
      * @namespace PaintGraph
      *
-     * @property class Pixels TODO.
-     * @property class Graph TODO.
-     * @property class Exporter TODO
+     * @property class Pixels.
+     * @property class Graph.
+     * @property class Exporter.
      */
     window.PaintGraph = {
         Pixels: Pixels,

@@ -1,4 +1,5 @@
 import axios from 'axios'
+let crypto = require('crypto')
 /**
  * Summary. (use period)
  *
@@ -158,12 +159,14 @@ export default class Graph {
             document.body.appendChild(link)
             link.click()
         }
+
         /**
          *
-         * @alias window~screenshotToS3
+         * @alias window~takeSnaptshot
          * @param {Number} datavoxelId
+         * @param {Boolean} snapshot
          */
-        window.screenshotToS3 = datavoxelId => {
+        window.takeSnaptshot = (datavoxelId, snapshot = false, name = '') => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
             let newHeight = 550
@@ -200,21 +203,34 @@ export default class Graph {
 
             let img = resizedCanvas.toDataURL('image/jpeg')
 
-            let request = { id: datavoxelId, data: img, preview: preview }
+            if (snapshot) {
+                let hash = crypto.randomBytes(8).toString('hex')
+                return uploadSnapshot(
+                    {
+                        id: datavoxelId,
+                        data: img,
+                        hash: hash,
+                        name: name,
+                    },
+                    '/uploadSnapshot'
+                )
+            } else {
+                return uploadSnapshot(
+                    { id: datavoxelId, data: img, preview: preview },
+                    '/screenshot'
+                )
+            }
+        }
 
-            axios({
+        const uploadSnapshot = (request, endpoint) => {
+            return axios({
                 method: 'post',
-                url: '/screenshot',
+                url: endpoint,
                 data: request,
+            }).then(function(response) {
+                //handle success
+                console.log(response)
             })
-                .then(function(response) {
-                    //handle success
-                    console.log(response)
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                })
         }
 
         return renderer
@@ -291,7 +307,7 @@ export default class Graph {
                 })
             }
         }, 2000)
-        // TODO: Comment on these event handlers.
+
         // default mouseUp to renderSec(1)
         document.body.addEventListener('mouseup', () => {
             this.renderSec(1)

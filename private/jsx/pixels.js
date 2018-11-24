@@ -358,7 +358,7 @@ export default class Pixels {
                                 'Taking Screenshot for voxel',
                                 datavoxelId
                             )
-                            window.screenshotToS3(datavoxelId)
+                            window.takeSnaptshot(datavoxelId)
                         }, 3000)
                     } else if (finished == totalTilesToLoad) {
                         console.log('Screenshot not needed!')
@@ -423,7 +423,7 @@ export default class Pixels {
                 //handle success
                 if (!response.data.screenshot) {
                     console.log('Getting Public Screenshot')
-                    window.screenshotToS3(datavoxelId)
+                    window.takeSnaptshot(datavoxelId)
                 } else {
                     console.log('Screenshot not Neededddd~!!!')
                 }

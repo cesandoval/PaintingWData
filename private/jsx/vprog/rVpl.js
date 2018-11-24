@@ -80,14 +80,12 @@ class VPL extends React.Component {
 
         this.geometries = {}
 
-        // TODO: should be stored in the redux when start
+        // TODO: should be stored in the redux when  start
         this.originDatasetArray = {}
     }
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
-        // TODO: should get dataset layers from props.
-
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
@@ -108,7 +106,6 @@ class VPL extends React.Component {
 
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
-            // TODO: use layerKey as nodeKey of layers node
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -771,7 +768,6 @@ class VPL extends React.Component {
                 if (node.type != 'DATASET' && hasNodeUpdated[nodeKey])
                     this.nodeOutput({ nodeKey, geometry: null })
             })
-
             // TODO: select better name for this
             // Keeps track of promises of each node voxel status
             const voxelStatus = {}
@@ -1166,7 +1162,6 @@ class VPL extends React.Component {
                             : nodeName}
                     </text>
                 </Popover>
-
                 <g
                     className="control"
                     transform={`translate(0, ${Math.max(
@@ -1176,6 +1171,7 @@ class VPL extends React.Component {
                     )})`}
                 >
                     {/* TODO: modify slider width */}
+                <g className="control">
                     <Slider index={nodeKey} />
                     <Panel
                         color={color}
