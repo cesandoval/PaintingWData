@@ -179,7 +179,6 @@ class VPL extends React.Component {
             type: type,
             classOptions,
             savedData: {},
-            nodeUpdated: false,
             options: {},
             inputs: { ...NodeType[type].inputs },
             filter: {
@@ -208,25 +207,8 @@ class VPL extends React.Component {
     }
 
     componentDidUpdate() {
-        const { nodes } = this.props
-        const { hasNodeUpdated } = this.state
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
-        }
-        for (let node in nodes) {
-            if (
-                _.get(nodes[node], 'nodeUpdated', false) &&
-                !_.get(hasNodeUpdated, node, false)
-            ) {
-                // TODO: update multiple attributes at the same time so there aren't two variables that represent a node needing update
-                Act.nodeUpdate({
-                    nodeKey: node,
-                    attr: 'nodeUpdated',
-                    value: false,
-                })
-                this.markNodesForUpdate(node)
-                this.refreshVoxels = true
-            }
         }
         if (this.refreshVoxels) {
             this.refreshVoxels = false
@@ -508,6 +490,7 @@ class VPL extends React.Component {
             )
 
             Act.nodeOptionUpdate({ nodeKey, attr, value: newValue })
+            this.markNodesForUpdate(nodeKey)
 
             this.refreshVoxels = true // this.computeNodes()
         }
@@ -1201,7 +1184,8 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
-                        updated={() => {
+                        updated={index => {
+                            this.markNodesForUpdate(index)
                             Act.setRefreshVoxels({ value: true })
                         }}
                         // changeFilter={(min, max) => {

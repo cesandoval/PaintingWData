@@ -289,6 +289,7 @@ export const LIN_REG = {
             })
         }
 
+        // Converts independent input arrays into feature column format
         const data = []
         const maxes = []
         for (let j = 1; j < inputs.length; j++) {
@@ -302,14 +303,7 @@ export const LIN_REG = {
             data.push(data_entry)
         }
 
-        // const x_range = Math.max(...inputs[1])
         const y_range = Math.max(...inputs[0])
-        console.log(maxes)
-        console.log(data)
-        // const xs = tf.tensor2d(inputs[1].map(x => x / x_range), [
-        //     inputs[1].length,
-        //     1,
-        // ])
         const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
         const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
             inputs[0].length,
@@ -319,16 +313,41 @@ export const LIN_REG = {
         return model
             .fit(xs, ys, {
                 validationSplit: 0.8,
-                // batchSize: 100,
                 epochs: Number(training_epochs),
-                // stepsPerEpoch: 10,
             })
             .then(() => {
+                // Saves the model for future training
                 savedData['model'] = model
                 return model.predict(xs).data()
             })
             .then(data => {
                 const dataArray = Array.from(data).map(x => x * y_range)
+
+                // Creates the best fit line if there is only 1 input
+                if (maxes.length === 1) {
+                    const linePoints = []
+                    for (let i = 0; i <= 10; i++) {
+                        linePoints.push(i / 10.0)
+                    }
+                    const lineTensor = tf.tensor2d(linePoints, [
+                        linePoints.length,
+                        1,
+                    ])
+                    model
+                        .predict(lineTensor)
+                        .data()
+                        .then(results => {
+                            const dataArray = Array.from(results).map(
+                                x => x * y_range
+                            )
+                            savedData['line'] = dataArray.map(
+                                (currentValue, index) => [
+                                    linePoints[index] * maxes[0],
+                                    currentValue,
+                                ]
+                            )
+                        })
+                }
                 return dataArray
             })
     },
