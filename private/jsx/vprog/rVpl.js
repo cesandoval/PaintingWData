@@ -87,7 +87,7 @@ class VPL extends React.Component {
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
-        const { nodeEvalStatus } = this.state
+        const { nodeEvalStatus, hasNodeUpdated } = this.state
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
@@ -109,6 +109,7 @@ class VPL extends React.Component {
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
             nodeEvalStatus[key] = Promise.resolve(true)
+            hasNodeUpdated[key] = true
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -117,7 +118,7 @@ class VPL extends React.Component {
 
         const datasetsLoaded = !_.isEmpty(layers)
         if (datasetsLoaded) this.checkMemory()
-        this.setState({ nodeEvalStatus })
+        this.setState({ nodeEvalStatus, hasNodeUpdated })
         return datasetsLoaded
     }
 
@@ -634,39 +635,41 @@ class VPL extends React.Component {
 
         // Datasets Preprocess
         const datasetPreprocess = datasetNodes.map(datasetKey => {
-            const geometry = this.geometries[datasetKey]
+            if (hasNodeUpdated[datasetKey]) {
+                const geometry = this.geometries[datasetKey]
+                hasNodeUpdated[datasetKey] = false
+                if (!this.originDatasetArray[datasetKey]) {
+                    // copy original size array
+                    const oriArray =
+                        geometry.geometry.attributes.originalsize.array
+                    this.originDatasetArray[datasetKey] = oriArray
+                }
 
-            if (!this.originDatasetArray[datasetKey]) {
-                // copy original size array
-                const oriArray = geometry.geometry.attributes.originalsize.array
-                this.originDatasetArray[datasetKey] = oriArray
+                const oriArray = this.originDatasetArray[datasetKey]
+                geometry.geometry.attributes.size.array = oriArray
+
+                let node = _.cloneDeep(nodes[datasetKey])
+
+                if (node.filter) {
+                    const { min, max } = node.filter
+                    node.filter.min = min / node.filter.maxVal
+                    node.filter.max = max / node.filter.maxVal
+                }
+
+                this.nodeOutput({ nodeKey: datasetKey, geometry: null })
+                nodeEvalStatus[datasetKey] = Promise.resolve(
+                    this.evalArithmeticNode({
+                        node,
+                        mathFunction: arr => arr[0],
+                        options: {},
+                        geometries: [geometry],
+                    })
+                )
             }
-
-            const oriArray = this.originDatasetArray[datasetKey]
-
-            geometry.geometry.attributes.size.array = oriArray
-
-            let node = _.cloneDeep(nodes[datasetKey])
-
-            if (node.filter) {
-                const { min, max } = node.filter
-                node.filter.min = min / node.filter.maxVal
-                node.filter.max = max / node.filter.maxVal
-            }
-
-            this.nodeOutput({ nodeKey: datasetKey, geometry: null })
-
-            return Promise.resolve(
-                this.evalArithmeticNode({
-                    node,
-                    mathFunction: arr => arr[0],
-                    options: {},
-                    geometries: [geometry],
-                })
-            )
+            return nodeEvalStatus[datasetKey]
         })
 
-        const datasetPreprocessCallback = () => {
+        const datasetPreprocessCallback = async () => {
             const outputs = this.props.links.outputs
             const inputs = this.props.links.inputs
 
