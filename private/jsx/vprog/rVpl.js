@@ -1170,8 +1170,6 @@ class VPL extends React.Component {
                             (Object.entries(inputs).length - 2)
                     )})`}
                 >
-                    {/* TODO: modify slider width */}
-                <g className="control">
                     <Slider index={nodeKey} />
                     <Panel
                         color={color}
