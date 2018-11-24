@@ -72,6 +72,7 @@ class VPL extends React.Component {
             },
             hover: '',
             hasNodeUpdated: {},
+            nodeEvalStatus: {},
         }
 
         this.checked = {
@@ -86,6 +87,7 @@ class VPL extends React.Component {
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
+        const { nodeEvalStatus } = this.state
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
@@ -106,6 +108,7 @@ class VPL extends React.Component {
 
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
+            nodeEvalStatus[key] = Promise.resolve(true)
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -114,7 +117,7 @@ class VPL extends React.Component {
 
         const datasetsLoaded = !_.isEmpty(layers)
         if (datasetsLoaded) this.checkMemory()
-
+        this.setState({ nodeEvalStatus })
         return datasetsLoaded
     }
 
@@ -622,7 +625,7 @@ class VPL extends React.Component {
     }
 
     computeNodes = () => {
-        const { hasNodeUpdated } = this.state
+        const { hasNodeUpdated, nodeEvalStatus } = this.state
         const nodes = this.props.nodes
 
         const datasetNodes = Object.entries(nodes)
@@ -768,39 +771,34 @@ class VPL extends React.Component {
                 if (node.type != 'DATASET' && hasNodeUpdated[nodeKey])
                     this.nodeOutput({ nodeKey, geometry: null })
             })
-            // TODO: select better name for this
-            // Keeps track of promises of each node voxel status
-            const voxelStatus = {}
 
             // Updates voxels for nodes once their input's voxels have been updated
             const voxelsComputed = outputOrder.reduce(
                 async (promise, nodeKey) => {
+                    let canComplete = nodeEvalStatus[nodeKey]
                     // TODO make sure nodes get their voxels removed on hotload
                     if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
                         hasNodeUpdated[nodeKey] = false
-                        let canComplete = Promise.resolve(true)
                         const inputNodes = Object.values(
                             nodeInputsFromNode[nodeKey]
                         )
                         for (let i = 0; i < inputNodes.length; i++) {
                             canComplete = canComplete.then(
-                                () => voxelStatus[inputNodes[i]]
+                                () => canComplete[inputNodes[i]]
                             )
                         }
                         const node = nodes[nodeKey]
-                        voxelStatus[nodeKey] = canComplete.then(() =>
+                        nodeEvalStatus[nodeKey] = canComplete.then(() =>
                             computeNodeThenAddVoxel(node, inputNodes)
                         )
-                        return promise.then(() => voxelStatus[nodeKey])
-                    } else {
-                        voxelStatus[nodeKey] = Promise.resolve(true)
+                        return promise.then(() => nodeEvalStatus[nodeKey])
                     }
                     return promise
                 },
                 Promise.resolve(true)
             )
 
-            this.setState({ hasNodeUpdated })
+            this.setState({ hasNodeUpdated, nodeEvalStatus })
 
             return voxelsComputed.then(() => {
                 return { nodeInputsFromNode, nodeOutputTree, outputOrder }
@@ -1232,11 +1230,14 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
+        const { nodeEvalStatus } = this.state
         const nodeHashKey = hashKey()
+        nodeEvalStatus[nodeHashKey] = Promise.resolve(true)
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
         })
+        this.setState({ nodeEvalStatus })
     }
 
     linkMarker() {
