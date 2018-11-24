@@ -1171,57 +1171,62 @@ class VPL extends React.Component {
                     )})`}
                 >
                     {/* TODO: modify slider width */}
-                <g className="control">
-                    <Slider index={nodeKey} />
-                    <Panel
-                        color={color}
-                        index={nodeKey}
-                        type={type}
-                        deleteNode={() => {
-                            this.deleteNode(nodeKey)
-                        }}
-                        updated={index => {
-                            this.markNodesForUpdate(index)
-                            Act.setRefreshVoxels({ value: true })
-                        }}
-                        // changeFilter={(min, max) => {
-                        //     this.changeNodeFilter(nodeKey, min, max)
-                        // }}
-                    />
+                    <g className="control">
+                        <Slider index={nodeKey} />
+                        <Panel
+                            color={color}
+                            index={nodeKey}
+                            type={type}
+                            deleteNode={() => {
+                                this.deleteNode(nodeKey)
+                            }}
+                            updated={index => {
+                                this.markNodesForUpdate(index)
+                                Act.setRefreshVoxels({ value: true })
+                            }}
+                            // changeFilter={(min, max) => {
+                            //     this.changeNodeFilter(nodeKey, min, max)
+                            // }}
+                        />
 
-                    {/* NODE OPTIONS */
-                    Object.entries(typeOptions).map(([attr, def], index) => {
-                        // if (attr == 'filter') return
+                        {/* NODE OPTIONS */
+                        Object.entries(typeOptions).map(
+                            ([attr, def], index) => {
+                                // if (attr == 'filter') return
 
-                        // 'attribute': 'default value'
-                        const value = options[attr] || def
+                                // 'attribute': 'default value'
+                                const value = options[attr] || def
 
-                        return (
-                            <text
-                                key={`${nodeKey}_option_${attr}`}
-                                onClick={() => {
-                                    this.updateNodeOption(
-                                        nodeKey,
-                                        attr,
-                                        Number(value)
-                                    )
-                                }}
-                                x={nodeWidth / 2}
-                                y={43 + index * 13}
-                                fontSize={Style.fontSize.propertyName + 'px'}
-                                style={{
-                                    cursor: 'pointer',
-                                    textAnchor: 'middle',
-                                    fontFamily: 'Monospace',
-                                    fill: '#b3b3b3',
-                                }}
-                            >
-                                {_.startCase(attr)} :{' '}
-                                {String(value).substring(0, 6)}
-                                <title>Click to edit it</title>
-                            </text>
-                        )
-                    })}
+                                return (
+                                    <text
+                                        key={`${nodeKey}_option_${attr}`}
+                                        onClick={() => {
+                                            this.updateNodeOption(
+                                                nodeKey,
+                                                attr,
+                                                Number(value)
+                                            )
+                                        }}
+                                        x={nodeWidth / 2}
+                                        y={43 + index * 13}
+                                        fontSize={
+                                            Style.fontSize.propertyName + 'px'
+                                        }
+                                        style={{
+                                            cursor: 'pointer',
+                                            textAnchor: 'middle',
+                                            fontFamily: 'Monospace',
+                                            fill: '#b3b3b3',
+                                        }}
+                                    >
+                                        {_.startCase(attr)} :{' '}
+                                        {String(value).substring(0, 6)}
+                                        <title>Click to edit it</title>
+                                    </text>
+                                )
+                            }
+                        )}
+                    </g>
                 </g>
             </g>
         )
