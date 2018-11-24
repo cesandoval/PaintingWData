@@ -1187,41 +1187,45 @@ class VPL extends React.Component {
                         // }}
                     />
 
-                    {/* NODE OPTIONS */
-                    Object.entries(typeOptions).map(([attr, def], index) => {
-                        // if (attr == 'filter') return
+                        {/* NODE OPTIONS */
+                        Object.entries(typeOptions).map(
+                            ([attr, def], index) => {
+                                // if (attr == 'filter') return
 
-                        // 'attribute': 'default value'
-                        const value = options[attr] || def
+                                // 'attribute': 'default value'
+                                const value = options[attr] || def
 
-                        return (
-                            <text
-                                key={`${nodeKey}_option_${attr}`}
-                                onClick={() => {
-                                    this.updateNodeOption(
-                                        nodeKey,
-                                        attr,
-                                        Number(value)
-                                    )
-                                }}
-                                x={nodeWidth / 2}
-                                y={43 + index * 13}
-                                fontSize={Style.fontSize.propertyName + 'px'}
-                                style={{
-                                    cursor: 'pointer',
-                                    textAnchor: 'middle',
-                                    fontFamily: 'Monospace',
-                                    fill: '#b3b3b3',
-                                }}
-                            >
-                                {_.startCase(attr)} :{' '}
-                                {String(value).substring(0, 6)}
-                                <title>Click to edit it</title>
-                            </text>
-                        )
-                    })}
+                                return (
+                                    <text
+                                        key={`${nodeKey}_option_${attr}`}
+                                        onClick={() => {
+                                            this.updateNodeOption(
+                                                nodeKey,
+                                                attr,
+                                                Number(value)
+                                            )
+                                        }}
+                                        x={nodeWidth / 2}
+                                        y={43 + index * 13}
+                                        fontSize={
+                                            Style.fontSize.propertyName + 'px'
+                                        }
+                                        style={{
+                                            cursor: 'pointer',
+                                            textAnchor: 'middle',
+                                            fontFamily: 'Monospace',
+                                            fill: '#b3b3b3',
+                                        }}
+                                    >
+                                        {_.startCase(attr)} :{' '}
+                                        {String(value).substring(0, 6)}
+                                        <title>Click to edit it</title>
+                                    </text>
+                                )
+                            }
+                        )}
+                    </g>
                 </g>
-            </g>
         )
     }
 
