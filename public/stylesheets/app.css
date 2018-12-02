@@ -92,7 +92,9 @@
 }
 
 .layers {
-    height: 50vh;
+    height: 65vh;
+    overflow-y: scroll;
+    border-bottom: #eeeeee 1px solid;
 }
 
 .layer-label {
