@@ -15,6 +15,7 @@
     "lint:check": "eslint . --cache --color --quiet"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^0.13.2",
     "@turf/interpolate": "^5.1.5",
     "@turf/meta": "^6.0.0-beta.3",
     "@turf/random": "^5.1.5",
@@ -69,6 +70,7 @@
     "rangeslider.js": "^2.3.0",
     "react-table": "^6.8.6",
     "redis-server": "^1.1.0",
+    "regression": "^2.0.1",
     "request": "^2.73.0",
     "rxjs": "^5.4.3",
     "s3": "^4.4.0",
