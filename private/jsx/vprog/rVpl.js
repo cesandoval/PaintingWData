@@ -778,15 +778,16 @@ class VPL extends React.Component {
             // TODO: save computed data to this state
             const computeNodeThenAddVoxel = (node, inputNodes) => {
                 const mapGeometries = this.geometries
-                // const { updateStatus } = node
+                const { updateStatus } = node
                 let mathFunction = NodeType[node.type].arithmetic
-                // if (updateStatus === 2) {
-                //     mathFunction = NodeType[node.type].arithmetic
-                // } else {
-                //     // return saved info from last iteration instead
-                //     mathFunction = value => Promise.resolve(value)
-                //     console.log(mathFunction([1, 2, 3, 4]))
-                // }
+                if (updateStatus === 2) {
+                    mathFunction = NodeType[node.type].arithmetic
+                } else {
+                    // return saved info from last iteration instead
+                    const values = _.get(node, 'savedData.actualValues', [])
+                    mathFunction = () => Promise.resolve(values)
+                    console.log(mathFunction([1, 2, 3, 4]))
+                }
                 const options = Object.assign(
                     NodeType[node.type].options,
                     node.options
@@ -899,7 +900,7 @@ class VPL extends React.Component {
         options,
         geometries,
     }) => {
-        const { savedData } = node
+        const savedData = _.get(node, 'savedData', {})
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
         const allIndices = this.newProps.datasets.allIndices
@@ -917,9 +918,9 @@ class VPL extends React.Component {
         const firstLayer = Object.values(this.newProps.layers)[0]
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
-        const mathCallback = sizeArray => {
-            console.log(sizeArray)
-            sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+        const mathCallback = actualValues => {
+            savedData['actualValues'] = actualValues
+            let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
             const originDataMax = math.max(sizeArray)
             const originDataMin = math.min(sizeArray)
             const newBounds = [originDataMin, originDataMax]
