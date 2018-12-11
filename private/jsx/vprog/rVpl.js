@@ -180,6 +180,7 @@ class VPL extends React.Component {
             type: type,
             classOptions,
             savedData: {},
+            updateStatus: 0, // 0 = No Update, 1 = Filter Only, 2 = Full update
             options: {},
             inputs: { ...NodeType[type].inputs },
             filter: {
@@ -208,8 +209,19 @@ class VPL extends React.Component {
     }
 
     componentDidUpdate() {
+        const { hasNodeUpdated } = this.state
+        const { nodes } = this.props
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
+        }
+        for (let nodeKey in nodes) {
+            let node = nodes[nodeKey]
+            if (
+                _.get(node, 'updateStatus', 0) > 0 &&
+                !_.get(hasNodeUpdated, nodeKey, false)
+            ) {
+                this.markNodesForUpdate(nodeKey)
+            }
         }
         if (this.refreshVoxels) {
             this.refreshVoxels = false
@@ -460,6 +472,13 @@ class VPL extends React.Component {
         const nodesToUpdate = [node]
         while (nodesToUpdate.length > 0) {
             let currentNode = nodesToUpdate.shift()
+            if (currentNode !== node) {
+                Act.nodeUpdate({
+                    nodeKey: currentNode,
+                    attr: 'updateStatus',
+                    value: 2,
+                })
+            }
             if (!hasNodeUpdated[currentNode]) {
                 hasNodeUpdated[currentNode] = true
                 for (let child in outputs[node]) {
@@ -473,13 +492,18 @@ class VPL extends React.Component {
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
-        this.markNodesForUpdate(toNode)
+        // this.markNodesForUpdate(toNode)
         Act.nodeUpdate({
             nodeKey: toNode,
             attr: 'savedData',
             value: {},
         })
         Act.linkAdd({ srcNode, toNode, toInput })
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'updateStatus',
+            value: 2,
+        })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
@@ -491,7 +515,12 @@ class VPL extends React.Component {
             )
 
             Act.nodeOptionUpdate({ nodeKey, attr, value: newValue })
-            this.markNodesForUpdate(nodeKey)
+            Act.nodeUpdate({
+                nodeKey: nodeKey,
+                attr: 'updateStatus',
+                value: 2,
+            })
+            // this.markNodesForUpdate(nodeKey)
 
             this.refreshVoxels = true // this.computeNodes()
         }
@@ -577,7 +606,12 @@ class VPL extends React.Component {
             attr: 'savedData',
             value: {},
         })
-        this.markNodesForUpdate(toNode)
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'updateStatus',
+            value: 2,
+        })
+        // this.markNodesForUpdate(toNode)
 
         this.refreshVoxels = true // this.computeNodes()
     }
@@ -744,7 +778,15 @@ class VPL extends React.Component {
             // TODO: save computed data to this state
             const computeNodeThenAddVoxel = (node, inputNodes) => {
                 const mapGeometries = this.geometries
-                const mathFunction = NodeType[node.type].arithmetic
+                // const { updateStatus } = node
+                let mathFunction = NodeType[node.type].arithmetic
+                // if (updateStatus === 2) {
+                //     mathFunction = NodeType[node.type].arithmetic
+                // } else {
+                //     // return saved info from last iteration instead
+                //     mathFunction = value => Promise.resolve(value)
+                //     console.log(mathFunction([1, 2, 3, 4]))
+                // }
                 const options = Object.assign(
                     NodeType[node.type].options,
                     node.options
@@ -781,6 +823,7 @@ class VPL extends React.Component {
                     let canComplete = nodeEvalStatus[nodeKey]
                     // TODO make sure nodes get their voxels removed on hotload
                     if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
+                        console.log('Updating ', nodeKey)
                         hasNodeUpdated[nodeKey] = false
                         const inputNodes = Object.values(
                             nodeInputsFromNode[nodeKey]
@@ -875,6 +918,7 @@ class VPL extends React.Component {
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
         const mathCallback = sizeArray => {
+            console.log(sizeArray)
             sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
             const originDataMax = math.max(sizeArray)
             const originDataMin = math.min(sizeArray)
@@ -892,7 +936,11 @@ class VPL extends React.Component {
                 value: savedData,
             })
 
-            node.nodeUpdated = false
+            Act.nodeUpdate({
+                nodeKey: node.nodeKey,
+                attr: 'updateStatus',
+                value: 0,
+            })
 
             if (node.remap) {
                 const dataMax = math.max(sizeArray)
@@ -1179,8 +1227,8 @@ class VPL extends React.Component {
                         deleteNode={() => {
                             this.deleteNode(nodeKey)
                         }}
-                        updated={index => {
-                            this.markNodesForUpdate(index)
+                        updated={() => {
+                            // this.markNodesForUpdate(index)
                             Act.setRefreshVoxels({ value: true })
                         }}
                         // changeFilter={(min, max) => {

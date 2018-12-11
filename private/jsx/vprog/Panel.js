@@ -168,6 +168,12 @@ class Panel extends React.Component {
             value: filter,
         })
 
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
+        })
+
         this.props.updated(this.props.index)
     }
 
@@ -179,6 +185,12 @@ class Panel extends React.Component {
             nodeKey: this.props.index,
             attr: 'remap',
             value: remap,
+        })
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
         })
 
         this.props.updated(this.props.index)
