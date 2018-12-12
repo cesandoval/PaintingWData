@@ -316,7 +316,14 @@ class Panel extends React.Component {
                         )}
                         {isStatistics && (
                             <img
-                                onClick={() => updated(index)}
+                                onClick={() => {
+                                    Act.nodeUpdate({
+                                        nodeKey: index,
+                                        attr: 'updateStatus',
+                                        value: 2,
+                                    })
+                                    updated()
+                                }}
                                 title="retrain"
                                 style={margin0px}
                                 src={svg.NEXT}

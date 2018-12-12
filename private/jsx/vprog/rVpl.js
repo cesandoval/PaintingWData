@@ -492,7 +492,6 @@ class VPL extends React.Component {
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
-        // this.markNodesForUpdate(toNode)
         Act.nodeUpdate({
             nodeKey: toNode,
             attr: 'savedData',
@@ -520,7 +519,6 @@ class VPL extends React.Component {
                 attr: 'updateStatus',
                 value: 2,
             })
-            // this.markNodesForUpdate(nodeKey)
 
             this.refreshVoxels = true // this.computeNodes()
         }
@@ -669,37 +667,36 @@ class VPL extends React.Component {
 
         // Datasets Preprocess
         const datasetPreprocess = datasetNodes.map(datasetKey => {
-            if (hasNodeUpdated[datasetKey]) {
-                const geometry = this.geometries[datasetKey]
-                hasNodeUpdated[datasetKey] = false
-                if (!this.originDatasetArray[datasetKey]) {
-                    // copy original size array
-                    const oriArray =
-                        geometry.geometry.attributes.originalsize.array
-                    this.originDatasetArray[datasetKey] = oriArray
-                }
-
-                const oriArray = this.originDatasetArray[datasetKey]
-                geometry.geometry.attributes.size.array = oriArray
-
-                let node = _.cloneDeep(nodes[datasetKey])
-
-                if (node.filter) {
-                    const { min, max } = node.filter
-                    node.filter.min = min / node.filter.maxVal
-                    node.filter.max = max / node.filter.maxVal
-                }
-
-                this.nodeOutput({ nodeKey: datasetKey, geometry: null })
-                nodeEvalStatus[datasetKey] = Promise.resolve(
-                    this.evalArithmeticNode({
-                        node,
-                        mathFunction: arr => arr[0],
-                        options: {},
-                        geometries: [geometry],
-                    })
-                )
+            // if (hasNodeUpdated[datasetKey]) {
+            const geometry = this.geometries[datasetKey]
+            hasNodeUpdated[datasetKey] = false
+            if (!this.originDatasetArray[datasetKey]) {
+                // copy original size array
+                const oriArray = geometry.geometry.attributes.originalsize.array
+                this.originDatasetArray[datasetKey] = oriArray
             }
+
+            const oriArray = this.originDatasetArray[datasetKey]
+            geometry.geometry.attributes.size.array = oriArray
+
+            let node = _.cloneDeep(nodes[datasetKey])
+
+            if (node.filter) {
+                const { min, max } = node.filter
+                node.filter.min = min / node.filter.maxVal
+                node.filter.max = max / node.filter.maxVal
+            }
+
+            this.nodeOutput({ nodeKey: datasetKey, geometry: null })
+            nodeEvalStatus[datasetKey] = Promise.resolve(
+                this.evalArithmeticNode({
+                    node,
+                    mathFunction: arr => arr[0],
+                    options: {},
+                    geometries: [geometry],
+                })
+            )
+            // }
             return nodeEvalStatus[datasetKey]
         })
 
@@ -786,7 +783,6 @@ class VPL extends React.Component {
                     // return saved info from last iteration instead
                     const values = _.get(node, 'savedData.actualValues', [])
                     mathFunction = () => Promise.resolve(values)
-                    console.log(mathFunction([1, 2, 3, 4]))
                 }
                 const options = Object.assign(
                     NodeType[node.type].options,
@@ -824,14 +820,13 @@ class VPL extends React.Component {
                     let canComplete = nodeEvalStatus[nodeKey]
                     // TODO make sure nodes get their voxels removed on hotload
                     if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
-                        console.log('Updating ', nodeKey)
                         hasNodeUpdated[nodeKey] = false
                         const inputNodes = Object.values(
                             nodeInputsFromNode[nodeKey]
                         )
                         for (let i = 0; i < inputNodes.length; i++) {
                             canComplete = canComplete.then(
-                                () => canComplete[inputNodes[i]]
+                                () => nodeEvalStatus[inputNodes[i]]
                             )
                         }
                         const node = nodes[nodeKey]
@@ -920,6 +915,7 @@ class VPL extends React.Component {
 
         const mathCallback = actualValues => {
             savedData['actualValues'] = actualValues
+
             let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
             const originDataMax = math.max(sizeArray)
             const originDataMin = math.min(sizeArray)
@@ -1047,6 +1043,13 @@ class VPL extends React.Component {
         const nodeWidth = Style.minWidth
         const nodeHeight = Style.minHeight
 
+        // // Debugging
+        // const updateStatus = _.get(
+        //     this.props.nodes,
+        //     `${nodeKey}.updateStatus`,
+        //     0
+        // )
+
         const desc = (
             <span
                 style={{
@@ -1081,7 +1084,12 @@ class VPL extends React.Component {
                     }
                     x="0"
                     y="0"
-                    style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
+                    style={{
+                        // fill: `${updateStatus > 0 ? '#ff9999' : '#ecf0f1'}`,
+                        fill: '#ecf0f1',
+                        stroke: '#ccc',
+                        rx: '2px',
+                    }}
                 />
 
                 {/* input Plugs */}
