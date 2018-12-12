@@ -8,6 +8,7 @@ import {
     VictoryChart,
     VictoryScatter,
     VictoryTheme,
+    VictoryAxis,
 } from 'victory'
 import _ from 'lodash'
 import * as NodeType from './nodeTypes'
@@ -203,6 +204,9 @@ class Panel extends React.Component {
         const line = _.get(node, 'savedData.line', [])
         const samples = _.get(node, 'savedData.samples', [])
         const pointToJson = point => ({ x: point[0], y: point[1] })
+        if (Object.keys(_.get(node, 'inputs', {})).length > 2) {
+            return <text>This feature is only avaiable for 2D regression</text>
+        }
         return (
             <VictoryChart theme={VictoryTheme.material}>
                 <VictoryLine
@@ -215,6 +219,21 @@ class Panel extends React.Component {
                     style={{ data: { fill: '#c43a31' } }}
                     size={3}
                     data={samples.map(pointToJson)}
+                />
+                <VictoryAxis
+                    label="X"
+                    style={{
+                        axis: { stroke: '#756f6a' },
+                        axisLabel: { fontSize: 20, padding: 30 },
+                    }}
+                />
+                <VictoryAxis
+                    dependentAxis
+                    label="Y"
+                    style={{
+                        axis: { stroke: '#756f6a' },
+                        axisLabel: { fontSize: 20, padding: 30 },
+                    }}
                 />
             </VictoryChart>
         )
@@ -361,12 +380,11 @@ class Panel extends React.Component {
                         {isStatistics && (
                             <Popover
                                 placement="bottom"
-                                title="Best Fit"
+                                title="Best Fit Line"
                                 content={bestFitLine}
                                 trigger="click"
                             >
                                 <img
-                                    // onClick={this.Show}
                                     title="best fit"
                                     style={margin0px}
                                     src={svg.GRAPH}

@@ -15,6 +15,7 @@ import { Popover, Button, Menu, Dropdown } from 'antd'
 import hashKey from '@/utils/hashKey'
 
 import * as NodeType from './nodeTypes'
+import * as svg from './svg/svg'
 
 // import testFile from '../store/test_userFile.json'
 
@@ -1142,10 +1143,6 @@ class VPL extends React.Component {
                             onClick={() => {
                                 const x_index =
                                     Object.entries(inputs).length + 1
-                                console.log(
-                                    'Input',
-                                    Object.entries(inputs)[x_index - 2]
-                                )
                                 Act.nodeUpdate({
                                     nodeKey,
                                     attr: 'inputs',
@@ -1159,10 +1156,61 @@ class VPL extends React.Component {
                             }}
                             title="add"
                             style={{ cursor: 'pointer' }}
-                            src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUyIDUyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MiA1MjsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSIxNnB4IiBoZWlnaHQ9IjE2cHgiPgo8Zz4KCTxwYXRoIGQ9Ik0yNiwwQzExLjY2NCwwLDAsMTEuNjYzLDAsMjZzMTEuNjY0LDI2LDI2LDI2czI2LTExLjY2MywyNi0yNlM0MC4zMzYsMCwyNiwweiBNMjYsNTBDMTIuNzY3LDUwLDIsMzkuMjMzLDIsMjYgICBTMTIuNzY3LDIsMjYsMnMyNCwxMC43NjcsMjQsMjRTMzkuMjMzLDUwLDI2LDUweiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTM4LjUsMjVIMjdWMTRjMC0wLjU1My0wLjQ0OC0xLTEtMXMtMSwwLjQ0Ny0xLDF2MTFIMTMuNWMtMC41NTIsMC0xLDAuNDQ3LTEsMXMwLjQ0OCwxLDEsMUgyNXYxMmMwLDAuNTUzLDAuNDQ4LDEsMSwxICAgczEtMC40NDcsMS0xVjI3aDExLjVjMC41NTIsMCwxLTAuNDQ3LDEtMVMzOS4wNTIsMjUsMzguNSwyNXoiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K"
+                            src={svg.PLUS}
                         />
                     </foreignObject>
                 )}
+                {_.get(classOptions, 'increaseInput', false) &&
+                    Object.entries(inputs).length > 2 && (
+                        <foreignObject
+                            transform={`translate(${2}, ${Style.plug.height /
+                                2 +
+                                Style.topOffset +
+                                Style.plug.marginTop *
+                                    (Object.entries(inputs).length + 0.5)})`}
+                        >
+                            <img
+                                onClick={() => {
+                                    const entries = Object.entries(inputs)
+                                    const newInput = entries
+                                        .slice(0, entries.length - 1)
+                                        .reduce(
+                                            (accum, current) => ({
+                                                ...accum,
+                                                [current[0]]: current[1],
+                                            }),
+                                            {}
+                                        )
+                                    const srcNode = _.get(
+                                        this.props.links.inputs,
+                                        `${nodeKey}.${
+                                            entries[entries.length - 1][0]
+                                        }`
+                                    )
+                                    if (srcNode) {
+                                        Act.linkRemove({
+                                            srcNode,
+                                            toNode: nodeKey,
+                                        })
+                                    }
+                                    Act.nodeUpdate({
+                                        nodeKey,
+                                        attr: 'updateStatus',
+                                        value: 2,
+                                    })
+                                    this.refreshVoxels = true
+                                    Act.nodeUpdate({
+                                        nodeKey,
+                                        attr: 'inputs',
+                                        value: newInput,
+                                    })
+                                }}
+                                title="minus"
+                                style={{ cursor: 'pointer' }}
+                                src={svg.MINUS}
+                            />
+                        </foreignObject>
+                    )}
                 <Button type="primary" icon="cloud-download" />
                 {/* Output Plug */}
                 <g
