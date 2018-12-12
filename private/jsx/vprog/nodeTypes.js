@@ -97,7 +97,9 @@ export const SUB = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.subtract(...inputs)
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.subtract(accum, input), inputs[0])
     },
 }
 
@@ -114,7 +116,9 @@ export const DIV = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.dotDivide(...inputs)
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.dotDivide(accum, input), inputs[0])
     },
 }
 
@@ -132,7 +136,11 @@ export const MULT = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.dotMultiply(...inputs)
+        return inputs.reduce(
+            (accum, input) => math.dotMultiply(accum, input),
+            1
+        )
+        // return math.dotMultiply(...inputs)
     },
 }
 
@@ -149,7 +157,7 @@ export const ADD = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.add(...inputs)
+        return inputs.reduce((accum, input) => math.add(accum, input), 0)
     },
 }
 
@@ -200,7 +208,11 @@ export const AND = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.and(...inputs).map(m => (m ? 1 : 0))
+        let result = math.and(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.and(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
     },
 }
 
@@ -217,7 +229,12 @@ export const OR = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.or(...inputs).map(m => (m ? 1 : 0))
+        let result = math.or(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.or(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
+        // return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
@@ -234,7 +251,12 @@ export const XOR = {
     output: 'Output',
     options: {},
     arithmetic: async inputs => {
-        return math.xor(...inputs).map(m => (m ? 1 : 0))
+        let result = math.xor(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.xor(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
+        // return math.xor(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
