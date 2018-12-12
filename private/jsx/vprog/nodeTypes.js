@@ -285,7 +285,6 @@ export const LIN_REG = {
             model.compile({
                 loss: 'meanSquaredError',
                 optimizer: 'sgd',
-                metrics: ['accuracy'],
             })
         }
 
@@ -323,6 +322,7 @@ export const LIN_REG = {
             .then(data => {
                 const dataArray = Array.from(data).map(x => x * y_range)
 
+                model.evaluate(xs, ys).print()
                 // Creates the best fit line if there is only 1 input
                 if (maxes.length === 1) {
                     const linePoints = []
@@ -346,6 +346,18 @@ export const LIN_REG = {
                                     currentValue,
                                 ]
                             )
+
+                            const indices = new Set()
+                            while (indices.size < 200) {
+                                const index = Math.floor(
+                                    Math.random() * inputs[0].length
+                                )
+                                indices.add(index)
+                            }
+                            savedData['samples'] = [...indices].map(index => [
+                                inputs[1][index],
+                                inputs[0][index],
+                            ])
                         })
                 }
                 return dataArray

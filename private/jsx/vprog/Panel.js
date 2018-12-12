@@ -3,9 +3,13 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
-// import _ from 'lodash'
-// import { VictoryLine, VictoryChart, VictoryTheme } from 'victory'
-// import RegressionGraph from './regressionGraph'
+import {
+    VictoryLine,
+    VictoryChart,
+    VictoryScatter,
+    VictoryTheme,
+} from 'victory'
+import _ from 'lodash'
 import * as NodeType from './nodeTypes'
 import * as svg from './svg/svg'
 
@@ -28,7 +32,6 @@ class Panel extends React.Component {
 
     componentWillReceiveProps(props) {
         this.props = props
-        // console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
         // Get geometry
 
         const node = this.props.nodes[this.props.index]
@@ -196,6 +199,27 @@ class Panel extends React.Component {
         this.props.updated(this.props.index)
     }
 
+    bestFit(node) {
+        const line = _.get(node, 'savedData.line', [])
+        const samples = _.get(node, 'savedData.samples', [])
+        const pointToJson = point => ({ x: point[0], y: point[1] })
+        return (
+            <VictoryChart theme={VictoryTheme.material}>
+                <VictoryLine
+                    style={{
+                        parent: { border: '1px solid #ccc' },
+                    }}
+                    data={line.map(pointToJson)}
+                />
+                <VictoryScatter
+                    style={{ data: { fill: '#c43a31' } }}
+                    size={3}
+                    data={samples.map(pointToJson)}
+                />
+            </VictoryChart>
+        )
+    }
+
     render() {
         const { index, updated } = this.props
         const margin0px = { margin: '0px' }
@@ -243,6 +267,11 @@ class Panel extends React.Component {
         const hasFilter = NodeType[type].class !== 'logic'
 
         const isStatistics = NodeType[type].class === 'statistics'
+
+        let bestFitLine
+        if (isStatistics) {
+            bestFitLine = this.bestFit(node)
+        }
 
         return (
             <g>
@@ -328,6 +357,21 @@ class Panel extends React.Component {
                                 style={margin0px}
                                 src={svg.NEXT}
                             />
+                        )}
+                        {isStatistics && (
+                            <Popover
+                                placement="bottom"
+                                title="Best Fit"
+                                content={bestFitLine}
+                                trigger="click"
+                            >
+                                <img
+                                    // onClick={this.Show}
+                                    title="best fit"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
                         )}
                     </div>
                 </foreignObject>
