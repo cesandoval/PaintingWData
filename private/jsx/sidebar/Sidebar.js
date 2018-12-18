@@ -34,6 +34,14 @@ export default class Sidebar extends React.Component {
                     .sidebar {
                         :global(.ant-tabs) {
                             height: 100%;
+                            > :global(.ant-tabs-content) {
+                                height: calc(
+                                    100% - 50px
+                                ); // - height of .ant-tabs-bar
+                            }
+                            :global(.ant-tabs-bar) {
+                                margin-bottom: 6px;
+                            }
                         }
                     }
                 `}</style>

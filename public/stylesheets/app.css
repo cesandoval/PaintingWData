@@ -92,7 +92,7 @@
 }
 
 .layers {
-    height: 65vh;
+    height: 100%;
     overflow-y: scroll;
     border-bottom: #eeeeee 1px solid;
 }
