@@ -60,6 +60,18 @@ module.exports.getSnapshots = function(req, res) {
         })
 }
 
+module.exports.getSnapshotByHash = function(req, res) {
+    const hash = req.params.hash;
+
+    Model.Datasnapshot.findOne({
+        where: { hash }, 
+    }).then(function(datasnapshot) {
+        if (datasnapshot !== null) {
+            res.json({snapshot: datasnapshot})
+        }
+    })
+}
+
 module.exports.deleteSnapshots = function(req, res) {
     // hashes is an array of ids
     var hashes = req.body.hashes;
@@ -78,4 +90,18 @@ module.exports.deleteSnapshots = function(req, res) {
             })   
           }
         })
+}
+
+module.exports.show = function(req, res) {
+    const hash = req.params.hash;
+
+    Model.Datasnapshot.findOne({
+        where: { hash }, 
+    }).then(function(snapshot) {
+        if (snapshot !== null) {
+            res.render('snap', { snap: snapshot });
+        } else {
+            res.render('error');
+        }
+    })
 }
