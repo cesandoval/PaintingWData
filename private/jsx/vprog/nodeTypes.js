@@ -20,6 +20,10 @@ const NodeType = {
 }
 */
 
+import _ from 'lodash'
+import * as tf from '@tensorflow/tfjs'
+// import regression from 'regression'
+
 export const DATASET = {
     fullName: 'Dataset',
     class: 'dataset',
@@ -31,7 +35,7 @@ export const DATASET = {
     },
     output: 'Output',
     options: {},
-    arithmetic() {},
+    arithmetic: async () => {},
 }
 
 export const LOG = {
@@ -48,7 +52,7 @@ export const LOG = {
         maximumInterval: 10, // 'valDiff'
         base: Math.E,
     },
-    arithmetic: (inputs, options = {}) => {
+    arithmetic: async (inputs, options = {}) => {
         const { maximumInterval, base } = options
         // console.log('log.arithmetic()', {inputs, options})
 
@@ -92,7 +96,7 @@ export const SUB = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.subtract(...inputs)
     },
 }
@@ -109,7 +113,7 @@ export const DIV = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.dotDivide(...inputs)
     },
 }
@@ -127,7 +131,7 @@ export const MULT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.dotMultiply(...inputs)
     },
 }
@@ -144,7 +148,7 @@ export const ADD = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.add(...inputs)
     },
 }
@@ -161,7 +165,7 @@ export const MIN = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.min(voxel))
     },
 }
@@ -178,7 +182,7 @@ export const MAX = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.max(voxel))
     },
 }
@@ -197,9 +201,8 @@ export const AND = {
     },
     output: 'Output',
     options: {},
-    arithmetic(...input) {
-        // TODO
-        return input[0]
+    arithmetic: async inputs => {
+        return math.and(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
@@ -215,7 +218,7 @@ export const OR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
@@ -232,7 +235,7 @@ export const XOR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return math.xor(...inputs).map(m => (m ? 1 : 0))
     },
 }
@@ -248,7 +251,106 @@ export const NOT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return inputs[0].map(m => !m)
+    },
+}
+
+export const LIN_REG = {
+    fullName: 'Linear Regression',
+    class: 'statistics',
+    desc: `
+        Return the voxels for the linear regression for dependent variable Y on observed variable X.
+    `,
+    inputs: {
+        Input1: 'Y',
+        Input2: 'X',
+    },
+    output: 'Output',
+    options: {
+        training_epochs: 5,
+    },
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
+        const { training_epochs } = options
+
+        let model
+        if (_.get(savedData, 'model')) {
+            model = _.get(savedData, 'model')
+        } else {
+            // Define a model for linear regression.
+            model = tf.sequential()
+            model.add(
+                tf.layers.dense({ units: 1, inputShape: [inputs.length - 1] })
+            )
+
+            // Prepare the model for training: Specify the loss and the optimizer.
+            model.compile({
+                loss: 'meanSquaredError',
+                optimizer: 'sgd',
+                metrics: ['accuracy'],
+            })
+        }
+
+        // Converts independent input arrays into feature column format
+        const data = []
+        const maxes = []
+        for (let j = 1; j < inputs.length; j++) {
+            maxes.push(Math.max(...inputs[j]))
+        }
+        for (let i = 0; i < inputs[1].length; i++) {
+            const data_entry = []
+            for (let j = 1; j < inputs.length; j++) {
+                data_entry.push(inputs[j][i] / maxes[j - 1])
+            }
+            data.push(data_entry)
+        }
+
+        const y_range = Math.max(...inputs[0])
+        const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
+        const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
+            inputs[0].length,
+            1,
+        ])
+
+        return model
+            .fit(xs, ys, {
+                validationSplit: 0.8,
+                epochs: Number(training_epochs),
+            })
+            .then(() => {
+                // Saves the model for future training
+                savedData['model'] = model
+                return model.predict(xs).data()
+            })
+            .then(data => {
+                const dataArray = Array.from(data).map(x => x * y_range)
+
+                // Creates the best fit line if there is only 1 input
+                if (maxes.length === 1) {
+                    const linePoints = []
+                    for (let i = 0; i <= 10; i++) {
+                        linePoints.push(i / 10.0)
+                    }
+                    const lineTensor = tf.tensor2d(linePoints, [
+                        linePoints.length,
+                        1,
+                    ])
+                    model
+                        .predict(lineTensor)
+                        .data()
+                        .then(results => {
+                            const dataArray = Array.from(results).map(
+                                x => x * y_range
+                            )
+                            savedData['line'] = dataArray.map(
+                                (currentValue, index) => [
+                                    linePoints[index] * maxes[0],
+                                    currentValue,
+                                ]
+                            )
+                        })
+                }
+                return dataArray
+            })
     },
 }

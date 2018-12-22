@@ -95,7 +95,7 @@ class Share extends React.Component {
     }
 
     copySnapshotLink = hash => {
-        const shareLink = `https://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`
+        const shareLink = `${window.location.origin}/snap/${hash}`
         const inputDom = document.querySelector('#snapshot-link')
         inputDom.value = shareLink
         this.execCopy(inputDom)
