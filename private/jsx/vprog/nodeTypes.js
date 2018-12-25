@@ -22,7 +22,7 @@ const NodeType = {
 
 import _ from 'lodash'
 import * as tf from '@tensorflow/tfjs'
-// import regression from 'regression'
+import kmeans from 'ml-kmeans'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -100,6 +100,26 @@ export const SUB = {
         return inputs
             .slice(1)
             .reduce((accum, input) => math.subtract(accum, input), inputs[0])
+    },
+}
+
+export const DIFF = {
+    fullName: 'Difference',
+    class: 'math',
+    desc: `
+        Computes the arithmetic absolute difference between datasets
+    `,
+    inputs: {
+        Minuend: 'M',
+        Subtrahend: 'S',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: async inputs => {
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.subtract(accum, input), inputs[0])
+            .map(val => Math.abs(val))
     },
 }
 
@@ -273,6 +293,44 @@ export const NOT = {
     options: {},
     arithmetic: async inputs => {
         return inputs[0].map(m => !m)
+    },
+}
+
+export const K_CLUSTER = {
+    fullName: 'K Clustering',
+    class: 'statistics',
+    desc: `
+        Clusters data into K clusters and averages among cluster
+    `,
+    inputs: {
+        Input1: 'Y',
+        Input2: 'X',
+    },
+    output: 'Output',
+    options: {
+        k: 100,
+    },
+    arithmetic: async (inputs, options = {}) => {
+        const { k } = options
+        const data = []
+        for (let i = 0; i < inputs[0].length; i++) {
+            const point = []
+            for (let j = 1; j < inputs.length; j++) {
+                point.push(inputs[j][i])
+            }
+            data.push(point)
+        }
+        const { centroids, clusters } = kmeans(data, Number(k))
+        const results = {}
+        console.log(centroids, clusters)
+        for (let i = 0; i < inputs[0].length; i++) {
+            const cluster = clusters[i]
+            results[cluster] =
+                _.get(results, `[${cluster}]`, 0) +
+                inputs[0][i] / centroids[cluster].size
+        }
+        console.log(results)
+        return Promise.resolve(clusters.map(cluster => results[cluster]))
     },
 }
 
