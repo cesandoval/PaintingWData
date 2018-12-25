@@ -610,7 +610,6 @@ class VPL extends React.Component {
             attr: 'updateStatus',
             value: 2,
         })
-        // this.markNodesForUpdate(toNode)
 
         this.refreshVoxels = true // this.computeNodes()
     }
@@ -666,10 +665,13 @@ class VPL extends React.Component {
             .filter(([, value]) => value.type == 'DATASET')
             .map(([key]) => key)
 
+        const { geometries } = this
         // Datasets Preprocess
         const datasetPreprocess = datasetNodes.map(datasetKey => {
-            // if (hasNodeUpdated[datasetKey]) {
-            const geometry = this.geometries[datasetKey]
+            const geometry = _.get(geometries, datasetKey) //geometries[datasetKey]
+            if (!geometry) {
+                return Promise.resolve(true)
+            }
             hasNodeUpdated[datasetKey] = false
             if (!this.originDatasetArray[datasetKey]) {
                 // copy original size array
@@ -697,7 +699,6 @@ class VPL extends React.Component {
                     geometries: [geometry],
                 })
             )
-            // }
             return nodeEvalStatus[datasetKey]
         })
 
@@ -773,7 +774,6 @@ class VPL extends React.Component {
 
             outputOrder = _.uniq(_.flatten(outputOrder))
 
-            // TODO: save computed data to this state
             const computeNodeThenAddVoxel = (node, inputNodes) => {
                 const mapGeometries = this.geometries
                 const { updateStatus } = node
@@ -816,36 +816,32 @@ class VPL extends React.Component {
             })
 
             // Updates voxels for nodes once their input's voxels have been updated
-            const voxelsComputed = outputOrder.reduce(
-                async (promise, nodeKey) => {
-                    let canComplete = nodeEvalStatus[nodeKey]
-                    // TODO make sure nodes get their voxels removed on hotload
-                    if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
-                        hasNodeUpdated[nodeKey] = false
-                        const inputNodes = Object.values(
-                            nodeInputsFromNode[nodeKey]
+            outputOrder.map(nodeKey => {
+                let canComplete = nodeEvalStatus[nodeKey]
+                // TODO make sure nodes get their voxels removed on hotload
+                if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
+                    hasNodeUpdated[nodeKey] = false
+                    const inputNodes = Object.values(
+                        nodeInputsFromNode[nodeKey]
+                    )
+                    for (let i = 0; i < inputNodes.length; i++) {
+                        canComplete = canComplete.then(
+                            () => nodeEvalStatus[inputNodes[i]]
                         )
-                        for (let i = 0; i < inputNodes.length; i++) {
-                            canComplete = canComplete.then(
-                                () => nodeEvalStatus[inputNodes[i]]
-                            )
-                        }
-                        const node = nodes[nodeKey]
-                        nodeEvalStatus[nodeKey] = canComplete.then(() =>
-                            computeNodeThenAddVoxel(node, inputNodes)
-                        )
-                        return promise.then(() => nodeEvalStatus[nodeKey])
                     }
-                    return promise
-                },
-                Promise.resolve(true)
-            )
+                    const node = nodes[nodeKey]
+                    nodeEvalStatus[nodeKey] = canComplete.then(() =>
+                        computeNodeThenAddVoxel(node, inputNodes)
+                    )
+                }
+            })
 
             this.setState({ hasNodeUpdated, nodeEvalStatus })
 
-            return voxelsComputed.then(() => {
-                return { nodeInputsFromNode, nodeOutputTree, outputOrder }
-            })
+            // return voxelsComputed.then(() => {
+            //     return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+            // })
+            return { nodeInputsFromNode, nodeOutputTree, outputOrder }
         }
 
         Promise.all(datasetPreprocess).then(cb => datasetPreprocessCallback(cb))
@@ -915,6 +911,7 @@ class VPL extends React.Component {
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
         const mathCallback = actualValues => {
+            console.log(node)
             savedData['actualValues'] = actualValues
 
             let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
@@ -1044,12 +1041,12 @@ class VPL extends React.Component {
         const nodeWidth = Style.minWidth
         const nodeHeight = Style.minHeight
 
-        // // Debugging
-        // const updateStatus = _.get(
-        //     this.props.nodes,
-        //     `${nodeKey}.updateStatus`,
-        //     0
-        // )
+        // Debugging
+        const updateStatus = _.get(
+            this.props.nodes,
+            `${nodeKey}.updateStatus`,
+            0
+        )
 
         const desc = (
             <span
@@ -1086,8 +1083,8 @@ class VPL extends React.Component {
                     x="0"
                     y="0"
                     style={{
-                        // fill: `${updateStatus > 0 ? '#ff9999' : '#ecf0f1'}`,
-                        fill: '#ecf0f1',
+                        fill: `${updateStatus > 0 ? '#92A3A8' : '#ecf0f1'}`,
+                        // fill: '#ecf0f1',
                         stroke: '#ccc',
                         rx: '2px',
                     }}
@@ -1198,7 +1195,7 @@ class VPL extends React.Component {
                                         attr: 'updateStatus',
                                         value: 2,
                                     })
-                                    this.refreshVoxels = true
+                                    // this.refreshVoxels = true
                                     Act.nodeUpdate({
                                         nodeKey,
                                         attr: 'inputs',
