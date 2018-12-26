@@ -838,9 +838,6 @@ class VPL extends React.Component {
 
             this.setState({ hasNodeUpdated, nodeEvalStatus })
 
-            // return voxelsComputed.then(() => {
-            //     return { nodeInputsFromNode, nodeOutputTree, outputOrder }
-            // })
             return { nodeInputsFromNode, nodeOutputTree, outputOrder }
         }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
-import { Popover, Slider } from 'antd'
+import { Popover, Button, Slider } from 'antd'
 import {
     VictoryLine,
     VictoryChart,
@@ -11,6 +11,7 @@ import {
     VictoryAxis,
 } from 'victory'
 import _ from 'lodash'
+import { saveSvgAsPng } from 'save-svg-as-png'
 import * as NodeType from './nodeTypes'
 import * as svg from './svg/svg'
 
@@ -75,6 +76,13 @@ class Panel extends React.Component {
             attr: 'color',
             value: this.props.color,
         })
+    }
+
+    exportComponent(nodeKey) {
+        const svg = document.getElementById(`bf-${nodeKey}`)
+        console.log(svg.childNodes)
+        saveSvgAsPng(svg.children[0].children[0])
+        return nodeKey
     }
 
     changeColor(e) {
@@ -208,34 +216,44 @@ class Panel extends React.Component {
             return <text>This feature is only avaiable for 2D regression</text>
         }
         return (
-            <VictoryChart theme={VictoryTheme.material}>
-                <VictoryLine
-                    style={{
-                        parent: { border: '1px solid #ccc' },
-                    }}
-                    data={line.map(pointToJson)}
+            <div style={{ textAlign: 'right' }}>
+                <Button
+                    shape="circle"
+                    icon="export"
+                    size="large"
+                    onClick={() => this.exportComponent(node.nodeKey)}
                 />
-                <VictoryScatter
-                    style={{ data: { fill: '#c43a31' } }}
-                    size={3}
-                    data={samples.map(pointToJson)}
-                />
-                <VictoryAxis
-                    label="X"
-                    style={{
-                        axis: { stroke: '#756f6a' },
-                        axisLabel: { fontSize: 20, padding: 30 },
-                    }}
-                />
-                <VictoryAxis
-                    dependentAxis
-                    label="Y"
-                    style={{
-                        axis: { stroke: '#756f6a' },
-                        axisLabel: { fontSize: 20, padding: 30 },
-                    }}
-                />
-            </VictoryChart>
+                <div id={`bf-${node.nodeKey}`}>
+                    <VictoryChart theme={VictoryTheme.material}>
+                        <VictoryLine
+                            style={{
+                                parent: { border: '1px solid #ccc' },
+                            }}
+                            data={line.map(pointToJson)}
+                        />
+                        <VictoryScatter
+                            style={{ data: { fill: '#c43a31' } }}
+                            size={3}
+                            data={samples.map(pointToJson)}
+                        />
+                        <VictoryAxis
+                            label="X"
+                            style={{
+                                axis: { stroke: '#756f6a' },
+                                axisLabel: { fontSize: 20, padding: 30 },
+                            }}
+                        />
+                        <VictoryAxis
+                            dependentAxis
+                            label="Y"
+                            style={{
+                                axis: { stroke: '#756f6a' },
+                                axisLabel: { fontSize: 20, padding: 30 },
+                            }}
+                        />
+                    </VictoryChart>
+                </div>
+            </div>
         )
     }
 
@@ -286,9 +304,10 @@ class Panel extends React.Component {
         const hasFilter = NodeType[type].class !== 'logic'
 
         const isStatistics = NodeType[type].class === 'statistics'
+        const isLinearRegression = type === 'LIN_REG'
 
         let bestFitLine
-        if (isStatistics) {
+        if (isLinearRegression) {
             bestFitLine = this.bestFit(node)
         }
 
@@ -354,14 +373,6 @@ class Panel extends React.Component {
                                 />
                             </Popover>
                         )}
-                        {this.props.type !== 'DATASET' && (
-                            <img
-                                onClick={this.deleteNode}
-                                title="delete"
-                                style={margin0px}
-                                src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0ODcuNiA0ODcuNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDg3LjYgNDg3LjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNNDU0LjUsNzUuM0gzNTIuMXYtMjRjMC0yOC4zLTIzLTUxLjMtNTEuMy01MS4zaC0xMTRjLTI4LjMsMC01MS4zLDIzLTUxLjMsNTEuM3YyMy45SDMzLjFjLTkuOSwwLTE4LDguMS0xOCwxOCAgICBjMCw5LjksOC4xLDE4LDE4LDE4aDI3LjJWNDI1YzAsMzQuNSwyOC4xLDYyLjYsNjIuNiw2Mi42aDI0MS45YzM0LjUsMCw2Mi42LTI4LjEsNjIuNi02Mi42VjE2OC41YzAtOS45LTguMS0xOC0xOC0xOCAgICBjLTkuOSwwLTE4LDguMS0xOCwxOFY0MjVjMCwxNC42LTExLjksMjYuNi0yNi42LDI2LjZoLTI0MmMtMTQuNiwwLTI2LjYtMTEuOS0yNi42LTI2LjZWMTExLjNoMzU4LjNjMTAsMCwxOC04LjEsMTgtMTggICAgUzQ2NC40LDc1LjMsNDU0LjUsNzUuM3ogTTMxNi4xLDc1LjJIMTcxLjVWNTEuM2MwLTguNCw2LjktMTUuMywxNS4zLTE1LjNoMTE0YzguNSwwLDE1LjMsNi45LDE1LjMsMTUuM1Y3NS4yeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE2Ny4yLDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NDEuNGMwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4di00MS40QzE4NS4yLDE1OC42LDE3Ny4xLDE1MC41LDE2Ny4yLDE1MC41ICAgIHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0xNjcuMiwyNjMuNGMtOS45LDAtMTgsOC4xLTE4LDE4djExMi45YzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMThWMjgxLjQgICAgQzE4NS4yLDI3MS41LDE3Ny4xLDI2My40LDE2Ny4yLDI2My40eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTI0My44LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2MTIyLjJjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOFYxNjguNSAgICBDMjYxLjgsMTU4LjYsMjUzLjcsMTUwLjUsMjQzLjgsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjQzLjgsMzQ0LjJjLTkuOSwwLTE4LDguMS0xOCwxOHYzMi4xYzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMTh2LTMyLjFDMjYxLjgsMzUyLjMsMjUzLjcsMzQ0LjIsMjQzLjgsMzQ0LjIgICAgeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTMyMC40LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NjNjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOHYtNjNDMzM4LjQsMTU4LjYsMzMwLjMsMTUwLjUsMzIwLjQsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMzIwLjQsMjg1Yy05LjksMC0xOCw4LjEtMTgsMTh2OTEuM2MwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4VjMwM0MzMzguNCwyOTMuMSwzMzAuNCwyODUsMzIwLjQsMjg1eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo="
-                            />
-                        )}
                         {isStatistics && (
                             <img
                                 onClick={() => {
@@ -377,7 +388,7 @@ class Panel extends React.Component {
                                 src={svg.NEXT}
                             />
                         )}
-                        {isStatistics && (
+                        {isLinearRegression && (
                             <Popover
                                 placement="bottom"
                                 title="Best Fit Line"
@@ -390,6 +401,14 @@ class Panel extends React.Component {
                                     src={svg.GRAPH}
                                 />
                             </Popover>
+                        )}
+                        {this.props.type !== 'DATASET' && (
+                            <img
+                                onClick={this.deleteNode}
+                                title="delete"
+                                style={margin0px}
+                                src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0ODcuNiA0ODcuNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDg3LjYgNDg3LjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNNDU0LjUsNzUuM0gzNTIuMXYtMjRjMC0yOC4zLTIzLTUxLjMtNTEuMy01MS4zaC0xMTRjLTI4LjMsMC01MS4zLDIzLTUxLjMsNTEuM3YyMy45SDMzLjFjLTkuOSwwLTE4LDguMS0xOCwxOCAgICBjMCw5LjksOC4xLDE4LDE4LDE4aDI3LjJWNDI1YzAsMzQuNSwyOC4xLDYyLjYsNjIuNiw2Mi42aDI0MS45YzM0LjUsMCw2Mi42LTI4LjEsNjIuNi02Mi42VjE2OC41YzAtOS45LTguMS0xOC0xOC0xOCAgICBjLTkuOSwwLTE4LDguMS0xOCwxOFY0MjVjMCwxNC42LTExLjksMjYuNi0yNi42LDI2LjZoLTI0MmMtMTQuNiwwLTI2LjYtMTEuOS0yNi42LTI2LjZWMTExLjNoMzU4LjNjMTAsMCwxOC04LjEsMTgtMTggICAgUzQ2NC40LDc1LjMsNDU0LjUsNzUuM3ogTTMxNi4xLDc1LjJIMTcxLjVWNTEuM2MwLTguNCw2LjktMTUuMywxNS4zLTE1LjNoMTE0YzguNSwwLDE1LjMsNi45LDE1LjMsMTUuM1Y3NS4yeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE2Ny4yLDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NDEuNGMwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4di00MS40QzE4NS4yLDE1OC42LDE3Ny4xLDE1MC41LDE2Ny4yLDE1MC41ICAgIHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0xNjcuMiwyNjMuNGMtOS45LDAtMTgsOC4xLTE4LDE4djExMi45YzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMThWMjgxLjQgICAgQzE4NS4yLDI3MS41LDE3Ny4xLDI2My40LDE2Ny4yLDI2My40eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTI0My44LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2MTIyLjJjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOFYxNjguNSAgICBDMjYxLjgsMTU4LjYsMjUzLjcsMTUwLjUsMjQzLjgsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjQzLjgsMzQ0LjJjLTkuOSwwLTE4LDguMS0xOCwxOHYzMi4xYzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMTh2LTMyLjFDMjYxLjgsMzUyLjMsMjUzLjcsMzQ0LjIsMjQzLjgsMzQ0LjIgICAgeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTMyMC40LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NjNjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOHYtNjNDMzM4LjQsMTU4LjYsMzMwLjMsMTUwLjUsMzIwLjQsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMzIwLjQsMjg1Yy05LjksMC0xOCw4LjEtMTgsMTh2OTEuM2MwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4VjMwM0MzMzguNCwyOTMuMSwzMzAuNCwyODUsMzIwLjQsMjg1eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo="
+                            />
                         )}
                     </div>
                 </foreignObject>
