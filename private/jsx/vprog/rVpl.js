@@ -471,9 +471,11 @@ class VPL extends React.Component {
         const { hasNodeUpdated } = this.state
         const { outputs } = this.props.links
         const nodesToUpdate = [node]
+        const forUpdateDebug = [node]
         while (nodesToUpdate.length > 0) {
             let currentNode = nodesToUpdate.shift()
-            if (currentNode !== node) {
+            if (currentNode !== node && !forUpdateDebug.includes(currentNode)) {
+                forUpdateDebug.push(currentNode)
                 Act.nodeUpdate({
                     nodeKey: currentNode,
                     attr: 'updateStatus',
@@ -487,6 +489,7 @@ class VPL extends React.Component {
                 }
             }
         }
+        console.log('UPDATING: ' + forUpdateDebug)
         this.setState({
             hasNodeUpdated,
         })
@@ -798,6 +801,7 @@ class VPL extends React.Component {
                 if (
                     inputGeometries.filter(f => f).length == inputNodes.length
                 ) {
+                    this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
                     voxelComputed = this.evalArithmeticNode({
                         node,
                         mathFunction,
@@ -908,7 +912,6 @@ class VPL extends React.Component {
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
         const mathCallback = actualValues => {
-            console.log(node)
             savedData['actualValues'] = actualValues
 
             let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
