@@ -5431,6 +5431,12 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
+is-integer@^1.0.6:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/is-integer/-/is-integer-1.0.7.tgz#6bde81aacddf78b659b6629d629cadc51a886d5c"
+  dependencies:
+    is-finite "^1.0.0"
+
 is-my-ip-valid@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-my-ip-valid/-/is-my-ip-valid-1.0.0.tgz#7b351b8e8edd4d3995d4d066680e664d94696824"
@@ -6592,9 +6598,37 @@ ml-array-rescale@^1.1.1:
     ml-array-max "^1.1.1"
     ml-array-min "^1.1.1"
 
+ml-distance-euclidean@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ml-distance-euclidean/-/ml-distance-euclidean-1.0.0.tgz#08447c2233641a2b2a9b4c29e5f792d28f1d5b95"
+
 ml-distance-euclidean@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ml-distance-euclidean/-/ml-distance-euclidean-2.0.0.tgz#3a668d236649d1b8fec96380b9435c6f42c9a817"
+
+ml-kernel-gaussian@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ml-kernel-gaussian/-/ml-kernel-gaussian-2.0.1.tgz#a01aef9f44f5bcc11341b09a383b1b32f11933c0"
+  dependencies:
+    ml-distance-euclidean "^1.0.0"
+
+ml-kernel-polynomial@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ml-kernel-polynomial/-/ml-kernel-polynomial-2.0.0.tgz#8ec02c02ccb68bf25a92fbccb4d55a4b387c8313"
+
+ml-kernel-sigmoid@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ml-kernel-sigmoid/-/ml-kernel-sigmoid-1.0.0.tgz#884b28be13f61a60a5173f04240e8096eb1d9cd2"
+
+ml-kernel@^2.0.0:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/ml-kernel/-/ml-kernel-2.3.4.tgz#7f6cdd5a3a9b1b6ee3c34bfd15c181664a0661dd"
+  dependencies:
+    ml-distance-euclidean "^1.0.0"
+    ml-kernel-gaussian "^2.0.1"
+    ml-kernel-polynomial "^2.0.0"
+    ml-kernel-sigmoid "^1.0.0"
+    ml-matrix "^5.0.0"
 
 ml-kmeans@^4.2.1:
   version "4.2.1"
@@ -6605,7 +6639,7 @@ ml-kmeans@^4.2.1:
     ml-nearest-vector "^2.0.1"
     ml-random "^0.5.0"
 
-ml-matrix@^5.1.1:
+ml-matrix@^5.0.0, ml-matrix@^5.0.1, ml-matrix@^5.1.1:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/ml-matrix/-/ml-matrix-5.2.0.tgz#3cabcf5a4f59e1c45bb7fd0e91700beb344c4f7e"
   dependencies:
@@ -6623,6 +6657,79 @@ ml-random@^0.5.0:
   resolved "https://registry.yarnpkg.com/ml-random/-/ml-random-0.5.0.tgz#d6f7c0e8fbcebee05a14ece9a411769508c5eb3b"
   dependencies:
     ml-xsadd "^2.0.0"
+
+ml-regression-base@^1.0.0, ml-regression-base@^1.1.1, ml-regression-base@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ml-regression-base/-/ml-regression-base-1.2.0.tgz#e8c58c12b649d845ecb13e0c246ad1be6e57cc1c"
+
+ml-regression-exponential@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ml-regression-exponential/-/ml-regression-exponential-1.0.1.tgz#f5eedba31a3e0bcfbbb92c26c590f9d02970e7d0"
+  dependencies:
+    ml-regression-base "^1.1.1"
+    ml-regression-simple-linear "^1.0.1"
+
+ml-regression-multivariate-linear@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ml-regression-multivariate-linear/-/ml-regression-multivariate-linear-1.2.0.tgz#cfb33ffacd7e153d33b7481ef9f5d094d954689e"
+  dependencies:
+    ml-matrix "^5.0.1"
+    ml-regression-base "^1.2.0"
+
+ml-regression-polynomial@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/ml-regression-polynomial/-/ml-regression-polynomial-1.0.3.tgz#bd77838c8b673ddcc6ad6e53959a9a97789b80c5"
+  dependencies:
+    ml-matrix "^5.0.0"
+    ml-regression-base "^1.1.1"
+
+ml-regression-power@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ml-regression-power/-/ml-regression-power-1.0.0.tgz#eb934fc3c0531a15d8772f46a7ca9551785e481f"
+  dependencies:
+    ml-regression-base "^1.2.0"
+    ml-regression-simple-linear "^1.0.2"
+
+ml-regression-robust-polynomial@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ml-regression-robust-polynomial/-/ml-regression-robust-polynomial-1.0.1.tgz#870793f61bde021d002e439ebb4064428ed9d888"
+  dependencies:
+    ml-matrix "^5.0.0"
+    ml-regression-base "^1.2.0"
+
+ml-regression-simple-linear@^1.0.0, ml-regression-simple-linear@^1.0.1, ml-regression-simple-linear@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ml-regression-simple-linear/-/ml-regression-simple-linear-1.0.2.tgz#d99fe95be9178c3bf045cc58490b1e62851336af"
+  dependencies:
+    ml-regression-base "^1.0.0"
+
+ml-regression-theil-sen@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ml-regression-theil-sen/-/ml-regression-theil-sen-1.0.0.tgz#fb33c67ca88cd182c9eee999cecccd7aad5c2bc8"
+  dependencies:
+    ml-regression-base "^1.2.0"
+    ml-stat "^1.3.3"
+
+ml-regression@^4.4.2:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/ml-regression/-/ml-regression-4.4.2.tgz#d19b376bcc990968cda0d9c3e59f04fd12b91a5f"
+  dependencies:
+    is-integer "^1.0.6"
+    ml-kernel "^2.0.0"
+    ml-matrix "^5.0.0"
+    ml-regression-base "^1.2.0"
+    ml-regression-exponential "^1.0.0"
+    ml-regression-multivariate-linear "^1.0.0"
+    ml-regression-polynomial "^1.0.0"
+    ml-regression-power "^1.0.0"
+    ml-regression-robust-polynomial "^1.0.0"
+    ml-regression-simple-linear "^1.0.0"
+    ml-regression-theil-sen "^1.0.0"
+    ml-stat "^1.3.3"
+
+ml-stat@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/ml-stat/-/ml-stat-1.3.3.tgz#8a5493b0f67382fbf705c260e070436655a7dcfa"
 
 ml-xsadd@^2.0.0:
   version "2.0.0"

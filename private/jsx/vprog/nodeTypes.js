@@ -23,6 +23,10 @@ const NodeType = {
 import _ from 'lodash'
 import * as tf from '@tensorflow/tfjs'
 import kmeans from 'ml-kmeans'
+import {
+    SimpleLinearRegression,
+    MultivariateLinearRegression,
+} from 'ml-regression'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -336,6 +340,90 @@ export const K_CLUSTER = {
 
 export const LIN_REG = {
     fullName: 'Linear Regression',
+    class: 'statistics',
+    desc: `
+            Return the voxels for the linear regression for dependent variable Y on observed variable X.
+        `,
+    inputs: {
+        Input1: 'Y',
+        Input2: 'X',
+    },
+    output: 'Output',
+    options: {
+        trainingSplit: 0.6,
+    },
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
+        let trainingSplit = Number(options.trainingSplit)
+        trainingSplit =
+            trainingSplit < 0 ? 0 : trainingSplit > 1 ? 1 : trainingSplit
+        const sample = (x, y, split = trainingSplit) => {
+            const sampleSize = Math.floor(inputs[0].length * split)
+            const sampleIndices = _.sampleSize(
+                [...Array(inputs[0].length).keys()],
+                sampleSize
+            )
+            const trainingX = []
+            const trainingY = []
+            for (let i = 0; i < sampleIndices.length; i++) {
+                trainingX.push(x[sampleIndices[i]])
+                trainingY.push(y[sampleIndices[i]])
+            }
+            return { trainingX, trainingY }
+        }
+
+        let regression
+        let results
+        let y
+        const yMax = Math.max(...inputs[0])
+        let x
+        if (inputs.length < 3) {
+            const xMax = Math.max(...inputs[1])
+            x = inputs[1].map(val => val / xMax)
+            y = inputs[0].map(val => val / yMax)
+            const { trainingX, trainingY } = sample(x, y)
+            regression = new SimpleLinearRegression(trainingX, trainingY)
+            results = regression.predict(x).map(val => val * yMax)
+
+            // Draws line
+            const linePoints = []
+            for (let i = 0; i <= 10; i++) {
+                linePoints.push(i / 10.0)
+            }
+            savedData['line'] = regression
+                .predict(linePoints)
+                .map((currentValue, index) => [linePoints[index], currentValue])
+            const sampledData = sample(x, y, Math.min(200 / x.length, 1))
+            savedData['samples'] = sampledData.trainingX.map((value, index) => [
+                value,
+                sampledData.trainingY[index],
+            ])
+        } else {
+            x = []
+            const maxes = []
+            // Gets max values for all inputs
+            for (let j = 1; j < inputs.length; j++) {
+                maxes.push(Math.max(...inputs[j]))
+            }
+            // Converts max inputs to an input matrix
+            for (let i = 0; i < inputs[1].length; i++) {
+                const data_entry = []
+                for (let j = 1; j < inputs.length; j++) {
+                    data_entry.push(inputs[j][i] / maxes[j - 1])
+                }
+                x.push(data_entry)
+            }
+
+            y = inputs[0].map(value => [value / yMax])
+            const { trainingX, trainingY } = sample(x, y)
+            regression = new MultivariateLinearRegression(trainingX, trainingY)
+            results = regression.predict(x).map(val => val[0] * yMax)
+        }
+        return results
+    },
+}
+
+export const LIN_REG2 = {
+    fullName: 'Linear Regression 2',
     class: 'statistics',
     desc: `
         Return the voxels for the linear regression for dependent variable Y on observed variable X.
