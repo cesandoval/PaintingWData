@@ -2,18 +2,10 @@ import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
-import { Popover, Button, Slider } from 'antd'
-import {
-    VictoryLine,
-    VictoryChart,
-    VictoryScatter,
-    VictoryTheme,
-    VictoryAxis,
-} from 'victory'
-import _ from 'lodash'
-import { saveSvgAsPng } from 'save-svg-as-png'
+import { Popover, Slider } from 'antd'
 import * as NodeType from './nodeTypes'
 import * as svg from './svg/svg'
+import { bestFit, kCluster } from './StatsCharts'
 
 class Panel extends React.Component {
     constructor(props) {
@@ -24,6 +16,7 @@ class Panel extends React.Component {
             node: {},
             visible: true,
             color: this.props.color,
+            graphOptions: {},
         }
 
         this.changeColor = this.changeColor.bind(this)
@@ -42,15 +35,6 @@ class Panel extends React.Component {
 
         if (pixels) {
             pixels.material.uniforms.show.value = node.visibility // TODO: refactor
-
-            /*
-            this.setState({
-                visible: pixels.material.uniforms.show.value == 1,
-                color:
-                    '#' +
-                    pixels.material.uniforms.startColor.value.getHexString(),
-            })
-            */
         }
 
         this.setState({
@@ -58,16 +42,6 @@ class Panel extends React.Component {
             visible: node.visibility,
             color: node.color,
         })
-
-        /*
-        if (pixels.material) {
-            this.setState({
-                visible: (pixels.material.uniforms.show.value == 1),
-                color1: '#' + pixels.material.uniforms.startColor.value.getHexString(),
-                color2: '#' + pixels.material.uniforms.endColor.value.getHexString(),
-            })
-        }
-        */
     }
 
     componentDidMount() {
@@ -78,13 +52,6 @@ class Panel extends React.Component {
         })
     }
 
-    exportComponent(nodeKey) {
-        const svg = document.getElementById(`bf-${nodeKey}`)
-        console.log(svg.childNodes)
-        saveSvgAsPng(svg.children[0].children[0])
-        return nodeKey
-    }
-
     changeColor(e) {
         console.log('changeColor(e)', e.target.value)
 
@@ -93,16 +60,6 @@ class Panel extends React.Component {
             attr: 'color',
             value: e.target.value,
         })
-
-        /* // using two color options for each layer
-        if (e.target.name == 'color1'){
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-        } else {
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
-        */
-
-        // if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
     }
 
     toggleVisibility() {
@@ -208,60 +165,11 @@ class Panel extends React.Component {
         this.props.updated(this.props.index)
     }
 
-    bestFit(node) {
-        const line = _.get(node, 'savedData.line', [])
-        const samples = _.get(node, 'savedData.samples', [])
-        const pointToJson = point => ({ x: point[0], y: point[1] })
-        if (Object.keys(_.get(node, 'inputs', {})).length > 2) {
-            return <text>This feature is only avaiable for 2D regression</text>
-        }
-        return (
-            <div style={{ textAlign: 'right' }}>
-                <Button
-                    shape="circle"
-                    icon="export"
-                    size="large"
-                    onClick={() => this.exportComponent(node.nodeKey)}
-                />
-                <div id={`bf-${node.nodeKey}`}>
-                    <VictoryChart theme={VictoryTheme.material}>
-                        <VictoryLine
-                            style={{
-                                parent: { border: '1px solid #ccc' },
-                            }}
-                            data={line.map(pointToJson)}
-                        />
-                        <VictoryScatter
-                            style={{ data: { fill: '#c43a31' } }}
-                            size={3}
-                            data={samples.map(pointToJson)}
-                        />
-                        <VictoryAxis
-                            label="X"
-                            style={{
-                                axis: { stroke: '#756f6a' },
-                                axisLabel: { fontSize: 20, padding: 30 },
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis
-                            label="Y"
-                            style={{
-                                axis: { stroke: '#756f6a' },
-                                axisLabel: { fontSize: 20, padding: 30 },
-                            }}
-                        />
-                    </VictoryChart>
-                </div>
-            </div>
-        )
-    }
-
     render() {
         const { index, updated } = this.props
         const margin0px = { margin: '0px' }
 
-        const node = this.state.node
+        const { graphOptions, node } = this.state
         const filterMax = node.filter ? node.filter.max : 1
         const filterMin = node.filter ? node.filter.min : 0
         const filterDefault = [filterMin, filterMax]
@@ -305,10 +213,18 @@ class Panel extends React.Component {
 
         const isStatistics = NodeType[type].class === 'statistics'
         const isLinearRegression = type === 'LIN_REG'
+        const isKCluster = type === 'K_CLUSTER'
 
-        let bestFitLine
+        let graph
         if (isLinearRegression) {
-            bestFitLine = this.bestFit(node)
+            graph = bestFit(node)
+        } else if (isKCluster) {
+            const barsShown = _.get(graphOptions, 'barsShown')
+            const callback = value => {
+                graphOptions.barsShown = value
+                this.setState({ graphOptions })
+            }
+            graph = kCluster(node, barsShown, callback)
         }
 
         return (
@@ -392,7 +308,7 @@ class Panel extends React.Component {
                             <Popover
                                 placement="bottom"
                                 title="Best Fit Line"
-                                content={bestFitLine}
+                                content={graph}
                                 trigger="click"
                             >
                                 <img
@@ -402,6 +318,21 @@ class Panel extends React.Component {
                                 />
                             </Popover>
                         )}
+                        {isKCluster && (
+                            <Popover
+                                placement="bottom"
+                                title="K Cluster Distribution"
+                                content={graph}
+                                trigger="click"
+                            >
+                                <img
+                                    title="cluster distribution"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
+                        )}
+
                         {this.props.type !== 'DATASET' && (
                             <img
                                 onClick={this.deleteNode}

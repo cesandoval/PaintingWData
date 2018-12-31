@@ -314,7 +314,7 @@ export const K_CLUSTER = {
     options: {
         k: 100,
     },
-    arithmetic: async (inputs, options = {}) => {
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
         const { k } = options
         const data = []
         for (let i = 0; i < inputs[0].length; i++) {
@@ -326,14 +326,16 @@ export const K_CLUSTER = {
         }
         const { centroids, clusters } = kmeans(data, Number(k))
         const results = {}
-        console.log(centroids, clusters)
         for (let i = 0; i < inputs[0].length; i++) {
             const cluster = clusters[i]
             results[cluster] =
                 _.get(results, `[${cluster}]`, 0) +
                 inputs[0][i] / centroids[cluster].size
         }
-        console.log(results)
+        const bar = centroids
+            .map((centroid, index) => [results[index], centroid.size])
+            .filter(point => point[0] !== 0)
+        savedData.bar = bar
         return Promise.resolve(clusters.map(cluster => results[cluster]))
     },
 }
@@ -397,6 +399,28 @@ export const LIN_REG = {
                 value,
                 sampledData.trainingY[index],
             ])
+
+            // residual sum
+            const mean =
+                y.reduce((accum, val) => accum + val, 0) / inputs[0].length
+            const total_ss = y.reduce(
+                (accum, val) => accum + (val - mean) ** 2,
+                0
+            )
+            const explained_ss = results.reduce(
+                (accum, val) => accum + (val - mean) ** 2,
+                0
+            )
+            const residual_ss = y.reduce(
+                (accum, val, index) => accum + (val - results[index]) ** 2,
+                0
+            )
+            console.warn(mean, total_ss, residual_ss, explained_ss)
+            console.warn(
+                1 - Math.min(residual_ss / total_ss, 1),
+                explained_ss / total_ss
+            )
+            console.warn(regression.score(x, y))
         } else {
             x = []
             const maxes = []
@@ -418,6 +442,7 @@ export const LIN_REG = {
             regression = new MultivariateLinearRegression(trainingX, trainingY)
             results = regression.predict(x).map(val => val[0] * yMax)
         }
+
         return results
     },
 }

@@ -470,26 +470,42 @@ class VPL extends React.Component {
     markNodesForUpdate = node => {
         const { hasNodeUpdated } = this.state
         const { outputs } = this.props.links
-        const nodesToUpdate = [node]
+        const { nodes } = this.props
+        hasNodeUpdated[node] = true
+        // const nodesToUpdate = [node]
+        const nodesToUpdate = Object.keys(_.get(outputs, node, {}))
         const forUpdateDebug = [node]
         while (nodesToUpdate.length > 0) {
             let currentNode = nodesToUpdate.shift()
-            if (currentNode !== node && !forUpdateDebug.includes(currentNode)) {
+            console.warn(currentNode, nodes[currentNode].updateStatus)
+            if (nodes[currentNode].updateStatus < 2) {
+                hasNodeUpdated[currentNode] = true
                 forUpdateDebug.push(currentNode)
                 Act.nodeUpdate({
                     nodeKey: currentNode,
                     attr: 'updateStatus',
                     value: 2,
                 })
-            }
-            if (!hasNodeUpdated[currentNode]) {
-                hasNodeUpdated[currentNode] = true
-                for (let child in outputs[node]) {
+                for (let child in outputs[currentNode]) {
                     nodesToUpdate.push(child)
                 }
             }
+            // if (currentNode !== node && !forUpdateDebug.includes(currentNode)) {
+            //     forUpdateDebug.push(currentNode)
+            //     Act.nodeUpdate({
+            //         nodeKey: currentNode,
+            //         attr: 'updateStatus',
+            //         value: 2,
+            //     })
+            // }
+            // if (!hasNodeUpdated[currentNode]) {
+            //     hasNodeUpdated[currentNode] = true
+            //     for (let child in outputs[node]) {
+            //         nodesToUpdate.push(child)
+            //     }
+            // }
         }
-        console.log('UPDATING: ' + forUpdateDebug)
+        console.warn('UPDATING: ' + forUpdateDebug)
         this.setState({
             hasNodeUpdated,
         })
@@ -614,7 +630,7 @@ class VPL extends React.Component {
             value: 2,
         })
 
-        this.refreshVoxels = true // this.computeNodes()
+        this.reflogreshVoxels = true // this.computeNodes()
     }
 
     createLinks = () => {
@@ -661,6 +677,7 @@ class VPL extends React.Component {
     }
 
     computeNodes = () => {
+        console.warn('Updating nodes')
         const { hasNodeUpdated, nodeEvalStatus } = this.state
         const nodes = this.props.nodes
 
@@ -714,7 +731,9 @@ class VPL extends React.Component {
 
             Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
                 const toNode = nodes[toNodeKey]
-                const toNodeTypeInputs = Object.keys(toNode.inputs)
+                const toNodeTypeInputs = Object.keys(
+                    _.get(toNode, 'inputs', {})
+                )
 
                 const toNodeInputs = toNodeTypeInputs.map(
                     input => inputsSrcNode[input]
@@ -777,15 +796,17 @@ class VPL extends React.Component {
 
             outputOrder = _.uniq(_.flatten(outputOrder))
 
-            const computeNodeThenAddVoxel = (node, inputNodes) => {
+            const computeNodeThenAddVoxel = async (node, inputNodes) => {
                 const mapGeometries = this.geometries
                 const { updateStatus } = node
                 let mathFunction = NodeType[node.type].arithmetic
+                console.warn(`Node ${node.nodeKey} at status ${updateStatus}`)
                 if (updateStatus === 2) {
                     mathFunction = NodeType[node.type].arithmetic
                 } else {
                     // return saved info from last iteration instead
                     const values = _.get(node, 'savedData.actualValues', [])
+                    console.warn(values)
                     mathFunction = () => Promise.resolve(values)
                 }
                 const options = Object.assign(
@@ -802,6 +823,7 @@ class VPL extends React.Component {
                     inputGeometries.filter(f => f).length == inputNodes.length
                 ) {
                     this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
+                    console.warn('Executing', node.nodeKey)
                     voxelComputed = this.evalArithmeticNode({
                         node,
                         mathFunction,
@@ -809,7 +831,7 @@ class VPL extends React.Component {
                         geometries: inputGeometries,
                     })
                 }
-
+                console.warn('Resolving: ' + node.nodeKey)
                 return Promise.resolve(voxelComputed)
             }
 
@@ -821,7 +843,11 @@ class VPL extends React.Component {
 
             // Updates voxels for nodes once their input's voxels have been updated
             outputOrder.map(nodeKey => {
-                let canComplete = nodeEvalStatus[nodeKey]
+                let canComplete = _.get(
+                    nodeEvalStatus,
+                    nodeKey,
+                    Promise.resolve(true)
+                )
                 // TODO make sure nodes get their voxels removed on hotload
                 if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
                     hasNodeUpdated[nodeKey] = false
@@ -985,6 +1011,8 @@ class VPL extends React.Component {
                 size: sizeArray,
                 translation: translationArray,
             }
+
+            console.warn('Finished ' + node.nodeKey)
 
             let geometry = {
                 minMax: this.newProps.datasets.minMax,
@@ -1393,28 +1421,6 @@ class VPL extends React.Component {
             true,
             geometry.properties
         )
-
-        /* may be need keep some property for dataset state
-        const layer = {
-            allIndices: '',
-            bbox: '',
-            bounds: geometry.bounds,
-            color1: color1,
-            color2: color2,
-            geojson: '',
-            name: geometry.layerName,
-            propertyName: '',
-            rowsCols: '',
-            shaderText: geometry.shaderText,
-            userLayerName: '',
-            visible: true,
-            showSidebar: false,
-        }
-
-        Action.mapAddGeometry(geometry.layerName, P)
-        // Here I should also add the geometry to the layers
-        Action.mapAddLayer(layer)
-        */
 
         this.nodeOutput({
             nodeKey: geometry.layerName,
