@@ -21,7 +21,7 @@ const NodeType = {
 */
 
 import _ from 'lodash'
-import * as tf from '@tensorflow/tfjs'
+// import * as tf from '@tensorflow/tfjs'
 import kmeans from 'ml-kmeans'
 import {
     SimpleLinearRegression,
@@ -447,113 +447,113 @@ export const LIN_REG = {
     },
 }
 
-export const LIN_REG2 = {
-    fullName: 'Linear Regression 2',
-    class: 'statistics',
-    desc: `
-        Return the voxels for the linear regression for dependent variable Y on observed variable X.
-    `,
-    inputs: {
-        Input1: 'Y',
-        Input2: 'X',
-    },
-    output: 'Output',
-    options: {
-        training_epochs: 5,
-    },
-    arithmetic: async (inputs, options = {}, savedData = {}) => {
-        const { training_epochs } = options
+// export const LIN_REG2 = {
+//     fullName: 'Linear Regression 2',
+//     class: 'statistics',
+//     desc: `
+//         Return the voxels for the linear regression for dependent variable Y on observed variable X.
+//     `,
+//     inputs: {
+//         Input1: 'Y',
+//         Input2: 'X',
+//     },
+//     output: 'Output',
+//     options: {
+//         training_epochs: 5,
+//     },
+//     arithmetic: async (inputs, options = {}, savedData = {}) => {
+//         const { training_epochs } = options
 
-        let model
-        if (_.get(savedData, 'model')) {
-            model = _.get(savedData, 'model')
-        } else {
-            // Define a model for linear regression.
-            model = tf.sequential()
-            model.add(
-                tf.layers.dense({ units: 1, inputShape: [inputs.length - 1] })
-            )
+//         let model
+//         if (_.get(savedData, 'model')) {
+//             model = _.get(savedData, 'model')
+//         } else {
+//             // Define a model for linear regression.
+//             model = tf.sequential()
+//             model.add(
+//                 tf.layers.dense({ units: 1, inputShape: [inputs.length - 1] })
+//             )
 
-            // Prepare the model for training: Specify the loss and the optimizer.
-            model.compile({
-                loss: 'meanSquaredError',
-                optimizer: 'sgd',
-            })
-        }
+//             // Prepare the model for training: Specify the loss and the optimizer.
+//             model.compile({
+//                 loss: 'meanSquaredError',
+//                 optimizer: 'sgd',
+//             })
+//         }
 
-        // Converts independent input arrays into feature column format
-        const data = []
-        const maxes = []
-        for (let j = 1; j < inputs.length; j++) {
-            maxes.push(Math.max(...inputs[j]))
-        }
-        for (let i = 0; i < inputs[1].length; i++) {
-            const data_entry = []
-            for (let j = 1; j < inputs.length; j++) {
-                data_entry.push(inputs[j][i] / maxes[j - 1])
-            }
-            data.push(data_entry)
-        }
+//         // Converts independent input arrays into feature column format
+//         const data = []
+//         const maxes = []
+//         for (let j = 1; j < inputs.length; j++) {
+//             maxes.push(Math.max(...inputs[j]))
+//         }
+//         for (let i = 0; i < inputs[1].length; i++) {
+//             const data_entry = []
+//             for (let j = 1; j < inputs.length; j++) {
+//                 data_entry.push(inputs[j][i] / maxes[j - 1])
+//             }
+//             data.push(data_entry)
+//         }
 
-        const y_range = Math.max(...inputs[0])
-        const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
-        const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
-            inputs[0].length,
-            1,
-        ])
+//         const y_range = Math.max(...inputs[0])
+//         const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
+//         const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
+//             inputs[0].length,
+//             1,
+//         ])
 
-        return model
-            .fit(xs, ys, {
-                validationSplit: 0.8,
-                epochs: Number(training_epochs),
-            })
-            .then(() => {
-                // Saves the model for future training
-                savedData['model'] = model
-                return model.predict(xs).data()
-            })
-            .then(data => {
-                const dataArray = Array.from(data).map(x => x * y_range)
+//         return model
+//             .fit(xs, ys, {
+//                 validationSplit: 0.8,
+//                 epochs: Number(training_epochs),
+//             })
+//             .then(() => {
+//                 // Saves the model for future training
+//                 savedData['model'] = model
+//                 return model.predict(xs).data()
+//             })
+//             .then(data => {
+//                 const dataArray = Array.from(data).map(x => x * y_range)
 
-                model.evaluate(xs, ys).print()
-                // Creates the best fit line if there is only 1 input
-                if (maxes.length === 1) {
-                    const linePoints = []
-                    for (let i = 0; i <= 10; i++) {
-                        linePoints.push(i / 10.0)
-                    }
-                    const lineTensor = tf.tensor2d(linePoints, [
-                        linePoints.length,
-                        1,
-                    ])
-                    model
-                        .predict(lineTensor)
-                        .data()
-                        .then(results => {
-                            const dataArray = Array.from(results).map(
-                                x => x * y_range
-                            )
-                            savedData['line'] = dataArray.map(
-                                (currentValue, index) => [
-                                    linePoints[index] * maxes[0],
-                                    currentValue,
-                                ]
-                            )
+//                 model.evaluate(xs, ys).print()
+//                 // Creates the best fit line if there is only 1 input
+//                 if (maxes.length === 1) {
+//                     const linePoints = []
+//                     for (let i = 0; i <= 10; i++) {
+//                         linePoints.push(i / 10.0)
+//                     }
+//                     const lineTensor = tf.tensor2d(linePoints, [
+//                         linePoints.length,
+//                         1,
+//                     ])
+//                     model
+//                         .predict(lineTensor)
+//                         .data()
+//                         .then(results => {
+//                             const dataArray = Array.from(results).map(
+//                                 x => x * y_range
+//                             )
+//                             savedData['line'] = dataArray.map(
+//                                 (currentValue, index) => [
+//                                     linePoints[index] * maxes[0],
+//                                     currentValue,
+//                                 ]
+//                             )
 
-                            const indices = new Set()
-                            while (indices.size < 200) {
-                                const index = Math.floor(
-                                    Math.random() * inputs[0].length
-                                )
-                                indices.add(index)
-                            }
-                            savedData['samples'] = [...indices].map(index => [
-                                inputs[1][index],
-                                inputs[0][index],
-                            ])
-                        })
-                }
-                return dataArray
-            })
-    },
-}
+//                             const indices = new Set()
+//                             while (indices.size < 200) {
+//                                 const index = Math.floor(
+//                                     Math.random() * inputs[0].length
+//                                 )
+//                                 indices.add(index)
+//                             }
+//                             savedData['samples'] = [...indices].map(index => [
+//                                 inputs[1][index],
+//                                 inputs[0][index],
+//                             ])
+//                         })
+//                 }
+//                 return dataArray
+//             })
+//     },
+// }
