@@ -201,10 +201,6 @@ class VPL extends React.Component {
         return newNode
     }
 
-    componentWillReceiveProps(newProps) {
-        this.newProps = newProps
-    }
-
     componentDidUpdate() {
         const { hasNodeUpdated, refreshVoxels } = this.state
         const { nodes, map } = this.props
@@ -454,7 +450,7 @@ class VPL extends React.Component {
     deleteNode = nodeKey => {
         const { outputs } = this.props.links
 
-        Object.keys(outputs[nodeKey]).map(node =>
+        Object.keys(_.get(outputs, nodeKey, [])).map(node =>
             Act.nodeUpdate({
                 nodeKey: node,
                 attr: 'updateStatus',
@@ -470,7 +466,6 @@ class VPL extends React.Component {
     markNodesForUpdate = initNode => {
         const { hasNodeUpdated, nodeInQueue } = this.state
         const { outputs, inputs } = this.props.links
-        // const { outputs } = this.props.links
         const { nodes } = this.props
         hasNodeUpdated[initNode] = true
         const nodeQueue = Object.keys(_.get(outputs, initNode, {}))
@@ -500,7 +495,7 @@ class VPL extends React.Component {
             )
             let shortcircuit = false
 
-            let computeNode = Promise.resolve(true)
+            let nodeEvaluating = Promise.resolve(true)
             for (let i = 0; i < nodesToUpdate.length; i++) {
                 const { nodeKey, type } = nodes[nodesToUpdate[i]]
                 if (type !== 'DATASET') {
@@ -509,8 +504,8 @@ class VPL extends React.Component {
                         Object.keys(inputs[nodeKey]).length >=
                             Object.keys(NodeType[type].inputs).length
                     ) {
-                        computeNode = computeNode.then(() =>
-                            this.startNodeEvaluate(nodeKey)
+                        nodeEvaluating = nodeEvaluating.then(() =>
+                            this.computeNode(nodeKey)
                         )
                     } else {
                         this.nodeOutput({
@@ -521,13 +516,13 @@ class VPL extends React.Component {
                         shortcircuit = true
                     }
                 } else {
-                    computeNode = computeNode.then(() =>
+                    nodeEvaluating = nodeEvaluating.then(() =>
                         this.computeDatabaseNode(nodeKey)
                     )
                 }
             }
             nodesToUpdate.map(node => {
-                nodeInQueue[node] = computeNode
+                nodeInQueue[node] = nodeEvaluating
             })
 
             if (shortcircuit) {
@@ -680,12 +675,10 @@ class VPL extends React.Component {
         return Object.entries(outputs).map(([srcNode, input]) => {
             const svgRect = svgDOM.getBoundingClientRect()
 
-            // const srcNodeDOM = this['node_' + srcNode]
             const outputPlugDOM = this[`${srcNode}_plug_output`]
             if (!outputPlugDOM) return ''
 
             return Object.entries(input).map(([toNode, inputKey]) => {
-                // const toNodeDOM = this['node_' + toNode]
                 const inputPlugDOM = this[`${toNode}_plug_input_${inputKey}`]
                 if (!inputPlugDOM) return ''
                 const linkKey = `${srcNode}_${toNode}`
@@ -714,6 +707,7 @@ class VPL extends React.Component {
         })
     }
 
+    // Computes database node voxels
     computeDatabaseNode = datasetKey => {
         const { geometries } = this
         const { nodes } = this.props
@@ -745,57 +739,63 @@ class VPL extends React.Component {
         })
     }
 
-    computeNodeThenAddVoxel = async node => {
-        const { hasNodeUpdated } = this.state
-        const { inputs } = this.props.links
-        const mapGeometries = this.geometries
-        const { updateStatus } = node
-        let mathFunction = NodeType[node.type].arithmetic
-        if (updateStatus === 1) {
-            // return saved info from last iteration instead
-            const values = _.get(node, 'savedData.actualValues', [])
-            mathFunction = () => Promise.resolve(values)
-        } else {
-            mathFunction = NodeType[node.type].arithmetic
-        }
-        const options = Object.assign(NodeType[node.type].options, node.options)
-
-        const inputKeys = Object.values(inputs[node.nodeKey])
-        let inputGeometries = inputKeys.map(index => mapGeometries[index])
-
-        let voxelComputed = Promise.resolve(true)
-        if (inputGeometries.filter(f => f).length === inputKeys.length) {
-            voxelComputed = this.evalArithmeticNode({
-                node,
-                mathFunction,
-                options,
-                geometries: inputGeometries,
-            })
-        } else {
-            this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
-            hasNodeUpdated[node.nodeKey] = false
-            this.setState({ hasNodeUpdated, refreshVoxels: false })
-        }
-        // return Promise.resolve(voxelComputed)
-        return voxelComputed
-    }
-
-    startNodeEvaluate = nodeKey => {
+    // Computes non database node voxels
+    computeNode = nodeKey => {
         const { hasNodeUpdated, nodeEvalStatus } = this.state
         const { nodes } = this.props
         const { inputs } = this.props.links
+
         let canComplete = Promise.resolve(true)
-        // TODO make sure nodes get their voxels removed on hotload
         if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
             const parents = Object.values(inputs[nodeKey])
+            const node = nodes[nodeKey]
+
+            // Retrieves the evaluating status of parent nodes
             for (let i = 0; i < parents.length; i++) {
                 const parent = parents[i]
                 canComplete = canComplete.then(() => nodeEvalStatus[parent])
             }
-            const node = nodes[nodeKey]
-            nodeEvalStatus[nodeKey] = canComplete.then(() =>
-                this.computeNodeThenAddVoxel(node)
-            )
+
+            // Starts evaluating node
+            nodeEvalStatus[nodeKey] = canComplete.then(() => {
+                const mapGeometries = this.geometries
+                const { updateStatus } = node
+                let mathFunction = NodeType[node.type].arithmetic
+
+                // If update status is set to filter, changes the function to return last computed values instead
+                if (updateStatus === 1) {
+                    const values = _.get(node, 'savedData.actualValues', [])
+                    mathFunction = () => Promise.resolve(values)
+                }
+                const options = Object.assign(
+                    NodeType[node.type].options,
+                    node.options
+                )
+
+                const inputKeys = Object.values(inputs[node.nodeKey])
+                let inputGeometries = inputKeys.map(
+                    index => mapGeometries[index]
+                )
+
+                let voxelComputed = Promise.resolve(true)
+
+                // Evaluates node if all the input nodes are connected
+                if (
+                    inputGeometries.filter(f => f).length === inputKeys.length
+                ) {
+                    voxelComputed = this.evalArithmeticNode({
+                        node,
+                        mathFunction,
+                        options,
+                        geometries: inputGeometries,
+                    })
+                } else {
+                    this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
+                    hasNodeUpdated[node.nodeKey] = false
+                    this.setState({ hasNodeUpdated, refreshVoxels: false })
+                }
+                return voxelComputed
+            })
         }
         this.setState({ nodeEvalStatus })
         return canComplete
@@ -839,7 +839,6 @@ class VPL extends React.Component {
         )
     }
 
-    // TODO: refactoring this function.
     evalArithmeticNode = async ({
         node,
         mathFunction,
@@ -849,7 +848,7 @@ class VPL extends React.Component {
         const savedData = _.get(node, 'savedData', {})
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
-        const allIndices = this.newProps.datasets.allIndices
+        const allIndices = this.props.datasets.allIndices
 
         const amplifier = 3
 
@@ -861,8 +860,8 @@ class VPL extends React.Component {
             Array.from(geometry.geometry.attributes.size.array)
         )
 
-        const firstLayer = Object.values(this.newProps.layers)[0]
-        const firstGeometry = Object.values(this.newProps.map.geometries)[0]
+        const firstLayer = Object.values(this.props.layers)[0]
+        const firstGeometry = Object.values(this.props.map.geometries)[0]
 
         const mathCallback = actualValues => {
             const { hasNodeUpdated } = this.state
@@ -944,14 +943,14 @@ class VPL extends React.Component {
             }
 
             let geometry = {
-                minMax: this.newProps.datasets.minMax,
+                minMax: this.props.datasets.minMax,
                 addressArray: firstGeometry.addresses,
                 properties: props,
                 cols: firstLayer.rowsCols.cols,
                 rows: firstLayer.rowsCols.rows,
                 bounds: newBounds,
                 shaderText: firstLayer.shaderText,
-                n: _.size(this.newProps.layers) + 1,
+                n: _.size(this.props.layers) + 1,
                 name: node.name,
                 type: node.type,
                 layerName: node.nodeKey,
@@ -1327,7 +1326,7 @@ class VPL extends React.Component {
 
     addVoxelGeometry = geometry => {
         // TODO: adding Geometry function should be more simple
-        const map = this.newProps.map.instance
+        const map = this.props.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
         const otherArray = []
 
