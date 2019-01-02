@@ -25,23 +25,22 @@ class Panel extends React.Component {
         this.deleteNode = this.deleteNode.bind(this)
     }
 
-    componentWillReceiveProps(props) {
-        this.props = props
-        // Get geometry
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            const node = this.props.nodes[this.props.index]
 
-        const node = this.props.nodes[this.props.index]
+            let pixels = this.props.geometries[this.props.index]
 
-        let pixels = this.props.geometries[this.props.index]
+            if (pixels) {
+                pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+            }
 
-        if (pixels) {
-            pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+            this.setState({
+                node,
+                visible: node.visibility,
+                color: node.color,
+            })
         }
-
-        this.setState({
-            node,
-            visible: node.visibility,
-            color: node.color,
-        })
     }
 
     componentDidMount() {

@@ -60,8 +60,6 @@ class VPL extends React.Component {
     constructor(props) {
         super(props)
 
-        this.newProps = {}
-
         this.state = {
             tempLink: {
                 from: { x: 50, y: 50 },
