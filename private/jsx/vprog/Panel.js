@@ -84,6 +84,12 @@ class Panel extends React.Component {
             attr: 'visibility',
             value: visibility,
         })
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 2,
+        })
     }
 
     soloShow() {
@@ -120,6 +126,11 @@ class Panel extends React.Component {
                     value: false,
                 })
             }
+            Act.nodeUpdate({
+                nodeKey: index,
+                attr: 'updateStatus',
+                value: 2,
+            })
         }
     }
 

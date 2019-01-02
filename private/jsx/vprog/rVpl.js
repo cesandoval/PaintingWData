@@ -74,6 +74,7 @@ class VPL extends React.Component {
             hover: '',
             hasNodeUpdated: {},
             nodeEvalStatus: {},
+            nodeInQueue: {},
         }
 
         this.checked = {
@@ -110,7 +111,7 @@ class VPL extends React.Component {
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
             nodeEvalStatus[key] = Promise.resolve(true)
-            hasNodeUpdated[key] = true
+            hasNodeUpdated[key] = false
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -181,7 +182,7 @@ class VPL extends React.Component {
             type: type,
             classOptions,
             savedData: {},
-            updateStatus: 0, // 0 = No Update, 1 = Filter Only, 2 = Full update
+            updateStatus: 2, // 0 = No Update, 1 = Filter Only, 2 = Full update
             options: {},
             inputs: { ...NodeType[type].inputs },
             filter: {
@@ -201,7 +202,7 @@ class VPL extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.newProps = newProps
-        this.geometries = Object.assign({}, newProps.map.geometries)
+        // this.geometries = Object.assign({}, newProps.map.geometries)
 
         if (newProps.refreshVoxels) {
             this.refreshVoxels = true
@@ -211,22 +212,43 @@ class VPL extends React.Component {
 
     componentDidUpdate() {
         const { hasNodeUpdated } = this.state
-        const { nodes } = this.props
+        const { nodes, map } = this.props
+        this.geometries = Object.assign({}, map.geometries)
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
         }
-        for (let nodeKey in nodes) {
-            let node = nodes[nodeKey]
-            if (
-                _.get(node, 'updateStatus', 0) > 0 &&
-                !_.get(hasNodeUpdated, nodeKey, false)
-            ) {
-                this.markNodesForUpdate(nodeKey)
-            }
-        }
+        // for (let nodeKey in nodes) {
+        //     let node = nodes[nodeKey]
+        //     if (
+        //         _.get(node, 'updateStatus', 2) > 0 &&
+        //         !_.get(hasNodeUpdated, nodeKey, false)
+        //     ) {
+        //         console.warn(
+        //             'Node changes',
+        //             nodeKey,
+        //             _.get(node, 'updateStatus', 0),
+        //             _.get(hasNodeUpdated, nodeKey, false)
+        //         )
+        //         this.markNodesForUpdate(nodeKey)
+        //     }
+        // }
         if (this.refreshVoxels) {
             this.refreshVoxels = false
-            this.computeNodes()
+            for (let nodeKey in nodes) {
+                let node = nodes[nodeKey]
+                if (
+                    _.get(node, 'updateStatus', 2) > 0 &&
+                    !_.get(hasNodeUpdated, nodeKey, false)
+                ) {
+                    console.warn(
+                        'Node changes',
+                        nodeKey,
+                        _.get(node, 'updateStatus', 0),
+                        _.get(hasNodeUpdated, nodeKey, false)
+                    )
+                    this.markNodesForUpdate(nodeKey)
+                }
+            }
         }
     }
 
@@ -467,48 +489,91 @@ class VPL extends React.Component {
         this.refreshVoxels = true // this.computeNodes()
     }
 
-    markNodesForUpdate = node => {
-        const { hasNodeUpdated } = this.state
-        const { outputs } = this.props.links
+    markNodesForUpdate = initNode => {
+        const { hasNodeUpdated, nodeInQueue } = this.state
+        const { outputs, inputs } = this.props.links
         const { nodes } = this.props
-        hasNodeUpdated[node] = true
-        // const nodesToUpdate = [node]
-        const nodesToUpdate = Object.keys(_.get(outputs, node, {}))
-        const forUpdateDebug = [node]
-        while (nodesToUpdate.length > 0) {
-            let currentNode = nodesToUpdate.shift()
+        hasNodeUpdated[initNode] = true
+        const nodeQueue = Object.keys(_.get(outputs, initNode, {}))
+        const nodesToUpdate = [initNode]
+        while (nodeQueue.length > 0) {
+            let currentNode = nodeQueue.shift()
             console.warn(currentNode, nodes[currentNode].updateStatus)
-            if (nodes[currentNode].updateStatus < 2) {
+            if (!nodesToUpdate.includes(currentNode)) {
                 hasNodeUpdated[currentNode] = true
-                forUpdateDebug.push(currentNode)
+                nodesToUpdate.push(currentNode)
+                for (let child in outputs[currentNode]) {
+                    nodeQueue.push(child)
+                }
+            }
+        }
+
+        let promises = nodesToUpdate.map(node =>
+            _.get(nodeInQueue, node, Promise.resolve(true))
+        )
+
+        Promise.all(promises).then(() => {
+            console.warn(nodesToUpdate)
+            console.warn('Begining to compute')
+            nodesToUpdate.map(currentNode =>
                 Act.nodeUpdate({
                     nodeKey: currentNode,
                     attr: 'updateStatus',
                     value: 2,
                 })
-                for (let child in outputs[currentNode]) {
-                    nodesToUpdate.push(child)
+            )
+            let shortcircuit = false
+
+            // let computeNode = this.computeDatabaseNodes()
+            let computeNode = Promise.resolve(true)
+            for (let i = 0; i < nodesToUpdate.length; i++) {
+                const { nodeKey, type } = nodes[nodesToUpdate[i]]
+                console.warn(nodeKey, type, NodeType[type])
+                if (type !== 'DATASET') {
+                    if (
+                        _.get(inputs, nodeKey) &&
+                        Object.keys(inputs[nodeKey]).length >=
+                            Object.keys(NodeType[type].inputs).length
+                    ) {
+                        console.warn(`Starting computing of ${nodeKey}`)
+                        computeNode = computeNode.then(() =>
+                            this.startNodeEvaluate(nodeKey)
+                        )
+                    } else {
+                        console.warn(`Short circuiting at ${nodeKey}`)
+                        Act.nodeUpdate({
+                            nodeKey: nodeKey,
+                            attr: 'updateStatus',
+                            value: 0,
+                        })
+                        hasNodeUpdated[nodeKey] = false
+                        shortcircuit = true
+                    }
+                } else {
+                    computeNode = computeNode.then(() =>
+                        this.computeDatabaseNode(nodeKey)
+                    )
                 }
             }
-            // if (currentNode !== node && !forUpdateDebug.includes(currentNode)) {
-            //     forUpdateDebug.push(currentNode)
-            //     Act.nodeUpdate({
-            //         nodeKey: currentNode,
-            //         attr: 'updateStatus',
-            //         value: 2,
-            //     })
-            // }
-            // if (!hasNodeUpdated[currentNode]) {
-            //     hasNodeUpdated[currentNode] = true
-            //     for (let child in outputs[node]) {
-            //         nodesToUpdate.push(child)
-            //     }
-            // }
-        }
-        console.warn('UPDATING: ' + forUpdateDebug)
-        this.setState({
-            hasNodeUpdated,
+            nodesToUpdate.map(node => {
+                console.warn(node, nodeInQueue)
+                nodeInQueue[node] = computeNode
+            })
+
+            console.warn('Queue', nodeInQueue)
+            if (shortcircuit) {
+                this.setState({
+                    hasNodeUpdated,
+                    nodeInQueue,
+                })
+            } else {
+                this.setState({
+                    nodeInQueue,
+                })
+            }
         })
+
+        this.setState({ hasNodeUpdated })
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
@@ -676,202 +741,97 @@ class VPL extends React.Component {
         })
     }
 
-    computeNodes = () => {
-        console.warn('Updating nodes')
-        const { hasNodeUpdated, nodeEvalStatus } = this.state
-        const nodes = this.props.nodes
-
-        const datasetNodes = Object.entries(nodes)
-            .filter(([, value]) => value.type == 'DATASET')
-            .map(([key]) => key)
-
+    computeDatabaseNode = datasetKey => {
         const { geometries } = this
-        // Datasets Preprocess
-        const datasetPreprocess = datasetNodes.map(datasetKey => {
-            const geometry = _.get(geometries, datasetKey) //geometries[datasetKey]
-            if (!geometry) {
-                return Promise.resolve(true)
-            }
-            hasNodeUpdated[datasetKey] = false
-            if (!this.originDatasetArray[datasetKey]) {
-                // copy original size array
-                const oriArray = geometry.geometry.attributes.originalsize.array
-                this.originDatasetArray[datasetKey] = oriArray
-            }
-
-            const oriArray = this.originDatasetArray[datasetKey]
-            geometry.geometry.attributes.size.array = oriArray
-
-            let node = _.cloneDeep(nodes[datasetKey])
-
-            if (node.filter) {
-                const { min, max } = node.filter
-                node.filter.min = min / node.filter.maxVal
-                node.filter.max = max / node.filter.maxVal
-            }
-
-            this.nodeOutput({ nodeKey: datasetKey, geometry: null })
-            nodeEvalStatus[datasetKey] = Promise.resolve(
-                this.evalArithmeticNode({
-                    node,
-                    mathFunction: arr => arr[0],
-                    options: {},
-                    geometries: [geometry],
-                })
-            )
-            return nodeEvalStatus[datasetKey]
-        })
-
-        const datasetPreprocessCallback = async () => {
-            const outputs = this.props.links.outputs
-            const inputs = this.props.links.inputs
-
-            // collect node inputs if inputs enough like node type setting
-            const nodeInputsFromNode = {}
-
-            Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
-                const toNode = nodes[toNodeKey]
-                const toNodeTypeInputs = Object.keys(
-                    _.get(toNode, 'inputs', {})
-                )
-
-                const toNodeInputs = toNodeTypeInputs.map(
-                    input => inputsSrcNode[input]
-                )
-
-                if (
-                    toNodeInputs.filter(f => f).length ==
-                    toNodeTypeInputs.length
-                ) {
-                    // console.log(toNodeKey, 'enough input')
-                    nodeInputsFromNode[toNodeKey] = inputsSrcNode
-                } else {
-                    // console.log(toNodeKey, 'less input')
-                }
-            })
-            // getting a output Tree Structure to check the order of output.
-            const nodeOutputTree = {}
-
-            const getOutputToNode = output => {
-                Object.keys(output).map(toNodeKey => {
-                    if (outputs[toNodeKey]) {
-                        output[toNodeKey] = _.clone(outputs[toNodeKey])
-                        getOutputToNode(output[toNodeKey])
-                    } else output[toNodeKey] = true
-                })
-            }
-
-            datasetNodes.map(datasetNodeKey => {
-                if (outputs[datasetNodeKey]) {
-                    const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
-                    nodeOutputTree[datasetNodeKey] = datasetNodeOutput
-                    getOutputToNode(nodeOutputTree[datasetNodeKey])
-                }
-            })
-
-            let outputOrder = [[]]
-
-            const getOutputOrder = (tree, depth) => {
-                // console.log(`S getOutputOrder(${depth})`, tree)
-                let depthNodes = []
-                let deepDepth = depth + 1
-
-                Object.entries(tree).map(([nodeKey, value]) => {
-                    if (nodeInputsFromNode[nodeKey]) {
-                        depthNodes.push(nodeKey)
-                        getOutputOrder(value, deepDepth)
-                    }
-                })
-
-                // console.log(`E getOutputOrder(${depth})`, tree, depthNodes)
-                outputOrder[depth] = outputOrder[depth]
-                    ? [...outputOrder[depth], ...depthNodes]
-                    : [...depthNodes]
-            }
-
-            Object.entries(nodeOutputTree).map(([nodeKey, value]) => {
-                outputOrder[0].push(nodeKey)
-                getOutputOrder(value, 1)
-            })
-
-            outputOrder = _.uniq(_.flatten(outputOrder))
-
-            const computeNodeThenAddVoxel = async (node, inputNodes) => {
-                const mapGeometries = this.geometries
-                const { updateStatus } = node
-                let mathFunction = NodeType[node.type].arithmetic
-                console.warn(`Node ${node.nodeKey} at status ${updateStatus}`)
-                if (updateStatus === 2) {
-                    mathFunction = NodeType[node.type].arithmetic
-                } else {
-                    // return saved info from last iteration instead
-                    const values = _.get(node, 'savedData.actualValues', [])
-                    console.warn(values)
-                    mathFunction = () => Promise.resolve(values)
-                }
-                const options = Object.assign(
-                    NodeType[node.type].options,
-                    node.options
-                )
-
-                let inputGeometries = inputNodes.map(
-                    index => mapGeometries[index]
-                )
-
-                let voxelComputed = null
-                if (
-                    inputGeometries.filter(f => f).length == inputNodes.length
-                ) {
-                    this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
-                    console.warn('Executing', node.nodeKey)
-                    voxelComputed = this.evalArithmeticNode({
-                        node,
-                        mathFunction,
-                        options,
-                        geometries: inputGeometries,
-                    })
-                }
-                console.warn('Resolving: ' + node.nodeKey)
-                return Promise.resolve(voxelComputed)
-            }
-
-            // Clears geometry of nodes who need voxels updated
-            Object.entries(nodes).map(([nodeKey, node]) => {
-                if (node.type != 'DATASET' && hasNodeUpdated[nodeKey])
-                    this.nodeOutput({ nodeKey, geometry: null })
-            })
-
-            // Updates voxels for nodes once their input's voxels have been updated
-            outputOrder.map(nodeKey => {
-                let canComplete = _.get(
-                    nodeEvalStatus,
-                    nodeKey,
-                    Promise.resolve(true)
-                )
-                // TODO make sure nodes get their voxels removed on hotload
-                if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
-                    hasNodeUpdated[nodeKey] = false
-                    const inputNodes = Object.values(
-                        nodeInputsFromNode[nodeKey]
-                    )
-                    for (let i = 0; i < inputNodes.length; i++) {
-                        canComplete = canComplete.then(
-                            () => nodeEvalStatus[inputNodes[i]]
-                        )
-                    }
-                    const node = nodes[nodeKey]
-                    nodeEvalStatus[nodeKey] = canComplete.then(() =>
-                        computeNodeThenAddVoxel(node, inputNodes)
-                    )
-                }
-            })
-
-            this.setState({ hasNodeUpdated, nodeEvalStatus })
-
-            return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+        const { nodes } = this.props
+        const geometry = _.get(geometries, datasetKey) //geometries[datasetKey]
+        if (!geometry) {
+            return Promise.resolve(true)
+        }
+        if (!this.originDatasetArray[datasetKey]) {
+            // copy original size array
+            const oriArray = geometry.geometry.attributes.originalsize.array
+            this.originDatasetArray[datasetKey] = oriArray
         }
 
-        Promise.all(datasetPreprocess).then(cb => datasetPreprocessCallback(cb))
+        const oriArray = this.originDatasetArray[datasetKey]
+        geometry.geometry.attributes.size.array = oriArray
+
+        let node = _.cloneDeep(nodes[datasetKey])
+
+        if (node.filter) {
+            const { min, max } = node.filter
+            node.filter.min = min / node.filter.maxVal
+            node.filter.max = max / node.filter.maxVal
+        }
+        return Promise.resolve(
+            this.evalArithmeticNode({
+                node,
+                mathFunction: arr => arr[0],
+                options: {},
+                geometries: [geometry],
+            })
+        )
+    }
+
+    computeNodeThenAddVoxel = async node => {
+        const { hasNodeUpdated } = this.state
+        const { inputs } = this.props.links
+        const mapGeometries = this.geometries
+        const { updateStatus } = node
+        let mathFunction = NodeType[node.type].arithmetic
+        console.warn(`Node ${node.nodeKey} at status ${updateStatus}`)
+        if (updateStatus === 1) {
+            // return saved info from last iteration instead
+            const values = _.get(node, 'savedData.actualValues', [])
+            console.warn(values)
+            mathFunction = () => Promise.resolve(values)
+        } else {
+            mathFunction = NodeType[node.type].arithmetic
+        }
+        const options = Object.assign(NodeType[node.type].options, node.options)
+
+        const inputKeys = Object.values(inputs[node.nodeKey])
+        let inputGeometries = inputKeys.map(index => mapGeometries[index])
+
+        let voxelComputed = null
+        console.warn(inputGeometries.filter(f => f), inputKeys)
+        if (inputGeometries.filter(f => f).length === inputKeys.length) {
+            console.warn('Executing', node.nodeKey)
+            voxelComputed = this.evalArithmeticNode({
+                node,
+                mathFunction,
+                options,
+                geometries: inputGeometries,
+            })
+        } else {
+            this.nodeOutput({ node: node.nodeKey, geometry: null })
+            hasNodeUpdated[node.nodeKey] = false
+            this.setState({ hasNodeUpdated })
+        }
+        console.warn('Resolving: ' + node.nodeKey)
+        return Promise.resolve(voxelComputed)
+    }
+
+    startNodeEvaluate = nodeKey => {
+        const { hasNodeUpdated, nodeEvalStatus } = this.state
+        const { nodes } = this.props
+        const { inputs } = this.props.links
+        // TODO make sure nodes get their voxels removed on hotload
+        if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
+            let canComplete = Promise.resolve(true)
+            const parents = Object.values(inputs[nodeKey])
+            for (let i = 0; i < parents.length; i++) {
+                const parent = parents[i]
+                console.warn(parent)
+                canComplete = canComplete.then(() => nodeEvalStatus[parent])
+            }
+            const node = nodes[nodeKey]
+            nodeEvalStatus[nodeKey] = canComplete.then(() =>
+                this.computeNodeThenAddVoxel(node)
+            )
+        }
+        this.setState({ nodeEvalStatus })
     }
 
     diagonal(source, target) {
@@ -919,6 +879,7 @@ class VPL extends React.Component {
         options,
         geometries,
     }) => {
+        console.warn(`Beginning to evaluate ${node.nodeKey}`)
         const savedData = _.get(node, 'savedData', {})
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
@@ -938,6 +899,9 @@ class VPL extends React.Component {
         const firstGeometry = Object.values(this.newProps.map.geometries)[0]
 
         const mathCallback = actualValues => {
+            console.warn(`Finished computing ${node.nodeKey}`)
+            const { hasNodeUpdated } = this.state
+            hasNodeUpdated[node.nodeKey] = false
             savedData['actualValues'] = actualValues
 
             let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
@@ -962,6 +926,8 @@ class VPL extends React.Component {
                 attr: 'updateStatus',
                 value: 0,
             })
+
+            this.setState({ hasNodeUpdated })
 
             if (node.remap) {
                 const dataMax = math.max(sizeArray)
@@ -1012,8 +978,6 @@ class VPL extends React.Component {
                 translation: translationArray,
             }
 
-            console.warn('Finished ' + node.nodeKey)
-
             let geometry = {
                 minMax: this.newProps.datasets.minMax,
                 addressArray: firstGeometry.addresses,
@@ -1035,9 +999,21 @@ class VPL extends React.Component {
             this.addVoxelGeometry(geometry)
         }
 
-        return Promise.resolve(
-            mathFunction(geomArray, options, savedData)
-        ).then(result => mathCallback(result))
+        return Promise.resolve(mathFunction(geomArray, options, savedData))
+            .then(result => mathCallback(result))
+            .catch(error => {
+                console.error(`Node ${node.nodeKey} failed`)
+                console.error(error)
+                const { hasNodeUpdated } = this.state
+                hasNodeUpdated[node.nodeKey] = false
+                this.refreshVoxels = false
+                this.setState({ hasNodeUpdated })
+                Act.nodeUpdate({
+                    nodeKey: node.nodeKey,
+                    attr: 'updateStatus',
+                    value: 2,
+                })
+            })
     }
 
     decideNodeType(node) {
@@ -1403,6 +1379,17 @@ class VPL extends React.Component {
 
         // let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
         // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
+        // const { hasNodeUpdated } = this.state
+        // hasNodeUpdated[geometry.layerName] = false
+        // Act.nodeUpdate({
+        //     nodeKey: geometry.layerName,
+        //     attr: 'updateStatus',
+        //     value: 0,
+        // })
+
+        // this.setState({ hasNodeUpdated })
+        console.warn('Finished ' + geometry.layerName)
+        this.nodeOutput({ nodeKey: geometry.layerName, geometry: null })
 
         const P = new PaintGraph.Pixels(
             geometry.layerName,
