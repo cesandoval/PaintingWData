@@ -898,7 +898,7 @@ class VPL extends React.Component {
                 const newScale = node.remap.max - dataMin
 
                 const remap = x =>
-                    x ? x * newScale / originScale + dataMin : 0
+                    x ? (x * newScale) / originScale + dataMin : 0
 
                 if (originScale > 0) sizeArray = sizeArray.map(remap)
             }
@@ -1087,12 +1087,7 @@ class VPL extends React.Component {
                 ))}
                 {/* Adding more nodes */}
                 {_.get(classOptions, 'increaseInput', false) && (
-                    <foreignObject
-                        transform={`translate(${2}, ${Style.plug.height / 2 +
-                            Style.topOffset +
-                            Style.plug.marginTop *
-                                (Object.entries(inputs).length - 0.5)})`}
-                    >
+                    <Button>
                         <img
                             onClick={() => {
                                 const x_index =
@@ -1112,7 +1107,33 @@ class VPL extends React.Component {
                             style={{ cursor: 'pointer' }}
                             src={svg.PLUS}
                         />
-                    </foreignObject>
+                    </Button>
+                    // <foreignObject
+                    //     transform={`translate(${2}, ${Style.plug.height / 2 +
+                    //         Style.topOffset +
+                    //         Style.plug.marginTop *
+                    //             (Object.entries(inputs).length - 0.5)})`}
+                    // >
+                    //     <img
+                    //         onClick={() => {
+                    //             const x_index =
+                    //                 Object.entries(inputs).length + 1
+                    //             Act.nodeUpdate({
+                    //                 nodeKey,
+                    //                 attr: 'inputs',
+                    //                 value: {
+                    //                     ...inputs,
+                    //                     [`Input${x_index}`]: Object.entries(
+                    //                         inputs
+                    //                     )[x_index - 2][1], //`I${x_index - 1}`,
+                    //                 },
+                    //             })
+                    //         }}
+                    //         title="add"
+                    //         style={{ cursor: 'pointer' }}
+                    //         src={svg.PLUS}
+                    //     />
+                    // </foreignObject>
                 )}
                 {/* Removing */}
                 {_.get(classOptions, 'increaseInput', false) &&
@@ -1124,7 +1145,7 @@ class VPL extends React.Component {
                                 Style.plug.marginTop *
                                     (Object.entries(inputs).length + 0.5)})`}
                         >
-                            <img
+                            <Button
                                 onClick={() => {
                                     const entries = Object.entries(inputs)
                                     const newInput = entries
@@ -1160,10 +1181,13 @@ class VPL extends React.Component {
                                     })
                                     this.setState({ refreshVoxels: true })
                                 }}
-                                title="minus"
-                                style={{ cursor: 'pointer' }}
-                                src={svg.MINUS}
-                            />
+                            >
+                                <img
+                                    title="minus"
+                                    style={{ cursor: 'pointer' }}
+                                    src={svg.MINUS}
+                                />
+                            </Button>
                         </foreignObject>
                     )}
                 <Button type="primary" icon="cloud-download" />
@@ -1378,19 +1402,18 @@ class VPL extends React.Component {
         )
         const NodeMenu = (
             <Menu onClick={({ key }) => this.addNode(key)}>
-                {Object.entries(nodeTypeGroupByClass).map(
-                    ([key, types]) =>
-                        key != 'dataset' ? (
-                            <Menu.SubMenu title={key.toUpperCase()} key={key}>
-                                {types.map(({ fullName, typeKey }) => (
-                                    <Menu.Item key={typeKey}>
-                                        {fullName + ' Node'}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        ) : (
-                            ''
-                        )
+                {Object.entries(nodeTypeGroupByClass).map(([key, types]) =>
+                    key != 'dataset' ? (
+                        <Menu.SubMenu title={key.toUpperCase()} key={key}>
+                            {types.map(({ fullName, typeKey }) => (
+                                <Menu.Item key={typeKey}>
+                                    {fullName + ' Node'}
+                                </Menu.Item>
+                            ))}
+                        </Menu.SubMenu>
+                    ) : (
+                        ''
+                    )
                 )}
             </Menu>
         )
