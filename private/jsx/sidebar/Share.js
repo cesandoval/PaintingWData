@@ -108,15 +108,25 @@ class Share extends React.Component {
     }
 
     takeSnapshot = e => {
-        console.log('takeSnapshot', e)
+        console.log('takeSnapshot', e, 9393939393939393939393939393939)
         this.setState({
             snapshotModalVisible: true,
         })
 
         const mapCanvas = document.querySelector('#mapCanvas canvas')
 
+        let resizedPreview = document.createElement('canvas2')
+        let resizedContext = resizedPreview.getContext('2d')
+        let newHeight = 1200
+        // let ratio = height / newHeight
+        let newWidth = 1146 //width / ratio
+
+        resizedContext.height = newHeight.toString()
+        resizedContext.width = newWidth.toString()
+        resizedContext.drawImage(mapCanvas, 0, 0, newWidth, newHeight)
+
         const snapshotPreviewImg = {
-            snapshotPreviewImg: mapCanvas.toDataURL('image/png'),
+            snapshotPreviewImg: resizedPreview.toDataURL('image/png'),
         }
         this.setState(snapshotPreviewImg)
 
