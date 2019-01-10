@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { Modal, Button, Menu, Dropdown } from 'antd'
 
-class Cover extends React.Component {
+export class Cover extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -120,6 +120,26 @@ class Cover extends React.Component {
 
         if (started) {
             try {
+                const validStyles = [
+                    'empty',
+                    'mapbox.streets',
+                    'mapbox.light',
+                    'mapbox.dark',
+                    'mapbox.satellite',
+                    'mapbox.streets-satellite',
+                    'mapbox.wheatpaste',
+                    'mapbox.streets-basic',
+                    'mapbox.comic',
+                    'mapbox.outdoors',
+                    'mapbox.run-bike-hike',
+                    'mapbox.pencil',
+                    'mapbox.pirates',
+                    'mapbox.emerald',
+                    'mapbox.high-contrast',
+                ]
+                if (!validStyles.includes(value)) {
+                    throw new Error('Invalid style.')
+                }
                 Act.mapSetBgStyle({ value })
                 window.refreshTiles() // call window.refreshTiles() to refresh the tiles cache.
                 window.updateTiles() // call window.updateTiles() to update the tiles.

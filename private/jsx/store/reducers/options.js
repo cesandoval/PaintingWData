@@ -31,7 +31,6 @@ export default (state = initialOptionsState, action) => {
          * @param {Number} value The value to change the opacity to.
          */
         case t.MAP_SET_OPACITY: {
-            console.log(state)
             const { value } = action
             const opacity = { opacity: value }
             return Object.assign({}, state, opacity)
@@ -45,7 +44,6 @@ export default (state = initialOptionsState, action) => {
             const knnValue = { knnValue: value }
             return Object.assign({}, state, knnValue)
         }
-
         default:
             return state
     }
