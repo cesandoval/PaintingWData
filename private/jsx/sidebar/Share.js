@@ -165,6 +165,23 @@ class Share extends React.Component {
         })
     }
 
+    forceDownload(url, fileName) {
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', url, true)
+        xhr.responseType = 'blob'
+        xhr.onload = function() {
+            var urlCreator = window.URL || window.webkitURL
+            var imageUrl = urlCreator.createObjectURL(this.response)
+            var tag = document.createElement('a')
+            tag.href = imageUrl
+            tag.download = fileName
+            document.body.appendChild(tag)
+            tag.click()
+            document.body.removeChild(tag)
+        }
+        xhr.send()
+    }
+
     snapshotDOM = ({ name, hash, image, createdAt }) => {
         const createAtDate = new Date(createdAt).toDateString()
 
@@ -187,12 +204,15 @@ class Share extends React.Component {
                             onClick={() => this.copySnapshotLink(hash)}
                         />
                         <i>
-                            <a
-                                href={`https://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`}
-                                download={`${name}-${createdAt}`}
-                            >
-                                <i className="fas fa-download" />
-                            </a>
+                            <i
+                                className="fas fa-download"
+                                onClick={() =>
+                                    this.forceDownload(
+                                        `http://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`,
+                                        `${name}-${createdAt}.jpg`
+                                    )
+                                }
+                            />
                         </i>
                     </span>
                 </div>
