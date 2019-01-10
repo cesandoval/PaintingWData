@@ -179,7 +179,7 @@ class Share extends React.Component {
             tag.click()
             document.body.removeChild(tag)
         }
-        xhr.send()
+        xhr.send() //
     }
 
     snapshotDOM = ({ name, hash, image, createdAt }) => {
