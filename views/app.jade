@@ -5,6 +5,7 @@ append content
 
     script.
         var datavoxelId = #{datavoxelId};
+        var userSignedIn = #{userSignedIn};
     div.mainWindow
         div#react
 
@@ -16,8 +17,7 @@ append content
     //- Font Awesome Version 5.1.0
     link(rel="stylesheet", href="/stylesheets/fontawesome-5.css")
     link(rel="stylesheet", href="/stylesheets/fontawesome-regular-5.css")
-
-    script(src="/javascripts/js/bootstrap-slider.js")
+    link(rel="stylesheet", href="/stylesheets/fontawesome-solid-5.css")
 
     script(id="vertexShader", type="x-shader/x-vertex").
         precision mediump float;
@@ -85,12 +85,7 @@ append content
 
         }
 
-    script.
-        var mySlider = $("input.slider").bootstrapSlider();
-        var value = mySlider.bootstrapSlider('getValue');
-
     //- script(src='/javascripts/js/three.js')
-    //- script(src='/javascripts/js/OrbitControls.js')
     #drawing
     script(src='/javascripts/js/d3.js')
     script(src='/javascripts/js/d3.parcoords.js')
@@ -216,4 +211,3 @@ append content
     script(src='/javascripts/libs/utilities.js')
     script(src='/javascripts/libs/app.js')
     script(src='/javascripts/libs/appUI.js')
-    //- script(src='/javascripts/libs/OrbitControls.js')

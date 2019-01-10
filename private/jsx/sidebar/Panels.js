@@ -82,7 +82,7 @@ class Panels extends React.Component {
                     .panelCard {
                         margin: 5px 10px;
                         width: 260px;
-                        height: 82px;
+                        height: 62px;
                         border: 1px solid #ccc;
                         border-radius: 3px;
                         cursor: pointer;
@@ -98,7 +98,7 @@ class Panels extends React.Component {
                             float: left;
                         }
 
-                        $imgSize: 70px;
+                        $imgSize: 50px;
                         .panelImg {
                             width: $imgSize;
                             height: $imgSize;

@@ -1,5 +1,6 @@
 var passport = require('passport'),
     appController = require('../controllers/appController.js'),
+    sharingController = require('../controllers/sharingController.js'),
     fileUploadController = require('../controllers/fileUploadController.js'),
     fileViewerController = require('../controllers/fileViewerController.js'),
     datalayerController = require('../controllers/datalayerController.js'),
@@ -7,7 +8,7 @@ var passport = require('passport'),
     voxelPrivacy = require('../controllers/voxelPrivacyController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
     deleteController = require('../controllers/deleteController')
-    // saveUserfile = require('../controllers/userFileController');
+    saveUserfile = require('../controllers/userFileController');
     isAuthenticatedOrPublicVoxel = require('../controllers/signupController').isAuthenticatedOrPublicVoxel,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -27,14 +28,18 @@ var passport = require('passport'),
     res.render('blog', {userSignedIn: req.isAuthenticated(), user: req.user});
   });
 
-  router.get('/blogs', function (req, res) {
-    res.render('blogs', {userSignedIn: req.isAuthenticated(), user: req.user});
+  router.get('/tutorials', function (req, res) {
+    res.render('tutorials', {userSignedIn: req.isAuthenticated(), user: req.user});
   });
 
 
   router.get('/upload', isAuthenticated, fileUploadController.show);
+  // Wenzhe
+  // Upload SHP files
   router.post('/upload', fileUploadController.upload);
 
+  // Wenzhe 
+  // Gets the information sent by the uploader and renders a map
   router.get('/uploadViewer/:id', isAuthenticated, function(req, res) {
     var stringParse = req.params.id
     var id = stringParse.substr(0, stringParse.indexOf('$$'));
@@ -44,7 +49,11 @@ var passport = require('passport'),
     console.log("Upload viewer size: " + size);    
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
+  
+  // Wenzhe
+  // Actually saves the files into datalayers
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
+
   router.post('/voxelPrivacy', isAuthenticated, voxelPrivacy.setVoxelPublicOrPrivate);
 
   router.get('/getMapData/:id', isAuthenticated, fileViewerController.serveMapData);
@@ -54,8 +63,13 @@ var passport = require('passport'),
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
+  // Wenzhe
+  // Middleware for getting datasets
+  router.get('/datasets/', isAuthenticated, datalayerController.getDatasets);
   router.get('/datasets/:id', isAuthenticated, datalayerController.showDatasets);
   router.get('/datasets/:id/:datafileId', isAuthenticated, datalayerController.showDatasets);
+  // Wenzhe
+  // Middleware for creating voxels
   router.post('/datasets', isAuthenticated, datalayerController.computeVoxels);
 
   router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
@@ -75,13 +89,24 @@ var passport = require('passport'),
   // router.get('/createProject/:id', isAuthenticated, datalayerController.createProject);
 
   // router.get('/voxels/:id', isAuthenticated, datalayerController.showVoxels);
-
-  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
+  
+  // App route
   router.get('/app/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  // Embed route
+  router.get('/embed/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.show);
+  
+  router.get('/getDatalayers/:datafileId', isAuthenticated, fileViewerController.getDatalayers);
   router.get('/datajson/all/:datavoxelId', isAuthenticatedOrPublicVoxel, appController.getDatajsons);
   router.post('/screenshot', isAuthenticated, appController.uploadScreenshot);
   router.get('/screenshot', appController.getPublicVoxelScreenshots);
   router.post('/checkScreenshot', appController.checkScreenshot);
+
+  // Sharing Routers
+  router.post('/uploadSnapshot', isAuthenticated, sharingController.uploadSnapshot);
+  router.post('/getSnapshots', sharingController.getSnapshots);
+  router.get('/getSnapshotByHash/:hash', sharingController.getSnapshotByHash);
+  router.post('/deleteSnapshots', isAuthenticated, sharingController.deleteSnapshots);
+  router.get('/snap/:hash', sharingController.show);
 
   router.get('/update/shapes', isAuthenticated, updateController.updateShapes);
 
@@ -90,6 +115,6 @@ var passport = require('passport'),
   router.post('/delete/project', deleteController.deleteDataVoxel);
 
   // These are save/load files for a map's state, i.e. how the user exited it.
-  // router.post('/saveuserfile/', isAuthenticated, saveUserfile.save);
-  // router.get('/importuserfile/:datavoxelId', isAuthenticated, saveUserfile.import);
+  router.post('/saveUserfile/', isAuthenticated, saveUserfile.save);
+  router.get('/getUserfile/:datavoxelId', saveUserfile.get);
 module.exports = router;

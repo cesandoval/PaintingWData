@@ -2,16 +2,14 @@
 module.exports = function(sequelize, DataTypes) {
   var Datauserfile = sequelize.define('Datauserfile', {
     //insert attributes here
-    state: DataTypes.JSON, //the hash type!
-    userId: DataTypes.INTEGER,
+    //data saved from the client, usually a React.js state
+    data: DataTypes.JSON, 
     datavoxelId: DataTypes.INTEGER,
-    voxelId: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
-        Datauserfile.belongsTo(models.Datavoxel, {foreignKey: 'voxelId'});
-        Datauserfile.belongsTo(models.User, {foreignKey: 'userId'});
+        Datauserfile.belongsTo(models.Datavoxel, {foreignKey: 'datavoxelId'});
       }
     }
   });
