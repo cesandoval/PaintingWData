@@ -208,7 +208,9 @@ class Share extends React.Component {
                                 className="fas fa-download"
                                 onClick={() =>
                                     this.forceDownload(
-                                        `http://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`,
+                                        `${
+                                            location.protocol
+                                        }//s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`,
                                         `${name}-${createdAt}.jpg`
                                     )
                                 }
