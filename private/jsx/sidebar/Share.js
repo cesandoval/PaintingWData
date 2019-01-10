@@ -165,6 +165,23 @@ class Share extends React.Component {
         })
     }
 
+    forceDownload(url, fileName) {
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', url, true)
+        xhr.responseType = 'blob'
+        xhr.onload = function() {
+            var urlCreator = window.URL || window.webkitURL
+            var imageUrl = urlCreator.createObjectURL(this.response)
+            var tag = document.createElement('a')
+            tag.href = imageUrl
+            tag.download = fileName
+            document.body.appendChild(tag)
+            tag.click()
+            document.body.removeChild(tag)
+        }
+        xhr.send()
+    }
+
     snapshotDOM = ({ name, hash, image, createdAt }) => {
         const createAtDate = new Date(createdAt).toDateString()
 
@@ -186,6 +203,17 @@ class Share extends React.Component {
                             className="fas fa-link"
                             onClick={() => this.copySnapshotLink(hash)}
                         />
+                        <i>
+                            <i
+                                className="fas fa-download"
+                                onClick={() =>
+                                    this.forceDownload(
+                                        `http://s3.amazonaws.com/data-voxel-snapshots/${hash}.jpg`,
+                                        `${name}-${createdAt}.jpg`
+                                    )
+                                }
+                            />
+                        </i>
                     </span>
                 </div>
                 <div className="desc">
@@ -231,6 +259,10 @@ class Share extends React.Component {
 
                                 > i + i {
                                     margin-left: 12px;
+                                }
+
+                                a {
+                                    color: inherit !important;
                                 }
                             }
                         }
@@ -318,6 +350,7 @@ class Share extends React.Component {
                             id="snapshotTakingName"
                             addonBefore="Name"
                             defaultValue=""
+                            placeholder="Snapshot Name"
                         />
                     </div>
                 </Modal>
