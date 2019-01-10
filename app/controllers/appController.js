@@ -140,7 +140,10 @@ module.exports.getDatajsons = function(req, res){
 			{model: Model.Datavoxel}, 
 			{model: Model.Datafile, 
 				include: [
-					{model: Model.Datalayer, limit: 1}
+          {model: Model.Datalayer, limit: 1, }
+            // include: [
+            //   {model: Model.Datadbf, limit: 1}
+            // ]}
 				]
 			}
 		]
