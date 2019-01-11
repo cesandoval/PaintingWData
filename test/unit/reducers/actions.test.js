@@ -41,14 +41,14 @@ describe('reducer actions', () => {
     }
 
     // importUserfile
-    it('should importUserfile', () => {
-        const payload = {}
-        const expectedAction = {
-            type: t.IMPORT_USERFILE,
-            ...payload,
-        }
-        expect(Act.importUserfile(payload)).toEqual(expectedAction)
-    })
+    // it('should importUserfile', () => {
+    //     const payload = {}
+    //     const expectedAction = {
+    //         type: t.IMPORT_USERFILE,
+    //         ...payload,
+    //     }
+    //     expect(Act.importUserfile(payload)).toEqual(expectedAction)
+    // })
     // TODO: importDatasets (error: d3)
     it('should create an action to add a dataset', () => {
         const payload = {}
@@ -223,17 +223,17 @@ describe('reducer actions', () => {
 
         expect(Act.setRefreshVoxels(payload)).toEqual(expectedAction)
     })
-    // saveUserFile
-    it('should saveUserFile', () => {
-        // Create a mock function for fetch
-        global.fetch = jest.fn(() => new Promise(resolve => resolve()))
+    // // saveUserFile
+    // it('should saveUserFile', () => {
+    //     // Create a mock function for fetch
+    //     global.fetch = jest.fn(() => new Promise(resolve => resolve()))
 
-        const payload = {}
-        const expectedAction = {
-            type: t.SAVE_USERFILE,
-            ...payload,
-        }
+    //     const payload = {}
+    //     const expectedAction = {
+    //         type: t.SAVE_USERFILE,
+    //         ...payload,
+    //     }
 
-        expect(Act.saveUserFile(payload)).toEqual(expectedAction)
-    })
+    //     expect(Act.saveUserFile(payload)).toEqual(expectedAction)
+    // })
 })

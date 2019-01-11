@@ -1,7 +1,7 @@
 import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
-import { Controls } from '../../../private/jsx/sidebarN/Controls'
+import { Controls } from '../../../private/jsx/sidebar/Controls'
 
 Enzyme.configure({ adapter: new Adapter() })
 

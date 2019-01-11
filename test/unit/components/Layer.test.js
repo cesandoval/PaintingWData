@@ -7,7 +7,7 @@ TODO: Tests to implement.
 import React from 'react'
 import Enzyme, { shallow } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-15'
-import { Layer } from '../../../private/jsx/sidebarN/Layer'
+import { Layer } from '../../../private/jsx/sidebar/Layer'
 
 Enzyme.configure({ adapter: new Adapter() })
 
