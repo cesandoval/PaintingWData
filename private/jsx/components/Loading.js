@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Icon, Spin } from 'antd'
 
-class Loading extends React.Component {
+export class Loading extends React.Component {
     constructor(props) {
         super(props)
     }

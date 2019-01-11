@@ -4,7 +4,8 @@ import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 // import * as Act from '../store/actions'
 
-class Table extends React.Component {
+// Use named export for unconnected component (for tests)
+export class Table extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -14,6 +15,9 @@ class Table extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
+        /*eslint-disable*/
+        debugger;
+        /*eslint-enable*/
         this.props = newProps
         const firstRowHeaders = Object.keys(this.props.tableData[0])
         const columns = firstRowHeaders.map(function(headerValue) {
@@ -34,7 +38,7 @@ class Table extends React.Component {
             },
         })
         return (
-            <div>
+            <div className="chartTable">
                 <ReactTable
                     data={this.state.tableData}
                     columns={this.state.columns}
@@ -55,6 +59,7 @@ class Table extends React.Component {
     }
 }
 
+// Use default export for the connected component (for app)
 export default connect(s => ({
     tableData: s.datasets.tableData,
 }))(Table)
