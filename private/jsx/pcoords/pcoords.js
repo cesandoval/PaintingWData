@@ -29,15 +29,15 @@ export class PCoords extends React.Component {
             Object.keys(this.props.geometries).length !== 0 &&
             this.props.geometries.constructor === Object
         ) {
-            // TODO: should be renamed to 'datasetNodes'
-            let nodeLayers = Object.values(nprops.nodes).filter(
+            const datasetNodes = Object.values(nprops.nodes).filter(
                 f => f.type == 'DATASET'
             )
-            let visibleNodes = nodeLayers.filter(l => l.visibility)
+            const visibleNodes = datasetNodes.filter(l => l.visibility)
+            const visibleLayersLength = visibleNodes.length
 
-            this.setState({ visibleLayers: visibleNodes.length })
+            this.setState({ visibleLayers: visibleLayersLength })
             if (
-                visibleNodes.length != this.state.visibleLayers &&
+                visibleLayersLength != this.state.visibleLayers &&
                 this.state.started
             ) {
                 let visibleNames = {}
@@ -123,12 +123,11 @@ export class PCoords extends React.Component {
                     pcContainer.removeChild(pcContainer.firstChild)
                 }
 
-                this.setState({ visibleLayers: visibleNodes.length })
+                this.setState({ visibleLayers: visibleLayersLength })
 
                 // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
                 // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
-                let numLayers = visibleNodes.length
-                // TODO: should be reuse, so rename numLayer to visibleLayersLength
+                let numLayers = visibleLayersLength
 
                 let dictBuild = Array(maxVoxels)
                 for (let j = 0; j < numLayers; j++) {

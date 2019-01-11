@@ -1,11 +1,10 @@
 // /*global datavoxelId*/
 import React from 'react'
 // import * as Act from './store/actions.js'
-import Sidebar from './sidebarN/Sidebar' // origin is sidebar/sidebar
-// import Options from './options/options'
-import Map from './mapN/map'
+import Sidebar from './sidebar/Sidebar' // origin is sidebar/sidebar
+import Map from './map/map'
 
-import Loading from './utils/Loading'
+import Loading from './components/Loading'
 
 /**
  * Summary. The main meat of the mapping service.
@@ -26,7 +25,6 @@ export default class App extends React.Component {
      * The Datauserfile model, in `app/models/datauserfile.js`, is where the
      * necessary saved states are stored.
      *
-     * TODO: When the user closes out, automatically save.
      */
     componentDidMount() {
         /*
@@ -60,12 +58,27 @@ export default class App extends React.Component {
      * Summary. Renders the three components in App: Options, Sidebar, and Map.
      */
     render() {
+        const isEmbedUrl = window.location.pathname.split('/')[1] == 'embed'
+
         return (
             <div className="mapMain">
                 <Loading />
                 {/* <Options /> */}
                 <Sidebar />
                 <Map />
+                <style jsx global>{`
+                    .sidebar,
+                    #PCoords,
+                    #Cover,
+                    body > nav {
+                        display: ${isEmbedUrl ? 'none' : ''};
+                    }
+
+                    #mapCanvas {
+                        width: ${isEmbedUrl ? '100vw !important' : ''};
+                        top: ${isEmbedUrl ? '0 !important' : ''};
+                    }
+                `}</style>
             </div>
         )
     }

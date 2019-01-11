@@ -32,6 +32,8 @@ module.exports = {
       'semi': false,
     }],
 
+    'vue/no-side-effects-in-computed-properties': 'off',
+
     'vue/max-attributes-per-line': [
       2,
       {

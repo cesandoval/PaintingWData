@@ -2,8 +2,6 @@
  * @author PaintingWithData
  * Contains all of the type constants. To be exported to reducer methods.
  */
-// app
-export const IMPORT_USERFILE = 'IMPORT_USERFILE'
 
 // datasets
 export const IMPORT_DATASETS = 'IMPORT_DATASETS'
@@ -30,5 +28,8 @@ export const LINK_REMOVE = 'LINK_REMOVE'
 export const SET_ACTIVENODE = 'SET_ACTIVENODE'
 export const SET_LOADING = 'SET_LOADING'
 export const SET_PANELSHOW = 'SET_PANELSHOW'
-export const SAVE_USERFILE = 'SAVE_USERFILE'
 export const SET_REFRESHVOXELS = 'SET_REFRESHVOXELS'
+
+// memory
+export const LOAD_MEMORY = 'LOAD_MEMORY'
+export const SET_MODIFIED = 'SET_MODIFIED'

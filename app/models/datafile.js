@@ -33,6 +33,17 @@ module.exports = function(sequelize, DataTypes) {
       geometryType: {
         type: DataTypes.STRING,
       },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      public: {
+        type: DataTypes.BOOLEAN
+      },
+      userFileName: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
   }, {
 
     classMethods: {
@@ -41,6 +52,7 @@ module.exports = function(sequelize, DataTypes) {
         Datafile.hasMany(models.Datalayer, {foreignKey: 'datafileId'});
         Datafile.hasMany(models.Datadbf, {foreignKey: 'datafileId'});
         Datafile.belongsToMany(models.Datavoxel, {through: 'Datafilevoxel'});
+        Datafile.hasMany(models.Datafiletag, {foreignKey: 'datafileId'});
 
       }
     }

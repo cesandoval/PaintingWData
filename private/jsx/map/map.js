@@ -1,6 +1,3 @@
-/* global project */
-/* global datavoxelId */
-
 import React from 'react'
 import * as Act from '../store/actions'
 import { connect } from 'react-redux'
@@ -8,8 +5,8 @@ import PCoords from '../pcoords/pcoords'
 import VPL from '../vprog/rVpl'
 import Charts from '../charts/charts'
 import Table from '../charts/table'
-import { DropdownButton, MenuItem } from 'react-bootstrap'
-import Button from 'react-bootstrap/lib/Button'
+import Cover from './Cover'
+
 /**
  * The Map component. Contains a draggable, zoomable map, with voxels as concentric circles
  * representing the data points. This can be used to correlate two variables, such as home
@@ -63,6 +60,7 @@ class MapCanvas extends React.Component {
             })
             // Now we know that the map is initialized.
             this.setState({ mapInited: true })
+            Act.setLoading({ value: false })
         }
 
         // Initializes the sidebar options.
@@ -79,6 +77,7 @@ class MapCanvas extends React.Component {
         // }
     }
 
+    /* 
     exportSVG(geoms) {
         // let layer = Object.values(this.props.layers)[0]
         let centroid = this.props.map.camera.position
@@ -110,7 +109,7 @@ class MapCanvas extends React.Component {
         let textFile = window.URL.createObjectURL(data)
 
         let link = document.createElement('a')
-        link.setAttribute('download', 'projectExport.'.concat(exportType))
+        link.setAttribute('download', 'voxelExport.'.concat(exportType))
         link.href = textFile
         document.body.appendChild(link)
         link.click()
@@ -148,67 +147,18 @@ class MapCanvas extends React.Component {
             }
         }
     }
-
+    
     getScreenShot() {
         window.getScreenShot()
     }
-
-    /**
-     * Zooms the map back to its original location.
-     */
+    
+    // Zooms the map back to its original location.
     zoomMap() {
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()
     }
-    //TODO: Pass in the appropriate parameters!
-    saveFile() {
-        //Gets the voxel ID.
-        /*
-        var temp = window.location.toString().split('/')
-        var voxelId = parseInt(temp[temp.length - 1])
-        */
-        //This is horrible coding, copying from exportSVG... lolrip
-        let _centroid = this.props.map.camera.position
-        let bbox = this.props.bbox[0]
-        let projectedMin = project([bbox[0][0], bbox[0][1]])
-        let projectedMax = project([bbox[2][0], bbox[2][1]])
-
-        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
-        let _bounds = [
-            Math.abs(projectedMax.x + _translation[0]),
-            Math.abs(projectedMax.z + (0 - projectedMin.z)),
-        ]
-        //Save everything in one JSON -- pass variable "info" to the request handler.
-        var _info = {
-            // It's just the "map" attribute that we have to fix. "options" and "vpl" correspond to the correct properties.
-            map: {
-                translation: _translation,
-                centroid: _centroid,
-                bounds: _bounds,
-                /*
-                instance: {
-                  // ThreeJS Graph Object
-                  renderFunc,
-                },
-                loaded: false,
-                geometries: {
-                  [layer$key]: {
-
-                  },
-                },
-                // layers: [], // ???
-                */
-            },
-            options: this.props.options,
-            vpl: this.props.vpl,
-        }
-        Act.saveUserFile({
-            userId: 1, //replace with user Id
-            voxelId: datavoxelId,
-            info: _info,
-        })
-    }
+    */
 
     render() {
         const panelShow = this.props.panelShow
@@ -217,17 +167,18 @@ class MapCanvas extends React.Component {
             : ''
 
         const PCoordsShow =
-            panelShow == 'PCoords' || activeNodeType == 'DATASET'
+            panelShow == 'PCoords' ||
+            (panelShow == 'VPL' && activeNodeType == 'DATASET')
 
         return (
             <div>
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '75vw',
+                        width: 'calc(95vw - 280px)',
                         position: 'fixed',
                         overflow: 'hidden',
-                        top: '15vh',
+                        top: '170px',
                         right: '2.5vw',
                         zIndex: '100',
                         opacity: 0.9,
@@ -240,11 +191,11 @@ class MapCanvas extends React.Component {
                 <div
                     style={{
                         backgroundColor: 'white',
-                        width: '80vw',
+                        width: 'calc(100vw - 280px)',
                         height: '300px',
                         position: 'fixed',
                         overflow: 'hidden',
-                        bottom: '30px',
+                        bottom: '0px',
                         right: '0',
                         zIndex: '100',
                         opacity: 0.5,
@@ -266,70 +217,17 @@ class MapCanvas extends React.Component {
                         opacity: ${PCoordsShow ? 1 : 0};
                     }
                 `}</style>
-                <div
-                    style={{
-                        position: 'absolute',
-                        width: '80vw',
-                        right: '0px',
-                    }}
-                >
-                    <div
-                        style={{
-                            position: 'absolute',
-                            left: '40px',
-                            top: '20px',
-                            display: panelShow == 'VPL' ? 'none' : '',
-                        }}
-                        className="map-menu"
-                    >
-                        <DropdownButton title={'Export'} id={`export-dropdown`}>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('SVG')
-                                }}
-                            >
-                                SVG
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('GeoJSON')
-                                }}
-                            >
-                                GeoJSON
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    this.exportMap('SHP')
-                                }}
-                            >
-                                SHP
-                            </MenuItem>
-                            <MenuItem onClick={this.getScreenShot}>
-                                IMAGE
-                            </MenuItem>
-                        </DropdownButton>
 
-                        {/* <Button
-                            id={`save-userfile`}
-                            onClick={() => {
-                                this.saveFile()
-                            }}
-                        >
-                            Save Userfile
-                        </Button> */}
-                    </div>
-                    <Button
-                        id="zoomShow"
-                        className="buttons zoomText btn buttonsText"
-                        onClick={() => this.zoomMap()}
-                    >
-                        {' '}
-                        Zoom to Map{' '}
-                    </Button>
+                <div id="Cover">
+                    <Cover />
                 </div>
-                <div id="mapCanvas" />
-                <div id="pivot" />
-                <div id="grid" />
+                <style jsx>{`
+                    #Cover {
+                        width: 100%;
+                        height: 100%;
+                    }
+                `}</style>
+                <div className="map" id="mapCanvas" />
             </div>
         )
     }

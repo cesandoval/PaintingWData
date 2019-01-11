@@ -57,7 +57,10 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
             }).then(function(){
                 Model.User.findById(result[4].user.id).then(function(user) {
                     // send user an email
+                    // Wenzhe - this is the callback for vue
+                    // Callback for project creation......
                     mailer.sendVoxelEmail(user.email, user.id);
+                    // res.send({completed: true})
                 }).then(function(){
                     callback({name: datavoxel.voxelname});
                 })    
@@ -65,6 +68,57 @@ function startRasterVoxelWorker(datalayerIds, req, callback){
         })
     });
 };
+
+function pushJSON(req, callback) {
+    var datafileId = req.body.datafileId
+    var geomType = null
+    var layer = {
+        name: req.body.layername, 
+        filePath: req.body.targetPath, 
+        datafileId: req.body.datafileId
+    }
+    async.waterfall([
+        // queryRepeatedLayer(file, layer, epsg, fields, req, geomType, callback),
+        async.apply(fileViewerHelper.queryRepeatedLayer, null, layer, 4326, null, req, geomType),
+        fileViewerHelper.saveJSON,
+        fileViewerHelper.getCentroidBbox,
+        // function(file, thingsArray, callback){
+        //     //   fs_extra.remove(file, err => {
+        //     //       if (err) {
+        //     //         console.log("Error cleaning local directory: ", file);
+        //     //         console.log(err, err.stack);
+        //     //         callback(err);
+        //     //       }
+        //     //       else{
+        //     //          callback(null);
+        //     //       }
+        //     // })
+        //     // console.log(file)
+        //     // console.log(thingsArray)
+        //     callback(null, []);         
+        // },
+        // pushDataRaster
+    ], function (err, result) {
+        if (err) {
+            callback( new Error(err))
+            return
+        }
+        // Send Layer complete user email
+        Model.User.findById(req.user.id).then(function(user){
+            // Wenzhe - this is the callback for vue
+            // This will be the callback to vue.
+            // res.send({completed: true})
+            console.log('sending email! ------')
+            mailer.sendLayerEmail(user.email ,req.user.id);
+        },
+        function(err){
+            console.log(err)
+        }
+        ).then(function(){
+            callback({uploaded: true});
+        });       
+    });
+}
 
 function startShapeWorker(req, callback) {
     var id = req.user.id;
@@ -98,12 +152,18 @@ function startShapeWorker(req, callback) {
     ], function (err, result) {
         // Send Layer complete user email
         Model.User.findById(req.user.id).then(function(user){
+            // Wenzhe - this is the callback for vue
+            // This will be the callback to vue.
+            // res.send({completed: true})
+            console.log('sending email! ------')
             mailer.sendLayerEmail(user.email ,req.user.id);
         },
         function(err){
             console.log(err)
         }
-        );       
+        ).then(function(){
+            callback({uploaded: true});
+        });       
     });
 }
 
@@ -193,7 +253,7 @@ function createDatavoxel(bbox, props, req, callback){
     newDatavoxel.bbox = currBbox;
     newDatavoxel.processed = false;
     newDatavoxel.voxelId = req.voxelID;
-    newDatavoxel.public = false;
+    newDatavoxel.public = req.body.public;
     newDatavoxel.save().then(function(datavoxel){
         props.forEach(function(prop, index){
             prop.datavoxelId = datavoxel.id;
@@ -625,3 +685,4 @@ function pushDatajson(dataJSONs, objProps, req, rowsCols, allIndices, ptDistance
 
 module.exports.processDatalayer = startRasterVoxelWorker;
 module.exports.pushShapes = startShapeWorker;
+module.exports.pushJSON = pushJSON

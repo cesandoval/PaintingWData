@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 /**
  * The sub-component of "Layers"; it depicts a single layer.
  */
-class Layer extends React.Component {
+export class Layer extends React.Component {
     constructor(props) {
         super(props)
         /**
@@ -85,7 +85,8 @@ class Layer extends React.Component {
                                     onChange={this.handleCheckedEvent}
                                     name={this.props.name}
                                     style={{
-                                        '-webkit-appearance': 'checkbox',
+                                        appearance: 'checkbox',
+                                        WebkitAppearance: 'checkbox',
                                         height: '17px',
                                         width: '16px',
                                         margin: '0px 5px',

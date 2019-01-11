@@ -1,5 +1,4 @@
 /* global project */
-/* global datavoxelId */
 
 import React from 'react'
 import * as Act from '../store/actions'
@@ -98,54 +97,6 @@ export class Cover extends React.Component {
         PaintGraph.Pixels.zoomExtent(this.props.map, this.props.bbox)
         window.refreshTiles()
         window.updateTiles()
-    }
-    //TODO: Pass in the appropriate parameters!
-    saveFile() {
-        //Gets the voxel ID.
-        /*
-        var temp = window.location.toString().split('/')
-        var voxelId = parseInt(temp[temp.length - 1])
-        */
-        //This is horrible coding, copying from exportSVG... lolrip
-        let _centroid = this.props.map.camera.position
-        let bbox = this.props.bbox[0]
-        let projectedMin = project([bbox[0][0], bbox[0][1]])
-        let projectedMax = project([bbox[2][0], bbox[2][1]])
-
-        let _translation = [0 - projectedMin.x, 0 - projectedMax.z]
-        let _bounds = [
-            Math.abs(projectedMax.x + _translation[0]),
-            Math.abs(projectedMax.z + (0 - projectedMin.z)),
-        ]
-        //Save everything in one JSON -- pass variable "info" to the request handler.
-        var _info = {
-            // It's just the "map" attribute that we have to fix. "options" and "vpl" correspond to the correct properties.
-            map: {
-                translation: _translation,
-                centroid: _centroid,
-                bounds: _bounds,
-                /*
-                instance: {
-                  // ThreeJS Graph Object
-                  renderFunc,
-                },
-                loaded: false,
-                geometries: {
-                  [layer$key]: {
-
-                  },
-                },
-                // layers: [], // ???
-                */
-            },
-            options: this.props.options,
-            vpl: this.props.vpl,
-        }
-        Act.saveUserFile({
-            userId: 1, //replace with user Id
-            voxelId: datavoxelId,
-            info: _info,
-        })
     }
 
     setExportModalVisible = exportModalVisible => {
