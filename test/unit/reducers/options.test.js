@@ -1,9 +1,9 @@
 import reducer from '../../../private/jsx/store/reducers/options.js'
 import * as t from '../../../private/jsx/store/types'
 
-const DEFAULT_BGSTYLE = 'mapbox.light'
-const DEFAULT_OPACITY = 50
-const DEFAULT_KNN = 0
+// const DEFAULT_BGSTYLE = 'mapbox.light'
+// const DEFAULT_OPACITY = 50
+// const DEFAULT_KNN = 0
 
 describe('MAP_SET_BGSTYLE', () => {
     it("Should return whatever's passed in, or the default on invalid input", () => {
