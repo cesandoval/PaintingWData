@@ -75,7 +75,7 @@ export default class Pixels {
                 : 0.00000001
         this.layerZHeight =
             Math.log(graph.controls.object.position.y) / 10000 > 0
-                ? (Math.log(graph.controls.object.position.y) / 10000) * 2
+                ? Math.log(graph.controls.object.position.y) / 10000 * 2
                 : 0.00000001
 
         if (!vLang) {
@@ -135,7 +135,7 @@ export default class Pixels {
         radius = diag.length() * 0.5
         // Compute offset needed to move the camera back that much needed to center AABB (approx: better if from BB front face)
         let offset =
-            radius / Math.tan((Math.PI / 180.0) * canvas.camera.fov * 0.5)
+            radius / Math.tan(Math.PI / 180.0 * canvas.camera.fov * 0.5)
         // We calculate newPos based on the above offset.
         let newPos = new THREE.Vector3(testCenter.x, offset, testCenter.z)
         // Sets the camera position and target to newPos.
@@ -196,7 +196,7 @@ export default class Pixels {
             var tileset = img ? mapboxStyle : 'mapbox.terrain-rgb' //
             var res = img ? '@2x.png' : '@2x.pngraw'
             // Calculates the server to download from given the coordinates.
-            var serverIndex = 2 * (coords[1] % 2) + (coords[2] % 2)
+            var serverIndex = 2 * (coords[1] % 2) + coords[2] % 2
             var server = ['a', 'b', 'c', 'd'][serverIndex]
             // Returns an assembled URL that we can now use.
             return (
@@ -316,7 +316,7 @@ export default class Pixels {
                     function(err, pixels) {
                         // usually a water tile-- fill with 0 elevation
                         if (err) pixels = null
-                        var parserIndex = 2 * (coords[1] % 2) + (coords[2] % 2)
+                        var parserIndex = 2 * (coords[1] % 2) + coords[2] % 2
                         parserPool[parserIndex].postMessage([
                             pixels,
                             coords,
