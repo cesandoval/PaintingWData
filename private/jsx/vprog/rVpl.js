@@ -46,6 +46,12 @@ const style = {
             plugName: 14,
         },
     },
+    iconButton: {
+        padding: 0,
+        border: 'none',
+        background: 'none',
+        cursor: 'pointer',
+    },
 }
 
 function observer(label = '') {
@@ -898,7 +904,7 @@ class VPL extends React.Component {
                 const newScale = node.remap.max - dataMin
 
                 const remap = x =>
-                    x ? (x * newScale) / originScale + dataMin : 0
+                    x ? x * newScale / originScale + dataMin : 0
 
                 if (originScale > 0) sizeArray = sizeArray.map(remap)
             }
@@ -1087,8 +1093,13 @@ class VPL extends React.Component {
                 ))}
                 {/* Adding more nodes */}
                 {_.get(classOptions, 'increaseInput', false) && (
-                    <Button>
-                        <img
+                    <foreignObject
+                        transform={`translate(${2}, ${Style.plug.height / 2 +
+                            Style.topOffset +
+                            Style.plug.marginTop *
+                                (Object.entries(inputs).length - 0.5)})`}
+                    >
+                        <Button
                             onClick={() => {
                                 const x_index =
                                     Object.entries(inputs).length + 1
@@ -1103,37 +1114,11 @@ class VPL extends React.Component {
                                     },
                                 })
                             }}
-                            title="add"
-                            style={{ cursor: 'pointer' }}
-                            src={svg.PLUS}
-                        />
-                    </Button>
-                    // <foreignObject
-                    //     transform={`translate(${2}, ${Style.plug.height / 2 +
-                    //         Style.topOffset +
-                    //         Style.plug.marginTop *
-                    //             (Object.entries(inputs).length - 0.5)})`}
-                    // >
-                    //     <img
-                    //         onClick={() => {
-                    //             const x_index =
-                    //                 Object.entries(inputs).length + 1
-                    //             Act.nodeUpdate({
-                    //                 nodeKey,
-                    //                 attr: 'inputs',
-                    //                 value: {
-                    //                     ...inputs,
-                    //                     [`Input${x_index}`]: Object.entries(
-                    //                         inputs
-                    //                     )[x_index - 2][1], //`I${x_index - 1}`,
-                    //                 },
-                    //             })
-                    //         }}
-                    //         title="add"
-                    //         style={{ cursor: 'pointer' }}
-                    //         src={svg.PLUS}
-                    //     />
-                    // </foreignObject>
+                            style={style.iconButton}
+                        >
+                            <img title="add" src={svg.PLUS} />
+                        </Button>
+                    </foreignObject>
                 )}
                 {/* Removing */}
                 {_.get(classOptions, 'increaseInput', false) &&
@@ -1181,12 +1166,9 @@ class VPL extends React.Component {
                                     })
                                     this.setState({ refreshVoxels: true })
                                 }}
+                                style={style.iconButton}
                             >
-                                <img
-                                    title="minus"
-                                    style={{ cursor: 'pointer' }}
-                                    src={svg.MINUS}
-                                />
+                                <img title="minus" src={svg.MINUS} />
                             </Button>
                         </foreignObject>
                     )}
@@ -1402,18 +1384,19 @@ class VPL extends React.Component {
         )
         const NodeMenu = (
             <Menu onClick={({ key }) => this.addNode(key)}>
-                {Object.entries(nodeTypeGroupByClass).map(([key, types]) =>
-                    key != 'dataset' ? (
-                        <Menu.SubMenu title={key.toUpperCase()} key={key}>
-                            {types.map(({ fullName, typeKey }) => (
-                                <Menu.Item key={typeKey}>
-                                    {fullName + ' Node'}
-                                </Menu.Item>
-                            ))}
-                        </Menu.SubMenu>
-                    ) : (
-                        ''
-                    )
+                {Object.entries(nodeTypeGroupByClass).map(
+                    ([key, types]) =>
+                        key != 'dataset' ? (
+                            <Menu.SubMenu title={key.toUpperCase()} key={key}>
+                                {types.map(({ fullName, typeKey }) => (
+                                    <Menu.Item key={typeKey}>
+                                        {fullName + ' Node'}
+                                    </Menu.Item>
+                                ))}
+                            </Menu.SubMenu>
+                        ) : (
+                            ''
+                        )
                 )}
             </Menu>
         )

@@ -357,7 +357,7 @@ export default class Graph {
      * Updates the aspect ratio of the camera, and the size of the renderer.
      */
     onResize() {
-        this.camera.aspect = (window.innerWidth * 0.799) / window.innerHeight
+        this.camera.aspect = window.innerWidth * 0.799 / window.innerHeight
         this.camera.updateProjectionMatrix()
         this.renderer.setSize(
             Math.floor(window.innerWidth * 0.799),
