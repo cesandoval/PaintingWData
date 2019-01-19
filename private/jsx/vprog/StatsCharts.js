@@ -17,10 +17,10 @@ const paddingTop = { paddingTop: '10%' }
 const fullWidth = { width: '100%' }
 const textAlignCenter = { textAlign: 'center' }
 
-const exportComponent = nodeKey => {
+export const exportComponent = nodeKey => {
     const svg = document.getElementById(`bf-${nodeKey}`)
     console.log(svg.childNodes)
-    saveSvgAsPng(svg.children[0].children[0], {
+    saveSvgAsPng(svg.children[0].children[0], nodeKey, {
         encoderOptions: 1,
     })
     return nodeKey
@@ -79,7 +79,7 @@ export const bestFit = node => {
 export const kCluster = (node, barsShown, callback) => {
     const bar = _.get(node, 'savedData.bar', []).slice()
     if (!barsShown) {
-        barsShown = Math.floor(bar.length / 10)
+        barsShown = bar.length
     }
     const filteredBar = bar
         .sort((a, b) => a[1] - b[1])
