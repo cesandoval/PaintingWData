@@ -293,6 +293,12 @@ class PCoords extends React.Component {
                     attr: 'filter',
                     value: filter,
                 })
+
+                Act.nodeUpdate({
+                    nodeKey: layer.layerKey,
+                    attr: 'updateStatus',
+                    value: 1,
+                })
             }
         }
 
