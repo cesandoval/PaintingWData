@@ -185,9 +185,10 @@ export default (state = initialState, action) => {
             const { srcNode, toNode } = action
 
             const toPlug = links.outputs[srcNode][toNode]
-
             delete links.outputs[srcNode][toNode]
-            delete links.inputs[toNode][toPlug]
+            if (_.get(links.inputs, `${toNode}.${toPlug}`)) {
+                delete links.inputs[toNode][toPlug]
+            }
 
             return update(state, {
                 links: {

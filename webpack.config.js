@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     // These are the "entry points" to our application.
@@ -143,12 +144,22 @@ if (process.env.NODE_ENV === 'production') {
                 NODE_ENV: '"production"',
             },
         }),
-        new webpack.optimize.UglifyJsPlugin({
+        new UglifyJsPlugin({
+            test: /\.js($|\?)/i,
             sourceMap: true,
-            compress: {
+            uglifyOptions: {
+              mangle: {
+                keep_fnames: true,
+              },
+              compress: {
                 warnings: false,
+              },
+              output: {
+                beautify: false,
+              },
             },
-        }),
+          }),
+    
         new webpack.LoaderOptionsPlugin({
             minimize: true,
         }),

@@ -3,11 +3,9 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
-// import _ from 'lodash'
-// import { VictoryLine, VictoryChart, VictoryTheme } from 'victory'
-// import RegressionGraph from './regressionGraph'
 import * as NodeType from './nodeTypes'
 import * as svg from './svg/svg'
+import { bestFit, kCluster } from './StatsCharts'
 
 class Panel extends React.Component {
     constructor(props) {
@@ -18,6 +16,7 @@ class Panel extends React.Component {
             node: {},
             visible: true,
             color: this.props.color,
+            graphOptions: {},
         }
 
         this.changeColor = this.changeColor.bind(this)
@@ -26,43 +25,22 @@ class Panel extends React.Component {
         this.deleteNode = this.deleteNode.bind(this)
     }
 
-    componentWillReceiveProps(props) {
-        this.props = props
-        // console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
-        // Get geometry
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            const node = this.props.nodes[this.props.index]
 
-        const node = this.props.nodes[this.props.index]
+            let pixels = this.props.geometries[this.props.index]
 
-        let pixels = this.props.geometries[this.props.index]
+            if (pixels) {
+                pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+            }
 
-        if (pixels) {
-            pixels.material.uniforms.show.value = node.visibility // TODO: refactor
-
-            /*
             this.setState({
-                visible: pixels.material.uniforms.show.value == 1,
-                color:
-                    '#' +
-                    pixels.material.uniforms.startColor.value.getHexString(),
-            })
-            */
-        }
-
-        this.setState({
-            node,
-            visible: node.visibility,
-            color: node.color,
-        })
-
-        /*
-        if (pixels.material) {
-            this.setState({
-                visible: (pixels.material.uniforms.show.value == 1),
-                color1: '#' + pixels.material.uniforms.startColor.value.getHexString(),
-                color2: '#' + pixels.material.uniforms.endColor.value.getHexString(),
+                node,
+                visible: node.visibility,
+                color: node.color,
             })
         }
-        */
     }
 
     componentDidMount() {
@@ -81,16 +59,6 @@ class Panel extends React.Component {
             attr: 'color',
             value: e.target.value,
         })
-
-        /* // using two color options for each layer
-        if (e.target.name == 'color1'){
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-        } else {
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
-        */
-
-        // if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
     }
 
     toggleVisibility() {
@@ -114,6 +82,12 @@ class Panel extends React.Component {
             nodeKey: this.props.index,
             attr: 'visibility',
             value: visibility,
+        })
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 2,
         })
     }
 
@@ -151,6 +125,11 @@ class Panel extends React.Component {
                     value: false,
                 })
             }
+            Act.nodeUpdate({
+                nodeKey: index,
+                attr: 'updateStatus',
+                value: 2,
+            })
         }
     }
 
@@ -168,6 +147,12 @@ class Panel extends React.Component {
             value: filter,
         })
 
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
+        })
+
         this.props.updated(this.props.index)
     }
 
@@ -181,6 +166,12 @@ class Panel extends React.Component {
             value: remap,
         })
 
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
+        })
+
         this.props.updated(this.props.index)
     }
 
@@ -188,7 +179,7 @@ class Panel extends React.Component {
         const { index, updated } = this.props
         const margin0px = { margin: '0px' }
 
-        const node = this.state.node
+        const { graphOptions, node } = this.state
         const filterMax = node.filter ? node.filter.max : 1
         const filterMin = node.filter ? node.filter.min : 0
         const filterDefault = [filterMin, filterMax]
@@ -231,6 +222,20 @@ class Panel extends React.Component {
         const hasFilter = NodeType[type].class !== 'logic'
 
         const isStatistics = NodeType[type].class === 'statistics'
+        const isLinearRegression = type === 'LIN_REG'
+        const isKCluster = type === 'K_CLUSTER'
+
+        let graph
+        if (isLinearRegression) {
+            graph = bestFit(node)
+        } else if (isKCluster) {
+            const barsShown = _.get(graphOptions, 'barsShown')
+            const callback = value => {
+                graphOptions.barsShown = value
+                this.setState({ graphOptions })
+            }
+            graph = kCluster(node, barsShown, callback)
+        }
 
         return (
             <g>
@@ -294,20 +299,56 @@ class Panel extends React.Component {
                                 />
                             </Popover>
                         )}
+                        {isStatistics && (
+                            <img
+                                onClick={() => {
+                                    Act.nodeUpdate({
+                                        nodeKey: index,
+                                        attr: 'updateStatus',
+                                        value: 2,
+                                    })
+                                    updated()
+                                }}
+                                title="retrain"
+                                style={margin0px}
+                                src={svg.NEXT}
+                            />
+                        )}
+                        {isLinearRegression && (
+                            <Popover
+                                placement="bottom"
+                                title="Best Fit Line"
+                                content={graph}
+                                trigger="click"
+                            >
+                                <img
+                                    title="best fit"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
+                        )}
+                        {isKCluster && (
+                            <Popover
+                                placement="bottom"
+                                title="K Cluster Distribution"
+                                content={graph}
+                                trigger="click"
+                            >
+                                <img
+                                    title="cluster distribution"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
+                        )}
+
                         {this.props.type !== 'DATASET' && (
                             <img
                                 onClick={this.deleteNode}
                                 title="delete"
                                 style={margin0px}
                                 src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA0ODcuNiA0ODcuNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNDg3LjYgNDg3LjY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNNDU0LjUsNzUuM0gzNTIuMXYtMjRjMC0yOC4zLTIzLTUxLjMtNTEuMy01MS4zaC0xMTRjLTI4LjMsMC01MS4zLDIzLTUxLjMsNTEuM3YyMy45SDMzLjFjLTkuOSwwLTE4LDguMS0xOCwxOCAgICBjMCw5LjksOC4xLDE4LDE4LDE4aDI3LjJWNDI1YzAsMzQuNSwyOC4xLDYyLjYsNjIuNiw2Mi42aDI0MS45YzM0LjUsMCw2Mi42LTI4LjEsNjIuNi02Mi42VjE2OC41YzAtOS45LTguMS0xOC0xOC0xOCAgICBjLTkuOSwwLTE4LDguMS0xOCwxOFY0MjVjMCwxNC42LTExLjksMjYuNi0yNi42LDI2LjZoLTI0MmMtMTQuNiwwLTI2LjYtMTEuOS0yNi42LTI2LjZWMTExLjNoMzU4LjNjMTAsMCwxOC04LjEsMTgtMTggICAgUzQ2NC40LDc1LjMsNDU0LjUsNzUuM3ogTTMxNi4xLDc1LjJIMTcxLjVWNTEuM2MwLTguNCw2LjktMTUuMywxNS4zLTE1LjNoMTE0YzguNSwwLDE1LjMsNi45LDE1LjMsMTUuM1Y3NS4yeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTE2Ny4yLDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NDEuNGMwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4di00MS40QzE4NS4yLDE1OC42LDE3Ny4xLDE1MC41LDE2Ny4yLDE1MC41ICAgIHoiIGZpbGw9IiMwMDAwMDAiLz4KCTwvZz4KPC9nPgo8Zz4KCTxnPgoJCTxwYXRoIGQ9Ik0xNjcuMiwyNjMuNGMtOS45LDAtMTgsOC4xLTE4LDE4djExMi45YzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMThWMjgxLjQgICAgQzE4NS4yLDI3MS41LDE3Ny4xLDI2My40LDE2Ny4yLDI2My40eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTI0My44LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2MTIyLjJjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOFYxNjguNSAgICBDMjYxLjgsMTU4LjYsMjUzLjcsMTUwLjUsMjQzLjgsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMjQzLjgsMzQ0LjJjLTkuOSwwLTE4LDguMS0xOCwxOHYzMi4xYzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMTh2LTMyLjFDMjYxLjgsMzUyLjMsMjUzLjcsMzQ0LjIsMjQzLjgsMzQ0LjIgICAgeiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgoJPGc+CgkJPHBhdGggZD0iTTMyMC40LDE1MC41Yy05LjksMC0xOCw4LjEtMTgsMTh2NjNjMCw5LjksOC4xLDE4LDE4LDE4YzkuOSwwLDE4LTguMSwxOC0xOHYtNjNDMzM4LjQsMTU4LjYsMzMwLjMsMTUwLjUsMzIwLjQsMTUwLjV6IiBmaWxsPSIjMDAwMDAwIi8+Cgk8L2c+CjwvZz4KPGc+Cgk8Zz4KCQk8cGF0aCBkPSJNMzIwLjQsMjg1Yy05LjksMC0xOCw4LjEtMTgsMTh2OTEuM2MwLDkuOSw4LjEsMTgsMTgsMThjOS45LDAsMTgtOC4xLDE4LTE4VjMwM0MzMzguNCwyOTMuMSwzMzAuNCwyODUsMzIwLjQsMjg1eiIgZmlsbD0iIzAwMDAwMCIvPgoJPC9nPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo="
-                            />
-                        )}
-                        {isStatistics && (
-                            <img
-                                onClick={() => updated(index)}
-                                title="retrain"
-                                style={margin0px}
-                                src={svg.NEXT}
                             />
                         )}
                     </div>
