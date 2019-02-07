@@ -6,8 +6,9 @@ var passport = require('passport'),
     updateController = require('../controllers/updateController'),
     voxelPrivacy = require('../controllers/voxelPrivacyController'),
     isAuthenticated = require('../controllers/signupController').isAuthenticated,
-    deleteController = require('../controllers/deleteController')
-    saveUserfile = require('../controllers/userFileController');
+    deleteController = require('../controllers/deleteController'),
+    saveUserfile = require('../controllers/userFileController'),
+    editController = require('../controllers/editController'),
     isAuthenticatedOrPublicVoxel = require('../controllers/signupController').isAuthenticatedOrPublicVoxel,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -105,4 +106,8 @@ var passport = require('passport'),
   // These are save/load files for a map's state, i.e. how the user exited it.
   router.post('/saveUserfile/', isAuthenticated, saveUserfile.save);
   router.get('/getUserfile/:datavoxelId', saveUserfile.get);
+
+  // Routes to edit datafiles and datavoxels
+  router.post('/editUserfile/', isAuthenticated, editController.editUserfile)
+  router.post('/editVoxelName/', isAuthenticated, editController.editVoxelName)
 module.exports = router;
