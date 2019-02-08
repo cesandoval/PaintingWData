@@ -55,7 +55,7 @@ module.exports.editVoxelName = function(req, res){
         updatedAt: updatedAt
     }, {
         where: {
-            id: voxelId
+            voxelId: voxelId
         }
     }).then(function(result){
         res.json({voxelId:voxelId, updated: true});
