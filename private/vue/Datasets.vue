@@ -687,6 +687,7 @@ export default {
     },
 
     handleRemove(file) {
+      console.log(file)
       this.file = null
     },
     beforeUpload(file) {

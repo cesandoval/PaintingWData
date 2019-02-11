@@ -44,6 +44,7 @@ module.exports.editUserfile = function(req, res){
  */
 module.exports.editVoxelName = function(req, res){
     // voxel to be updated
+    let id = req.body.id
     let voxelId = req.body.voxelId
     let voxelName = req.body.userFileName
     let updatedAt = req.body.updatedAt
@@ -55,7 +56,8 @@ module.exports.editVoxelName = function(req, res){
         updatedAt: updatedAt
     }, {
         where: {
-            voxelId: voxelId
+            // voxelId: voxelId
+            id: id
         }
     }).then(function(result){
         res.json({voxelId:voxelId, updated: true});

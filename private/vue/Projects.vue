@@ -694,6 +694,7 @@ export default {
     },
 
     rowSelection() {
+      /* eslint-disable */
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.currentProperties = selectedRows.map(item => item.name)
