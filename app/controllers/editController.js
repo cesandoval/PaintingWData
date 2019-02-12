@@ -50,9 +50,8 @@ module.exports.editVoxelName = function(req, res){
     let updatedAt = req.body.updatedAt
     
     // update relevant datavoxel
-    Model.Datafile.update({
+    Model.Datavoxel.update({
         voxelname: voxelName,
-        description: '',
         updatedAt: updatedAt
     }, {
         where: {
