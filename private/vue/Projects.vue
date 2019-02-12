@@ -959,30 +959,26 @@ export default {
     },
     handleEditSubmit(e) {
       e.preventDefault()
-      console.log('userFileName', this.editTitle)
-      console.log('updatedAt', this.editTime)
-      console.log('voxelId', this.selectedItem.voxelId)
-      console.log('id', this.selectedItem.id)
 
-      let formData = new FormData()
-      formData.append('userFileName', this.editTitle)
-      formData.append('updatedAt', this.editTime)
-      formData.append('voxelId', this.selectedItem.voxelId)
-      formData.append('id', this.selectedItem.id)
+      let formData = {
+        userFileName: this.editTitle,
+        updatedAt: this.editTime,
+        voxelId: this.selectedItem.voxelId,
+        id: this.selectedItem.id,
+      }
 
-      // TO DO: call middleware API below
+      console.log(formData)
+      this.$http.post('/editVoxelName', formData).then(response => {
+        console.log('submitted', response) //req
 
-      // this.$http.post('/***', formData).then(response => {
-      //   console.log('submitted', response) //req
-
-      //   if (response.data.completed) {
-      //     document.location.reload()
-      //   } else {
-      //     this.errorMessage = response.data.alert
-      //     this.file = null
-      //     this.submitting = false
-      //   }
-      // })
+        if (response.data.updated) {
+          document.location.reload()
+        } else {
+          this.errorMessage = response.data.alert
+          this.file = null
+          this.submitting = false
+        }
+      })
     },
   },
 }
@@ -1551,3 +1547,4 @@ a {
 <style>
 @import '~leaflet/dist/leaflet.css';
 </style>
+>

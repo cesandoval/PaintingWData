@@ -52,7 +52,7 @@ module.exports.editVoxelName = function(req, res){
     // update relevant datavoxel
     Model.Datafile.update({
         voxelname: voxelName,
-        description: description,
+        description: '',
         updatedAt: updatedAt
     }, {
         where: {

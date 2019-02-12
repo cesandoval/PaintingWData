@@ -707,11 +707,6 @@ export default {
       this.errorMessage = ''
 
       const { file } = this
-      console.log('file', file)
-      console.log('dataset_name', this.formName)
-      console.log('dataset_desc', this.formDesc)
-      console.log('dataset_public', this.formPublicity)
-      console.log('tags', this.tags)
 
       let formData = new FormData()
       formData.append('file', file)
@@ -723,8 +718,6 @@ export default {
       formData.append('dataset_desc', this.formDesc)
       formData.append('dataset_public', this.formPublicity)
       formData.append('dataset_tags', this.tags)
-
-      console.log('formData', formData, formData.getAll('file'))
 
       this.$http.post('/upload', formData).then(response => {
         console.log('submitted', response) //req
@@ -743,32 +736,30 @@ export default {
 
     handleEditSubmit(e) {
       e.preventDefault()
-      console.log('userFileName', this.editTitle)
-      console.log('description', this.editDesc)
-      console.log('updatedAt', this.editTime)
-      console.log('id', this.selectedItem.id)
+      this.submitting = true
 
-      let formData = new FormData()
-      formData.append('userFileName', this.editTitle)
-      formData.append('description', this.editDesc)
-      formData.append('updatedAt', this.editTime)
-      formData.append('id', this.selectedItem.id)
+      let formData = {
+        userFileName: this.editTitle,
+        description: this.editDesc,
+        updatedAt: this.editTime,
+        id: this.selectedItem.id,
+      }
 
-      console.log('formData', formData, formData.getAll('file'))
+      console.log('formData', formData)
 
       // TO DO: call middleware API below
 
-      // this.$http.post('/***', formData).then(response => {
-      //   console.log('submitted', response) //req
+      this.$http.post('/editUserfile', formData).then(response => {
+        console.log('submitted', response) //req
 
-      //   if (response.data.completed) {
-      //     document.location.reload()
-      //   } else {
-      //     this.errorMessage = response.data.alert
-      //     this.file = null
-      //     this.submitting = false
-      //   }
-      // })
+        if (response.data.updated) {
+          document.location.reload()
+        } else {
+          this.errorMessage = response.data.alert
+          this.file = null
+          this.submitting = false
+        }
+      })
     },
 
     startUploading() {
