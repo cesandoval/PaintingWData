@@ -44,7 +44,8 @@ var Datavoxel = sequelize.define('Datavoxel', {
         // Datavoxel.hasMany(models.Datafilevoxel, {foreignKey: 'DatavoxelId'});
         Datavoxel.belongsToMany(models.Datafile, {through: 'Datafilevoxel'});
         Datavoxel.hasMany(models.Datajson, {foreignKey: 'datavoxelId'})
-        Datavoxel.hasOne(models.Datavoxelimage)//, {foreignKey: 'test'})
+        Datavoxel.hasOne(models.Datavoxelimage),//, {foreignKey: 'test'})
+        Datavoxel.hasMany(models.Datasnapshot, {foreignKey: 'datavoxelId'})
       }
     }
   });

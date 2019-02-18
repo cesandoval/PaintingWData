@@ -1,4 +1,5 @@
 import axios from 'axios'
+let crypto = require('crypto')
 /**
  * Summary. (use period)
  *
@@ -158,17 +159,69 @@ export default class Graph {
             document.body.appendChild(link)
             link.click()
         }
+        function scaleImage(
+            srcwidth,
+            srcheight,
+            targetwidth,
+            targetheight,
+            fLetterBox
+        ) {
+            var result = { width: 0, height: 0, fScaleToTargetWidth: true }
+
+            // scale to the target width
+            var scaleX1 = targetwidth
+            var scaleY1 = srcheight * targetwidth / srcwidth
+
+            // scale to the target height
+            var scaleX2 = srcwidth * targetheight / srcheight
+            var scaleY2 = targetheight
+
+            // now figure out which one we should use
+            var fScaleOnWidth = scaleX2 > targetwidth
+            if (fScaleOnWidth) {
+                fScaleOnWidth = fLetterBox
+            } else {
+                fScaleOnWidth = !fLetterBox
+            }
+
+            if (fScaleOnWidth) {
+                result.width = Math.floor(scaleX1)
+                result.height = Math.floor(scaleY1)
+                result.fScaleToTargetWidth = true
+            } else {
+                result.width = Math.floor(scaleX2)
+                result.height = Math.floor(scaleY2)
+                result.fScaleToTargetWidth = false
+            }
+            result.targetleft = Math.floor((targetwidth - result.width) / 2)
+            result.targettop = Math.floor((targetheight - result.height) / 2)
+
+            return result
+        }
+
         /**
          *
-         * @alias window~screenshotToS3
+         * @alias window~takeSnaptshot
          * @param {Number} datavoxelId
+         * @param {Boolean} snapshot
          */
-        window.screenshotToS3 = datavoxelId => {
+        window.takeSnaptshot = (datavoxelId, snapshot = false, name = '') => {
             let resizedCanvas = document.createElement('canvas')
             let resizedContext = resizedCanvas.getContext('2d')
-            let newHeight = 550
-            let ratio = height / newHeight
-            let newWidth = width / ratio
+            let newHeight, newWidth, newDims
+            if (snapshot) {
+                // newWidth = 1146
+                // let ratio = width / newWidth
+                // newHeight = height / ratio
+                newDims = scaleImage(width, height, 1146, 600)
+                console.log(newDims)
+                newWidth = newDims.width
+                newHeight = newDims.height
+            } else {
+                newHeight = 550
+                let ratio = height / newHeight
+                newWidth = width / ratio
+            }
 
             resizedCanvas.height = newHeight.toString()
             resizedCanvas.width = newWidth.toString()
@@ -179,6 +232,22 @@ export default class Graph {
                 newWidth,
                 newHeight
             )
+
+            if (snapshot) {
+                let imageData = resizedContext.getImageData(
+                    newDims.targetleft,
+                    Math.abs(newDims.targettop),
+                    1146,
+                    600
+                )
+                resizedCanvas.width = 1146
+                resizedCanvas.height = 600
+                var ctx1 = resizedCanvas.getContext('2d')
+                ctx1.rect(0, 0, 100, 100)
+                ctx1.fillStyle = 'white'
+                ctx1.fill()
+                ctx1.putImageData(imageData, 0, 0)
+            }
 
             let resizedPreview = document.createElement('canvas')
             let resizedContextPreview = resizedPreview.getContext('2d')
@@ -200,21 +269,34 @@ export default class Graph {
 
             let img = resizedCanvas.toDataURL('image/jpeg')
 
-            let request = { id: datavoxelId, data: img, preview: preview }
+            if (snapshot) {
+                let hash = crypto.randomBytes(8).toString('hex')
+                return uploadSnapshot(
+                    {
+                        id: datavoxelId,
+                        data: img,
+                        hash: hash,
+                        name: name,
+                    },
+                    '/uploadSnapshot'
+                )
+            } else {
+                return uploadSnapshot(
+                    { id: datavoxelId, data: img, preview: preview },
+                    '/screenshot'
+                )
+            }
+        }
 
-            axios({
+        const uploadSnapshot = (request, endpoint) => {
+            return axios({
                 method: 'post',
-                url: '/screenshot',
+                url: endpoint,
                 data: request,
+            }).then(function(response) {
+                //handle success
+                console.log(response)
             })
-                .then(function(response) {
-                    //handle success
-                    console.log(response)
-                })
-                .catch(function(response) {
-                    //handle error
-                    console.log(response)
-                })
         }
 
         return renderer

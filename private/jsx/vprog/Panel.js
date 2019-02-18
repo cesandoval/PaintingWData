@@ -3,8 +3,9 @@ import * as Act from '../store/actions'
 import { connect } from 'react-redux'
 
 import { Popover, Slider } from 'antd'
-
 import * as NodeType from './nodeTypes'
+import * as svg from './svg/svg'
+import { bestFit, kCluster } from './StatsCharts'
 
 class Panel extends React.Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class Panel extends React.Component {
             node: {},
             visible: true,
             color: this.props.color,
+            graphOptions: {},
         }
 
         this.changeColor = this.changeColor.bind(this)
@@ -23,43 +25,22 @@ class Panel extends React.Component {
         this.deleteNode = this.deleteNode.bind(this)
     }
 
-    componentWillReceiveProps(props) {
-        this.props = props
-        // console.log('[Panel] componentWillReceiveProps()', this.props.index, props)
-        // Get geometry
+    componentDidUpdate(prevProps) {
+        if (prevProps !== this.props) {
+            const node = this.props.nodes[this.props.index]
 
-        const node = this.props.nodes[this.props.index]
+            let pixels = this.props.geometries[this.props.index]
 
-        let pixels = this.props.geometries[this.props.index]
+            if (pixels) {
+                pixels.material.uniforms.show.value = node.visibility // TODO: refactor
+            }
 
-        if (pixels) {
-            pixels.material.uniforms.show.value = node.visibility // TODO: refactor
-
-            /*
             this.setState({
-                visible: pixels.material.uniforms.show.value == 1,
-                color:
-                    '#' +
-                    pixels.material.uniforms.startColor.value.getHexString(),
-            })
-            */
-        }
-
-        this.setState({
-            node,
-            visible: node.visibility,
-            color: node.color,
-        })
-
-        /*
-        if (pixels.material) {
-            this.setState({
-                visible: (pixels.material.uniforms.show.value == 1),
-                color1: '#' + pixels.material.uniforms.startColor.value.getHexString(),
-                color2: '#' + pixels.material.uniforms.endColor.value.getHexString(),
+                node,
+                visible: node.visibility,
+                color: node.color,
             })
         }
-        */
     }
 
     componentDidMount() {
@@ -78,16 +59,6 @@ class Panel extends React.Component {
             attr: 'color',
             value: e.target.value,
         })
-
-        /* // using two color options for each layer
-        if (e.target.name == 'color1'){
-            pixels.material.uniforms.startColor.value.set(e.target.value)
-        } else {
-            pixels.material.uniforms.endColor.value.set(e.target.value)
-        }
-        */
-
-        // if (window.renderSec) window.renderSec(0.5, 'vpl layer color')
     }
 
     toggleVisibility() {
@@ -111,6 +82,12 @@ class Panel extends React.Component {
             nodeKey: this.props.index,
             attr: 'visibility',
             value: visibility,
+        })
+
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 2,
         })
     }
 
@@ -148,6 +125,11 @@ class Panel extends React.Component {
                     value: false,
                 })
             }
+            Act.nodeUpdate({
+                nodeKey: index,
+                attr: 'updateStatus',
+                value: 2,
+            })
         }
     }
 
@@ -165,7 +147,13 @@ class Panel extends React.Component {
             value: filter,
         })
 
-        this.props.updated()
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
+        })
+
+        this.props.updated(this.props.index)
     }
 
     changeRemapMax = remapMax => {
@@ -178,13 +166,20 @@ class Panel extends React.Component {
             value: remap,
         })
 
-        this.props.updated()
+        Act.nodeUpdate({
+            nodeKey: this.props.index,
+            attr: 'updateStatus',
+            value: 1,
+        })
+
+        this.props.updated(this.props.index)
     }
 
     render() {
+        const { index, updated } = this.props
         const margin0px = { margin: '0px' }
 
-        const node = this.state.node
+        const { graphOptions, node } = this.state
         const filterMax = node.filter ? node.filter.max : 1
         const filterMin = node.filter ? node.filter.min : 0
         const filterDefault = [filterMin, filterMax]
@@ -222,8 +217,25 @@ class Panel extends React.Component {
                 />
             </div>
         )
+
         // const hasFilter = type !== 'DATASET' && NodeType[type].class !== 'logic'
         const hasFilter = NodeType[type].class !== 'logic'
+
+        const isStatistics = NodeType[type].class === 'statistics'
+        const isLinearRegression = type === 'LIN_REG'
+        const isKCluster = type === 'K_CLUSTER'
+
+        let graph
+        if (isLinearRegression) {
+            graph = bestFit(node)
+        } else if (isKCluster) {
+            const barsShown = _.get(graphOptions, 'barsShown')
+            const callback = value => {
+                graphOptions.barsShown = value
+                this.setState({ graphOptions })
+            }
+            graph = kCluster(node, barsShown, callback)
+        }
 
         return (
             <g>
@@ -287,6 +299,50 @@ class Panel extends React.Component {
                                 />
                             </Popover>
                         )}
+                        {isStatistics && (
+                            <img
+                                onClick={() => {
+                                    Act.nodeUpdate({
+                                        nodeKey: index,
+                                        attr: 'updateStatus',
+                                        value: 2,
+                                    })
+                                    updated()
+                                }}
+                                title="retrain"
+                                style={margin0px}
+                                src={svg.NEXT}
+                            />
+                        )}
+                        {isLinearRegression && (
+                            <Popover
+                                placement="bottom"
+                                title="Best Fit Line"
+                                content={graph}
+                                trigger="click"
+                            >
+                                <img
+                                    title="best fit"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
+                        )}
+                        {isKCluster && (
+                            <Popover
+                                placement="bottom"
+                                title="K Cluster Distribution"
+                                content={graph}
+                                trigger="click"
+                            >
+                                <img
+                                    title="cluster distribution"
+                                    style={margin0px}
+                                    src={svg.GRAPH}
+                                />
+                            </Popover>
+                        )}
+
                         {this.props.type !== 'DATASET' && (
                             <img
                                 onClick={this.deleteNode}

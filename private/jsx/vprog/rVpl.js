@@ -15,6 +15,7 @@ import { Popover, Button, Menu, Dropdown } from 'antd'
 import hashKey from '@/utils/hashKey'
 
 import * as NodeType from './nodeTypes'
+import * as svg from './svg/svg'
 
 // import testFile from '../store/test_userFile.json'
 
@@ -45,6 +46,12 @@ const style = {
             plugName: 14,
         },
     },
+    iconButton: {
+        padding: 0,
+        border: 'none',
+        background: 'none',
+        cursor: 'pointer',
+    },
 }
 
 function observer(label = '') {
@@ -59,8 +66,6 @@ class VPL extends React.Component {
     constructor(props) {
         super(props)
 
-        this.newProps = {}
-
         this.state = {
             tempLink: {
                 from: { x: 50, y: 50 },
@@ -71,6 +76,10 @@ class VPL extends React.Component {
                 y: 0,
             },
             hover: '',
+            hasNodeUpdated: {},
+            nodeEvalStatus: {},
+            nodeInQueue: {},
+            refreshVoxels: false,
         }
 
         this.checked = {
@@ -85,6 +94,7 @@ class VPL extends React.Component {
 
     // create the dataset nodes if they're not exitst.
     initDatasetNode = () => {
+        const { nodeEvalStatus, hasNodeUpdated } = this.state
         const layers = this.props.layers
         console.log('initDatasetNode()', layers, this.props.nodes)
 
@@ -105,6 +115,8 @@ class VPL extends React.Component {
 
             datasetNode.filter = { max, min, maxVal: max, minVal: min }
 
+            nodeEvalStatus[key] = Promise.resolve(true)
+            hasNodeUpdated[key] = false
             Act.nodeAdd({
                 nodeKey: key,
                 node: datasetNode,
@@ -113,7 +125,7 @@ class VPL extends React.Component {
 
         const datasetsLoaded = !_.isEmpty(layers)
         if (datasetsLoaded) this.checkMemory()
-
+        this.setState({ nodeEvalStatus, hasNodeUpdated })
         return datasetsLoaded
     }
 
@@ -162,10 +174,22 @@ class VPL extends React.Component {
                 y: 0,
             }
         }
+
+        // Options for node inherit to class.
+        const classOptions = {
+            increaseInput:
+                NodeType[type] !== NodeType.DATASET &&
+                NodeType[type] !== NodeType.LOG,
+        }
+
         const newNode = {
             name: type,
             type: type,
+            classOptions,
+            savedData: {},
+            updateStatus: 2, // 0 = No Update, 1 = Filter Only, 2 = Full update
             options: {},
+            inputs: { ...NodeType[type].inputs },
             filter: {
                 max: 1,
                 min: 0,
@@ -181,24 +205,28 @@ class VPL extends React.Component {
         return newNode
     }
 
-    componentWillReceiveProps(newProps) {
-        this.newProps = newProps
-        this.geometries = Object.assign({}, newProps.map.geometries)
-
+    componentDidUpdate() {
+        const { hasNodeUpdated, refreshVoxels } = this.state
+        const { nodes, map } = this.props
+        this.geometries = Object.assign({}, map.geometries)
         if (!this.checked.datasetNode) {
             this.checked.datasetNode = this.initDatasetNode()
         }
-
-        if (newProps.refreshVoxels) {
-            this.refreshVoxels = true
-            Act.setRefreshVoxels({ value: false })
+        if (refreshVoxels) {
+            this.setState({ refreshVoxels: false })
+            for (let nodeKey in nodes) {
+                let node = nodes[nodeKey]
+                if (
+                    _.get(node, 'updateStatus', 2) > 0 &&
+                    !_.get(hasNodeUpdated, nodeKey, false)
+                ) {
+                    this.markNodesForUpdate(nodeKey)
+                }
+            }
         }
-    }
-
-    componentDidUpdate() {
-        if (this.refreshVoxels) {
-            this.refreshVoxels = false
-            this.computeNodes()
+        if (this.props.refreshVoxels && !refreshVoxels) {
+            Act.setRefreshVoxels({ value: false })
+            this.setState({ refreshVoxels: true })
         }
     }
 
@@ -346,7 +374,7 @@ class VPL extends React.Component {
                 }
             })
             .do(() => {
-                this.refreshVoxels = true // this.computeNodes()
+                this.setState({ refreshVoxels: true })
             })
             .subscribe(observer('linkNode$'))
 
@@ -414,47 +442,120 @@ class VPL extends React.Component {
     }
 
     panning = ({ x, y }) => {
-        // console.log('panning()', { x, y })
         const panning = { x, y }
 
         this.setState({ panning })
     }
 
     moveNode = ({ nodeKey, newPosition }) => {
-        // console.log('moveNode()', {nodeKey, newPosition})
-
         Act.nodeUpdate({ nodeKey, attr: 'position', value: newPosition })
     }
 
     deleteNode = nodeKey => {
-        console.log(`deleteNode(${nodeKey})`)
+        const { outputs } = this.props.links
 
-        /*
-        Action.vlangRemoveNode(nodeKey)
-        // force remove the node geometry on the map.
-        Action.mapRemoveGeometry(nodeKey)
-        */
+        Object.keys(_.get(outputs, nodeKey, [])).map(node =>
+            Act.nodeUpdate({
+                nodeKey: node,
+                attr: 'updateStatus',
+                value: 2,
+            })
+        )
 
         Act.nodeRemove({ nodeKey })
 
-        this.refreshVoxels = true // this.computeNodes()
+        this.setState({ refreshVoxels: true })
+    }
+
+    markNodesForUpdate = initNode => {
+        const { hasNodeUpdated, nodeInQueue } = this.state
+        const { outputs, inputs } = this.props.links
+        const { nodes } = this.props
+        hasNodeUpdated[initNode] = true
+        const nodeQueue = Object.keys(_.get(outputs, initNode, {}))
+        const nodesToUpdate = [initNode]
+        while (nodeQueue.length > 0) {
+            let currentNode = nodeQueue.shift()
+            if (!nodesToUpdate.includes(currentNode)) {
+                hasNodeUpdated[currentNode] = true
+                nodesToUpdate.push(currentNode)
+                for (let child in outputs[currentNode]) {
+                    nodeQueue.push(child)
+                }
+            }
+        }
+
+        let promises = nodesToUpdate.map(node =>
+            _.get(nodeInQueue, node, Promise.resolve(true))
+        )
+
+        Promise.all(promises).then(() => {
+            nodesToUpdate.map(currentNode =>
+                Act.nodeUpdate({
+                    nodeKey: currentNode,
+                    attr: 'updateStatus',
+                    value: 2,
+                })
+            )
+            let shortcircuit = false
+
+            let nodeEvaluating = Promise.resolve(true)
+            for (let i = 0; i < nodesToUpdate.length; i++) {
+                const { nodeKey, type } = nodes[nodesToUpdate[i]]
+                if (type !== 'DATASET') {
+                    if (
+                        _.get(inputs, nodeKey) &&
+                        Object.keys(inputs[nodeKey]).length >=
+                            Object.keys(NodeType[type].inputs).length
+                    ) {
+                        nodeEvaluating = nodeEvaluating.then(() =>
+                            this.computeNode(nodeKey)
+                        )
+                    } else {
+                        this.nodeOutput({
+                            nodeKey: nodeKey,
+                            geometry: null,
+                        })
+                        hasNodeUpdated[nodeKey] = false
+                        shortcircuit = true
+                    }
+                } else {
+                    nodeEvaluating = nodeEvaluating.then(() =>
+                        this.computeDatabaseNode(nodeKey)
+                    )
+                }
+            }
+            nodesToUpdate.map(node => {
+                nodeInQueue[node] = nodeEvaluating
+            })
+
+            if (shortcircuit) {
+                this.setState({
+                    hasNodeUpdated,
+                    nodeInQueue,
+                })
+            } else {
+                this.setState({
+                    nodeInQueue,
+                })
+            }
+        })
+
+        this.setState({ hasNodeUpdated })
     }
 
     linkNode = ({ srcNode, toNode, toInput }) => {
-        console.log('linkNode()', srcNode, toNode, toInput)
-
-        // const inputs = {
-        //   [toNode]: {
-        //     [toInput]: srcNode,
-        //   },
-        // }
-        // const outputs = {
-        //   [srcNode]: {
-        //     [toNode]: toInput,
-        //   },
-        // }
-
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'savedData',
+            value: {},
+        })
         Act.linkAdd({ srcNode, toNode, toInput })
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'updateStatus',
+            value: 2,
+        })
     }
 
     updateNodeOption = (nodeKey, attr, value) => {
@@ -466,8 +567,13 @@ class VPL extends React.Component {
             )
 
             Act.nodeOptionUpdate({ nodeKey, attr, value: newValue })
+            Act.nodeUpdate({
+                nodeKey: nodeKey,
+                attr: 'updateStatus',
+                value: 2,
+            })
 
-            this.refreshVoxels = true // this.computeNodes()
+            this.setState({ refreshVoxels: true })
         }
     }
 
@@ -477,20 +583,13 @@ class VPL extends React.Component {
 
         const filter = { min, max }
 
-        /*
-        Act.vlangUpdateNodeOptions({
-            nodeKey,
-            attr: 'filter',
-            value: filter,
-        })
-        */
         Act.nodeOptionUpdate({
             nodeKey,
             attr: 'filter',
             value: filter,
         })
 
-        this.refreshVoxels = true // this.computeNodes()
+        this.setState({ refreshVoxels: true })
     }
 
     createTempLink = () => {
@@ -525,7 +624,6 @@ class VPL extends React.Component {
             strokeWidth: nodeHover ? '3px' : null,
             stroke: nodeHover ? '#ec6651' : null,
         }
-
         return (
             <path
                 style={style}
@@ -542,13 +640,34 @@ class VPL extends React.Component {
     }
 
     deleteLink = event => {
+        const { hasNodeUpdated } = this.state
         const linkDOM = event.target
         const srcNode = linkDOM.getAttribute('data-src-node')
         const toNode = linkDOM.getAttribute('data-to-node')
 
         Act.linkRemove({ srcNode, toNode })
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'savedData',
+            value: {},
+        })
 
-        this.refreshVoxels = true // this.computeNodes()
+        hasNodeUpdated[srcNode] = false
+        hasNodeUpdated[toNode] = false
+
+        Act.nodeUpdate({
+            nodeKey: srcNode,
+            attr: 'updateStatus',
+            value: 2,
+        })
+
+        Act.nodeUpdate({
+            nodeKey: toNode,
+            attr: 'updateStatus',
+            value: 2,
+        })
+
+        this.setState({ hasNodeUpdated, refreshVoxels: true })
     }
 
     createLinks = () => {
@@ -560,17 +679,12 @@ class VPL extends React.Component {
         return Object.entries(outputs).map(([srcNode, input]) => {
             const svgRect = svgDOM.getBoundingClientRect()
 
-            // const srcNodeDOM = this['node_' + srcNode]
             const outputPlugDOM = this[`${srcNode}_plug_output`]
             if (!outputPlugDOM) return ''
 
-            // console.log('srcNodeDOM', srcNodeDOM)
-
             return Object.entries(input).map(([toNode, inputKey]) => {
-                // const toNodeDOM = this['node_' + toNode]
                 const inputPlugDOM = this[`${toNode}_plug_input_${inputKey}`]
                 if (!inputPlugDOM) return ''
-
                 const linkKey = `${srcNode}_${toNode}`
                 const linkInfo = { srcNode, toNode }
 
@@ -597,183 +711,98 @@ class VPL extends React.Component {
         })
     }
 
-    computeNodes = () => {
-        /*
-        inputs: { // for arithmetic iterate
-          // [toNode]: {
-          //   [toInput]: srcNode,
-          // },
-          '$nodeC':{
-            'Minuend': '$nodeA',
-            'Subtrahend': '$nodeB',
-          },
-          '$nodeD':{
-            'Numerator': '$nodeB',
-            'Denominator': '',
-          },
-        },
-        outputs: { // for checking the limitation of links
-          // [srcNode]: {
-          //   [toNode]: toInput,
-          // },
-          '$nodeA':{
-            '$nodeC': 'Minuend',
-          },
-          '$nodeB':{
-            '$nodeC': 'Subtrahend',
-            '$nodeD': 'Numerator',
-          },
-        },
-        */
-
-        const nodes = this.props.nodes
-
-        const datasetNodes = Object.entries(nodes)
-            .filter(([, value]) => value.type == 'DATASET')
-            .map(([key]) => key)
-
-        // Datasets Preprocess
-        datasetNodes.map(datasetKey => {
-            const geometry = this.geometries[datasetKey]
-
-            if (!this.originDatasetArray[datasetKey]) {
-                // copy original size array
-                const oriArray = geometry.geometry.attributes.originalsize.array
-                this.originDatasetArray[datasetKey] = oriArray
-            }
-
-            const oriArray = this.originDatasetArray[datasetKey]
-
-            geometry.geometry.attributes.size.array = oriArray
-
-            let node = _.cloneDeep(nodes[datasetKey])
-
-            if (node.filter) {
-                const { min, max } = node.filter
-                node.filter.min = min / node.filter.maxVal
-                node.filter.max = max / node.filter.maxVal
-            }
-
-            this.nodeOutput({ nodeKey: datasetKey, geometry: null })
-
-            this.evalArithmeticNode({
-                node,
-                mathFunction: arr => arr[0],
-                options: {},
-                geometries: [geometry],
-            })
-        })
-
-        // const outputs = _.cloneDeep(this.props.links.outputs)
-        // const inputs = _.cloneDeep(this.props.links.inputs)
-
-        const outputs = this.props.links.outputs
-        const inputs = this.props.links.inputs
-
-        // collect node inputs if inputs enough like node type setting
-        const nodeInputsFromNode = {}
-
-        Object.entries(inputs).map(([toNodeKey, inputsSrcNode]) => {
-            const toNode = nodes[toNodeKey]
-            const toNodeTypeInputs = Object.keys(NodeType[toNode.type].inputs)
-
-            const toNodeInputs = toNodeTypeInputs.map(
-                input => inputsSrcNode[input]
-            )
-            if (toNodeInputs.filter(f => f).length == toNodeTypeInputs.length) {
-                // console.log(toNodeKey, 'enough input')
-                nodeInputsFromNode[toNodeKey] = inputsSrcNode
-            } else {
-                // console.log(toNodeKey, 'less input')
-            }
-        })
-
-        // console.log({ nodeInputsFromNode })
-
-        // getting a output Tree Structure to check the order of output.
-        const nodeOutputTree = {}
-
-        const getOutputToNode = output => {
-            Object.keys(output).map(toNodeKey => {
-                if (outputs[toNodeKey]) {
-                    output[toNodeKey] = _.clone(outputs[toNodeKey])
-                    getOutputToNode(output[toNodeKey])
-                } else output[toNodeKey] = true
-            })
+    // Computes database node voxels
+    computeDatabaseNode = datasetKey => {
+        const { geometries } = this
+        const { nodes } = this.props
+        const geometry = _.get(geometries, datasetKey) //geometries[datasetKey]
+        if (!geometry) {
+            return Promise.resolve(true)
+        }
+        if (!this.originDatasetArray[datasetKey]) {
+            // copy original size array
+            const oriArray = geometry.geometry.attributes.originalsize.array
+            this.originDatasetArray[datasetKey] = oriArray
         }
 
-        datasetNodes.map(datasetNodeKey => {
-            if (outputs[datasetNodeKey]) {
-                const datasetNodeOutput = _.clone(outputs[datasetNodeKey])
-                nodeOutputTree[datasetNodeKey] = datasetNodeOutput
-                getOutputToNode(nodeOutputTree[datasetNodeKey])
-            }
-        })
+        const oriArray = this.originDatasetArray[datasetKey]
+        geometry.geometry.attributes.size.array = oriArray
 
-        // console.log({ nodeOutputTree })
+        let node = _.cloneDeep(nodes[datasetKey])
 
-        let outputOrder = [[]]
-
-        const getOutputOrder = (tree, depth) => {
-            // console.log(`S getOutputOrder(${depth})`, tree)
-            let depthNodes = []
-            let deepDepth = depth + 1
-
-            Object.entries(tree).map(([nodeKey, value]) => {
-                if (nodeInputsFromNode[nodeKey]) {
-                    depthNodes.push(nodeKey)
-                    getOutputOrder(value, deepDepth)
-                }
-            })
-
-            // console.log(`E getOutputOrder(${depth})`, tree, depthNodes)
-            outputOrder[depth] = outputOrder[depth]
-                ? [...outputOrder[depth], ...depthNodes]
-                : [...depthNodes]
+        if (node.filter) {
+            const { min, max } = node.filter
+            node.filter.min = min / node.filter.maxVal
+            node.filter.max = max / node.filter.maxVal
         }
-
-        Object.entries(nodeOutputTree).map(([nodeKey, value]) => {
-            outputOrder[0].push(nodeKey)
-            getOutputOrder(value, 1)
+        return this.evalArithmeticNode({
+            node,
+            mathFunction: arr => arr[0],
+            options: {},
+            geometries: [geometry],
         })
+    }
 
-        outputOrder = _.uniq(_.flatten(outputOrder))
-        // console.log({ outputOrder })
+    // Computes non database node voxels
+    computeNode = nodeKey => {
+        const { hasNodeUpdated, nodeEvalStatus } = this.state
+        const { nodes } = this.props
+        const { inputs } = this.props.links
 
-        // TODO: cache the same computed data result to this.state
-        const computeNodeThenAddVoxel = (node, inputNodes) => {
-            const mapGeometries = this.geometries
-            const mathFunction = NodeType[node.type].arithmetic
-            const options = Object.assign(
-                NodeType[node.type].options,
-                node.options
-            )
-
-            let inputGeometries = inputNodes.map(index => mapGeometries[index])
-
-            if (inputGeometries.filter(f => f).length == inputNodes.length)
-                this.evalArithmeticNode({
-                    node,
-                    mathFunction,
-                    options,
-                    geometries: inputGeometries,
-                })
-        }
-
-        Object.entries(nodes).map(([nodeKey, node]) => {
-            if (node.type != 'DATASET')
-                this.nodeOutput({ nodeKey, geometry: null })
-        })
-
-        outputOrder.map(nodeKey => {
+        let canComplete = Promise.resolve(true)
+        if (nodeKey in inputs && hasNodeUpdated[nodeKey]) {
+            const parents = Object.values(inputs[nodeKey])
             const node = nodes[nodeKey]
-            if (node.type != 'DATASET') {
-                const inputNodes = Object.values(nodeInputsFromNode[nodeKey])
-                computeNodeThenAddVoxel(node, inputNodes)
-            }
-        })
 
-        return { nodeInputsFromNode, nodeOutputTree, outputOrder }
+            // Retrieves the evaluating status of parent nodes
+            for (let i = 0; i < parents.length; i++) {
+                const parent = parents[i]
+                canComplete = canComplete.then(() => nodeEvalStatus[parent])
+            }
+
+            // Starts evaluating node
+            nodeEvalStatus[nodeKey] = canComplete.then(() => {
+                const mapGeometries = this.geometries
+                const { updateStatus } = node
+                let mathFunction = NodeType[node.type].arithmetic
+
+                // If update status is set to filter, changes the function to return last computed values instead
+                if (updateStatus === 1) {
+                    const values = _.get(node, 'savedData.actualValues', [])
+                    mathFunction = () => Promise.resolve(values)
+                }
+                const options = Object.assign(
+                    NodeType[node.type].options,
+                    node.options
+                )
+
+                const inputKeys = Object.values(inputs[node.nodeKey])
+                let inputGeometries = inputKeys.map(
+                    index => mapGeometries[index]
+                )
+
+                let voxelComputed = Promise.resolve(true)
+
+                // Evaluates node if all the input nodes are connected
+                if (
+                    inputGeometries.filter(f => f).length === inputKeys.length
+                ) {
+                    voxelComputed = this.evalArithmeticNode({
+                        node,
+                        mathFunction,
+                        options,
+                        geometries: inputGeometries,
+                    })
+                } else {
+                    this.nodeOutput({ nodeKey: node.nodeKey, geometry: null })
+                    hasNodeUpdated[node.nodeKey] = false
+                    this.setState({ hasNodeUpdated, refreshVoxels: false })
+                }
+                return voxelComputed
+            })
+        }
+        this.setState({ nodeEvalStatus })
+        return canComplete
     }
 
     diagonal(source, target) {
@@ -814,194 +843,162 @@ class VPL extends React.Component {
         )
     }
 
-    evalArithmeticNode = ({ node, mathFunction, options, geometries }) => {
-        console.log({ node })
-
+    evalArithmeticNode = async ({
+        node,
+        mathFunction,
+        options,
+        geometries,
+    }) => {
+        const savedData = _.get(node, 'savedData', {})
         const arraySize = geometries[0].geometry.attributes.size.count
         const hashedData = {}
-        const allIndices = this.newProps.datasets.allIndices
+        const allIndices = this.props.datasets.allIndices
 
         const amplifier = 3
 
-        // let transArray1 = geometry1.geometry.attributes.translation.array;
-        // let transArray2 = geometry2.geometry.attributes.translation.array;
         let transArray = geometries.map(
             geometry => geometry.geometry.attributes.translation.array
         )
 
-        // let geomArray1 = Array.from(geometry1.geometry.attributes.size.array);
-        // let geomArray2 = Array.from(geometry2.geometry.attributes.size.array);
         let geomArray = geometries.map(geometry =>
             Array.from(geometry.geometry.attributes.size.array)
         )
 
-        // let sizeArray = mathFunction(geomArray1, geomArray2);
+        const firstLayer = Object.values(this.props.layers)[0]
+        const firstGeometry = Object.values(this.props.map.geometries)[0]
 
-        let sizeArray = mathFunction(geomArray, options)
+        const mathCallback = actualValues => {
+            const { hasNodeUpdated } = this.state
+            hasNodeUpdated[node.nodeKey] = false
+            savedData['actualValues'] = actualValues
 
-        sizeArray = sizeArray.map(x => (x > 0 ? x : 0))
+            let sizeArray = actualValues.map(x => (x > 0 ? x : 0))
+            const originDataMax = math.max(sizeArray)
+            const originDataMin = math.min(sizeArray)
+            const newBounds = [originDataMin, originDataMax]
 
-        const originDataMax = math.max(sizeArray)
-        const originDataMin = math.min(sizeArray)
-        const newBounds = [originDataMin, originDataMax]
+            Act.nodeUpdate({
+                nodeKey: node.nodeKey,
+                attr: 'max',
+                value: originDataMax,
+            })
 
-        // console.log(node.type, { originDataMax, originDataMin })
+            Act.nodeUpdate({
+                nodeKey: node.nodeKey,
+                attr: 'savedData',
+                value: savedData,
+            })
 
-        Act.nodeUpdate({
-            nodeKey: node.nodeKey,
-            attr: 'max',
-            value: originDataMax,
-        })
+            Act.nodeUpdate({
+                nodeKey: node.nodeKey,
+                attr: 'updateStatus',
+                value: 0,
+            })
 
-        if (node.remap) {
-            const dataMax = math.max(sizeArray)
-            // const dataMin = math.min(sizeArray)
-            const dataMin = 0 // always be zero.
-            const originScale = dataMax - dataMin
-            const newScale = node.remap.max - dataMin
+            this.setState({ hasNodeUpdated })
 
-            const remap = x => (x ? x * newScale / originScale + dataMin : 0)
-            // if (x != 0) {
-            //     return valDiff * ((x - min) / (max - min)) + dataMin
-            // } else {
-            //     return 0
-            // }
+            if (node.remap) {
+                const dataMax = math.max(sizeArray)
+                const dataMin = 0 // always be zero.
+                const originScale = dataMax - dataMin
+                const newScale = node.remap.max - dataMin
 
-            if (originScale > 0) sizeArray = sizeArray.map(remap)
+                const remap = x =>
+                    x ? x * newScale / originScale + dataMin : 0
 
-            // console.log('[remap] after', {
-            //     max: math.max(sizeArray),
-            //     min: math.min(sizeArray),
-            // })
-        }
-
-        // new: filter feature (2017 Nov. )
-        if (node.filter) {
-            const dataMax = math.max(sizeArray)
-            // const dataMin = math.min(sizeArray)
-            const dataMin = 0 // should be zero
-
-            let { min, max } = node.filter
-            // console.log('[filter]', { min, max })
-            const range = dataMax - dataMin
-
-            // console.log('[filter] Before', { dataMin, dataMax }, sizeArray)
-            min = dataMin + min * range
-            max = dataMin + max * range
-            sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
-            // console.log('[filter] After', { min, max }, sizeArray)
-        }
-
-        if (NodeType[node.type].class == 'logic') {
-            const trueValue = this.props.datasets.bounds[1]
-            sizeArray = sizeArray.map(x => (x ? trueValue : x))
-        }
-
-        /*
-        const translationArray = new Float32Array(arraySize*3);
-        for (let i = 0, j = 0; j < arraySize; i = i + 3, j++){s
-            translationArray[i] = this.getNotZero(transArray1[i], transArray2[i]);
-            translationArray[i+1] = this.getNotZero(transArray1[i+1], transArray2[i+1]);
-            translationArray[i+2] = this.getNotZero(transArray1[i+2], transArray2[i+2]);
-            if (allIndices.includes(j)) {
-                let hashedArray = Array(8);
-                hashedArray[3] = sizeArray[j];
-                hashedData[j] = hashedArray;
-            }
-        }
-        */
-
-        const translationArray = new Float32Array(arraySize * amplifier)
-        for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
-            for (let k = amplifier - 1; k >= 0; k--) {
-                // `.find(f=> f != 0) || 0` replace `getNotZero()`
-                translationArray[i + k] =
-                    transArray.map(ta => ta[i + k]).find(f => f != 0) || 0
+                if (originScale > 0) sizeArray = sizeArray.map(remap)
             }
 
-            if (allIndices.includes(j)) {
-                let hashedArray = Array(8)
-                hashedArray[3] = sizeArray[j]
-                hashedData[j] = hashedArray
+            // new: filter feature (2017 Nov. )
+            if (node.filter) {
+                const dataMax = math.max(sizeArray)
+                const dataMin = 0 // should be zero
+
+                let { min, max } = node.filter
+                const range = dataMax - dataMin
+
+                min = dataMin + min * range
+                max = dataMin + max * range
+                sizeArray = sizeArray.map(x => (x <= max && x >= min ? x : 0))
             }
-        }
 
-        /*
-        let min = math.min(Array.from(sizeArray))
-        let max
-
-        if (node.type == 'DIVISION') {
-            max = math.max(
-                sizeArray.filter(item => item !== Number.POSITIVE_INFINITY)
-            )
-        } else {
-            max = math.max(sizeArray)
-        }
-
-        const valDiff = geometries[0].highBnd - geometries[0].lowBnd
-        const remap = function(x) {
-            if (x != 0) {
-                return (
-                    valDiff * ((x - min) / (max - min)) + geometries[0].lowBnd
-                )
-            } else {
-                return 0
+            if (NodeType[node.type].class == 'logic') {
+                const trueValue = this.props.datasets.bounds[1]
+                sizeArray = sizeArray.map(x => (x ? trueValue : x))
             }
+
+            const translationArray = new Float32Array(arraySize * amplifier)
+            for (let i = 0, j = 0; j < arraySize; i = i + amplifier, j++) {
+                for (let k = amplifier - 1; k >= 0; k--) {
+                    translationArray[i + k] =
+                        transArray.map(ta => ta[i + k]).find(f => f != 0) || 0
+                }
+
+                if (allIndices.includes(j)) {
+                    let hashedArray = Array(8)
+                    hashedArray[3] = sizeArray[j]
+                    hashedData[j] = hashedArray
+                }
+            }
+
+            let props = {
+                size: sizeArray,
+                translation: translationArray,
+            }
+
+            let geometry = {
+                minMax: this.props.datasets.minMax,
+                addressArray: firstGeometry.addresses,
+                properties: props,
+                cols: firstLayer.rowsCols.cols,
+                rows: firstLayer.rowsCols.rows,
+                bounds: newBounds,
+                shaderText: firstLayer.shaderText,
+                n: _.size(this.props.layers) + 1,
+                name: node.name,
+                type: node.type,
+                layerName: node.nodeKey,
+                length: Math.max(...geometries.map(g => g.numElements)),
+                hashedData: hashedData,
+                allIndices: allIndices,
+                color1: node.color,
+                color2: node.color,
+            }
+            this.addVoxelGeometry(geometry)
         }
 
-        let remapOriginalSize = sizeArray.map(remap)
-        */
-
-        let props = {
-            // size: remapOriginalSize,
-            size: sizeArray,
-            translation: translationArray,
-        }
-
-        const firstLayer = Object.values(this.newProps.layers)[0]
-        const firstGeometry = Object.values(this.newProps.map.geometries)[0]
-
-        let geometry = {
-            minMax: this.newProps.datasets.minMax,
-            addressArray: firstGeometry.addresses,
-            // addressArray: this.newProps.map.geometries[
-            //     Object.keys(this.newProps.map.geometries)[0]
-            // ].addresses,
-            properties: props,
-            // cols: this.newProps.layers[0].rowsCols.cols,
-            // rows: this.newProps.layers[0].rowsCols.rows,
-            // bounds: this.newProps.layers[0].bounds,
-            // shaderText: this.newProps.layers[0].shaderText,
-            cols: firstLayer.rowsCols.cols,
-            rows: firstLayer.rowsCols.rows,
-            bounds: newBounds,
-            shaderText: firstLayer.shaderText,
-            // n: this.newProps.layers.length + 1,
-            n: _.size(this.newProps.layers) + 1,
-            name: node.name,
-            type: node.type,
-            layerName: node.nodeKey,
-            // length: Math.max(geometry1.numElements, geometry2.numElements),
-            length: Math.max(...geometries.map(g => g.numElements)),
-            hashedData: hashedData,
-            allIndices: allIndices,
-            // propVals: names, // CHECK: is this necessary?
-            color1: node.color,
-            color2: node.color,
-        }
-        this.addVoxelGeometry(geometry)
+        return Promise.resolve(mathFunction(geomArray, options, savedData))
+            .then(result => mathCallback(result))
+            .catch(err => {
+                console.error(err)
+                const { hasNodeUpdated } = this.state
+                hasNodeUpdated[node.nodeKey] = false
+                this.setState({ hasNodeUpdated })
+                Act.nodeUpdate({
+                    nodeKey: node.nodeKey,
+                    attr: 'updateStatus',
+                    value: 0,
+                })
+            })
     }
 
     decideNodeType(node) {
-        // console.log(`decideNodeType()`, node)
         return this.nodeSVG(node)
     }
 
-    nodeSVG = ({ color, name, type, nodeKey, options }) => {
-        // console.log(`nodeSVG({${color}, ${name}, ${type}})`)
-        //const p = {x: 0, y: 0}
-
-        const inputs = NodeType[type].inputs
+    nodeSVG = ({
+        color,
+        name,
+        type,
+        nodeKey,
+        options,
+        inputs,
+        classOptions,
+    }) => {
+        // const inputs = NodeType[type].inputs
+        if (inputs === undefined) {
+            inputs = NodeType[type].inputs
+        }
         const output = NodeType[type].output
 
         const typeOptions = NodeType[type].options
@@ -1038,10 +1035,22 @@ class VPL extends React.Component {
                     key={nodeKey}
                     className="background"
                     width={nodeWidth}
-                    height={nodeHeight}
+                    height={
+                        nodeHeight +
+                        Math.max(
+                            0,
+                            Style.plug.marginTop *
+                                (Object.entries(inputs).length - 2)
+                        )
+                    }
                     x="0"
                     y="0"
-                    style={{ fill: '#ecf0f1', stroke: '#ccc', rx: '2px' }}
+                    style={{
+                        // fill: `${updateStatus > 0 ? '#92A3A8' : '#ecf0f1'}`,
+                        fill: '#ecf0f1',
+                        stroke: '#ccc',
+                        rx: '2px',
+                    }}
                 />
 
                 {/* input Plugs */}
@@ -1082,7 +1091,88 @@ class VPL extends React.Component {
                         </text>
                     </g>
                 ))}
-
+                {/* Adding more nodes */}
+                {_.get(classOptions, 'increaseInput', false) && (
+                    <foreignObject
+                        transform={`translate(${2}, ${Style.plug.height / 2 +
+                            Style.topOffset +
+                            Style.plug.marginTop *
+                                (Object.entries(inputs).length - 0.5)})`}
+                    >
+                        <Button
+                            onClick={() => {
+                                const x_index =
+                                    Object.entries(inputs).length + 1
+                                Act.nodeUpdate({
+                                    nodeKey,
+                                    attr: 'inputs',
+                                    value: {
+                                        ...inputs,
+                                        [`Input${x_index}`]: Object.entries(
+                                            inputs
+                                        )[x_index - 2][1], //`I${x_index - 1}`,
+                                    },
+                                })
+                            }}
+                            style={style.iconButton}
+                        >
+                            <img title="add" src={svg.PLUS} />
+                        </Button>
+                    </foreignObject>
+                )}
+                {/* Removing */}
+                {_.get(classOptions, 'increaseInput', false) &&
+                    Object.entries(inputs).length > 2 && (
+                        <foreignObject
+                            transform={`translate(${2}, ${Style.plug.height /
+                                2 +
+                                Style.topOffset +
+                                Style.plug.marginTop *
+                                    (Object.entries(inputs).length + 0.5)})`}
+                        >
+                            <Button
+                                onClick={() => {
+                                    const entries = Object.entries(inputs)
+                                    const newInput = entries
+                                        .slice(0, entries.length - 1)
+                                        .reduce(
+                                            (accum, current) => ({
+                                                ...accum,
+                                                [current[0]]: current[1],
+                                            }),
+                                            {}
+                                        )
+                                    const srcNode = _.get(
+                                        this.props.links.inputs,
+                                        `${nodeKey}.${
+                                            entries[entries.length - 1][0]
+                                        }`
+                                    )
+                                    if (srcNode) {
+                                        Act.linkRemove({
+                                            srcNode,
+                                            toNode: nodeKey,
+                                        })
+                                    }
+                                    Act.nodeUpdate({
+                                        nodeKey,
+                                        attr: 'updateStatus',
+                                        value: 2,
+                                    })
+                                    Act.nodeUpdate({
+                                        nodeKey,
+                                        attr: 'inputs',
+                                        value: newInput,
+                                    })
+                                    this.setState({ refreshVoxels: true })
+                                }}
+                                style={style.iconButton}
+                            >
+                                <img title="minus" src={svg.MINUS} />
+                            </Button>
+                        </foreignObject>
+                    )}
+                <Button type="primary" icon="cloud-download" />
                 {/* Output Plug */}
                 <g
                     ref={ref => (this[`${nodeKey}_plug_output`] = ref)}
@@ -1139,8 +1229,14 @@ class VPL extends React.Component {
                             : nodeName}
                     </text>
                 </Popover>
-
-                <g className="control">
+                <g
+                    className="control"
+                    transform={`translate(0, ${Math.max(
+                        0,
+                        Style.plug.marginTop *
+                            (Object.entries(inputs).length - 2)
+                    )})`}
+                >
                     <Slider index={nodeKey} />
                     <Panel
                         color={color}
@@ -1150,6 +1246,7 @@ class VPL extends React.Component {
                             this.deleteNode(nodeKey)
                         }}
                         updated={() => {
+                            // this.markNodesForUpdate(index)
                             Act.setRefreshVoxels({ value: true })
                         }}
                         // changeFilter={(min, max) => {
@@ -1202,11 +1299,14 @@ class VPL extends React.Component {
     }
 
     addNode = type => {
+        const { nodeEvalStatus } = this.state
         const nodeHashKey = hashKey()
+        nodeEvalStatus[nodeHashKey] = Promise.resolve(true)
         Act.nodeAdd({
             nodeKey: nodeHashKey,
             node: this.newNodeObj(type),
         })
+        this.setState({ nodeEvalStatus })
     }
 
     linkMarker() {
@@ -1230,7 +1330,7 @@ class VPL extends React.Component {
 
     addVoxelGeometry = geometry => {
         // TODO: adding Geometry function should be more simple
-        const map = this.newProps.map.instance
+        const map = this.props.map.instance
         const circle = new THREE.CircleBufferGeometry(1, 20)
         const otherArray = []
 
@@ -1239,6 +1339,7 @@ class VPL extends React.Component {
 
         // let shaderContent = document.getElementById( 'fragmentShader' ).textContent;
         // shaderContent = shaderContent.replace(/1.5/g, parseFloat(1/ptDistance));
+        this.nodeOutput({ nodeKey: geometry.layerName, geometry: null })
 
         const P = new PaintGraph.Pixels(
             geometry.layerName,
@@ -1258,29 +1359,10 @@ class VPL extends React.Component {
             geometry.properties
         )
 
-        /* may be need keep some property for dataset state
-        const layer = {
-            allIndices: '',
-            bbox: '',
-            bounds: geometry.bounds,
-            color1: color1,
-            color2: color2,
-            geojson: '',
-            name: geometry.layerName,
-            propertyName: '',
-            rowsCols: '',
-            shaderText: geometry.shaderText,
-            userLayerName: '',
-            visible: true,
-            showSidebar: false,
-        }
-
-        Action.mapAddGeometry(geometry.layerName, P)
-        // Here I should also add the geometry to the layers
-        Action.mapAddLayer(layer)
-        */
-
-        this.nodeOutput({ nodeKey: geometry.layerName, geometry: P })
+        this.nodeOutput({
+            nodeKey: geometry.layerName,
+            geometry: P,
+        })
     }
 
     nodeOutput = ({ nodeKey, geometry }) => {

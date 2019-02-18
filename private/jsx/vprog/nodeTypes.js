@@ -21,6 +21,12 @@ const NodeType = {
 */
 
 import _ from 'lodash'
+// import * as tf from '@tensorflow/tfjs'
+import kmeans from 'ml-kmeans'
+import {
+    SimpleLinearRegression,
+    MultivariateLinearRegression,
+} from 'ml-regression'
 
 export const DATASET = {
     fullName: 'Dataset',
@@ -33,7 +39,7 @@ export const DATASET = {
     },
     output: 'Output',
     options: {},
-    arithmetic() {},
+    arithmetic: async () => {},
 }
 
 export const LOG = {
@@ -50,7 +56,7 @@ export const LOG = {
         maximumInterval: 10, // 'valDiff'
         base: Math.E,
     },
-    arithmetic: (inputs, options = {}) => {
+    arithmetic: async (inputs, options = {}) => {
         const { maximumInterval, base } = options
         // console.log('log.arithmetic()', {inputs, options})
 
@@ -94,8 +100,30 @@ export const SUB = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.subtract(...inputs)
+    arithmetic: async inputs => {
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.subtract(accum, input), inputs[0])
+    },
+}
+
+export const DIFF = {
+    fullName: 'Difference',
+    class: 'math',
+    desc: `
+        Computes the arithmetic absolute difference between datasets
+    `,
+    inputs: {
+        Minuend: 'M',
+        Subtrahend: 'S',
+    },
+    output: 'Output',
+    options: {},
+    arithmetic: async inputs => {
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.subtract(accum, input), inputs[0])
+            .map(val => Math.abs(val))
     },
 }
 
@@ -111,8 +139,10 @@ export const DIV = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.dotDivide(...inputs)
+    arithmetic: async inputs => {
+        return inputs
+            .slice(1)
+            .reduce((accum, input) => math.dotDivide(accum, input), inputs[0])
     },
 }
 
@@ -129,8 +159,12 @@ export const MULT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.dotMultiply(...inputs)
+    arithmetic: async inputs => {
+        return inputs.reduce(
+            (accum, input) => math.dotMultiply(accum, input),
+            1
+        )
+        // return math.dotMultiply(...inputs)
     },
 }
 
@@ -146,8 +180,8 @@ export const ADD = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.add(...inputs)
+    arithmetic: async inputs => {
+        return inputs.reduce((accum, input) => math.add(accum, input), 0)
     },
 }
 
@@ -163,7 +197,7 @@ export const MIN = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.min(voxel))
     },
 }
@@ -180,7 +214,7 @@ export const MAX = {
     },
     output: 'Output',
     options: {},
-    arithmetic(inputs) {
+    arithmetic: async inputs => {
         return _.zipWith(...inputs, (...voxel) => _.max(voxel))
     },
 }
@@ -197,8 +231,12 @@ export const AND = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.and(...inputs).map(m => (m ? 1 : 0))
+    arithmetic: async inputs => {
+        let result = math.and(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.and(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
     },
 }
 
@@ -214,8 +252,13 @@ export const OR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.or(...inputs).map(m => (m ? 1 : 0))
+    arithmetic: async inputs => {
+        let result = math.or(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.or(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
+        // return math.or(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
@@ -231,8 +274,13 @@ export const XOR = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
-        return math.xor(...inputs).map(m => (m ? 1 : 0))
+    arithmetic: async inputs => {
+        let result = math.xor(inputs[0], inputs[1])
+        for (let i = 2; i < inputs.length; i++) {
+            result = math.xor(result, inputs[i])
+        }
+        return result.map(m => (m ? 1 : 0))
+        // return math.xor(...inputs).map(m => (m ? 1 : 0))
     },
 }
 
@@ -247,7 +295,272 @@ export const NOT = {
     },
     output: 'Output',
     options: {},
-    arithmetic: inputs => {
+    arithmetic: async inputs => {
         return inputs[0].map(m => !m)
     },
 }
+
+export const K_CLUSTER = {
+    fullName: 'K Clustering',
+    class: 'statistics',
+    desc: `
+        Clusters data into K clusters and averages among cluster
+    `,
+    inputs: {
+        Input1: 'Y',
+        Input2: 'X',
+    },
+    output: 'Output',
+    options: {
+        k: 100,
+    },
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
+        const { k } = options
+        const data = []
+        for (let i = 0; i < inputs[0].length; i++) {
+            const point = []
+            for (let j = 1; j < inputs.length; j++) {
+                point.push(inputs[j][i])
+            }
+            data.push(point)
+        }
+        const { centroids, clusters } = kmeans(data, Number(k))
+        const results = {}
+        for (let i = 0; i < inputs[0].length; i++) {
+            const cluster = clusters[i]
+            results[cluster] =
+                _.get(results, `[${cluster}]`, 0) +
+                inputs[0][i] / centroids[cluster].size
+        }
+        const bar = centroids
+            .map((centroid, index) => [results[index], centroid.size])
+            .filter(point => point[0] !== 0)
+        savedData.bar = bar
+        return Promise.resolve(clusters.map(cluster => results[cluster]))
+    },
+}
+
+export const LIN_REG = {
+    fullName: 'Linear Regression',
+    class: 'statistics',
+    desc: `
+            Return the voxels for the linear regression for dependent variable Y on observed variable X.
+        `,
+    inputs: {
+        Input1: 'Y',
+        Input2: 'X',
+    },
+    output: 'Output',
+    options: {
+        trainingSplit: 0.6,
+    },
+    arithmetic: async (inputs, options = {}, savedData = {}) => {
+        let trainingSplit = Number(options.trainingSplit)
+        trainingSplit =
+            trainingSplit < 0 ? 0 : trainingSplit > 1 ? 1 : trainingSplit
+
+        // TODO (kevinaer): decouple following 3 functions from this fn
+        const sample = (x, y, split = trainingSplit) => {
+            const sampleSize = Math.floor(inputs[0].length * split)
+            const sampleIndices = _.sampleSize(
+                [...Array(inputs[0].length).keys()],
+                sampleSize
+            )
+            const trainingX = []
+            const trainingY = []
+            for (let i = 0; i < sampleIndices.length; i++) {
+                trainingX.push(x[sampleIndices[i]])
+                trainingY.push(y[sampleIndices[i]])
+            }
+            return { trainingX, trainingY }
+        }
+
+        const meanSquaredSum = mean => {
+            return (accum, val) => accum + (val - mean) ** 2
+        }
+
+        const r2 = (real, predicted) => {
+            const mean =
+                real.reduce((accum, val) => accum + val, 0) / real.length
+            const total_ss = real.reduce(meanSquaredSum(mean), 0)
+            const explained_ss = predicted.reduce(meanSquaredSum(mean), 0)
+            const residual_ss = real.reduce(
+                (accum, val, index) => accum + (val - results[index]) ** 2,
+                0
+            )
+            console.warn(mean, total_ss, explained_ss, residual_ss)
+            console.warn(
+                1 - Math.min(residual_ss / total_ss, 1),
+                explained_ss / total_ss
+            )
+        }
+
+        let regression
+        let results
+        let y
+        const yMax = Math.max(...inputs[0])
+        let x
+        if (inputs.length < 3) {
+            const xMax = Math.max(...inputs[1])
+            x = inputs[1].map(val => val / xMax)
+            y = inputs[0].map(val => val / yMax)
+            const { trainingX, trainingY } = sample(x, y)
+            regression = new SimpleLinearRegression(trainingX, trainingY)
+            results = regression.predict(x).map(val => val * yMax)
+
+            // Draws line
+            const linePoints = []
+            for (let i = 0; i <= 10; i++) {
+                linePoints.push(i / 10.0)
+            }
+            savedData['line'] = regression
+                .predict(linePoints)
+                .map((currentValue, index) => [linePoints[index], currentValue])
+            const sampledData = sample(x, y, Math.min(200 / x.length, 1))
+            savedData['samples'] = sampledData.trainingX.map((value, index) => [
+                value,
+                sampledData.trainingY[index],
+            ])
+            r2(y, results)
+            console.warn(regression.score(x, y))
+        } else {
+            x = []
+            const maxes = []
+            // Gets max values for all inputs
+            for (let j = 1; j < inputs.length; j++) {
+                maxes.push(Math.max(...inputs[j]))
+            }
+            // Converts max inputs to an input matrix
+            for (let i = 0; i < inputs[1].length; i++) {
+                const data_entry = []
+                for (let j = 1; j < inputs.length; j++) {
+                    data_entry.push(inputs[j][i] / maxes[j - 1])
+                }
+                x.push(data_entry)
+            }
+
+            console.warn(x)
+
+            y = inputs[0].map(value => [value / yMax])
+            const { trainingX, trainingY } = sample(x, y)
+            console.warn(trainingX)
+            console.warn(trainingY)
+            regression = new MultivariateLinearRegression(trainingX, trainingY)
+            results = regression.predict(x).map(val => val[0] * yMax)
+            r2(y, results)
+        }
+
+        return results
+    },
+}
+
+// export const LIN_REG2 = {
+//     fullName: 'Linear Regression 2',
+//     class: 'statistics',
+//     desc: `
+//         Return the voxels for the linear regression for dependent variable Y on observed variable X.
+//     `,
+//     inputs: {
+//         Input1: 'Y',
+//         Input2: 'X',
+//     },
+//     output: 'Output',
+//     options: {
+//         training_epochs: 5,
+//     },
+//     arithmetic: async (inputs, options = {}, savedData = {}) => {
+//         const { training_epochs } = options
+
+//         let model
+//         if (_.get(savedData, 'model')) {
+//             model = _.get(savedData, 'model')
+//         } else {
+//             // Define a model for linear regression.
+//             model = tf.sequential()
+//             model.add(
+//                 tf.layers.dense({ units: 1, inputShape: [inputs.length - 1] })
+//             )
+
+//             // Prepare the model for training: Specify the loss and the optimizer.
+//             model.compile({
+//                 loss: 'meanSquaredError',
+//                 optimizer: 'sgd',
+//             })
+//         }
+
+//         // Converts independent input arrays into feature column format
+//         const data = []
+//         const maxes = []
+//         for (let j = 1; j < inputs.length; j++) {
+//             maxes.push(Math.max(...inputs[j]))
+//         }
+//         for (let i = 0; i < inputs[1].length; i++) {
+//             const data_entry = []
+//             for (let j = 1; j < inputs.length; j++) {
+//                 data_entry.push(inputs[j][i] / maxes[j - 1])
+//             }
+//             data.push(data_entry)
+//         }
+
+//         const y_range = Math.max(...inputs[0])
+//         const xs = tf.tensor2d(data, [inputs[1].length, inputs.length - 1])
+//         const ys = tf.tensor2d(inputs[0].map(y => y / y_range), [
+//             inputs[0].length,
+//             1,
+//         ])
+
+//         return model
+//             .fit(xs, ys, {
+//                 validationSplit: 0.8,
+//                 epochs: Number(training_epochs),
+//             })
+//             .then(() => {
+//                 // Saves the model for future training
+//                 savedData['model'] = model
+//                 return model.predict(xs).data()
+//             })
+//             .then(data => {
+//                 const dataArray = Array.from(data).map(x => x * y_range)
+
+//                 model.evaluate(xs, ys).print()
+//                 // Creates the best fit line if there is only 1 input
+//                 if (maxes.length === 1) {
+//                     const linePoints = []
+//                     for (let i = 0; i <= 10; i++) {
+//                         linePoints.push(i / 10.0)
+//                     }
+//                     const lineTensor = tf.tensor2d(linePoints, [
+//                         linePoints.length,
+//                         1,
+//                     ])
+//                     model
+//                         .predict(lineTensor)
+//                         .data()
+//                         .then(results => {
+//                             const dataArray = Array.from(results).map(
+//                                 x => x * y_range
+//                             )
+//                             savedData['line'] = dataArray.map(
+//                                 (currentValue, index) => [
+//                                     linePoints[index] * maxes[0],
+//                                     currentValue,
+//                                 ]
+//                             )
+
+//                             const indices = new Set()
+//                             while (indices.size < 200) {
+//                                 const index = Math.floor(
+//                                     Math.random() * inputs[0].length
+//                                 )
+//                                 indices.add(index)
+//                             }
+//                             savedData['samples'] = [...indices].map(index => [
+//                                 inputs[1][index],
+//                                 inputs[0][index],
+//                             ])
+//                         })
+//                 }
+//                 return dataArray
+//             })
+//     },
+// }
