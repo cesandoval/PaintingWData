@@ -1639,12 +1639,925 @@ module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(_) {
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _DatasetCard = __webpack_require__("./private/vue/components/DatasetCard.vue");
+
+var _DatasetCard2 = _interopRequireDefault(_DatasetCard);
+
+var _vue2Leaflet = __webpack_require__("./node_modules/vue2-leaflet/dist/vue2-leaflet.min.js");
+
+var _vue2Leaflet2 = _interopRequireDefault(_vue2Leaflet);
+
+var _leaflet = __webpack_require__("./node_modules/leaflet/dist/leaflet-src.js");
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var LMap = _vue2Leaflet2.default.LMap,
+    LTileLayer = _vue2Leaflet2.default.LTileLayer,
+    LPolygon = _vue2Leaflet2.default.LPolygon,
+    LMarker = _vue2Leaflet2.default.LMarker;
+
+
+delete _leaflet2.default.Icon.Default.prototype._getIconUrl;
+
+_leaflet2.default.Icon.Default.mergeOptions({
+  iconRetinaUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon.png"),
+  shadowUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-shadow.png")
+});
+
+exports.default = {
+  name: 'Datasets',
+
+  components: {
+    DatasetCard: _DatasetCard2.default,
+    LMap: LMap,
+    LTileLayer: LTileLayer,
+    LPolygon: LPolygon,
+    LMarker: LMarker
+  },
+
+  data: function data() {
+    return Object.assign(server, {
+      maps: {},
+      isSqueezed: false,
+      selectedDataset: null,
+      selectedIndex: null,
+      loading: false,
+      busy: false,
+      sortDate: true,
+      sortDown: true,
+      zoom: 13,
+      url: 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
+
+      attribution: '',
+      selectedGeometries: null,
+      selectedGeoType: null,
+      uploadProcess: 0,
+      formName: '',
+      formDesc: '',
+      submitting: false,
+      file: null,
+      formPublicity: false,
+      tags: [],
+      inputVisible: false,
+      inputValue: '',
+      errorMessage: '',
+      searchKey: '',
+      editing: false,
+      editSubmitting: false,
+      editTitle: '',
+      editDesc: '',
+      editTime: '',
+      pagination: {
+        onChange: function onChange(page) {
+          console.log(page);
+        },
+        pageSize: 6
+      }
+    });
+  },
+
+  computed: {
+    datafileList: function datafileList() {
+      var _this = this;
+
+      var tempData = null;
+      if (this.sortDate) {
+        if (this.sortDown) {
+          tempData = _.sortBy(this.datafiles, [function (o) {
+            return o.createdAt;
+          }]).reverse();
+        } else {
+          tempData = _.sortBy(this.datafiles, [function (o) {
+            return o.createdAt;
+          }]);
+        }
+      } else {
+        if (this.sortDown) {
+          tempData = _.sortBy(this.datafiles, [function (o) {
+            return o.filename[0];
+          }]);
+        } else {
+          tempData = _.sortBy(this.datafiles, [function (o) {
+            return o.filename[0];
+          }]).reverse();
+        }
+      }
+
+      if (this.searchKey.length == 0) return this.addAddingItem(this.removeDeleted(tempData));else {
+        return this.addAddingItem(this.removeDeleted(tempData.filter(function (item) {
+          return (item.userFileName ? item.userFileName : item.filename).toLowerCase().indexOf(_this.searchKey.toLowerCase()) > -1;
+        })));
+      }
+    },
+    selectedItem: function selectedItem() {
+      var _this2 = this;
+
+      return this.datafileList.filter(function (item) {
+        return item.id == _this2.selectedDataset;
+      })[0];
+    }
+  },
+  created: function created() {
+    // console.log('created')
+    // this.$http.get('/getThumbnailData/29').then(response => {
+    //   console.log(response)
+    // })
+  },
+
+
+  methods: {
+    addAddingItem: function addAddingItem(dataList) {
+      var item = Object.assign({}, dataList[0]);
+      item.label = 'adding';
+      dataList.unshift(item);
+
+      // console.log(dataList)
+      return dataList;
+    },
+    removeDeleted: function removeDeleted(dataList) {
+      return dataList.filter(function (item) {
+        return item.deleted !== false && item.Datalayers.length != 0;
+      });
+    },
+    onSearch: function onSearch(value) {
+      console.log('searching', value);
+      this.searchKey = value;
+    },
+    handleCloseTag: function handleCloseTag(removedTag) {
+      var tags = this.tags.filter(function (tag) {
+        return tag !== removedTag;
+      });
+      console.log(tags);
+      this.tags = tags;
+    },
+    showInput: function showInput() {
+      this.inputVisible = true;
+      this.$nextTick(function () {
+        this.$refs.input.focus();
+      });
+    },
+    handleInputChange: function handleInputChange(e) {
+      this.inputValue = e.target.value;
+    },
+    handleInputConfirm: function handleInputConfirm() {
+      var inputValue = this.inputValue;
+      var tags = this.tags;
+      if (inputValue && tags.indexOf(inputValue) === -1) {
+        tags = [].concat(_toConsumableArray(tags), [inputValue]);
+      }
+      console.log(tags);
+      Object.assign(this, {
+        tags: tags,
+        inputVisible: false,
+        inputValue: ''
+      });
+    },
+    handleRemove: function handleRemove(file) {
+      console.log(file);
+      this.file = null;
+    },
+    beforeUpload: function beforeUpload(file) {
+      this.file = file;
+      this.errorMessage = '';
+      return false;
+    },
+    handleFileUpload: function handleFileUpload() {
+      // this.file = this.$refs.file.files[0];
+      console.log('selected file');
+    },
+    handleSubmit: function handleSubmit(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      this.submitting = true;
+      this.errorMessage = '';
+
+      var file = this.file;
+
+
+      var formData = new FormData();
+      formData.append('file', file);
+
+      /*
+        Additional POST Data
+      */
+      formData.append('dataset_name', this.formName);
+      formData.append('dataset_desc', this.formDesc);
+      formData.append('dataset_public', this.formPublicity);
+      formData.append('dataset_tags', this.tags);
+
+      this.$http.post('/upload', formData).then(function (response) {
+        console.log('submitted', response); //req
+
+        if (response.data.completed) {
+          document.location.reload();
+        } else {
+          _this3.errorMessage = response.data.alert;
+          _this3.file = null;
+          _this3.submitting = false;
+
+          // need to indicate errors
+        }
+      });
+    },
+    handleEditSubmit: function handleEditSubmit(e) {
+      var _this4 = this;
+
+      e.preventDefault();
+      this.submitting = true;
+
+      var formData = {
+        userFileName: this.editTitle,
+        description: this.editDesc,
+        updatedAt: this.editTime,
+        id: this.selectedItem.id
+      };
+
+      console.log('formData', formData);
+
+      // TO DO: call middleware API below
+
+      this.$http.post('/editUserfile', formData).then(function (response) {
+        console.log('submitted', response); //req
+
+        if (response.data.updated) {
+          document.location.reload();
+        } else {
+          _this4.errorMessage = response.data.alert;
+          _this4.file = null;
+          _this4.submitting = false;
+        }
+      });
+    },
+    startUploading: function startUploading() {
+      console.log('upload data');
+      this.uploadProcess = 1;
+    },
+    unselectProject: function unselectProject(num) {
+      this.uploadProcess = num ? num : 0;
+      this.submitting = false;
+      this.editing = false;
+    },
+    getBbox: function getBbox(datafile) {
+      return datafile.bbox.coordinates[0].map(function (data) {
+        return [data[1], data[0]];
+      });
+    },
+    getMapCenter: function getMapCenter(datafile) {
+      return _leaflet2.default.latLng(datafile.centroid.coordinates[1], datafile.centroid.coordinates[0]);
+    },
+    setActiveDatasetId: function setActiveDatasetId(id, index) {
+      console.log('click ' + id);
+      // squeeze tile display
+      this.squeezeTiles();
+      this.selectedDataset = id;
+      this.selectedIndex = index;
+      this.selectedGeoType = this.datafileList[index].geometryType;
+
+      console.log(this.datafileList[index]);
+
+      this.queryMapGeometry(this.selectedDataset);
+
+      // highlight selected tile
+
+      // display dataset info on the right side
+    },
+    queryMapGeometry: function queryMapGeometry(datasetId) {
+      var _this5 = this;
+
+      this.$http.get('/getThumbnailData/' + datasetId).then(function (response) {
+        console.log(response);
+        if (_this5.selectedGeoType == 'Polygon') _this5.selectedGeometries = response.data.geoJSON.map(function (obj) {
+          return obj.coordinates[0].map(function (item) {
+            return [item[1], item[0]];
+          });
+        });else if (_this5.selectedGeoType == 'Point') {
+          _this5.selectedGeometries = response.data.geoJSON.map(function (obj) {
+            return [obj.coordinates[1], obj.coordinates[0]];
+          });
+        } else {
+          //TODO: Load map of other type of data
+        }
+      });
+    },
+    parseTime: function parseTime(timeStr) {
+      var timeLst = timeStr.split('T');
+      var date = timeLst[0];
+      var time = timeLst[1].split('.')[0];
+      return date + ' ' + time;
+    },
+    squeezeTiles: function squeezeTiles() {
+      this.isSqueezed = true;
+    },
+    unSqueezeTiles: function unSqueezeTiles() {
+      this.isSqueezed = false;
+      this.selectedDataset = null;
+      this.selectedIndex = null;
+      this.selectedGeometries = null;
+      this.selectedGeoType = null;
+      this.editing = false;
+    },
+    parseCoord: function parseCoord(coord) {
+      return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2);
+    },
+    handleDeleteClick: function handleDeleteClick(datasetId) {
+      var _this6 = this;
+
+      var req = { userId: this.id, datafileId: datasetId };
+
+      this.$http.post('/delete/dataset/', req).then(function (response) {
+        console.log('deleted', req, response);
+        if (response.data.success) {
+          // deletion in the UI
+          _this6.unSqueezeTiles();
+          _this6.datafiles = _this6.datafiles.filter(function (item) {
+            return item.id != datasetId;
+          });
+        } else {
+          // TODO: handle delete fail
+        }
+      });
+    },
+    openEditForm: function openEditForm() {
+      console.log('edit data', this.selectedItem);
+      this.editing = true;
+
+      this.editTitle = this.selectedItem.userFileName;
+      this.editDesc = this.selectedItem.description;
+      this.editTime = new Date().toISOString();
+    },
+    closeEditingForm: function closeEditingForm() {
+      this.editing = false;
+    }
+  }
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("./node_modules/lodash/lodash.js")))
+
 /***/ }),
 
 /***/ "./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/components/DatasetCard.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+exports.default = {
+  name: 'DatasetName',
+  components: {},
+  data: function data() {
+    return {
+      maps: {}
+    };
+  },
+  created: function created() {
+    // console.log('created')
+  },
+
+  methods: {}
+};
 
 /***/ }),
 
@@ -1663,7 +2576,7 @@ exports.push([module.i, "/*!\n * \n * antd v0.6.1\n * \n * Copyright 2017-presen
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1dbcfb1e\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1f96b81a\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
@@ -1678,11 +2591,18 @@ exports.push([module.i, "", ""]);
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-4a6368d2\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
 // imports
+
+
+// module
+exports.push([module.i, ".map-thumbnail[data-v-6515c129]{width:100%;background-color:rgba(0,0,0,.1);height:200px;margin-bottom:10px}.map-thumbnail-preview[data-v-6515c129]{width:100%;background-color:rgba(0,0,0,.1);height:100%;margin-bottom:10px}.page-title-section[data-v-6515c129]{margin-top:80px}.actions[data-v-6515c129]{position:absolute;left:25px;top:4px;border:none;padding:0}.ant-switch-checked[data-v-6515c129],.ant-switch[data-v-6515c129]{background-color:rgba(0,0,0,.4)}.sorting-switches[data-v-6515c129]{display:inline-block;float:right;margin-top:30px}.no-data[data-v-6515c129]{position:absolute;text-align:center;font-size:20px;left:50%;top:50%;transform:translate(-50%,-50%)}.page-title[data-v-6515c129]{margin:20px;margin-left:0;display:inline-block}.switch[data-v-6515c129]{float:left;margin-left:12px;font-size:12px}.card[data-v-6515c129]{padding:0!important;height:268.5px}.dataset-list[data-v-6515c129]{width:100%;height:100%;overflow-y:auto;float:left;overflow-x:hidden}.left-col[data-v-6515c129]{height:100%}.dataset-info[data-v-6515c129]{position:absolute;width:100%;left:0;top:0;bottom:0;right:0;border:1px solid rgba(0,0,0,.1);box-shadow:4px 4px 6px 0 rgba(0,0,0,.1);background-color:#fff;padding-top:80px;z-index:1000}.datainfo-content[data-v-6515c129]{height:70%;position:absolute;width:90%;top:50%;left:50%;transform:translate(-50%,-50%)}.right-col[data-v-6515c129]{height:100%;position:relative}.squeezeddatasetlist[data-v-6515c129]{width:60%}.card[data-v-6515c129] .ant-card-body{padding:10px}.card[data-v-6515c129] .ant-card-meta-title{font-size:14px}.card[data-v-6515c129] .ant-card-meta-description{font-size:11px}.unsqueeze[data-v-6515c129]{cursor:pointer;position:absolute;top:90px;right:10px;transform:scale(2);z-index:1001}.unsqueeze[data-v-6515c129]:hover{opacity:.6}.selected[data-v-6515c129]{background:rgba(231,83,50,.8)}.selected[data-v-6515c129] .ant-card{transform:scale(.95)}.info-cover-wrapper[data-v-6515c129]{width:100%;padding:10px;margin-top:30px;position:relative;height:50%}.squeezedContainer[data-v-6515c129]{height:0;min-height:0!important}.info-cover[data-v-6515c129]{width:100%}.bottom-info[data-v-6515c129]{position:absolute;bottom:0;height:auto!important;width:100%}.info-text[data-v-6515c129]{padding:10px;height:100%}.info-text[data-v-6515c129] .info-title{font-weight:700;font-size:15px;text-overflow:ellipsis}.info-text[data-v-6515c129] .info-time{font-size:13px;color:rgba(0,0,0,.45)}.info-text[data-v-6515c129] .info-digits{color:rgba(0,0,0,.45)}.demo-infinite-container[data-v-6515c129]{border:1px solid #e8e8e8;border-radius:4px;overflow:auto;padding:8px 24px}.demo-loading[data-v-6515c129]{position:absolute;bottom:40px;width:100%;text-align:center}.ant-list-item[data-v-6515c129] .ant-list-item-meta-content{padding-top:5px}.mainContainer[data-v-6515c129]{min-height:calc(100vh - 130px)}.demo-infinite-container[data-v-6515c129]{margin-top:10px;height:100%;background-color:rgba(0,0,0,.01)}.demo-infinite-container[data-v-6515c129] .ant-spin-container{overflow-y:auto}.map-loading[data-v-6515c129]{position:absolute;z-index:100;left:50%;top:50%;transform:scale(2) translate(-50%,-50%);transform-origin:0 0}.adding-icon[data-v-6515c129]{left:50%;position:absolute;top:50%;border-radius:0;transform:scale(3) translate(-50%,-50%);transform-origin:0 0;padding:15px;opacity:.4}.adding-icon[data-v-6515c129]:hover{opacity:1!important;cursor:pointer}.adding-btn[data-v-6515c129]{width:100%;height:100%}.making[data-v-6515c129]{position:absolute;left:0;top:0;bottom:0;right:0;background-color:#fff;z-index:1000}.unselectProject[data-v-6515c129]{z-index:1000;position:absolute;right:10px;top:90px;transform:scale(2);cursor:pointer}.unselectProject[data-v-6515c129]:hover{opacity:.6}.making-wrapper[data-v-6515c129]{position:absolute;top:80px;left:0;right:0;bottom:100px;padding:50px}.making1-wrapper[data-v-6515c129]{padding:20px;width:70%;height:70%;min-width:300px;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%)}.making-title[data-v-6515c129]{text-align:center;font-size:26px;display:inherit;font-weight:500;margin-bottom:0}.loading[data-v-6515c129]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.ant-btn-danger[data-v-6515c129]{color:#fff;background-color:#e75332;border-color:#e75332}.ant-btn-primary[data-v-6515c129]{position:absolute;background-color:#e75332;border-color:#e75332;left:50%;bottom:70px;transform:translate(-50%)}.ant-upload-drag-icon .anticon[data-v-6515c129]{color:#e75332!important}.ant-input-search[data-v-6515c129]{float:right;margin-top:22px}.proj-list[data-v-6515c129] .ant-list-item{margin-bottom:1px;background-color:hsla(0,0%,100%,.7);border-bottom:none}.proj-list[data-v-6515c129] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.proj-list[data-v-6515c129] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.editingForm[data-v-6515c129]{z-index:1000;position:fixed;left:50%;top:50%;border:1px solid rgba(0,0,0,.1);padding:20px;transform:translate(-50%,-50%);border-radius:10px;background:#fff;width:50%;box-shadow:0 0 8px 8px rgba(0,0,0,.1)}.closeEditingForm[data-v-6515c129]{font-size:20px;position:absolute;right:10px;top:10px}.closeEditingForm[data-v-6515c129]:hover{opacity:.6;cursor:pointer}", ""]);
+
+// exports
+
 
 /***/ }),
 
@@ -50156,7 +51076,7 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1dbcfb1e\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1f96b81a\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -50168,26 +51088,81 @@ var staticRenderFns = []
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4a6368d2\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6515c129\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"a\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"b\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    [\n      _c(\n        \"a-card\",\n        { staticStyle: { width: \"300px\" }, attrs: { hoverable: \"\" } },\n        [\n          _c(\"img\", {\n            attrs: {\n              slot: \"cover\",\n              alt: \"example\",\n              src:\n                \"https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png\"\n            },\n            slot: \"cover\"\n          }),\n          _vm._v(\" \"),\n          _c(\n            \"ul\",\n            {\n              staticClass: \"ant-card-actions\",\n              attrs: { slot: \"actions\" },\n              slot: \"actions\"\n            },\n            [\n              _c(\n                \"li\",\n                { staticStyle: { width: \"33.3333%\" } },\n                [_c(\"a-icon\", { attrs: { type: \"setting\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\n                \"li\",\n                { staticStyle: { width: \"33.3333%\" } },\n                [_c(\"a-icon\", { attrs: { type: \"edit\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\n                \"li\",\n                { staticStyle: { width: \"33.3333%\" } },\n                [_c(\"a-icon\", { attrs: { type: \"ellipsis\" } })],\n                1\n              )\n            ]\n          ),\n          _vm._v(\" \"),\n          _c(\n            \"a-card-meta\",\n            {\n              attrs: {\n                title: \"Card title\",\n                description: \"This is the description\"\n              }\n            },\n            [\n              _c(\"a-avatar\", {\n                attrs: {\n                  slot: \"avatar\",\n                  src:\n                    \"https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png\"\n                },\n                slot: \"avatar\"\n              })\n            ],\n            1\n          )\n        ],\n        1\n      )\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-4a6368d2\", { render: render, staticRenderFns: staticRenderFns })\n  }\n}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9wcml2YXRlL3Z1ZS9jb21wb25lbnRzL0RhdGFzZXRDYXJkLnZ1ZT9kYTliIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxTQUFTLGVBQWUsaUJBQWlCLFVBQVUsZ0JBQWdCLEVBQUU7QUFDckU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7QUFDQSxXQUFXO0FBQ1g7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHNCQUFzQixrQkFBa0I7QUFDeEM7QUFDQSxhQUFhO0FBQ2I7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCLGVBQWUsb0JBQW9CLEVBQUU7QUFDdEQsK0JBQStCLFNBQVMsa0JBQWtCLEVBQUU7QUFDNUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQixlQUFlLG9CQUFvQixFQUFFO0FBQ3RELCtCQUErQixTQUFTLGVBQWUsRUFBRTtBQUN6RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCLGVBQWUsb0JBQW9CLEVBQUU7QUFDdEQsK0JBQStCLFNBQVMsbUJBQW1CLEVBQUU7QUFDN0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsYUFBYTtBQUNiO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQjtBQUNqQjtBQUNBLGVBQWU7QUFDZjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDa0M7QUFDbEMsSUFBSSxLQUFVO0FBQ2Q7QUFDQTtBQUNBLHFFQUFxRSxtREFBbUQ7QUFDeEg7QUFDQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LTRhNjM2OGQyXCIsXCJoYXNTY29wZWRcIjp0cnVlLFwib3B0aW9uc0lkXCI6XCIwXCIsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL3ByaXZhdGUvdnVlL2NvbXBvbmVudHMvRGF0YXNldENhcmQudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIHJlbmRlciA9IGZ1bmN0aW9uKCkge1xuICB2YXIgX3ZtID0gdGhpc1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gIHJldHVybiBfYyhcbiAgICBcImRpdlwiLFxuICAgIFtcbiAgICAgIF9jKFxuICAgICAgICBcImEtY2FyZFwiLFxuICAgICAgICB7IHN0YXRpY1N0eWxlOiB7IHdpZHRoOiBcIjMwMHB4XCIgfSwgYXR0cnM6IHsgaG92ZXJhYmxlOiBcIlwiIH0gfSxcbiAgICAgICAgW1xuICAgICAgICAgIF9jKFwiaW1nXCIsIHtcbiAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgIHNsb3Q6IFwiY292ZXJcIixcbiAgICAgICAgICAgICAgYWx0OiBcImV4YW1wbGVcIixcbiAgICAgICAgICAgICAgc3JjOlxuICAgICAgICAgICAgICAgIFwiaHR0cHM6Ly9ndy5hbGlwYXlvYmplY3RzLmNvbS96b3Mvcm1zcG9ydGFsL0ppcUdzdEVmb1dBT0hpVHhjbHFpLnBuZ1wiXG4gICAgICAgICAgICB9LFxuICAgICAgICAgICAgc2xvdDogXCJjb3ZlclwiXG4gICAgICAgICAgfSksXG4gICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICBfYyhcbiAgICAgICAgICAgIFwidWxcIixcbiAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwiYW50LWNhcmQtYWN0aW9uc1wiLFxuICAgICAgICAgICAgICBhdHRyczogeyBzbG90OiBcImFjdGlvbnNcIiB9LFxuICAgICAgICAgICAgICBzbG90OiBcImFjdGlvbnNcIlxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJsaVwiLFxuICAgICAgICAgICAgICAgIHsgc3RhdGljU3R5bGU6IHsgd2lkdGg6IFwiMzMuMzMzMyVcIiB9IH0sXG4gICAgICAgICAgICAgICAgW19jKFwiYS1pY29uXCIsIHsgYXR0cnM6IHsgdHlwZTogXCJzZXR0aW5nXCIgfSB9KV0sXG4gICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICBcImxpXCIsXG4gICAgICAgICAgICAgICAgeyBzdGF0aWNTdHlsZTogeyB3aWR0aDogXCIzMy4zMzMzJVwiIH0gfSxcbiAgICAgICAgICAgICAgICBbX2MoXCJhLWljb25cIiwgeyBhdHRyczogeyB0eXBlOiBcImVkaXRcIiB9IH0pXSxcbiAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgIFwibGlcIixcbiAgICAgICAgICAgICAgICB7IHN0YXRpY1N0eWxlOiB7IHdpZHRoOiBcIjMzLjMzMzMlXCIgfSB9LFxuICAgICAgICAgICAgICAgIFtfYyhcImEtaWNvblwiLCB7IGF0dHJzOiB7IHR5cGU6IFwiZWxsaXBzaXNcIiB9IH0pXSxcbiAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgIClcbiAgICAgICAgICAgIF1cbiAgICAgICAgICApLFxuICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgX2MoXG4gICAgICAgICAgICBcImEtY2FyZC1tZXRhXCIsXG4gICAgICAgICAgICB7XG4gICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgdGl0bGU6IFwiQ2FyZCB0aXRsZVwiLFxuICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOiBcIlRoaXMgaXMgdGhlIGRlc2NyaXB0aW9uXCJcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSxcbiAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgX2MoXCJhLWF2YXRhclwiLCB7XG4gICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgIHNsb3Q6IFwiYXZhdGFyXCIsXG4gICAgICAgICAgICAgICAgICBzcmM6XG4gICAgICAgICAgICAgICAgICAgIFwiaHR0cHM6Ly96b3MuYWxpcGF5b2JqZWN0cy5jb20vcm1zcG9ydGFsL09EVExjanhBZnZxYnhIblZYQ1lYLnBuZ1wiXG4gICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICBzbG90OiBcImF2YXRhclwiXG4gICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICBdLFxuICAgICAgICAgICAgMVxuICAgICAgICAgIClcbiAgICAgICAgXSxcbiAgICAgICAgMVxuICAgICAgKVxuICAgIF0sXG4gICAgMVxuICApXG59XG52YXIgc3RhdGljUmVuZGVyRm5zID0gW11cbnJlbmRlci5fd2l0aFN0cmlwcGVkID0gdHJ1ZVxuZXhwb3J0IHsgcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnMgfVxuaWYgKG1vZHVsZS5ob3QpIHtcbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAobW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgcmVxdWlyZShcInZ1ZS1ob3QtcmVsb2FkLWFwaVwiKSAgICAgIC5yZXJlbmRlcihcImRhdGEtdi00YTYzNjhkMlwiLCB7IHJlbmRlcjogcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnM6IHN0YXRpY1JlbmRlckZucyB9KVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXI/e1wiaWRcIjpcImRhdGEtdi00YTYzNjhkMlwiLFwiaGFzU2NvcGVkXCI6dHJ1ZSxcIm9wdGlvbnNJZFwiOlwiMFwiLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9wcml2YXRlL3Z1ZS9jb21wb25lbnRzL0RhdGFzZXRDYXJkLnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi00YTYzNjhkMlwiLFwiaGFzU2NvcGVkXCI6dHJ1ZSxcIm9wdGlvbnNJZFwiOlwiMFwiLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9wcml2YXRlL3Z1ZS9jb21wb25lbnRzL0RhdGFzZXRDYXJkLnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDAiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4a6368d2\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue\n");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"mainContainer",class:{
+    squeezedContainer: _vm.selectedDataset != null || _vm.uploadProcess != 0,
+  }},[_c('div',{staticClass:"page-title-section"},[_c('h1',{staticClass:"page-title"},[_vm._v("Datasets")]),_vm._v(" "),(_vm.datafiles.length > 0)?_c('div',{staticClass:"sorting-switches"},[_c('span',{staticClass:"switch"},[_vm._v("Sort By")]),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"checked-children":"date","un-checked-children":"name","size":"small"},model:{value:(_vm.sortDate),callback:function ($$v) {_vm.sortDate=$$v},expression:"sortDate"}}),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"size":"small"},model:{value:(_vm.sortDown),callback:function ($$v) {_vm.sortDown=$$v},expression:"sortDown"}},[_c('a-icon',{attrs:{"slot":"checkedChildren","type":"arrow-down"},slot:"checkedChildren"}),_vm._v(" "),_c('a-icon',{attrs:{"slot":"unCheckedChildren","type":"arrow-up"},slot:"unCheckedChildren"})],1)],1):_vm._e(),_vm._v(" "),_c('a-input-search',{staticStyle:{"width":"200px"},attrs:{"placeholder":"input search text"},on:{"search":_vm.onSearch}})],1),_vm._v(" "),(_vm.datafiles.length === 0)?_c('div',{staticClass:"no-data"},[_vm._v("No Data Uploaded.")]):_vm._e(),_vm._v(" "),_c('transition',[_c('div',{staticClass:"dataset-list",class:{ squeezeddatasetlist: _vm.isSqueezed }},[_c('a-list',{staticClass:"proj-list",attrs:{"grid":{ gutter: 1, column: 3 },"data-source":_vm.datafileList,"pagination":_vm.pagination},scopedSlots:_vm._u([{key:"renderItem",fn:function(datafile, index){return _c('a-list-item',{},[(datafile.label != 'adding')?_c('span',{staticClass:"card",class:{ selected: datafile.id === _vm.selectedDataset },on:{"click":function () {
+                _vm.setActiveDatasetId(datafile.id, index)
+              }}},[_c('a-card',{attrs:{"hoverable":""}},[_c('div',{staticClass:"map-thumbnail"},[_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(datafile),"bounds":_vm.getBbox(datafile)}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),_c('l-polygon',{attrs:{"lat-lngs":_vm.getBbox(datafile),"weight":2,"color":"black","fill-color":"rgb(255,255,255)"}})],1)],1),_vm._v(" "),_c('a-card-meta',{attrs:{"title":datafile.userFileName
+                    ? datafile.userFileName
+                    : datafile.filename,"description":_vm.parseTime(datafile.createdAt)}})],1)],1):_c('span',{staticClass:"card col-sm-12 adding-panel"},[_c('a-button',{staticClass:"adding-btn",attrs:{"type":"dashed"},on:{"click":function () {
+                  _vm.startUploading()
+                }}},[_vm._v("\n              Upload A New Dataset\n            ")])],1)])}}])})],1)]),_vm._v(" "),(_vm.isSqueezed)?_c('div',{staticClass:"dataset-info"},[_c('span',{staticClass:"unsqueeze",on:{"click":function () {
+          _vm.unSqueezeTiles()
+        }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"datainfo-content"},[_c('div',{staticClass:"col-sm-6 left-col"},[_c('a-dropdown',{staticClass:"actions"},[_c('a-menu',{attrs:{"slot":"overlay"},slot:"overlay"},[_c('a-menu-item',{key:"1",nativeOn:{"click":function($event){_vm.openEditForm()}}},[_vm._v("Edit")]),_vm._v(" "),_c('a-menu-item',{key:"2",nativeOn:{"click":function($event){_vm.handleDeleteClick(_vm.selectedDataset)}}},[_vm._v("Delete Dataset")])],1),_vm._v(" "),_c('a-button',[_vm._v(" Actions "),_c('a-icon',{attrs:{"type":"down"}})],1)],1),_vm._v(" "),_c('div',{staticClass:"info-cover-wrapper"},[(_vm.selectedGeometries == null)?_c('a-icon',{staticClass:"map-loading",attrs:{"type":"loading"}}):_vm._e(),_vm._v(" "),_c('div',{staticClass:"map-thumbnail-preview"},[(_vm.selectedGeometries != null)?_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(_vm.selectedItem),"bounds":_vm.getBbox(_vm.selectedItem)}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),(_vm.selectedGeoType == 'Polygon')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-polygon',{key:index,attrs:{"lat-lngs":geometry,"weight":1,"color":"black","fill-color":"rgb(255,255,255)"}})}):_vm._e(),_vm._v(" "),(_vm.selectedGeoType == 'Point')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-marker',{key:index,attrs:{"lat-lng":geometry}})}):_vm._e()],2):_vm._e()],1)],1),_vm._v(" "),_c('div',{staticClass:"info-text bottom-info"},[_c('div',{staticClass:"info-title"},[_vm._v("\n            Title:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.userFileName))])]),_vm._v(" "),_c('div',{staticClass:"info-title"},[_vm._v("\n            File name:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.filename))])]),_vm._v(" "),_c('div',[_vm._v("\n            Created at:\n            "),_c('span',{staticClass:"info-time"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.createdAt)))])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',[_vm._v("\n            Last updated at:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.updatedAt)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Latitude:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.centroid.coordinates[0].toFixed(2)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Longitude:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.centroid.coordinates[1].toFixed(2)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Type of Geometry:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.geometryType))])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',[_vm._v("\n            Description:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.description))])])])],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 right-col"},[_c('div',{staticClass:"info-text"},[_vm._m(0),_vm._v(" "),[_c('div',{staticClass:"demo-infinite-container"},[_c('a-list',{attrs:{"data-source":Object.keys(_vm.selectedItem.Datalayers[0].properties)},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('div')],1)}}])},[(_vm.loading && !_vm.busy)?_c('a-spin',{staticClass:"demo-loading"}):_vm._e()],1)],1)]],2)])])]):_vm._e(),_vm._v(" "),(_vm.editing == true)?_c('div',{staticClass:"editingForm"},[_c('span',{staticClass:"closeEditingForm",on:{"click":function () {
+          _vm.closeEditingForm()
+        }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),(!_vm.editSubmitting)?[_c('a-form',{on:{"submit":_vm.handleEditSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 16 },"field-decorator-options":{
+            rules: [{ required: true, message: 'Please input your title!' }],
+          },"label":"Title","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.editTitle),callback:function ($$v) {_vm.editTitle=$$v},expression:"editTitle"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 16 },"field-decorator-options":{
+            rules: [{ required: true, message: '' }],
+          },"label":"File info","field-decorator-id":"name"}},[_c('a-textarea',{attrs:{"autosize":{ minRows: 3, maxRows: 6 },"placeholder":"File Info"},model:{value:(_vm.editDesc),callback:function ($$v) {_vm.editDesc=$$v},expression:"editDesc"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(!_vm.submitting)?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n            Submit\n          ")]):_vm._e()],1)],1)]:_vm._e()],2):_vm._e(),_vm._v(" "),_c('transition',[(_vm.uploadProcess == 1)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+            _vm.unselectProject()
+          }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making1-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Upload Data")]),_vm._v(" "),_c('span',{staticClass:"making1-desc"},[_vm._v("\n          Upload a shapefile* to create a new data layer. The shapefile should\n          include numerical attribute data that you’d like to visualize. After\n          you upload the file, you will be prompted to provide a name,\n          location and description of your layer and to select a data\n          attribute for your layer to represent. Each layer can represent one\n          attribute.\n        ")]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {
+              _vm.unselectProject(2)
+            }}},[_vm._v("Upload Data")])],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.uploadProcess == 2)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+            _vm.unselectProject()
+          }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making-wrapper"},[(!_vm.submitting)?[_c('a-form',{on:{"submit":_vm.handleSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input your dataset name!',
+                  } ],
+              },"label":"Dataset Name","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.formName),callback:function ($$v) {_vm.formName=$$v},expression:"formName"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{
+                rules: [
+                  {
+                    required: true,
+                    message: 'Please input your dataset description!',
+                  } ],
+              },"label":"Description","field-decorator-id":"desc"}},[_c('a-textarea',{attrs:{"rows":2,"placeholder":"Data Description"},model:{value:(_vm.formDesc),callback:function ($$v) {_vm.formDesc=$$v},expression:"formDesc"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Keywords"}},[[_c('div',[_vm._l((_vm.tags),function(tag){return [(tag.length > 20)?_c('a-tooltip',{key:tag,attrs:{"title":tag}},[_c('a-tag',{key:tag,attrs:{"closable":true},on:{"afterClose":function () { return _vm.handleCloseTag(tag); }}},[_vm._v("\n                        "+_vm._s(((tag.slice(0, 20)) + "..."))+"\n                      ")])],1):_c('a-tag',{key:tag,attrs:{"closable":true},on:{"afterClose":function () { return _vm.handleCloseTag(tag); }}},[_vm._v("\n                      "+_vm._s(tag)+"\n                    ")])]}),_vm._v(" "),(_vm.inputVisible)?_c('a-input',{ref:"input",style:({ width: '78px' }),attrs:{"value":_vm.inputValue,"type":"text","size":"small"},on:{"change":_vm.handleInputChange,"blur":_vm.handleInputConfirm,"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handleInputConfirm($event)}}}):_c('a-tag',{staticStyle:{"background":"#fff","borderStyle":"dashed"},on:{"click":_vm.showInput}},[_c('a-icon',{attrs:{"type":"plus"}}),_vm._v(" New Tag\n                  ")],1)],2)]],2),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Publicity","field-decorator-id":"public"}},[_c('a-switch',{attrs:{"checked-children":"Public","un-checked-children":"Private"},model:{value:(_vm.formPublicity),callback:function ($$v) {_vm.formPublicity=$$v},expression:"formPublicity"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Dataset","field-decorator-id":"zipfile"}},[_c('div',{staticClass:"dropbox"},[_c('a-upload-dragger',{attrs:{"file":_vm.file,"before-upload":_vm.beforeUpload,"multiple":false,"name":"file","action":"","items":""},on:{"change":function($event){_vm.handleFileUpload()},"remove":_vm.handleRemove}},[_c('p',{staticClass:"ant-upload-drag-icon"},[_c('a-icon',{attrs:{"type":"inbox"}})],1),_vm._v(" "),_c('p',{staticClass:"ant-upload-text"},[_vm._v("\n                    Click or drag file to this area to upload\n                  ")]),_vm._v(" "),_c('p',{staticClass:"ant-upload-hint"},[_vm._v("\n                    *Currently, Painting with Data supports polygon shapefiles\n                    only. Shapefiles must be compressed in a ZIP file. The ZIP\n                    file should include these files:.dbf file, .prj file, .shp\n                    file, .shx files. Do not include /shd.xml file in the ZIP.\n                  ")])])],1)]),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[_c('div',[(_vm.errorMessage.length != 0)?_c('a-alert',{attrs:{"type":"error","message":"Error text","banner":""}}):_vm._e()],1)]),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(
+                  _vm.file && _vm.formName != null && _vm.formName != '' && !_vm.submitting
+                )?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n                Submit\n              ")]):_vm._e()],1)],1)]:_vm._e(),_vm._v(" "),(_vm.submitting)?[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})]:_vm._e()],2)]):_vm._e()])],1)}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('strong',[_vm._v("Properties")])])}]
 
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1dbcfb1e\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1f96b81a\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1f96b81a\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
+var update = add("3b39af5c", content, true, {});
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-4a6368d2\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
+var update = add("77c5f9f6", content, true, {});
 
 /***/ }),
 
@@ -61510,7 +62485,42 @@ new _Vue2.default({
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Datasets.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__);\n/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1dbcfb1e_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-1dbcfb1e\\\",\\\"hasScoped\\\":true,\\\"optionsId\\\":\\\"0\\\",\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(\"./node_modules/vue-loader/lib/runtime/component-normalizer.js\");\nvar disposed = false\nfunction injectStyle (context) {\n  if (disposed) return\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"optionsId\\\":\\\"0\\\",\\\"vue\\\":true,\\\"id\\\":\\\"data-v-1dbcfb1e\\\",\\\"scoped\\\":true,\\\"sourceMap\\\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue\")\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"optionsId\\\":\\\"0\\\",\\\"vue\\\":true,\\\"scoped\\\":false,\\\"sourceMap\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Datasets.vue\")\n}\n/* script */\n\n\n/* template */\n\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = injectStyle\n/* scopeId */\nvar __vue_scopeId__ = \"data-v-1dbcfb1e\"\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\n\nvar Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__[\"a\" /* default */])(\n  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default.a,\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1dbcfb1e_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__[\"a\" /* render */],\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1dbcfb1e_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__[\"b\" /* staticRenderFns */],\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"private/vue/Datasets.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-1dbcfb1e\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-1dbcfb1e\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Component.exports);\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9wcml2YXRlL3Z1ZS9EYXRhc2V0cy52dWU/OTBhZiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQSxFQUFFLG1CQUFPLENBQUMsc1dBQWlSO0FBQzNSLEVBQUUsbUJBQU8sQ0FBQyw2U0FBcVA7QUFDL1A7QUFDQTtBQUM0RztBQUNhO0FBQ3pIO0FBQ29VO0FBQ3BVO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDZ0c7QUFDaEcsZ0JBQWdCLGtIQUFrQjtBQUNsQyxFQUFFLDJIQUFjO0FBQ2hCLEVBQUUsMk9BQWM7QUFDaEIsRUFBRSxvUEFBeUI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRWMsZ0ZBQWlCIiwiZmlsZSI6Ii4vcHJpdmF0ZS92dWUvRGF0YXNldHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGRpc3Bvc2VkID0gZmFsc2VcbmZ1bmN0aW9uIGluamVjdFN0eWxlIChjb250ZXh0KSB7XG4gIGlmIChkaXNwb3NlZCkgcmV0dXJuXG4gIHJlcXVpcmUoXCIhIXZ1ZS1zdHlsZS1sb2FkZXIhY3NzLWxvYWRlciEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXg/e1xcXCJvcHRpb25zSWRcXFwiOlxcXCIwXFxcIixcXFwidnVlXFxcIjp0cnVlLFxcXCJpZFxcXCI6XFxcImRhdGEtdi0xZGJjZmIxZVxcXCIsXFxcInNjb3BlZFxcXCI6dHJ1ZSxcXFwic291cmNlTWFwXFxcIjp0cnVlfSFzYXNzLWxvYWRlciEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL0RhdGFzZXRzLnZ1ZVwiKVxuICByZXF1aXJlKFwiISF2dWUtc3R5bGUtbG9hZGVyIWNzcy1sb2FkZXI/c291cmNlTWFwIS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleD97XFxcIm9wdGlvbnNJZFxcXCI6XFxcIjBcXFwiLFxcXCJ2dWVcXFwiOnRydWUsXFxcInNjb3BlZFxcXCI6ZmFsc2UsXFxcInNvdXJjZU1hcFxcXCI6dHJ1ZX0hLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c3R5bGVzJmluZGV4PTEhLi9EYXRhc2V0cy52dWVcIilcbn1cbi8qIHNjcmlwdCAqL1xuZXhwb3J0ICogZnJvbSBcIiEhYmFiZWwtbG9hZGVyIS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vRGF0YXNldHMudnVlXCJcbmltcG9ydCBfX3Z1ZV9zY3JpcHRfXyBmcm9tIFwiISFiYWJlbC1sb2FkZXIhLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9EYXRhc2V0cy52dWVcIlxuLyogdGVtcGxhdGUgKi9cbmltcG9ydCB7cmVuZGVyIGFzIF9fdnVlX3JlbmRlcl9fLCBzdGF0aWNSZW5kZXJGbnMgYXMgX192dWVfc3RhdGljX3JlbmRlcl9mbnNfX30gZnJvbSBcIiEhLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4P3tcXFwiaWRcXFwiOlxcXCJkYXRhLXYtMWRiY2ZiMWVcXFwiLFxcXCJoYXNTY29wZWRcXFwiOnRydWUsXFxcIm9wdGlvbnNJZFxcXCI6XFxcIjBcXFwiLFxcXCJidWJsZVxcXCI6e1xcXCJ0cmFuc2Zvcm1zXFxcIjp7fX19IS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9EYXRhc2V0cy52dWVcIlxuLyogdGVtcGxhdGUgZnVuY3Rpb25hbCAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyA9IGZhbHNlXG4vKiBzdHlsZXMgKi9cbnZhciBfX3Z1ZV9zdHlsZXNfXyA9IGluamVjdFN0eWxlXG4vKiBzY29wZUlkICovXG52YXIgX192dWVfc2NvcGVJZF9fID0gXCJkYXRhLXYtMWRiY2ZiMWVcIlxuLyogbW9kdWxlSWRlbnRpZmllciAoc2VydmVyIG9ubHkpICovXG52YXIgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfXyA9IG51bGxcbmltcG9ydCBub3JtYWxpemVDb21wb25lbnQgZnJvbSBcIiEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvcnVudGltZS9jb21wb25lbnQtbm9ybWFsaXplclwiXG52YXIgQ29tcG9uZW50ID0gbm9ybWFsaXplQ29tcG9uZW50KFxuICBfX3Z1ZV9zY3JpcHRfXyxcbiAgX192dWVfcmVuZGVyX18sXG4gIF9fdnVlX3N0YXRpY19yZW5kZXJfZm5zX18sXG4gIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyxcbiAgX192dWVfc3R5bGVzX18sXG4gIF9fdnVlX3Njb3BlSWRfXyxcbiAgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfX1xuKVxuQ29tcG9uZW50Lm9wdGlvbnMuX19maWxlID0gXCJwcml2YXRlL3Z1ZS9EYXRhc2V0cy52dWVcIlxuXG4vKiBob3QgcmVsb2FkICovXG5pZiAobW9kdWxlLmhvdCkgeyhmdW5jdGlvbiAoKSB7XG4gIHZhciBob3RBUEkgPSByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpXG4gIGhvdEFQSS5pbnN0YWxsKHJlcXVpcmUoXCJ2dWVcIiksIGZhbHNlKVxuICBpZiAoIWhvdEFQSS5jb21wYXRpYmxlKSByZXR1cm5cbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAoIW1vZHVsZS5ob3QuZGF0YSkge1xuICAgIGhvdEFQSS5jcmVhdGVSZWNvcmQoXCJkYXRhLXYtMWRiY2ZiMWVcIiwgQ29tcG9uZW50Lm9wdGlvbnMpXG4gIH0gZWxzZSB7XG4gICAgaG90QVBJLnJlbG9hZChcImRhdGEtdi0xZGJjZmIxZVwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfVxuICBtb2R1bGUuaG90LmRpc3Bvc2UoZnVuY3Rpb24gKGRhdGEpIHtcbiAgICBkaXNwb3NlZCA9IHRydWVcbiAgfSlcbn0pKCl9XG5cbmV4cG9ydCBkZWZhdWx0IENvbXBvbmVudC5leHBvcnRzXG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL3ByaXZhdGUvdnVlL0RhdGFzZXRzLnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9wcml2YXRlL3Z1ZS9EYXRhc2V0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAwIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./private/vue/Datasets.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__ = __webpack_require__("./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Datasets.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6515c129\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/component-normalizer.js");
+function injectStyle (context) {
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?minimize!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Datasets.vue")
+}
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-6515c129"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+
+var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__["b" /* staticRenderFns */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
 
 /***/ }),
 
@@ -61551,1040 +62561,17 @@ exports.default = _vue2.default;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/components/DatasetCard.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__);\n/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4a6368d2_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-4a6368d2\\\",\\\"hasScoped\\\":true,\\\"optionsId\\\":\\\"0\\\",\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(\"./node_modules/vue-loader/lib/runtime/component-normalizer.js\");\nvar disposed = false\nfunction injectStyle (context) {\n  if (disposed) return\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"optionsId\\\":\\\"0\\\",\\\"vue\\\":true,\\\"id\\\":\\\"data-v-4a6368d2\\\",\\\"scoped\\\":true,\\\"sourceMap\\\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue\")\n}\n/* script */\n\n\n/* template */\n\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = injectStyle\n/* scopeId */\nvar __vue_scopeId__ = \"data-v-4a6368d2\"\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\n\nvar Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__[\"a\" /* default */])(\n  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue___default.a,\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4a6368d2_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__[\"a\" /* render */],\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4a6368d2_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__[\"b\" /* staticRenderFns */],\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"private/vue/components/DatasetCard.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-4a6368d2\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-4a6368d2\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Component.exports);\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9wcml2YXRlL3Z1ZS9jb21wb25lbnRzL0RhdGFzZXRDYXJkLnZ1ZT8zMzI3Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQ0E7QUFDQTtBQUNBLEVBQUUsbUJBQU8sQ0FBQyxvWEFBMFI7QUFDcFM7QUFDQTtBQUNrSDtBQUNhO0FBQy9IO0FBQzZVO0FBQzdVO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDbUc7QUFDbkcsZ0JBQWdCLGtIQUFrQjtBQUNsQyxFQUFFLDhIQUFjO0FBQ2hCLEVBQUUsOE9BQWM7QUFDaEIsRUFBRSx1UEFBeUI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRWMsZ0ZBQWlCIiwiZmlsZSI6Ii4vcHJpdmF0ZS92dWUvY29tcG9uZW50cy9EYXRhc2V0Q2FyZC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgZGlzcG9zZWQgPSBmYWxzZVxuZnVuY3Rpb24gaW5qZWN0U3R5bGUgKGNvbnRleHQpIHtcbiAgaWYgKGRpc3Bvc2VkKSByZXR1cm5cbiAgcmVxdWlyZShcIiEhdnVlLXN0eWxlLWxvYWRlciFjc3MtbG9hZGVyIS4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleD97XFxcIm9wdGlvbnNJZFxcXCI6XFxcIjBcXFwiLFxcXCJ2dWVcXFwiOnRydWUsXFxcImlkXFxcIjpcXFwiZGF0YS12LTRhNjM2OGQyXFxcIixcXFwic2NvcGVkXFxcIjp0cnVlLFxcXCJzb3VyY2VNYXBcXFwiOnRydWV9IXNhc3MtbG9hZGVyIS4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXN0eWxlcyZpbmRleD0wIS4vRGF0YXNldENhcmQudnVlXCIpXG59XG4vKiBzY3JpcHQgKi9cbmV4cG9ydCAqIGZyb20gXCIhIWJhYmVsLWxvYWRlciEuLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT1zY3JpcHQmaW5kZXg9MCEuL0RhdGFzZXRDYXJkLnZ1ZVwiXG5pbXBvcnQgX192dWVfc2NyaXB0X18gZnJvbSBcIiEhYmFiZWwtbG9hZGVyIS4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vRGF0YXNldENhcmQudnVlXCJcbi8qIHRlbXBsYXRlICovXG5pbXBvcnQge3JlbmRlciBhcyBfX3Z1ZV9yZW5kZXJfXywgc3RhdGljUmVuZGVyRm5zIGFzIF9fdnVlX3N0YXRpY19yZW5kZXJfZm5zX199IGZyb20gXCIhIS4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleD97XFxcImlkXFxcIjpcXFwiZGF0YS12LTRhNjM2OGQyXFxcIixcXFwiaGFzU2NvcGVkXFxcIjp0cnVlLFxcXCJvcHRpb25zSWRcXFwiOlxcXCIwXFxcIixcXFwiYnVibGVcXFwiOntcXFwidHJhbnNmb3Jtc1xcXCI6e319fSEuLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vRGF0YXNldENhcmQudnVlXCJcbi8qIHRlbXBsYXRlIGZ1bmN0aW9uYWwgKi9cbnZhciBfX3Z1ZV90ZW1wbGF0ZV9mdW5jdGlvbmFsX18gPSBmYWxzZVxuLyogc3R5bGVzICovXG52YXIgX192dWVfc3R5bGVzX18gPSBpbmplY3RTdHlsZVxuLyogc2NvcGVJZCAqL1xudmFyIF9fdnVlX3Njb3BlSWRfXyA9IFwiZGF0YS12LTRhNjM2OGQyXCJcbi8qIG1vZHVsZUlkZW50aWZpZXIgKHNlcnZlciBvbmx5KSAqL1xudmFyIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX18gPSBudWxsXG5pbXBvcnQgbm9ybWFsaXplQ29tcG9uZW50IGZyb20gXCIhLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3J1bnRpbWUvY29tcG9uZW50LW5vcm1hbGl6ZXJcIlxudmFyIENvbXBvbmVudCA9IG5vcm1hbGl6ZUNvbXBvbmVudChcbiAgX192dWVfc2NyaXB0X18sXG4gIF9fdnVlX3JlbmRlcl9fLFxuICBfX3Z1ZV9zdGF0aWNfcmVuZGVyX2Zuc19fLFxuICBfX3Z1ZV90ZW1wbGF0ZV9mdW5jdGlvbmFsX18sXG4gIF9fdnVlX3N0eWxlc19fLFxuICBfX3Z1ZV9zY29wZUlkX18sXG4gIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX19cbilcbkNvbXBvbmVudC5vcHRpb25zLl9fZmlsZSA9IFwicHJpdmF0ZS92dWUvY29tcG9uZW50cy9EYXRhc2V0Q2FyZC52dWVcIlxuXG4vKiBob3QgcmVsb2FkICovXG5pZiAobW9kdWxlLmhvdCkgeyhmdW5jdGlvbiAoKSB7XG4gIHZhciBob3RBUEkgPSByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpXG4gIGhvdEFQSS5pbnN0YWxsKHJlcXVpcmUoXCJ2dWVcIiksIGZhbHNlKVxuICBpZiAoIWhvdEFQSS5jb21wYXRpYmxlKSByZXR1cm5cbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAoIW1vZHVsZS5ob3QuZGF0YSkge1xuICAgIGhvdEFQSS5jcmVhdGVSZWNvcmQoXCJkYXRhLXYtNGE2MzY4ZDJcIiwgQ29tcG9uZW50Lm9wdGlvbnMpXG4gIH0gZWxzZSB7XG4gICAgaG90QVBJLnJlbG9hZChcImRhdGEtdi00YTYzNjhkMlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfVxuICBtb2R1bGUuaG90LmRpc3Bvc2UoZnVuY3Rpb24gKGRhdGEpIHtcbiAgICBkaXNwb3NlZCA9IHRydWVcbiAgfSlcbn0pKCl9XG5cbmV4cG9ydCBkZWZhdWx0IENvbXBvbmVudC5leHBvcnRzXG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL3ByaXZhdGUvdnVlL2NvbXBvbmVudHMvRGF0YXNldENhcmQudnVlXG4vLyBtb2R1bGUgaWQgPSAuL3ByaXZhdGUvdnVlL2NvbXBvbmVudHMvRGF0YXNldENhcmQudnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMCJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./private/vue/components/DatasetCard.vue\n");
-
-/***/ })
-
-/******/ });
-//# sourceMappingURL=Datasets.js.map
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _DatasetCard = __webpack_require__("./private/vue/components/DatasetCard.vue");
-
-var _DatasetCard2 = _interopRequireDefault(_DatasetCard);
-
-var _vue2Leaflet = __webpack_require__("./node_modules/vue2-leaflet/dist/vue2-leaflet.min.js");
-
-var _vue2Leaflet2 = _interopRequireDefault(_vue2Leaflet);
-
-var _leaflet = __webpack_require__("./node_modules/leaflet/dist/leaflet-src.js");
-
-var _leaflet2 = _interopRequireDefault(_leaflet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var LMap = _vue2Leaflet2.default.LMap,
-    LTileLayer = _vue2Leaflet2.default.LTileLayer,
-    LPolygon = _vue2Leaflet2.default.LPolygon,
-    LMarker = _vue2Leaflet2.default.LMarker;
-
-
-delete _leaflet2.default.Icon.Default.prototype._getIconUrl;
-
-_leaflet2.default.Icon.Default.mergeOptions({
-  iconRetinaUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon.png"),
-  shadowUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-shadow.png")
-});
-
-exports.default = {
-  name: 'Datasets',
-
-  components: {
-    DatasetCard: _DatasetCard2.default,
-    LMap: LMap,
-    LTileLayer: LTileLayer,
-    LPolygon: LPolygon,
-    LMarker: LMarker
-  },
-
-  data: function data() {
-    return Object.assign(server, {
-      maps: {},
-      isSqueezed: false,
-      selectedDataset: null,
-      selectedIndex: null,
-      loading: false,
-      busy: false,
-      sortDate: true,
-      sortDown: true,
-      zoom: 13,
-      url: 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
-
-      attribution: '',
-      selectedGeometries: null,
-      selectedGeoType: null,
-      uploadProcess: 0,
-      formName: '',
-      formDesc: '',
-      submitting: false,
-      file: null,
-      formPublicity: false,
-      tags: [],
-      inputVisible: false,
-      inputValue: '',
-      errorMessage: '',
-      searchKey: '',
-      editing: false,
-      editSubmitting: false,
-      editTitle: '',
-      editDesc: '',
-      editTime: '',
-      pagination: {
-        onChange: function onChange(page) {
-          console.log(page);
-        },
-        pageSize: 6
-      }
-    });
-  },
-
-  computed: {
-    datafileList: function datafileList() {
-      var _this = this;
-
-      var tempData = null;
-      if (this.sortDate) {
-        if (this.sortDown) {
-          tempData = _.sortBy(this.datafiles, [function (o) {
-            return o.createdAt;
-          }]).reverse();
-        } else {
-          tempData = _.sortBy(this.datafiles, [function (o) {
-            return o.createdAt;
-          }]);
-        }
-      } else {
-        if (this.sortDown) {
-          tempData = _.sortBy(this.datafiles, [function (o) {
-            return o.filename[0];
-          }]);
-        } else {
-          tempData = _.sortBy(this.datafiles, [function (o) {
-            return o.filename[0];
-          }]).reverse();
-        }
-      }
-
-      if (this.searchKey.length == 0) return this.addAddingItem(this.removeDeleted(tempData));else {
-        return this.addAddingItem(this.removeDeleted(tempData.filter(function (item) {
-          return (item.userFileName ? item.userFileName : item.filename).toLowerCase().indexOf(_this.searchKey.toLowerCase()) > -1;
-        })));
-      }
-    },
-    selectedItem: function selectedItem() {
-      var _this2 = this;
-
-      return this.datafileList.filter(function (item) {
-        return item.id == _this2.selectedDataset;
-      })[0];
-    }
-  },
-  created: function created() {
-    // console.log('created')
-    // this.$http.get('/getThumbnailData/29').then(response => {
-    //   console.log(response)
-    // })
-  },
-
-
-  methods: {
-    addAddingItem: function addAddingItem(dataList) {
-      var item = Object.assign({}, dataList[0]);
-      item.label = 'adding';
-      dataList.unshift(item);
-
-      // console.log(dataList)
-      return dataList;
-    },
-    removeDeleted: function removeDeleted(dataList) {
-      return dataList.filter(function (item) {
-        return item.deleted !== false && item.Datalayers.length != 0;
-      });
-    },
-    onSearch: function onSearch(value) {
-      console.log('searching', value);
-      this.searchKey = value;
-    },
-    handleCloseTag: function handleCloseTag(removedTag) {
-      var tags = this.tags.filter(function (tag) {
-        return tag !== removedTag;
-      });
-      console.log(tags);
-      this.tags = tags;
-    },
-    showInput: function showInput() {
-      this.inputVisible = true;
-      this.$nextTick(function () {
-        this.$refs.input.focus();
-      });
-    },
-    handleInputChange: function handleInputChange(e) {
-      this.inputValue = e.target.value;
-    },
-    handleInputConfirm: function handleInputConfirm() {
-      var inputValue = this.inputValue;
-      var tags = this.tags;
-      if (inputValue && tags.indexOf(inputValue) === -1) {
-        tags = [].concat(_toConsumableArray(tags), [inputValue]);
-      }
-      console.log(tags);
-      Object.assign(this, {
-        tags: tags,
-        inputVisible: false,
-        inputValue: ''
-      });
-    },
-    handleRemove: function handleRemove(file) {
-      console.log(file);
-      this.file = null;
-    },
-    beforeUpload: function beforeUpload(file) {
-      this.file = file;
-      this.errorMessage = '';
-      return false;
-    },
-    handleFileUpload: function handleFileUpload() {
-      // this.file = this.$refs.file.files[0];
-      console.log('selected file');
-    },
-    handleSubmit: function handleSubmit(e) {
-      var _this3 = this;
-
-      e.preventDefault();
-      this.submitting = true;
-      this.errorMessage = '';
-
-      var file = this.file;
-
-
-      var formData = new FormData();
-      formData.append('file', file);
-
-      /*
-        Additional POST Data
-      */
-      formData.append('dataset_name', this.formName);
-      formData.append('dataset_desc', this.formDesc);
-      formData.append('dataset_public', this.formPublicity);
-      formData.append('dataset_tags', this.tags);
-
-      this.$http.post('/upload', formData).then(function (response) {
-        console.log('submitted', response); //req
-
-        if (response.data.completed) {
-          document.location.reload();
-        } else {
-          _this3.errorMessage = response.data.alert;
-          _this3.file = null;
-          _this3.submitting = false;
-
-          // need to indicate errors
-        }
-      });
-    },
-    handleEditSubmit: function handleEditSubmit(e) {
-      var _this4 = this;
-
-      e.preventDefault();
-      this.submitting = true;
-
-      var formData = {
-        userFileName: this.editTitle,
-        description: this.editDesc,
-        updatedAt: this.editTime,
-        id: this.selectedItem.id
-      };
-
-      console.log('formData', formData);
-
-      // TO DO: call middleware API below
-
-      this.$http.post('/editUserfile', formData).then(function (response) {
-        console.log('submitted', response); //req
-
-        if (response.data.updated) {
-          document.location.reload();
-        } else {
-          _this4.errorMessage = response.data.alert;
-          _this4.file = null;
-          _this4.submitting = false;
-        }
-      });
-    },
-    startUploading: function startUploading() {
-      console.log('upload data');
-      this.uploadProcess = 1;
-    },
-    unselectProject: function unselectProject(num) {
-      this.uploadProcess = num ? num : 0;
-      this.submitting = false;
-      this.editing = false;
-    },
-    getBbox: function getBbox(datafile) {
-      return datafile.bbox.coordinates[0].map(function (data) {
-        return [data[1], data[0]];
-      });
-    },
-    getMapCenter: function getMapCenter(datafile) {
-      return _leaflet2.default.latLng(datafile.centroid.coordinates[1], datafile.centroid.coordinates[0]);
-    },
-    setActiveDatasetId: function setActiveDatasetId(id, index) {
-      console.log('click ' + id);
-      // squeeze tile display
-      this.squeezeTiles();
-      this.selectedDataset = id;
-      this.selectedIndex = index;
-      this.selectedGeoType = this.datafileList[index].geometryType;
-
-      console.log(this.datafileList[index]);
-
-      this.queryMapGeometry(this.selectedDataset);
-
-      // highlight selected tile
-
-      // display dataset info on the right side
-    },
-    queryMapGeometry: function queryMapGeometry(datasetId) {
-      var _this5 = this;
-
-      this.$http.get('/getThumbnailData/' + datasetId).then(function (response) {
-        console.log(response);
-        if (_this5.selectedGeoType == 'Polygon') _this5.selectedGeometries = response.data.geoJSON.map(function (obj) {
-          return obj.coordinates[0].map(function (item) {
-            return [item[1], item[0]];
-          });
-        });else if (_this5.selectedGeoType == 'Point') {
-          _this5.selectedGeometries = response.data.geoJSON.map(function (obj) {
-            return [obj.coordinates[1], obj.coordinates[0]];
-          });
-        } else {
-          //TODO: Load map of other type of data
-        }
-      });
-    },
-    parseTime: function parseTime(timeStr) {
-      var timeLst = timeStr.split('T');
-      var date = timeLst[0];
-      var time = timeLst[1].split('.')[0];
-      return date + ' ' + time;
-    },
-    squeezeTiles: function squeezeTiles() {
-      this.isSqueezed = true;
-    },
-    unSqueezeTiles: function unSqueezeTiles() {
-      this.isSqueezed = false;
-      this.selectedDataset = null;
-      this.selectedIndex = null;
-      this.selectedGeometries = null;
-      this.selectedGeoType = null;
-      this.editing = false;
-    },
-    parseCoord: function parseCoord(coord) {
-      return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2);
-    },
-    handleDeleteClick: function handleDeleteClick(datasetId) {
-      var _this6 = this;
-
-      var req = { userId: this.id, datafileId: datasetId };
-
-      this.$http.post('/delete/dataset/', req).then(function (response) {
-        console.log('deleted', req, response);
-        if (response.data.success) {
-          // deletion in the UI
-          _this6.unSqueezeTiles();
-          _this6.datafiles = _this6.datafiles.filter(function (item) {
-            return item.id != datasetId;
-          });
-        } else {
-          // TODO: handle delete fail
-        }
-      });
-    },
-    openEditForm: function openEditForm() {
-      console.log('edit data', this.selectedItem);
-      this.editing = true;
-
-      this.editTitle = this.selectedItem.userFileName;
-      this.editDesc = this.selectedItem.description;
-      this.editTime = new Date().toISOString();
-    },
-    closeEditingForm: function closeEditingForm() {
-      this.editing = false;
-    }
-  }
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("./node_modules/lodash/lodash.js")))
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-exports.default = {
-  name: 'DatasetName',
-  components: {},
-  data: function data() {
-    return {
-      maps: {}
-    };
-  },
-  created: function created() {
-    // console.log('created')
-  },
-
-  methods: {}
-};
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-522e2537\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
-
-// module
-exports.push([module.i, ".map-thumbnail[data-v-6515c129]{width:100%;background-color:rgba(0,0,0,.1);height:200px;margin-bottom:10px}.map-thumbnail-preview[data-v-6515c129]{width:100%;background-color:rgba(0,0,0,.1);height:100%;margin-bottom:10px}.page-title-section[data-v-6515c129]{margin-top:80px}.actions[data-v-6515c129]{position:absolute;left:25px;top:4px;border:none;padding:0}.ant-switch-checked[data-v-6515c129],.ant-switch[data-v-6515c129]{background-color:rgba(0,0,0,.4)}.sorting-switches[data-v-6515c129]{display:inline-block;float:right;margin-top:30px}.no-data[data-v-6515c129]{position:absolute;text-align:center;font-size:20px;left:50%;top:50%;transform:translate(-50%,-50%)}.page-title[data-v-6515c129]{margin:20px;margin-left:0;display:inline-block}.switch[data-v-6515c129]{float:left;margin-left:12px;font-size:12px}.card[data-v-6515c129]{padding:0!important;height:268.5px}.dataset-list[data-v-6515c129]{width:100%;height:100%;overflow-y:auto;float:left;overflow-x:hidden}.left-col[data-v-6515c129]{height:100%}.dataset-info[data-v-6515c129]{position:absolute;width:100%;left:0;top:0;bottom:0;right:0;border:1px solid rgba(0,0,0,.1);box-shadow:4px 4px 6px 0 rgba(0,0,0,.1);background-color:#fff;padding-top:80px;z-index:1000}.datainfo-content[data-v-6515c129]{height:70%;position:absolute;width:90%;top:50%;left:50%;transform:translate(-50%,-50%)}.right-col[data-v-6515c129]{height:100%;position:relative}.squeezeddatasetlist[data-v-6515c129]{width:60%}.card[data-v-6515c129] .ant-card-body{padding:10px}.card[data-v-6515c129] .ant-card-meta-title{font-size:14px}.card[data-v-6515c129] .ant-card-meta-description{font-size:11px}.unsqueeze[data-v-6515c129]{cursor:pointer;position:absolute;top:90px;right:10px;transform:scale(2);z-index:1001}.unsqueeze[data-v-6515c129]:hover{opacity:.6}.selected[data-v-6515c129]{background:rgba(231,83,50,.8)}.selected[data-v-6515c129] .ant-card{transform:scale(.95)}.info-cover-wrapper[data-v-6515c129]{width:100%;padding:10px;margin-top:30px;position:relative;height:50%}.squeezedContainer[data-v-6515c129]{height:0;min-height:0!important}.info-cover[data-v-6515c129]{width:100%}.bottom-info[data-v-6515c129]{position:absolute;bottom:0;height:auto!important;width:100%}.info-text[data-v-6515c129]{padding:10px;height:100%}.info-text[data-v-6515c129] .info-title{font-weight:700;font-size:15px;text-overflow:ellipsis}.info-text[data-v-6515c129] .info-time{font-size:13px;color:rgba(0,0,0,.45)}.info-text[data-v-6515c129] .info-digits{color:rgba(0,0,0,.45)}.demo-infinite-container[data-v-6515c129]{border:1px solid #e8e8e8;border-radius:4px;overflow:auto;padding:8px 24px}.demo-loading[data-v-6515c129]{position:absolute;bottom:40px;width:100%;text-align:center}.ant-list-item[data-v-6515c129] .ant-list-item-meta-content{padding-top:5px}.mainContainer[data-v-6515c129]{min-height:calc(100vh - 130px)}.demo-infinite-container[data-v-6515c129]{margin-top:10px;height:100%;background-color:rgba(0,0,0,.01)}.demo-infinite-container[data-v-6515c129] .ant-spin-container{overflow-y:auto}.map-loading[data-v-6515c129]{position:absolute;z-index:100;left:50%;top:50%;transform:scale(2) translate(-50%,-50%);transform-origin:0 0}.adding-icon[data-v-6515c129]{left:50%;position:absolute;top:50%;border-radius:0;transform:scale(3) translate(-50%,-50%);transform-origin:0 0;padding:15px;opacity:.4}.adding-icon[data-v-6515c129]:hover{opacity:1!important;cursor:pointer}.adding-btn[data-v-6515c129]{width:100%;height:100%}.making[data-v-6515c129]{position:absolute;left:0;top:0;bottom:0;right:0;background-color:#fff;z-index:1000}.unselectProject[data-v-6515c129]{z-index:1000;position:absolute;right:10px;top:90px;transform:scale(2);cursor:pointer}.unselectProject[data-v-6515c129]:hover{opacity:.6}.making-wrapper[data-v-6515c129]{position:absolute;top:80px;left:0;right:0;bottom:100px;padding:50px}.making1-wrapper[data-v-6515c129]{padding:20px;width:70%;height:70%;min-width:300px;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%)}.making-title[data-v-6515c129]{text-align:center;font-size:26px;display:inherit;font-weight:500;margin-bottom:0}.loading[data-v-6515c129]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.ant-btn-danger[data-v-6515c129]{color:#fff;background-color:#e75332;border-color:#e75332}.ant-btn-primary[data-v-6515c129]{position:absolute;background-color:#e75332;border-color:#e75332;left:50%;bottom:70px;transform:translate(-50%)}.ant-upload-drag-icon .anticon[data-v-6515c129]{color:#e75332!important}.ant-input-search[data-v-6515c129]{float:right;margin-top:22px}.proj-list[data-v-6515c129] .ant-list-item{margin-bottom:1px;background-color:hsla(0,0%,100%,.7);border-bottom:none}.proj-list[data-v-6515c129] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.proj-list[data-v-6515c129] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.editingForm[data-v-6515c129]{z-index:1000;position:fixed;left:50%;top:50%;border:1px solid rgba(0,0,0,.1);padding:20px;transform:translate(-50%,-50%);border-radius:10px;background:#fff;width:50%;box-shadow:0 0 8px 8px rgba(0,0,0,.1)}.closeEditingForm[data-v-6515c129]{font-size:20px;position:absolute;right:10px;top:10px}.closeEditingForm[data-v-6515c129]:hover{opacity:.6;cursor:pointer}", ""]);
-
-// exports
-
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-522e2537\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue":
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6515c129\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue":
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"mainContainer",class:{
-    squeezedContainer: _vm.selectedDataset != null || _vm.uploadProcess != 0,
-  }},[_c('div',{staticClass:"page-title-section"},[_c('h1',{staticClass:"page-title"},[_vm._v("Datasets")]),_vm._v(" "),(_vm.datafiles.length > 0)?_c('div',{staticClass:"sorting-switches"},[_c('span',{staticClass:"switch"},[_vm._v("Sort By")]),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"checked-children":"date","un-checked-children":"name","size":"small"},model:{value:(_vm.sortDate),callback:function ($$v) {_vm.sortDate=$$v},expression:"sortDate"}}),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"size":"small"},model:{value:(_vm.sortDown),callback:function ($$v) {_vm.sortDown=$$v},expression:"sortDown"}},[_c('a-icon',{attrs:{"slot":"checkedChildren","type":"arrow-down"},slot:"checkedChildren"}),_vm._v(" "),_c('a-icon',{attrs:{"slot":"unCheckedChildren","type":"arrow-up"},slot:"unCheckedChildren"})],1)],1):_vm._e(),_vm._v(" "),_c('a-input-search',{staticStyle:{"width":"200px"},attrs:{"placeholder":"input search text"},on:{"search":_vm.onSearch}})],1),_vm._v(" "),(_vm.datafiles.length === 0)?_c('div',{staticClass:"no-data"},[_vm._v("No Data Uploaded.")]):_vm._e(),_vm._v(" "),_c('transition',[_c('div',{staticClass:"dataset-list",class:{ squeezeddatasetlist: _vm.isSqueezed }},[_c('a-list',{staticClass:"proj-list",attrs:{"grid":{ gutter: 1, column: 3 },"data-source":_vm.datafileList,"pagination":_vm.pagination},scopedSlots:_vm._u([{key:"renderItem",fn:function(datafile, index){return _c('a-list-item',{},[(datafile.label != 'adding')?_c('span',{staticClass:"card",class:{ selected: datafile.id === _vm.selectedDataset },on:{"click":function () {
-                _vm.setActiveDatasetId(datafile.id, index)
-              }}},[_c('a-card',{attrs:{"hoverable":""}},[_c('div',{staticClass:"map-thumbnail"},[_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(datafile),"bounds":_vm.getBbox(datafile)}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),_c('l-polygon',{attrs:{"lat-lngs":_vm.getBbox(datafile),"weight":2,"color":"black","fill-color":"rgb(255,255,255)"}})],1)],1),_vm._v(" "),_c('a-card-meta',{attrs:{"title":datafile.userFileName
-                    ? datafile.userFileName
-                    : datafile.filename,"description":_vm.parseTime(datafile.createdAt)}})],1)],1):_c('span',{staticClass:"card col-sm-12 adding-panel"},[_c('a-button',{staticClass:"adding-btn",attrs:{"type":"dashed"},on:{"click":function () {
-                  _vm.startUploading()
-                }}},[_vm._v("\n              Upload A New Dataset\n            ")])],1)])}}])})],1)]),_vm._v(" "),(_vm.isSqueezed)?_c('div',{staticClass:"dataset-info"},[_c('span',{staticClass:"unsqueeze",on:{"click":function () {
-          _vm.unSqueezeTiles()
-        }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"datainfo-content"},[_c('div',{staticClass:"col-sm-6 left-col"},[_c('a-dropdown',{staticClass:"actions"},[_c('a-menu',{attrs:{"slot":"overlay"},slot:"overlay"},[_c('a-menu-item',{key:"1",nativeOn:{"click":function($event){_vm.openEditForm()}}},[_vm._v("Edit")]),_vm._v(" "),_c('a-menu-item',{key:"2",nativeOn:{"click":function($event){_vm.handleDeleteClick(_vm.selectedDataset)}}},[_vm._v("Delete Dataset")])],1),_vm._v(" "),_c('a-button',[_vm._v(" Actions "),_c('a-icon',{attrs:{"type":"down"}})],1)],1),_vm._v(" "),_c('div',{staticClass:"info-cover-wrapper"},[(_vm.selectedGeometries == null)?_c('a-icon',{staticClass:"map-loading",attrs:{"type":"loading"}}):_vm._e(),_vm._v(" "),_c('div',{staticClass:"map-thumbnail-preview"},[(_vm.selectedGeometries != null)?_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(_vm.selectedItem),"bounds":_vm.getBbox(_vm.selectedItem)}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),(_vm.selectedGeoType == 'Polygon')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-polygon',{key:index,attrs:{"lat-lngs":geometry,"weight":1,"color":"black","fill-color":"rgb(255,255,255)"}})}):_vm._e(),_vm._v(" "),(_vm.selectedGeoType == 'Point')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-marker',{key:index,attrs:{"lat-lng":geometry}})}):_vm._e()],2):_vm._e()],1)],1),_vm._v(" "),_c('div',{staticClass:"info-text bottom-info"},[_c('div',{staticClass:"info-title"},[_vm._v("\n            Title:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.userFileName))])]),_vm._v(" "),_c('div',{staticClass:"info-title"},[_vm._v("\n            File name:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.filename))])]),_vm._v(" "),_c('div',[_vm._v("\n            Created at:\n            "),_c('span',{staticClass:"info-time"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.createdAt)))])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',[_vm._v("\n            Last updated at:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.updatedAt)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Latitude:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.centroid.coordinates[0].toFixed(2)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Longitude:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.centroid.coordinates[1].toFixed(2)))])]),_vm._v(" "),_c('div',[_vm._v("\n            Type of Geometry:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.geometryType))])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('div',[_vm._v("\n            Description:\n            "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.selectedItem.description))])])])],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 right-col"},[_c('div',{staticClass:"info-text"},[_vm._m(0),_vm._v(" "),[_c('div',{staticClass:"demo-infinite-container"},[_c('a-list',{attrs:{"data-source":Object.keys(_vm.selectedItem.Datalayers[0].properties)},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('div')],1)}}])},[(_vm.loading && !_vm.busy)?_c('a-spin',{staticClass:"demo-loading"}):_vm._e()],1)],1)]],2)])])]):_vm._e(),_vm._v(" "),(_vm.editing == true)?_c('div',{staticClass:"editingForm"},[_c('span',{staticClass:"closeEditingForm",on:{"click":function () {
-          _vm.closeEditingForm()
-        }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),(!_vm.editSubmitting)?[_c('a-form',{on:{"submit":_vm.handleEditSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 16 },"field-decorator-options":{
-            rules: [{ required: true, message: 'Please input your title!' }],
-          },"label":"Title","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.editTitle),callback:function ($$v) {_vm.editTitle=$$v},expression:"editTitle"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 16 },"field-decorator-options":{
-            rules: [{ required: true, message: '' }],
-          },"label":"File info","field-decorator-id":"name"}},[_c('a-textarea',{attrs:{"autosize":{ minRows: 3, maxRows: 6 },"placeholder":"File Info"},model:{value:(_vm.editDesc),callback:function ($$v) {_vm.editDesc=$$v},expression:"editDesc"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(!_vm.submitting)?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n            Submit\n          ")]):_vm._e()],1)],1)]:_vm._e()],2):_vm._e(),_vm._v(" "),_c('transition',[(_vm.uploadProcess == 1)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
-            _vm.unselectProject()
-          }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making1-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Upload Data")]),_vm._v(" "),_c('span',{staticClass:"making1-desc"},[_vm._v("\n          Upload a shapefile* to create a new data layer. The shapefile should\n          include numerical attribute data that you’d like to visualize. After\n          you upload the file, you will be prompted to provide a name,\n          location and description of your layer and to select a data\n          attribute for your layer to represent. Each layer can represent one\n          attribute.\n        ")]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {
-              _vm.unselectProject(2)
-            }}},[_vm._v("Upload Data")])],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.uploadProcess == 2)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
-            _vm.unselectProject()
-          }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making-wrapper"},[(!_vm.submitting)?[_c('a-form',{on:{"submit":_vm.handleSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your dataset name!',
-                  } ],
-              },"label":"Dataset Name","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.formName),callback:function ($$v) {_vm.formName=$$v},expression:"formName"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{
-                rules: [
-                  {
-                    required: true,
-                    message: 'Please input your dataset description!',
-                  } ],
-              },"label":"Description","field-decorator-id":"desc"}},[_c('a-textarea',{attrs:{"rows":2,"placeholder":"Data Description"},model:{value:(_vm.formDesc),callback:function ($$v) {_vm.formDesc=$$v},expression:"formDesc"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Keywords"}},[[_c('div',[_vm._l((_vm.tags),function(tag){return [(tag.length > 20)?_c('a-tooltip',{key:tag,attrs:{"title":tag}},[_c('a-tag',{key:tag,attrs:{"closable":true},on:{"afterClose":function () { return _vm.handleCloseTag(tag); }}},[_vm._v("\n                        "+_vm._s(((tag.slice(0, 20)) + "..."))+"\n                      ")])],1):_c('a-tag',{key:tag,attrs:{"closable":true},on:{"afterClose":function () { return _vm.handleCloseTag(tag); }}},[_vm._v("\n                      "+_vm._s(tag)+"\n                    ")])]}),_vm._v(" "),(_vm.inputVisible)?_c('a-input',{ref:"input",style:({ width: '78px' }),attrs:{"value":_vm.inputValue,"type":"text","size":"small"},on:{"change":_vm.handleInputChange,"blur":_vm.handleInputConfirm,"keyup":function($event){if(!('button' in $event)&&_vm._k($event.keyCode,"enter",13,$event.key,"Enter")){ return null; }return _vm.handleInputConfirm($event)}}}):_c('a-tag',{staticStyle:{"background":"#fff","borderStyle":"dashed"},on:{"click":_vm.showInput}},[_c('a-icon',{attrs:{"type":"plus"}}),_vm._v(" New Tag\n                  ")],1)],2)]],2),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Publicity","field-decorator-id":"public"}},[_c('a-switch',{attrs:{"checked-children":"Public","un-checked-children":"Private"},model:{value:(_vm.formPublicity),callback:function ($$v) {_vm.formPublicity=$$v},expression:"formPublicity"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Dataset","field-decorator-id":"zipfile"}},[_c('div',{staticClass:"dropbox"},[_c('a-upload-dragger',{attrs:{"file":_vm.file,"before-upload":_vm.beforeUpload,"multiple":false,"name":"file","action":"","items":""},on:{"change":function($event){_vm.handleFileUpload()},"remove":_vm.handleRemove}},[_c('p',{staticClass:"ant-upload-drag-icon"},[_c('a-icon',{attrs:{"type":"inbox"}})],1),_vm._v(" "),_c('p',{staticClass:"ant-upload-text"},[_vm._v("\n                    Click or drag file to this area to upload\n                  ")]),_vm._v(" "),_c('p',{staticClass:"ant-upload-hint"},[_vm._v("\n                    *Currently, Painting with Data supports polygon shapefiles\n                    only. Shapefiles must be compressed in a ZIP file. The ZIP\n                    file should include these files:.dbf file, .prj file, .shp\n                    file, .shx files. Do not include /shd.xml file in the ZIP.\n                  ")])])],1)]),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[_c('div',[(_vm.errorMessage.length != 0)?_c('a-alert',{attrs:{"type":"error","message":"Error text","banner":""}}):_vm._e()],1)]),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(
-                  _vm.file && _vm.formName != null && _vm.formName != '' && !_vm.submitting
-                )?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n                Submit\n              ")]):_vm._e()],1)],1)]:_vm._e(),_vm._v(" "),(_vm.submitting)?[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})]:_vm._e()],2)]):_vm._e()])],1)}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('strong',[_vm._v("Properties")])])}]
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-522e2537\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue":
-// load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-522e2537\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue");
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("9c044b46", content, true, {});
-
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue":
-// load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue");
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("77c5f9f6", content, true, {});
-
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__ = __webpack_require__("./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Datasets.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6515c129\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Datasets.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/component-normalizer.js");
-function injectStyle (context) {
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-6515c129\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Datasets.vue")
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?minimize!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Datasets.vue")
-}
-/* script */
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-6515c129"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-
-var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Datasets_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__["a" /* render */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6515c129_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Datasets_vue__["b" /* staticRenderFns */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
-
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__ = __webpack_require__("./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/components/DatasetCard.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__);
 /* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_522e2537_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-522e2537\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1f96b81a_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1f96b81a\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/components/DatasetCard.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/component-normalizer.js");
 function injectStyle (context) {
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-522e2537\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-1f96b81a\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/components/DatasetCard.vue")
 }
 /* script */
+
 
 /* template */
 
@@ -62593,14 +62580,14 @@ var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-522e2537"
+var __vue_scopeId__ = "data-v-1f96b81a"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 
 var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
   __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_DatasetCard_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_522e2537_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__["a" /* render */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_522e2537_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__["b" /* staticRenderFns */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1f96b81a_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_1f96b81a_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_DatasetCard_vue__["b" /* staticRenderFns */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -62609,3 +62596,8 @@ var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_
 
 /* harmony default export */ __webpack_exports__["default"] = (Component.exports);
 
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=Datasets.js.map
