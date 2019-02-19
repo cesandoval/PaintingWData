@@ -1,24 +1,25 @@
 <template>
-  <div 
-    :class="{ squeezedContainer:selectedProject!=null||makingProcess!=0, }"
-    class = "mainContainer"
-  
+  <div
+    :class="{
+      squeezedContainer: selectedProject != null || makingProcess != 0,
+    }"
+    class="mainContainer"
   >
-    <div class = "page-title-section">
-      <h1 class = "page-title">Projects</h1>
+    <div class="page-title-section">
+      <h1 class="page-title">Projects</h1>
 
-      <div v-if="datavoxels.length>0"
-           class="sorting-Switches"
-      >
-        <span class = "switch">Sort By</span>
-        <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small"
-                  class = "switch"/>
-        <a-switch v-model="sortDown"
-                  size="small"
-                  class = "switch">
-          <a-icon slot="checkedChildren" type="arrow-down"/>
-          <a-icon slot="unCheckedChildren" type="arrow-up"/>
+      <div v-if="datavoxels.length > 0" class="sorting-Switches">
+        <span class="switch">Sort By</span>
+        <a-switch
+          v-model="sortDate"
+          checked-children="date"
+          un-checked-children="name"
+          size="small"
+          class="switch"
+        />
+        <a-switch v-model="sortDown" size="small" class="switch">
+          <a-icon slot="checkedChildren" type="arrow-down" />
+          <a-icon slot="unCheckedChildren" type="arrow-up" />
         </a-switch>
       </div>
       <a-input-search
@@ -36,10 +37,8 @@
 
     <!-- project thumbnail list -->
     <transition>
-      <div 
-        class = "dataset-list">
-
-        <!-- adding project btn -->        
+      <div class="dataset-list">
+        <!-- adding project btn -->
 
         <a-list
           :grid="{ gutter: 1, column: 3 }"
@@ -47,175 +46,142 @@
           :pagination="pagination"
           class="proj-list"
         >
-
-          <!-- <span class="card col-sm-4 adding-panel">
-            <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
-              Create A New Project
-            </a-button>
-          </span> -->
-
           <a-list-item slot="renderItem" slot-scope="datafile, index">
-
             <span
-              v-if="datafile.label!='adding'"
-              :class="{selected:datafile.id===selectedProject}"
+              v-if="datafile.label != 'adding'"
+              :class="{ selected: datafile.id === selectedProject }"
               class="card"
-              @click="()=> {setActiveProjId(datafile.id,index)}"
+              @click="
+                () => {
+                  setActiveProjId(datafile.id, index)
+                }
+              "
             >
-              <a-card
-                hoverable
-              >
+              <a-card hoverable>
                 <div class="card-images">
                   <img
-                    v-if="datafile.Datavoxelimage!=null"
+                    v-if="datafile.Datavoxelimage != null"
                     slot="cover"
-                    :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
-                    class = "thumbnail-img"
+                    :src="
+                      parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]
+                    "
+                    class="thumbnail-img"
                   >
                   <div v-else>
-                    <a-icon
-                      type="picture"
-                      class="preview-ph"
-                    />
-                    <span class="preview-ph-text">Preview not available yet.</span>
+                    <a-icon type="picture" class="preview-ph" />
+                    <span class="preview-ph-text"
+                    >Preview not available yet.</span
+                    >
                   </div>
                 </div>
                 <a-card-meta
-                  :title="datafile.voxelname?datafile.voxelname:'Untitled'"
-                  :description="parseTime(datafile.createdAt)"/>
+                  :title="datafile.voxelname ? datafile.voxelname : 'Untitled'"
+                  :description="parseTime(datafile.createdAt)"
+                />
               </a-card>
-            </span> 
-            <span v-else
-                  class="card col-sm-12 adding-panel">
-              <a-button type="dashed" class="adding-btn" @click="()=> {startMaking()}">
+            </span>
+            <span v-else class="card col-sm-12 adding-panel">
+              <a-button
+                type="dashed"
+                class="adding-btn"
+                @click="
+                  () => {
+                    startMaking()
+                  }
+                "
+              >
                 Create A New Project
               </a-button>
             </span>
-
-
           </a-list-item>
         </a-list>
-
-
-
-
-        <!-- <span
-          v-for="(datafile,index) in projectList"
-          :key="datafile.id"
-          :class="{selected:datafile.id===selectedProject}"
-          class="card col-sm-4"
-          @click="()=> {setActiveProjId(datafile.id,index)}"
-        >
-          <a-card
-            hoverable
-          >
-            <div class="card-images">
-              <img
-                v-if="datafile.Datavoxelimage!=null"
-                slot="cover"
-                :src="parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]"
-                class = "thumbnail-img"
-              >
-              <div v-else>
-                <a-icon
-                  type="picture"
-                  class="preview-ph"
-                />
-                <span class="preview-ph-text">Preview not available yet.</span>
-              </div>
-            </div>
-            <a-card-meta
-              :title="datafile.voxelname?datafile.voxelname:'Untitled'"
-              :description="parseTime(datafile.createdAt)"/>
-          </a-card>
-        </span> -->
-
-
-
       </div>
     </transition>
 
-
     <!-- project info pop-up -->
     <transition>
-      <div v-if="selectedProject!=null"
-           class = "project-info">
-
+      <div v-if="selectedProject != null" class="project-info">
         <img
-          v-if="selectedItem.Datavoxelimage!=null"
+          v-if="selectedItem.Datavoxelimage != null"
           :src="parsePreviewImg(selectedItem.Datavoxelimage.DatavoxelId)[1]"
-          class = "preview-img"
+          class="preview-img"
         >
 
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="
+            () => {
+              unselectProject()
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
 
-        <div class = "info-text ">
+        <div class="info-text ">
+          <div class="col-sm-6 info-text-left">
+            <div class="info-title">
+              {{ selectedItem.voxelname ? selectedItem.voxelname : 'Untitled' }}
+            </div>
 
-          <div class = "col-sm-6 info-text-left">
-            <div class = "info-title">
-              {{ selectedItem.voxelname?selectedItem.voxelname:'Untitled' }}</div>
-
-            <a-dropdown class = "actions">
+            <a-dropdown class="actions">
               <a-menu slot="overlay">
-                <a-menu-item key="1" @click.native="handleDeleteClick(selectedProject)">Delete Project</a-menu-item>
-                <a-menu-item key="2" >
+                <a-menu-item key="1" @click.native="openEditForm()"
+                >Edit</a-menu-item
+                >
+                <a-menu-item
+                  key="2"
+                  @click.native="handleDeleteClick(selectedProject)"
+                >Delete Project</a-menu-item
+                >
+                <a-menu-item key="3">
                   <!-- <a-checkbox default-checked @change="handlePublicity">Public</a-checkbox> -->
-                  <a-checkbox :default-checked="selectedItem.public" @change="handlePublicity">Public</a-checkbox>
-
+                  <a-checkbox
+                    :default-checked="selectedItem.public"
+                    @change="handlePublicity"
+                  >Public</a-checkbox
+                  >
                 </a-menu-item>
               </a-menu>
-              <a-button>
-                Actions <a-icon type="down" />
-              </a-button>
+              <a-button> Actions <a-icon type="down" /> </a-button>
             </a-dropdown>
 
-            <a-button class = "open-btn"
-                      @click="openProject(selectedProject)"
-            
-            >Open Project</a-button>
+            <a-button class="open-btn" @click="openProject(selectedProject)"
+            >Open Project</a-button
+            >
 
-
-            <div class = "info-bottom-left">
-
-              <div>Created at:  
-                <span class = "info-time"
-              >{{ parseTime(selectedItem.createdAt) }}</span></div>
-              <div>Last updated at:  
-                <span class = "info-digits"
-              >{{ parseTime(selectedItem.updatedAt) }}</span></div>
-
+            <div class="info-bottom-left">
+              <div>
+                Created at:
+                <span class="info-time">{{
+                  parseTime(selectedItem.createdAt)
+                }}</span>
+              </div>
+              <div>
+                Last updated at:
+                <span class="info-digits">{{
+                  parseTime(selectedItem.updatedAt)
+                }}</span>
+              </div>
             </div>
-            <br>
+            <br >
           </div>
-          <div class = "col-sm-6 info-text-right">
-
+          <div class="col-sm-6 info-text-right">
             <div><strong>Layers</strong></div>
             <template>
-              <div 
-                class="demo-infinite-container"
-              >
-                <a-list
-                  :data-source="selectedItem.Datajsons"
-                  class="prop-list"
-                >
-
-                  <a-list-item slot="renderItem" slot-scope="item, index"
-                  >
-
-                    <a-list-item-meta :description="item.rasterProperty"
-                    >
-                      <a slot="title" :key="item.datafileId">{{ item.layername }}</a>
-                      <a-button slot="avatar" shape="circle">{{ item.layername.charAt(0).toUpperCase() }}</a-button>
+              <div class="demo-infinite-container">
+                <a-list :data-source="selectedItem.Datajsons" class="prop-list">
+                  <a-list-item slot="renderItem" slot-scope="item, index">
+                    <a-list-item-meta :description="item.rasterProperty">
+                      <a slot="title" :key="item.datafileId">{{
+                        item.layername
+                      }}</a>
+                      <a-button slot="avatar" shape="circle">{{
+                        item.layername.charAt(0).toUpperCase()
+                      }}</a-button>
                     </a-list-item-meta>
                   </a-list-item>
-
-
                 </a-list>
-
               </div>
             </template>
           </div>
@@ -223,32 +189,93 @@
       </div>
     </transition>
 
+    <!-- project editing form -->
+    <div v-if="editing == true" class="editingForm">
+      <span
+        class="closeEditingForm"
+        @click="
+          () => {
+            closeEditingForm()
+          }
+        "
+      >
+        <a-icon type="close" />
+      </span>
+
+      <template v-if="!editSubmitting">
+        <a-form @submit="handleEditSubmit">
+          <a-form-item
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 16 }"
+            :field-decorator-options="{
+              rules: [{ required: true, message: 'Please input your title!' }],
+            }"
+            label="Title"
+            field-decorator-id="name"
+          >
+            <a-input v-model="editTitle" />
+          </a-form-item>
+          <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+            <a-button v-if="!submitting" type="danger" html-type="submit">
+              Submit
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </template>
+    </div>
+
     <!-- project creation page 1 -->
     <transition>
-      <div v-if="makingProcess==1"
-           class="making making1">
+      <div v-if="makingProcess == 1" class="making making1">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="
+            () => {
+              unselectProject()
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
         <div class="making1-wrapper">
           <span class="making-title">Create Project</span>
           <span class="making1-desc">
-            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.
+            With Painting with Data, users can create an interactive map and
+            explore relationships between georeferenced datasets leading to
+            sound, informed policy or business decisions. Painting with Data
+            utilizes voxels, which are a two-dimensional representation of a
+            three-dimensional overlay, to compute different variables into a
+            single map. Through an easy-to-use online interface, users can
+            upload spatial datasets, or use the datasets available in the
+            platform, creating spatial models that allow them to iteratively
+            think about the correlations among datasets, and build spatial
+            models on the fly. The spatial models can then be easily shared and
+            built in collaboration with numerous users or citizens.
           </span>
-          <a-button type="primary" @click="() => {createProjectMode()}">Create Project</a-button>
+          <a-button
+            type="primary"
+            @click="
+              () => {
+                createProjectMode()
+              }
+            "
+          >Create Project</a-button
+          >
         </div>
       </div>
     </transition>
 
     <!-- project creation page 2 -->
     <transition>
-      <div v-if="makingProcess>=2"
-           class="making making2">
+      <div v-if="makingProcess >= 2" class="making making2">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="
+            () => {
+              unselectProject()
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
 
@@ -257,230 +284,282 @@
 
           <div class="container making2-cols">
             <div class="col-sm-6 making2-section">
-              <div class="col-header">
-                <span>Datasets</span>
-              </div>
-              <div v-if="mydataset && mydataset.length>0" class="dataset-wrapper"> 
-                <a-list
-                  :data-source="mydataset"
-                >
-                  <a-list-item 
-                    v-if="item.deleted!==false&&item.Datalayers.length!=0" slot="renderItem" 
+              <div class="col-header"><span>Datasets</span></div>
+              <div
+                v-if="mydataset && mydataset.length > 0"
+                class="dataset-wrapper"
+              >
+                <a-list :data-source="mydataset">
+                  <a-list-item
+                    v-if="item.deleted !== false && item.Datalayers.length != 0"
+                    slot="renderItem"
                     slot-scope="item, index"
-                    @click="()=> {datasetSelection(item,index)}">
+                    @click="
+                      () => {
+                        datasetSelection(item, index)
+                      }
+                    "
+                  >
                     <a-list-item-meta description="">
-                      <a slot="title" :key="item.filename">{{ item.userFileName ? item.userFileName : item.filename }}</a>
-                      <a-button slot="avatar" shape="circle">{{ item.filename.charAt(0).toUpperCase() }}</a-button>
+                      <a slot="title" :key="item.filename">{{
+                        item.userFileName ? item.userFileName : item.filename
+                      }}</a>
+                      <a-button slot="avatar" shape="circle">{{
+                        item.filename.charAt(0).toUpperCase()
+                      }}</a-button>
                     </a-list-item-meta>
-                    <div/>
+                    <div />
                   </a-list-item>
-                <!-- <a-spin v-if="loading && !busy" class="demo-loading" /> -->
+                  <!-- <a-spin v-if="loading && !busy" class="demo-loading" /> -->
                 </a-list>
               </div>
-              <div v-else>
-                <a-icon type="loading" class="loading"/>
-              </div>
+              <div v-else><a-icon type="loading" class="loading" /></div>
             </div>
 
             <div class="col-sm-6 making2-section">
-              <div class="col-header">
-                <span>Selected Properties</span>
-              </div>
+              <div class="col-header"><span>Selected Properties</span></div>
               <div class="property-viewer">
-
                 <template>
                   <div>
-                    <a-collapse 
+                    <a-collapse
                       v-if="Object.keys(selectedLayers).length"
                       :active-key="Object.keys(selectedLayers)"
-                      @change="_onChange">
-
-                      <a-collapse-panel 
-                        v-for="(dataKey) in Object.keys(selectedLayers)"
-                        :key="dataKey">
+                      @change="_onChange"
+                    >
+                      <a-collapse-panel
+                        v-for="dataKey in Object.keys(selectedLayers)"
+                        :key="dataKey"
+                      >
                         <template slot="header">
                           {{ dataById(dataKey).filename }}
-                          <a-icon type="delete" class="delete-data"
-                                  @click="()=> {deleteData(dataKey)}"
+                          <a-icon
+                            type="delete"
+                            class="delete-data"
+                            @click="
+                              () => {
+                                deleteData(dataKey)
+                              }
+                            "
                           />
                         </template>
 
-                        <a-list
-                          :data-source="selectedLayers[dataKey]"
-                        >
-
-                          <a-list-item slot="renderItem" slot-scope="item, index">
+                        <a-list :data-source="selectedLayers[dataKey]">
+                          <a-list-item
+                            slot="renderItem"
+                            slot-scope="item, index"
+                          >
                             <a-list-item-meta description="">
                               <a slot="title" :key="item">{{ item }}</a>
-                              <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
+                              <a-button slot="avatar" shape="circle">{{
+                                item.charAt(0).toUpperCase()
+                              }}</a-button>
                             </a-list-item-meta>
-                            <a-icon type="delete" class="delete-prop"
-                                    @click="()=> {deleteProp(dataKey,item)}"/>
+                            <a-icon
+                              type="delete"
+                              class="delete-prop"
+                              @click="
+                                () => {
+                                  deleteProp(dataKey, item)
+                                }
+                              "
+                            />
 
-                            <div/>
+                            <div />
                           </a-list-item>
-
                         </a-list>
-
                       </a-collapse-panel>
-
                     </a-collapse>
                   </div>
                 </template>
-
-
               </div>
-
-
-
             </div>
-
           </div>
 
-          <a-button v-if="Object.keys(selectedLayers).length>0" type="primary"
-                    @click="() => {projectInfoPage()}">Next</a-button>
-
+          <a-button
+            v-if="Object.keys(selectedLayers).length > 0"
+            type="primary"
+            @click="
+              () => {
+                projectInfoPage()
+              }
+            "
+          >Next</a-button
+          >
         </div>
       </div>
     </transition>
 
-
-
     <!-- project creation page 3 -->
     <transition>
-      <div v-if="makingProcess==3"
-           class="making making3">
+      <div v-if="makingProcess == 3" class="making making3">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject(2)}">
+          @click="
+            () => {
+              unselectProject(2)
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
 
         <div class="making3-wrapper">
-          <div class = "col-left">
-            <div class="col-left-title"><strong>{{ mydataset[selectedDatasetIndex].filename }}</strong></div>
+          <div class="col-left">
+            <div class="col-left-title">
+              <strong>{{ mydataset[selectedDatasetIndex].filename }}</strong>
+            </div>
 
             <div class="map-wrapper">
-              <a-icon 
-                v-if="true" 
-                type="loading"
-                class = "loading"/>
+              <a-icon v-if="true" type="loading" class="loading" />
 
-              <l-map 
-                v-if="selectedGeometries!=null"
-                :zoom="zoom" 
+              <l-map
+                v-if="selectedGeometries != null"
+                :zoom="zoom"
                 :center="getMapCenter(mydataset[selectedDatasetIndex])"
-                :bounds="getBbox(mydataset[selectedDatasetIndex])">
-                <l-tile-layer :url="url" :attribution="attribution"/>
+                :bounds="getBbox(mydataset[selectedDatasetIndex])"
+              >
+                <l-tile-layer :url="url" :attribution="attribution" />
 
                 <!-- polygons -->
-                <template v-if="selectedGeoType=='Polygon'">
-                  <l-polygon v-for="(geometry,index) in selectedGeometries"
-                             :key="index"
-                             :lat-lngs="geometry" :weight="1" color="black" 
-                             fill-color="rgb(255,255,255)"/>
+                <template v-if="selectedGeoType == 'Polygon'">
+                  <l-polygon
+                    v-for="(geometry, index) in selectedGeometries"
+                    :key="index"
+                    :lat-lngs="geometry"
+                    :weight="1"
+                    color="black"
+                    fill-color="rgb(255,255,255)"
+                  />
                 </template>
 
-                <template v-if="selectedGeoType=='Point'">
-                  <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
-                            :lat-lng="geometry"/>
+                <template v-if="selectedGeoType == 'Point'">
+                  <l-marker
+                    v-for="(geometry, index) in selectedGeometries"
+                    :key="index"
+                    :lat-lng="geometry"
+                  />
                 </template>
-
               </l-map>
-            
-            </div>  
-            
-
+            </div>
           </div>
-          <div class = "col-right">
+          <div class="col-right">
             <div class="col-right-title"><strong>Select Property</strong></div>
             <div class="property-wrapper">
               <template>
-                <a-table 
+                <a-table
                   :row-selection="rowSelection"
-                  :columns="columns" :data-source="formatProperties(mydataset[selectedDatasetIndex].Datalayers[0].properties)" :pagination ="false">
+                  :columns="columns"
+                  :data-source="
+                    formatProperties(
+                      mydataset[selectedDatasetIndex].Datalayers[0].properties
+                    )
+                  "
+                  :pagination="false"
+                >
                   <a slot="name" slot-scope="text" href="#">{{ text }}</a>
                 </a-table>
               </template>
             </div>
           </div>
         </div>
-        <a-button type="primary" @click="() => {selectProperties()}">Add To Selection</a-button>
-      
+        <a-button
+          type="primary"
+          @click="
+            () => {
+              selectProperties()
+            }
+          "
+        >Add To Selection</a-button
+        >
       </div>
     </transition>
 
     <!-- project creation page 4 -->
     <transition>
-      <div v-if="makingProcess==4"
-           class="making making4">
+      <div v-if="makingProcess == 4" class="making making4">
         <span
           class="unselectProject"
-          @click="()=> {pageJumper(2)}">
+          @click="
+            () => {
+              pageJumper(2)
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
-      
+
         <div class="making4-wrapper">
-
-          <template v-if="!submitting">
-            <a-form :auto-form-create="()=>{formInit()}" @submit="handleSubmit">
-              <a-form-item
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 12 }"
-                :field-decorator-options="{rules: [{ required: true, message: 'Please input your project name!' }]}"
-                label="Project Name"
-                field-decorator-id="name"
+          <div class="making-form">
+            <template v-if="!submitting">
+              <a-form
+                :auto-form-create="
+                  () => {
+                    formInit()
+                  }
+                "
+                @submit="handleSubmit"
               >
-                <a-input v-model="formName"/>
+                <a-form-item
+                  :label-col="{ span: 5 }"
+                  :wrapper-col="{ span: 12 }"
+                  :field-decorator-options="{
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your project name!',
+                      },
+                    ],
+                  }"
+                  label="Project Name"
+                  field-decorator-id="name"
+                >
+                  <a-input v-model="formName" />
+                </a-form-item>
 
-              </a-form-item>
+                <a-form-item
+                  :label-col="{ span: 5 }"
+                  :wrapper-col="{ span: 12 }"
+                  label="Voxel Density"
+                  field-decorator-id="density"
+                >
+                  <a-col :span="26">
+                    <a-slider :min="10000" :max="40000" v-model="formDensity" />
+                  </a-col>
+                </a-form-item>
 
-              <a-form-item
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 12 }"
-                label="Voxel Density"
-                field-decorator-id="density"
-              >
-                <a-col :span="26">
-                  <a-slider :min="10000" :max="40000" v-model="formDensity"/>
-                </a-col>
-              </a-form-item>
+                <a-form-item
+                  :label-col="{ span: 5 }"
+                  :wrapper-col="{ span: 12 }"
+                  label="Publicity"
+                  field-decorator-id="public"
+                >
+                  <a-switch
+                    v-model="formPublicity"
+                    checked-children="Public"
+                    un-checked-children="Private"
+                  />
+                </a-form-item>
 
-              <a-form-item
-                :label-col="{ span: 5 }"
-                :wrapper-col="{ span: 12 }"
-                label="Publicity"
-                field-decorator-id="public"
-              >
-                <a-switch v-model="formPublicity" checked-children="Public" un-checked-children="Private"/>
-              </a-form-item>
-
-              <a-form-item
-                :wrapper-col="{ span: 12, offset: 5 }"
-              >
-                <a-button v-if="formName!=null && formName!='' && !submitting" type="danger" html-type="submit">
-                  Submit
-                </a-button>
-              </a-form-item>
-            </a-form>
-          </template>
+                <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+                  <a-button
+                    v-if="formName != null && formName != '' && !submitting"
+                    type="danger"
+                    html-type="submit"
+                  >
+                    Submit
+                  </a-button>
+                </a-form-item>
+              </a-form>
+            </template>
+          </div>
 
           <template v-if="submitting">
-            <a-icon type="loading" class="loading"/>
+            <a-icon type="loading" class="loading" />
           </template>
-
-
         </div>
-
-
-
       </div>
-    </transition>
-
-
-
-
-</div></template>
+  </transition></div
+></template>
 
 <script>
 import Vue2Leaflet from 'vue2-leaflet'
@@ -543,6 +622,10 @@ export default {
       formDensity: 10000,
       submitting: false,
       searchKey: '',
+      editing: false,
+      editTitle: '',
+      editTime: '',
+      editSubmitting: false,
       pagination: {
         onChange: page => {
           console.log(page)
@@ -611,6 +694,7 @@ export default {
     },
 
     rowSelection() {
+      /* eslint-disable */
       return {
         onChange: (selectedRowKeys, selectedRows) => {
           this.currentProperties = selectedRows.map(item => item.name)
@@ -862,13 +946,46 @@ export default {
     formatProperties(properties) {
       return Object.keys(properties).map(item => ({ name: item }))
     },
+    openEditForm() {
+      console.log('edit')
+      this.editing = true
+      console.log(this.selectedItem)
+
+      this.editTitle = this.selectedItem.voxelname
+      this.editTime = new Date().toISOString()
+    },
+    closeEditingForm() {
+      this.editing = false
+    },
+    handleEditSubmit(e) {
+      e.preventDefault()
+
+      let formData = {
+        userFileName: this.editTitle,
+        updatedAt: this.editTime,
+        voxelId: this.selectedItem.voxelId,
+        id: this.selectedItem.id,
+      }
+
+      console.log(formData)
+      this.$http.post('/editVoxelName', formData).then(response => {
+        console.log('submitted', response) //req
+
+        if (response.data.updated) {
+          document.location.reload()
+        } else {
+          this.errorMessage = response.data.alert
+          this.file = null
+          this.submitting = false
+        }
+      })
+    },
   },
 }
 </script>
 
-
 <style lang="scss" scoped>
-.ant-form {
+.making-form {
   position: absolute;
   width: 500px;
   top: 50%;
@@ -1399,8 +1516,35 @@ a {
   float: right;
   margin-top: 22px;
 }
+
+.editingForm {
+  z-index: 1000;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background: white;
+  width: 50%;
+  box-shadow: 0px 0px 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+.closeEditingForm {
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.closeEditingForm:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
 </style>
 
 <style>
 @import '~leaflet/dist/leaflet.css';
 </style>
+>

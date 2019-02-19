@@ -1289,7 +1289,7 @@ p {
 
 .surveyBox {
     position: fixed;
-    z-index: 101;
+    z-index: 2000;
     background: white;
     width: 90%;
     height: 75%;

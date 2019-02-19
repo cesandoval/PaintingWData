@@ -1639,859 +1639,6 @@ module.exports = {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(_) {
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _vue2Leaflet = __webpack_require__("./node_modules/vue2-leaflet/dist/vue2-leaflet.min.js");
-
-var _vue2Leaflet2 = _interopRequireDefault(_vue2Leaflet);
-
-var _leaflet = __webpack_require__("./node_modules/leaflet/dist/leaflet-src.js");
-
-var _leaflet2 = _interopRequireDefault(_leaflet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var LMap = _vue2Leaflet2.default.LMap,
-    LTileLayer = _vue2Leaflet2.default.LTileLayer,
-    LPolygon = _vue2Leaflet2.default.LPolygon,
-    LMarker = _vue2Leaflet2.default.LMarker;
-
-
-delete _leaflet2.default.Icon.Default.prototype._getIconUrl;
-
-_leaflet2.default.Icon.Default.mergeOptions({
-  iconRetinaUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon-2x.png"),
-  iconUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon.png"),
-  shadowUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-shadow.png")
-});
-
-var columns = [{
-  title: 'Property',
-  dataIndex: 'name',
-  scopedSlots: { customRender: 'name' }
-}];
-
-exports.default = {
-  name: 'Projects',
-
-  components: {
-    LMap: LMap,
-    LTileLayer: LTileLayer,
-    LPolygon: LPolygon,
-    LMarker: LMarker
-  },
-  data: function data() {
-    return Object.assign(server, {
-      maps: {},
-      sortDate: true,
-      sortDown: true,
-      selectedProject: null,
-      selectedIndex: null,
-      selectedDatasetIndex: null,
-      makingProcess: 0,
-      mydataset: null,
-      zoom: 13,
-      selectedGeometries: null,
-      selectedGeoType: null,
-      attribution: '',
-      columns: columns,
-      selectedLayers: {},
-      currentDatasetId: null,
-      currentProperties: [],
-      formName: null,
-      formPublicity: false,
-      formDensity: 10000,
-      submitting: false,
-      searchKey: '',
-      pagination: {
-        onChange: function onChange(page) {
-          console.log(page);
-        },
-        pageSize: 6
-      },
-
-      url: 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
-
-      text: 'this is a test data\n        ',
-      customStyle: 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden'
-    });
-  },
-
-
-  computed: {
-    projectList: function projectList() {
-      var _this = this;
-
-      var tempList = null;
-      if (this.sortDate) {
-        if (this.sortDown) {
-          tempList = _.sortBy(this.datavoxels, [function (o) {
-            return o.createdAt;
-          }]).reverse();
-        } else {
-          tempList = _.sortBy(this.datavoxels, [function (o) {
-            return o.createdAt;
-          }]);
-        }
-      } else {
-        if (this.sortDown) {
-          tempList = _.sortBy(this.datavoxels, [function (o) {
-            return o.voxelname[0];
-          }]);
-        } else {
-          tempList = _.sortBy(this.datavoxels, [function (o) {
-            return o.voxelname[0];
-          }]).reverse();
-        }
-      }
-
-      if (this.searchKey.length == 0) return this.addAddingItem(this.removeDeleted(tempList));else {
-        return this.addAddingItem(this.removeDeleted(tempList.filter(function (item) {
-          return item.voxelname.toLowerCase().indexOf(_this.searchKey.toLowerCase()) > -1;
-        })));
-      }
-    },
-    rowSelection: function rowSelection() {
-      var _this2 = this;
-
-      return {
-        onChange: function onChange(selectedRowKeys, selectedRows) {
-          _this2.currentProperties = selectedRows.map(function (item) {
-            return item.name;
-          });
-        }
-      };
-    },
-    encodedLayers: function encodedLayers() {
-      var _this3 = this;
-
-      var output = {};
-      Object.keys(this.selectedLayers).forEach(function (k) {
-        output[k] = _this3.selectedLayers[k].join(';');
-      });
-
-      return JSON.stringify(output);
-    },
-    selectedItem: function selectedItem() {
-      var _this4 = this;
-
-      return this.projectList.filter(function (item) {
-        return item.id == _this4.selectedProject;
-      })[0];
-    }
-  },
-  created: function created() {},
-
-  methods: {
-    addAddingItem: function addAddingItem(dataList) {
-      var item = Object.assign({}, dataList[0]);
-      item.label = 'adding';
-      dataList.unshift(item);
-
-      // console.log(dataList)
-      return dataList;
-    },
-    removeDeleted: function removeDeleted(dataList) {
-      return dataList;
-      // return dataList.filter(item => {
-      //   return item.deleted !== false && item.Datalayers.length != 0
-      // })
-    },
-    onSearch: function onSearch(value) {
-      console.log('searching', value);
-      this.searchKey = value;
-    },
-    formInit: function formInit() {
-      console.log('form created');
-    },
-    handleSubmit: function handleSubmit(e) {
-      e.preventDefault();
-
-      var req = {
-        voxelname: this.formName,
-        datalayerIds: this.encodedLayers,
-        voxelDensity: this.formDensity,
-        public: this.formPublicity,
-        layerButton: 'compute'
-      };
-
-      this.submitting = true;
-      this.$http.post('/datasets', req).then(function (response) {
-        console.log('submitted', req, response);
-        document.location.reload();
-      });
-    },
-    handleSelectChange: function handleSelectChange(type, value) {
-      console.log(type, value);
-    },
-    _onChange: function _onChange(index) {
-      console.log(index);
-    },
-    getBbox: function getBbox(datafile) {
-      return datafile.bbox.coordinates[0].map(function (data) {
-        return [data[1], data[0]];
-      });
-    },
-    getMapCenter: function getMapCenter(datafile) {
-      return _leaflet2.default.latLng(datafile.centroid.coordinates[1], datafile.centroid.coordinates[0]);
-    },
-    setActiveProjId: function setActiveProjId(id, index) {
-      console.log('click ' + id);
-      console.log('selectedIndex ' + index);
-
-      this.selectedProject = id;
-      this.selectedIndex = index;
-    },
-    parseTime: function parseTime(timeStr) {
-      var timeLst = timeStr.split('T');
-      var date = timeLst[0];
-      var time = timeLst[1].split('.')[0];
-      return date + ' ' + time;
-    },
-    unselectProject: function unselectProject(num) {
-      this.selectedProject = null;
-      this.selectedIndex = null;
-      this.selectedDatasetIndex = null;
-      this.currentProperties = [];
-      this.currentDatasetId = null;
-      this.makingProcess = num ? num : 0;
-      num ? null : this.selectedLayers = {};
-      this.selectedGeometries = null;
-      this.selectedGeoType = null;
-      this.formName = null;
-      this.formPublicity = false;
-      this.formDensity = 10000;
-    },
-    pageJumper: function pageJumper(num) {
-      this.makingProcess = num;
-    },
-    handleDeleteClick: function handleDeleteClick(projectId) {
-      var _this5 = this;
-
-      var req = { userId: this.id, dataVoxelId: projectId };
-      this.$http.post('/delete/project/', req).then(function (response) {
-        console.log('deleted', req, response);
-        if (response.data.success) {
-          // deletion in the UI
-          _this5.unselectProject();
-          _this5.datavoxels = _this5.datavoxels.filter(function (item) {
-            return item.id != projectId;
-          });
-        } else {
-          // TODO: handle delete fail
-        }
-      });
-    },
-    handlePublicity: function handlePublicity(e) {
-      // `req: {userId: integer, datavoxelId: integer, public: boolean}`
-      // projectList[selectedIndex].public
-
-      var req = {
-        userId: +this.id,
-        datavoxelId: this.selectedProject,
-        public: e.target.checked
-      };
-
-      this.$http.post('/voxelPrivacy/', req).then(function (response) {
-        console.log('publicity', req, response);
-      });
-    },
-    openProject: function openProject(projectId) {
-      window.location = '/app/' + projectId;
-    },
-    parsePreviewImg: function parsePreviewImg(ThumbnailId) {
-      var thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images-server2/';
-      var previewBase = 'https://s3.amazonaws.com/data-voxel-preview-server/';
-
-      return [thumbnailBase + ThumbnailId + '.jpg', previewBase + ThumbnailId + '.jpg'];
-    },
-    dataById: function dataById(id) {
-      var data = this.mydataset.filter(function (item) {
-        return item.id == id;
-      });
-      return data.length > 0 ? data[0] : null;
-    },
-    deleteData: function deleteData(id) {
-      var dupSelectedLayers = Object.assign({}, this.selectedLayers);
-      delete dupSelectedLayers[id];
-      this.selectedLayers = dupSelectedLayers;
-    },
-    deleteProp: function deleteProp(dataid, prop) {
-      this.selectedLayers[dataid].splice(this.selectedLayers[dataid].indexOf(prop), 1);
-
-      if (this.selectedLayers[dataid].length == 0) {
-        this.deleteData(dataid);
-      }
-    },
-
-
-    // show project-making landing page
-    startMaking: function startMaking() {
-      this.makingProcess = 1;
-      this.selectedDatasetIndex = null;
-      this.currentProperties = [];
-      this.currentDatasetId = null;
-      this.mydataset = null;
-    },
-
-
-    // show project-making page
-    createProjectMode: function createProjectMode() {
-      this.makingProcess = 2;
-      this.selectedDatasetIndex = null;
-      this.currentProperties = [];
-      this.currentDatasetId = null;
-      this.mydataset = null;
-      this.queryDatasets();
-    },
-
-
-    // query dataset api
-    queryDatasets: function queryDatasets() {
-      var _this6 = this;
-
-      if (!this.mydataset) this.$http.get('/datasets/').then(function (response) {
-        _this6.mydataset = response.data.datafiles;
-      });
-    },
-
-
-    // open up the dataset selection pop-up box
-    datasetSelection: function datasetSelection(data, index) {
-      this.makingProcess = 3;
-      this.selectedDatasetIndex = index;
-      this.currentProperties = [];
-      this.currentDatasetId = data.id;
-      this.selectedGeoType = data.geometryType;
-
-      this.queryMapGeometry(data.id);
-    },
-    selectProperties: function selectProperties() {
-      if (this.currentProperties.length > 0) {
-        this.selectedLayers[this.currentDatasetId] = this.currentProperties;
-      }
-
-      this.unselectProject(2);
-      console.log(this.dataById(46), this.selectedLayers);
-    },
-    projectInfoPage: function projectInfoPage() {
-      if (Object.keys(this.selectedLayers).length > 0) {
-        this.makingProcess = 4;
-      }
-    },
-    queryMapGeometry: function queryMapGeometry(datasetId) {
-      var _this7 = this;
-
-      this.$http.get('/getThumbnailData/' + datasetId).then(function (response) {
-        if (_this7.selectedGeoType == 'Polygon') _this7.selectedGeometries = response.data.geoJSON.map(function (obj) {
-          return obj.coordinates[0].map(function (item) {
-            return [item[1], item[0]];
-          });
-        });else if (_this7.selectedGeoType == 'Point') {
-          _this7.selectedGeometries = response.data.geoJSON.map(function (obj) {
-            return [obj.coordinates[1], obj.coordinates[0]];
-          });
-        } else {
-          //TODO: Load map of other type of data
-        }
-      });
-    },
-    formatProperties: function formatProperties(properties) {
-      return Object.keys(properties).map(function (item) {
-        return { name: item };
-      });
-    }
-  }
-};
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("./node_modules/lodash/lodash.js")))
-
 /***/ }),
 
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-antd-ui/dist/antd.css":
@@ -2509,18 +1656,11 @@ exports.push([module.i, "/*!\n * \n * antd v0.6.1\n * \n * Copyright 2017-presen
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-79280fae\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-93c73dc6\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(false);
 // imports
-
-
-// module
-exports.push([module.i, ".ant-form[data-v-79280fae]{position:absolute;width:500px;top:50%;left:50%;transform:translate(-50%,-50%)}a[data-v-79280fae]{color:#000}.ant-btn-danger[data-v-79280fae]{color:#fff;background-color:#e75332;border-color:#e75332}.ant-btn-primary[data-v-79280fae]{position:absolute;background-color:#e75332;border-color:#e75332;left:50%;bottom:70px;transform:translate(-50%)}.making[data-v-79280fae]{position:absolute;left:0;top:0;bottom:0;right:0;background-color:#fff;z-index:1000}.making-title[data-v-79280fae]{text-align:center;font-size:26px;display:inherit;font-weight:500;margin-bottom:0}.adding-icon[data-v-79280fae]{left:50%;position:absolute;top:50%;border-radius:0;transform:scale(3) translate(-50%,-50%);transform-origin:0 0;padding:15px;opacity:.4}.adding-icon[data-v-79280fae]:hover{opacity:1!important;cursor:pointer}.preview-ph[data-v-79280fae]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.preview-ph-text[data-v-79280fae]{position:absolute;opacity:.6;font-size:14px;bottom:10px;text-align:center;width:100%}.preview-img[data-v-79280fae]{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;opacity:.3}.open-btn[data-v-79280fae]{position:absolute;right:15px;border:none;top:50px;color:#e75332}.page-title-section[data-v-79280fae]{margin-top:80px}.mainContainer[data-v-79280fae]{min-height:calc(100vh - 130px)}.squeezedContainer[data-v-79280fae]{height:0;min-height:0}.unselectProject[data-v-79280fae]{z-index:1000;position:absolute;right:10px;top:90px;transform:scale(2);cursor:pointer}.unselectProject[data-v-79280fae]:hover{opacity:.6}.project-info[data-v-79280fae]{position:absolute;top:0;left:0;right:0;height:99%;background:#fff;z-index:1000}.actions[data-v-79280fae]{position:absolute;left:15px;top:50px;border:none;padding:0;background:none}.card-images[data-v-79280fae]{height:200px;overflow:hidden;position:relative;background-color:rgba(0,0,0,.03);margin-bottom:10px}.ant-switch-checked[data-v-79280fae],.ant-switch[data-v-79280fae]{background-color:rgba(0,0,0,.4)}.sorting-Switches[data-v-79280fae]{display:inline-block;float:right;margin-top:30px}.no-data[data-v-79280fae]{position:absolute;text-align:center;font-size:20px;left:50%;top:50%;transform:translate(-50%,-50%)}.page-title[data-v-79280fae]{margin:20px;margin-left:0;display:inline-block}.card[data-v-79280fae]{padding:0!important;height:268.5px!important}.dataset-list[data-v-79280fae]{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;float:left}.switch[data-v-79280fae]{float:left;margin-left:12px;font-size:12px}.dataset-info[data-v-79280fae]{position:relative;width:40%;float:left;border:1px solid rgba(0,0,0,.1);min-height:calc(100vh - 300px);margin-bottom:20px;box-shadow:4px 4px 6px 0 rgba(0,0,0,.1)}.datainfo-content[data-v-79280fae]{height:calc(100% - 20px);overflow-y:auto}.squeezeddatasetlist[data-v-79280fae]{width:60%}.ant-card[data-v-79280fae] .ant-card-body{padding:10px}.ant-card[data-v-79280fae] .ant-card-meta-title{font-size:14px}.ant-card[data-v-79280fae] .ant-card-meta-description{font-size:11px}.unsqueeze[data-v-79280fae]{cursor:pointer;position:absolute;top:10px;right:10px}.unsqueeze[data-v-79280fae]:hover{opacity:.6}.selected[data-v-79280fae]{background:rgba(231,83,50,.8)}.selected[data-v-79280fae] .ant-card{transform:scale(.95)}.info-cover-wrapper[data-v-79280fae]{width:100%;padding:10px;margin-top:30px}.thumbnail-img[data-v-79280fae]{object-fit:cover;width:100%;height:100%;position:absolute;left:0;top:0;transform:scale(1.3)}.info-cover[data-v-79280fae]{width:100%}.info-text[data-v-79280fae]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:350px;width:80%;height:60%;min-height:400px}.info-text[data-v-79280fae] .info-title{font-weight:700;font-size:30px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.info-text[data-v-79280fae] .info-time{font-size:13px;color:rgba(0,0,0,.45)}.info-text[data-v-79280fae] .info-digits{color:rgba(0,0,0,.45)}.info-text[data-v-79280fae] .info-text-left{height:100%}.info-text[data-v-79280fae] .info-text-right{border-left:1px solid rgba(0,0,0,.1);height:100%;overflow-y:auto}.info-text[data-v-79280fae] .info-bottom-left{position:absolute;left:15px;bottom:0}.demo-infinite-container[data-v-79280fae]{border-radius:4px;overflow:auto;padding:8px 24px}.demo-loading[data-v-79280fae]{position:absolute;bottom:40px;width:100%;text-align:center}.loading[data-v-79280fae]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.demo-infinite-container[data-v-79280fae]{height:auto}.proj-list[data-v-79280fae] .ant-list-item{margin-bottom:1px;background-color:hsla(0,0%,100%,.7)}.proj-list[data-v-79280fae] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.proj-list[data-v-79280fae] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.prop-list[data-v-79280fae] .ant-list-item{background-color:hsla(0,0%,100%,.7);padding:12px}.prop-list[data-v-79280fae] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.prop-list[data-v-79280fae] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.making1-wrapper[data-v-79280fae]{padding:20px;width:70%;height:70%;min-width:300px;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%)}.making2-wrapper[data-v-79280fae]{position:absolute;top:80px;left:0;right:0;bottom:0;padding:50px}.making3-wrapper[data-v-79280fae],.making4-wrapper[data-v-79280fae]{position:absolute;top:80px;left:0;right:0;bottom:100px;padding:50px}.making2-section[data-v-79280fae]{background-color:rgba(0,0,0,.01);border:1px solid rgba(0,0,0,.1);height:100%}.making2-cols[data-v-79280fae]{height:calc(100% - 120px)}.col-header[data-v-79280fae]{font-size:20px;margin:10px;margin-bottom:10px;text-align:center}.dataset-wrapper[data-v-79280fae]{height:calc(100% - 50px);overflow-y:auto}.dataset-wrapper[data-v-79280fae] .ant-list-item:hover{cursor:pointer;opacity:.7}.col-left[data-v-79280fae],.col-right[data-v-79280fae]{width:50%;float:left;height:100%;position:relative}.col-right[data-v-79280fae]{padding-left:20px}.col-right-title[data-v-79280fae]{position:absolute;z-index:1;left:20px}.col-left-title[data-v-79280fae]{position:absolute;z-index:1;left:0;font-size:20px}.property-wrapper[data-v-79280fae]{height:calc(100% - 40px);margin-top:40px;overflow-y:auto}.map-wrapper[data-v-79280fae]{position:absolute;height:calc(100% - 40px);width:100%;top:40px;background-color:rgba(0,0,0,.1)}.property-viewer[data-v-79280fae]{overflow:auto;height:calc(100% - 50px)}.delete-data[data-v-79280fae]{position:absolute;right:29px;top:15px}.delete-prop[data-v-79280fae]{cursor:pointer}.adding-btn[data-v-79280fae]{width:100%;height:100%}.ant-input-search[data-v-79280fae]{float:right;margin-top:22px}", ""]);
-
-// exports
-
 
 /***/ }),
 
@@ -50994,30 +50134,19 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-79280fae\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-93c73dc6\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"mainContainer",class:{ squeezedContainer:_vm.selectedProject!=null||_vm.makingProcess!=0, }},[_c('div',{staticClass:"page-title-section"},[_c('h1',{staticClass:"page-title"},[_vm._v("Projects")]),_vm._v(" "),(_vm.datavoxels.length>0)?_c('div',{staticClass:"sorting-Switches"},[_c('span',{staticClass:"switch"},[_vm._v("Sort By")]),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"checked-children":"date","un-checked-children":"name","size":"small"},model:{value:(_vm.sortDate),callback:function ($$v) {_vm.sortDate=$$v},expression:"sortDate"}}),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"size":"small"},model:{value:(_vm.sortDown),callback:function ($$v) {_vm.sortDown=$$v},expression:"sortDown"}},[_c('a-icon',{attrs:{"slot":"checkedChildren","type":"arrow-down"},slot:"checkedChildren"}),_vm._v(" "),_c('a-icon',{attrs:{"slot":"unCheckedChildren","type":"arrow-up"},slot:"unCheckedChildren"})],1)],1):_vm._e(),_vm._v(" "),_c('a-input-search',{staticStyle:{"width":"200px"},attrs:{"placeholder":"input search text"},on:{"search":_vm.onSearch}})],1),_vm._v(" "),_c('transition',[_c('div',{staticClass:"dataset-list"},[_c('a-list',{staticClass:"proj-list",attrs:{"grid":{ gutter: 1, column: 3 },"data-source":_vm.projectList,"pagination":_vm.pagination},scopedSlots:_vm._u([{key:"renderItem",fn:function(datafile, index){return _c('a-list-item',{},[(datafile.label!='adding')?_c('span',{staticClass:"card",class:{selected:datafile.id===_vm.selectedProject},on:{"click":function (){_vm.setActiveProjId(datafile.id,index)}}},[_c('a-card',{attrs:{"hoverable":""}},[_c('div',{staticClass:"card-images"},[(datafile.Datavoxelimage!=null)?_c('img',{staticClass:"thumbnail-img",attrs:{"slot":"cover","src":_vm.parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]},slot:"cover"}):_c('div',[_c('a-icon',{staticClass:"preview-ph",attrs:{"type":"picture"}}),_vm._v(" "),_c('span',{staticClass:"preview-ph-text"},[_vm._v("Preview not available yet.")])],1)]),_vm._v(" "),_c('a-card-meta',{attrs:{"title":datafile.voxelname?datafile.voxelname:'Untitled',"description":_vm.parseTime(datafile.createdAt)}})],1)],1):_c('span',{staticClass:"card col-sm-12 adding-panel"},[_c('a-button',{staticClass:"adding-btn",attrs:{"type":"dashed"},on:{"click":function (){_vm.startMaking()}}},[_vm._v("\n                Create A New Project\n              ")])],1)])}}])})],1)]),_vm._v(" "),_c('transition',[(_vm.selectedProject!=null)?_c('div',{staticClass:"project-info"},[(_vm.selectedItem.Datavoxelimage!=null)?_c('img',{staticClass:"preview-img",attrs:{"src":_vm.parsePreviewImg(_vm.selectedItem.Datavoxelimage.DatavoxelId)[1]}}):_vm._e(),_vm._v(" "),_c('span',{staticClass:"unselectProject",on:{"click":function (){_vm.unselectProject()}}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"info-text "},[_c('div',{staticClass:"col-sm-6 info-text-left"},[_c('div',{staticClass:"info-title"},[_vm._v("\n              "+_vm._s(_vm.selectedItem.voxelname?_vm.selectedItem.voxelname:'Untitled'))]),_vm._v(" "),_c('a-dropdown',{staticClass:"actions"},[_c('a-menu',{attrs:{"slot":"overlay"},slot:"overlay"},[_c('a-menu-item',{key:"1",nativeOn:{"click":function($event){_vm.handleDeleteClick(_vm.selectedProject)}}},[_vm._v("Delete Project")]),_vm._v(" "),_c('a-menu-item',{key:"2"},[_c('a-checkbox',{attrs:{"default-checked":_vm.selectedItem.public},on:{"change":_vm.handlePublicity}},[_vm._v("Public")])],1)],1),_vm._v(" "),_c('a-button',[_vm._v("\n                Actions "),_c('a-icon',{attrs:{"type":"down"}})],1)],1),_vm._v(" "),_c('a-button',{staticClass:"open-btn",on:{"click":function($event){_vm.openProject(_vm.selectedProject)}}},[_vm._v("Open Project")]),_vm._v(" "),_c('div',{staticClass:"info-bottom-left"},[_c('div',[_vm._v("Created at:  \n                "),_c('span',{staticClass:"info-time"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.createdAt)))])]),_vm._v(" "),_c('div',[_vm._v("Last updated at:  \n                "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.updatedAt)))])])]),_vm._v(" "),_c('br')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 info-text-right"},[_c('div',[_c('strong',[_vm._v("Layers")])]),_vm._v(" "),[_c('div',{staticClass:"demo-infinite-container"},[_c('a-list',{staticClass:"prop-list",attrs:{"data-source":_vm.selectedItem.Datajsons},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":item.rasterProperty}},[_c('a',{key:item.datafileId,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item.layername))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.layername.charAt(0).toUpperCase()))])],1)],1)}}])})],1)]],2)])]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess==1)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function (){_vm.unselectProject()}}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making1-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Create Project")]),_vm._v(" "),_c('span',{staticClass:"making1-desc"},[_vm._v("\n            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.\n          ")]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {_vm.createProjectMode()}}},[_vm._v("Create Project")])],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess>=2)?_c('div',{staticClass:"making making2"},[_c('span',{staticClass:"unselectProject",on:{"click":function (){_vm.unselectProject()}}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making2-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Select Dataset")]),_vm._v(" "),_c('div',{staticClass:"container making2-cols"},[_c('div',{staticClass:"col-sm-6 making2-section"},[_c('div',{staticClass:"col-header"},[_c('span',[_vm._v("Datasets")])]),_vm._v(" "),(_vm.mydataset && _vm.mydataset.length>0)?_c('div',{staticClass:"dataset-wrapper"},[_c('a-list',{attrs:{"data-source":_vm.mydataset},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return (item.deleted!==false&&item.Datalayers.length!=0)?_c('a-list-item',{on:{"click":function (){_vm.datasetSelection(item,index)}}},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item.filename,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item.userFileName ? item.userFileName : item.filename))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.filename.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('div')],1):_vm._e()}}])})],1):_c('div',[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})],1)]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 making2-section"},[_c('div',{staticClass:"col-header"},[_c('span',[_vm._v("Selected Properties")])]),_vm._v(" "),_c('div',{staticClass:"property-viewer"},[[_c('div',[(Object.keys(_vm.selectedLayers).length)?_c('a-collapse',{attrs:{"active-key":Object.keys(_vm.selectedLayers)},on:{"change":_vm._onChange}},_vm._l((Object.keys(_vm.selectedLayers)),function(dataKey){return _c('a-collapse-panel',{key:dataKey},[_c('template',{slot:"header"},[_vm._v("\n                          "+_vm._s(_vm.dataById(dataKey).filename)+"\n                          "),_c('a-icon',{staticClass:"delete-data",attrs:{"type":"delete"},on:{"click":function (){_vm.deleteData(dataKey)}}})],1),_vm._v(" "),_c('a-list',{attrs:{"data-source":_vm.selectedLayers[dataKey]},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('a-icon',{staticClass:"delete-prop",attrs:{"type":"delete"},on:{"click":function (){_vm.deleteProp(dataKey,item)}}}),_vm._v(" "),_c('div')],1)}}])})],2)})):_vm._e()],1)]],2)])]),_vm._v(" "),(Object.keys(_vm.selectedLayers).length>0)?_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {_vm.projectInfoPage()}}},[_vm._v("Next")]):_vm._e()],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess==3)?_c('div',{staticClass:"making making3"},[_c('span',{staticClass:"unselectProject",on:{"click":function (){_vm.unselectProject(2)}}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making3-wrapper"},[_c('div',{staticClass:"col-left"},[_c('div',{staticClass:"col-left-title"},[_c('strong',[_vm._v(_vm._s(_vm.mydataset[_vm.selectedDatasetIndex].filename))])]),_vm._v(" "),_c('div',{staticClass:"map-wrapper"},[(true)?_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}}):_vm._e(),_vm._v(" "),(_vm.selectedGeometries!=null)?_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(_vm.mydataset[_vm.selectedDatasetIndex]),"bounds":_vm.getBbox(_vm.mydataset[_vm.selectedDatasetIndex])}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),(_vm.selectedGeoType=='Polygon')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-polygon',{key:index,attrs:{"lat-lngs":geometry,"weight":1,"color":"black","fill-color":"rgb(255,255,255)"}})}):_vm._e(),_vm._v(" "),(_vm.selectedGeoType=='Point')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-marker',{key:index,attrs:{"lat-lng":geometry}})}):_vm._e()],2):_vm._e()],1)]),_vm._v(" "),_c('div',{staticClass:"col-right"},[_c('div',{staticClass:"col-right-title"},[_c('strong',[_vm._v("Select Property")])]),_vm._v(" "),_c('div',{staticClass:"property-wrapper"},[[_c('a-table',{attrs:{"row-selection":_vm.rowSelection,"columns":_vm.columns,"data-source":_vm.formatProperties(_vm.mydataset[_vm.selectedDatasetIndex].Datalayers[0].properties),"pagination":false},scopedSlots:_vm._u([{key:"name",fn:function(text){return _c('a',{attrs:{"href":"#"}},[_vm._v(_vm._s(text))])}}])})]],2)])]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {_vm.selectProperties()}}},[_vm._v("Add To Selection")])],1):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess==4)?_c('div',{staticClass:"making making4"},[_c('span',{staticClass:"unselectProject",on:{"click":function (){_vm.pageJumper(2)}}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making4-wrapper"},[(!_vm.submitting)?[_c('a-form',{attrs:{"auto-form-create":function (){_vm.formInit()}},on:{"submit":_vm.handleSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{rules: [{ required: true, message: 'Please input your project name!' }]},"label":"Project Name","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.formName),callback:function ($$v) {_vm.formName=$$v},expression:"formName"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Voxel Density","field-decorator-id":"density"}},[_c('a-col',{attrs:{"span":26}},[_c('a-slider',{attrs:{"min":10000,"max":40000},model:{value:(_vm.formDensity),callback:function ($$v) {_vm.formDensity=$$v},expression:"formDensity"}})],1)],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Publicity","field-decorator-id":"public"}},[_c('a-switch',{attrs:{"checked-children":"Public","un-checked-children":"Private"},model:{value:(_vm.formPublicity),callback:function ($$v) {_vm.formPublicity=$$v},expression:"formPublicity"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(_vm.formName!=null && _vm.formName!='' && !_vm.submitting)?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n                  Submit\n                ")]):_vm._e()],1)],1)]:_vm._e(),_vm._v(" "),(_vm.submitting)?[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})]:_vm._e()],2)]):_vm._e()])],1)}
-var staticRenderFns = []
+eval("/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"a\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"b\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    {\n      staticClass: \"mainContainer\",\n      class: {\n        squeezedContainer: _vm.selectedProject != null || _vm.makingProcess != 0\n      }\n    },\n    [\n      _c(\n        \"div\",\n        { staticClass: \"page-title-section\" },\n        [\n          _c(\"h1\", { staticClass: \"page-title\" }, [_vm._v(\"Projects\")]),\n          _vm._v(\" \"),\n          _vm.datavoxels.length > 0\n            ? _c(\n                \"div\",\n                { staticClass: \"sorting-Switches\" },\n                [\n                  _c(\"span\", { staticClass: \"switch\" }, [_vm._v(\"Sort By\")]),\n                  _vm._v(\" \"),\n                  _c(\"a-switch\", {\n                    staticClass: \"switch\",\n                    attrs: {\n                      \"checked-children\": \"date\",\n                      \"un-checked-children\": \"name\",\n                      size: \"small\"\n                    },\n                    model: {\n                      value: _vm.sortDate,\n                      callback: function($$v) {\n                        _vm.sortDate = $$v\n                      },\n                      expression: \"sortDate\"\n                    }\n                  }),\n                  _vm._v(\" \"),\n                  _c(\n                    \"a-switch\",\n                    {\n                      staticClass: \"switch\",\n                      attrs: { size: \"small\" },\n                      model: {\n                        value: _vm.sortDown,\n                        callback: function($$v) {\n                          _vm.sortDown = $$v\n                        },\n                        expression: \"sortDown\"\n                      }\n                    },\n                    [\n                      _c(\"a-icon\", {\n                        attrs: { slot: \"checkedChildren\", type: \"arrow-down\" },\n                        slot: \"checkedChildren\"\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"a-icon\", {\n                        attrs: { slot: \"unCheckedChildren\", type: \"arrow-up\" },\n                        slot: \"unCheckedChildren\"\n                      })\n                    ],\n                    1\n                  )\n                ],\n                1\n              )\n            : _vm._e(),\n          _vm._v(\" \"),\n          _c(\"a-input-search\", {\n            staticStyle: { width: \"200px\" },\n            attrs: { placeholder: \"input search text\" },\n            on: { search: _vm.onSearch }\n          })\n        ],\n        1\n      ),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _c(\n          \"div\",\n          { staticClass: \"dataset-list\" },\n          [\n            _c(\"a-list\", {\n              staticClass: \"proj-list\",\n              attrs: {\n                grid: { gutter: 1, column: 3 },\n                \"data-source\": _vm.projectList,\n                pagination: _vm.pagination\n              },\n              scopedSlots: _vm._u([\n                {\n                  key: \"renderItem\",\n                  fn: function(datafile, index) {\n                    return _c(\"a-list-item\", {}, [\n                      datafile.label != \"adding\"\n                        ? _c(\n                            \"span\",\n                            {\n                              staticClass: \"card\",\n                              class: {\n                                selected: datafile.id === _vm.selectedProject\n                              },\n                              on: {\n                                click: function() {\n                                  _vm.setActiveProjId(datafile.id, index)\n                                }\n                              }\n                            },\n                            [\n                              _c(\n                                \"a-card\",\n                                { attrs: { hoverable: \"\" } },\n                                [\n                                  _c(\"div\", { staticClass: \"card-images\" }, [\n                                    datafile.Datavoxelimage != null\n                                      ? _c(\"img\", {\n                                          staticClass: \"thumbnail-img\",\n                                          attrs: {\n                                            slot: \"cover\",\n                                            src: _vm.parsePreviewImg(\n                                              datafile.Datavoxelimage\n                                                .DatavoxelId\n                                            )[0]\n                                          },\n                                          slot: \"cover\"\n                                        })\n                                      : _c(\n                                          \"div\",\n                                          [\n                                            _c(\"a-icon\", {\n                                              staticClass: \"preview-ph\",\n                                              attrs: { type: \"picture\" }\n                                            }),\n                                            _vm._v(\" \"),\n                                            _c(\n                                              \"span\",\n                                              {\n                                                staticClass: \"preview-ph-text\"\n                                              },\n                                              [\n                                                _vm._v(\n                                                  \"Preview not available yet.\"\n                                                )\n                                              ]\n                                            )\n                                          ],\n                                          1\n                                        )\n                                  ]),\n                                  _vm._v(\" \"),\n                                  _c(\"a-card-meta\", {\n                                    attrs: {\n                                      title: datafile.voxelname\n                                        ? datafile.voxelname\n                                        : \"Untitled\",\n                                      description: _vm.parseTime(\n                                        datafile.createdAt\n                                      )\n                                    }\n                                  })\n                                ],\n                                1\n                              )\n                            ],\n                            1\n                          )\n                        : _c(\n                            \"span\",\n                            { staticClass: \"card col-sm-12 adding-panel\" },\n                            [\n                              _c(\n                                \"a-button\",\n                                {\n                                  staticClass: \"adding-btn\",\n                                  attrs: { type: \"dashed\" },\n                                  on: {\n                                    click: function() {\n                                      _vm.startMaking()\n                                    }\n                                  }\n                                },\n                                [\n                                  _vm._v(\n                                    \"\\n                Create A New Project\\n              \"\n                                  )\n                                ]\n                              )\n                            ],\n                            1\n                          )\n                    ])\n                  }\n                }\n              ])\n            })\n          ],\n          1\n        )\n      ]),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _vm.selectedProject != null\n          ? _c(\"div\", { staticClass: \"project-info\" }, [\n              _vm.selectedItem.Datavoxelimage != null\n                ? _c(\"img\", {\n                    staticClass: \"preview-img\",\n                    attrs: {\n                      src: _vm.parsePreviewImg(\n                        _vm.selectedItem.Datavoxelimage.DatavoxelId\n                      )[1]\n                    }\n                  })\n                : _vm._e(),\n              _vm._v(\" \"),\n              _c(\n                \"span\",\n                {\n                  staticClass: \"unselectProject\",\n                  on: {\n                    click: function() {\n                      _vm.unselectProject()\n                    }\n                  }\n                },\n                [_c(\"a-icon\", { attrs: { type: \"close\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\"div\", { staticClass: \"info-text \" }, [\n                _c(\n                  \"div\",\n                  { staticClass: \"col-sm-6 info-text-left\" },\n                  [\n                    _c(\"div\", { staticClass: \"info-title\" }, [\n                      _vm._v(\n                        \"\\n              \" +\n                          _vm._s(\n                            _vm.selectedItem.voxelname\n                              ? _vm.selectedItem.voxelname\n                              : \"Untitled\"\n                          )\n                      )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"a-dropdown\",\n                      { staticClass: \"actions\" },\n                      [\n                        _c(\n                          \"a-menu\",\n                          { attrs: { slot: \"overlay\" }, slot: \"overlay\" },\n                          [\n                            _c(\n                              \"a-menu-item\",\n                              {\n                                key: \"1\",\n                                nativeOn: {\n                                  click: function($event) {\n                                    _vm.handleDeleteClick(_vm.selectedProject)\n                                  }\n                                }\n                              },\n                              [_vm._v(\"Delete Project\")]\n                            ),\n                            _vm._v(\" \"),\n                            _c(\n                              \"a-menu-item\",\n                              { key: \"2\" },\n                              [\n                                _c(\n                                  \"a-checkbox\",\n                                  {\n                                    attrs: {\n                                      \"default-checked\": _vm.selectedItem.public\n                                    },\n                                    on: { change: _vm.handlePublicity }\n                                  },\n                                  [_vm._v(\"Public\")]\n                                )\n                              ],\n                              1\n                            )\n                          ],\n                          1\n                        ),\n                        _vm._v(\" \"),\n                        _c(\n                          \"a-button\",\n                          [\n                            _vm._v(\"\\n                Actions \"),\n                            _c(\"a-icon\", { attrs: { type: \"down\" } })\n                          ],\n                          1\n                        )\n                      ],\n                      1\n                    ),\n                    _vm._v(\" \"),\n                    _c(\n                      \"a-button\",\n                      {\n                        staticClass: \"open-btn\",\n                        on: {\n                          click: function($event) {\n                            _vm.openProject(_vm.selectedProject)\n                          }\n                        }\n                      },\n                      [_vm._v(\"Open Project\")]\n                    ),\n                    _vm._v(\" \"),\n                    _c(\"div\", { staticClass: \"info-bottom-left\" }, [\n                      _c(\"div\", [\n                        _vm._v(\"Created at:  \\n                \"),\n                        _c(\"span\", { staticClass: \"info-time\" }, [\n                          _vm._v(\n                            _vm._s(_vm.parseTime(_vm.selectedItem.createdAt))\n                          )\n                        ])\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"div\", [\n                        _vm._v(\"Last updated at:  \\n                \"),\n                        _c(\"span\", { staticClass: \"info-digits\" }, [\n                          _vm._v(\n                            _vm._s(_vm.parseTime(_vm.selectedItem.updatedAt))\n                          )\n                        ])\n                      ])\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\"br\")\n                  ],\n                  1\n                ),\n                _vm._v(\" \"),\n                _c(\n                  \"div\",\n                  { staticClass: \"col-sm-6 info-text-right\" },\n                  [\n                    _c(\"div\", [_c(\"strong\", [_vm._v(\"Layers\")])]),\n                    _vm._v(\" \"),\n                    [\n                      _c(\n                        \"div\",\n                        { staticClass: \"demo-infinite-container\" },\n                        [\n                          _c(\"a-list\", {\n                            staticClass: \"prop-list\",\n                            attrs: {\n                              \"data-source\": _vm.selectedItem.Datajsons\n                            },\n                            scopedSlots: _vm._u([\n                              {\n                                key: \"renderItem\",\n                                fn: function(item, index) {\n                                  return _c(\n                                    \"a-list-item\",\n                                    {},\n                                    [\n                                      _c(\n                                        \"a-list-item-meta\",\n                                        {\n                                          attrs: {\n                                            description: item.rasterProperty\n                                          }\n                                        },\n                                        [\n                                          _c(\n                                            \"a\",\n                                            {\n                                              key: item.datafileId,\n                                              attrs: { slot: \"title\" },\n                                              slot: \"title\"\n                                            },\n                                            [_vm._v(_vm._s(item.layername))]\n                                          ),\n                                          _vm._v(\" \"),\n                                          _c(\n                                            \"a-button\",\n                                            {\n                                              attrs: {\n                                                slot: \"avatar\",\n                                                shape: \"circle\"\n                                              },\n                                              slot: \"avatar\"\n                                            },\n                                            [\n                                              _vm._v(\n                                                _vm._s(\n                                                  item.layername\n                                                    .charAt(0)\n                                                    .toUpperCase()\n                                                )\n                                              )\n                                            ]\n                                          )\n                                        ],\n                                        1\n                                      )\n                                    ],\n                                    1\n                                  )\n                                }\n                              }\n                            ])\n                          })\n                        ],\n                        1\n                      )\n                    ]\n                  ],\n                  2\n                )\n              ])\n            ])\n          : _vm._e()\n      ]),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _vm.makingProcess == 1\n          ? _c(\"div\", { staticClass: \"making making1\" }, [\n              _c(\n                \"span\",\n                {\n                  staticClass: \"unselectProject\",\n                  on: {\n                    click: function() {\n                      _vm.unselectProject()\n                    }\n                  }\n                },\n                [_c(\"a-icon\", { attrs: { type: \"close\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\n                \"div\",\n                { staticClass: \"making1-wrapper\" },\n                [\n                  _c(\"span\", { staticClass: \"making-title\" }, [\n                    _vm._v(\"Create Project\")\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\"span\", { staticClass: \"making1-desc\" }, [\n                    _vm._v(\n                      \"\\n            With Painting with Data, users can create an interactive map and explore relationships between georeferenced datasets leading to sound, informed policy or business decisions. Painting with Data utilizes voxels, which are a two-dimensional representation of a three-dimensional overlay, to compute different variables into a single map. Through an easy-to-use online interface, users can upload spatial datasets, or use the datasets available in the platform, creating spatial models that allow them to iteratively think about the correlations among datasets, and build spatial models on the fly. The spatial models can then be easily shared and built in collaboration with numerous users or citizens.\\n          \"\n                    )\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\n                    \"a-button\",\n                    {\n                      attrs: { type: \"primary\" },\n                      on: {\n                        click: function() {\n                          _vm.createProjectMode()\n                        }\n                      }\n                    },\n                    [_vm._v(\"Create Project\")]\n                  )\n                ],\n                1\n              )\n            ])\n          : _vm._e()\n      ]),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _vm.makingProcess >= 2\n          ? _c(\"div\", { staticClass: \"making making2\" }, [\n              _c(\n                \"span\",\n                {\n                  staticClass: \"unselectProject\",\n                  on: {\n                    click: function() {\n                      _vm.unselectProject()\n                    }\n                  }\n                },\n                [_c(\"a-icon\", { attrs: { type: \"close\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\n                \"div\",\n                { staticClass: \"making2-wrapper\" },\n                [\n                  _c(\"span\", { staticClass: \"making-title\" }, [\n                    _vm._v(\"Select Dataset\")\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\"div\", { staticClass: \"container making2-cols\" }, [\n                    _c(\"div\", { staticClass: \"col-sm-6 making2-section\" }, [\n                      _c(\"div\", { staticClass: \"col-header\" }, [\n                        _c(\"span\", [_vm._v(\"Datasets\")])\n                      ]),\n                      _vm._v(\" \"),\n                      _vm.mydataset && _vm.mydataset.length > 0\n                        ? _c(\n                            \"div\",\n                            { staticClass: \"dataset-wrapper\" },\n                            [\n                              _c(\"a-list\", {\n                                attrs: { \"data-source\": _vm.mydataset },\n                                scopedSlots: _vm._u([\n                                  {\n                                    key: \"renderItem\",\n                                    fn: function(item, index) {\n                                      return item.deleted !== false &&\n                                        item.Datalayers.length != 0\n                                        ? _c(\n                                            \"a-list-item\",\n                                            {\n                                              on: {\n                                                click: function() {\n                                                  _vm.datasetSelection(\n                                                    item,\n                                                    index\n                                                  )\n                                                }\n                                              }\n                                            },\n                                            [\n                                              _c(\n                                                \"a-list-item-meta\",\n                                                { attrs: { description: \"\" } },\n                                                [\n                                                  _c(\n                                                    \"a\",\n                                                    {\n                                                      key: item.filename,\n                                                      attrs: { slot: \"title\" },\n                                                      slot: \"title\"\n                                                    },\n                                                    [\n                                                      _vm._v(\n                                                        _vm._s(\n                                                          item.userFileName\n                                                            ? item.userFileName\n                                                            : item.filename\n                                                        )\n                                                      )\n                                                    ]\n                                                  ),\n                                                  _vm._v(\" \"),\n                                                  _c(\n                                                    \"a-button\",\n                                                    {\n                                                      attrs: {\n                                                        slot: \"avatar\",\n                                                        shape: \"circle\"\n                                                      },\n                                                      slot: \"avatar\"\n                                                    },\n                                                    [\n                                                      _vm._v(\n                                                        _vm._s(\n                                                          item.filename\n                                                            .charAt(0)\n                                                            .toUpperCase()\n                                                        )\n                                                      )\n                                                    ]\n                                                  )\n                                                ],\n                                                1\n                                              ),\n                                              _vm._v(\" \"),\n                                              _c(\"div\")\n                                            ],\n                                            1\n                                          )\n                                        : _vm._e()\n                                    }\n                                  }\n                                ])\n                              })\n                            ],\n                            1\n                          )\n                        : _c(\n                            \"div\",\n                            [\n                              _c(\"a-icon\", {\n                                staticClass: \"loading\",\n                                attrs: { type: \"loading\" }\n                              })\n                            ],\n                            1\n                          )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\"div\", { staticClass: \"col-sm-6 making2-section\" }, [\n                      _c(\"div\", { staticClass: \"col-header\" }, [\n                        _c(\"span\", [_vm._v(\"Selected Properties\")])\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\n                        \"div\",\n                        { staticClass: \"property-viewer\" },\n                        [\n                          [\n                            _c(\n                              \"div\",\n                              [\n                                Object.keys(_vm.selectedLayers).length\n                                  ? _c(\n                                      \"a-collapse\",\n                                      {\n                                        attrs: {\n                                          \"active-key\": Object.keys(\n                                            _vm.selectedLayers\n                                          )\n                                        },\n                                        on: { change: _vm._onChange }\n                                      },\n                                      _vm._l(\n                                        Object.keys(_vm.selectedLayers),\n                                        function(dataKey) {\n                                          return _c(\n                                            \"a-collapse-panel\",\n                                            { key: dataKey },\n                                            [\n                                              _c(\n                                                \"template\",\n                                                { slot: \"header\" },\n                                                [\n                                                  _vm._v(\n                                                    \"\\n                          \" +\n                                                      _vm._s(\n                                                        _vm.dataById(dataKey)\n                                                          .filename\n                                                      ) +\n                                                      \"\\n                          \"\n                                                  ),\n                                                  _c(\"a-icon\", {\n                                                    staticClass: \"delete-data\",\n                                                    attrs: { type: \"delete\" },\n                                                    on: {\n                                                      click: function() {\n                                                        _vm.deleteData(dataKey)\n                                                      }\n                                                    }\n                                                  })\n                                                ],\n                                                1\n                                              ),\n                                              _vm._v(\" \"),\n                                              _c(\"a-list\", {\n                                                attrs: {\n                                                  \"data-source\":\n                                                    _vm.selectedLayers[dataKey]\n                                                },\n                                                scopedSlots: _vm._u([\n                                                  {\n                                                    key: \"renderItem\",\n                                                    fn: function(item, index) {\n                                                      return _c(\n                                                        \"a-list-item\",\n                                                        {},\n                                                        [\n                                                          _c(\n                                                            \"a-list-item-meta\",\n                                                            {\n                                                              attrs: {\n                                                                description: \"\"\n                                                              }\n                                                            },\n                                                            [\n                                                              _c(\n                                                                \"a\",\n                                                                {\n                                                                  key: item,\n                                                                  attrs: {\n                                                                    slot:\n                                                                      \"title\"\n                                                                  },\n                                                                  slot: \"title\"\n                                                                },\n                                                                [\n                                                                  _vm._v(\n                                                                    _vm._s(item)\n                                                                  )\n                                                                ]\n                                                              ),\n                                                              _vm._v(\" \"),\n                                                              _c(\n                                                                \"a-button\",\n                                                                {\n                                                                  attrs: {\n                                                                    slot:\n                                                                      \"avatar\",\n                                                                    shape:\n                                                                      \"circle\"\n                                                                  },\n                                                                  slot: \"avatar\"\n                                                                },\n                                                                [\n                                                                  _vm._v(\n                                                                    _vm._s(\n                                                                      item\n                                                                        .charAt(\n                                                                          0\n                                                                        )\n                                                                        .toUpperCase()\n                                                                    )\n                                                                  )\n                                                                ]\n                                                              )\n                                                            ],\n                                                            1\n                                                          ),\n                                                          _vm._v(\" \"),\n                                                          _c(\"a-icon\", {\n                                                            staticClass:\n                                                              \"delete-prop\",\n                                                            attrs: {\n                                                              type: \"delete\"\n                                                            },\n                                                            on: {\n                                                              click: function() {\n                                                                _vm.deleteProp(\n                                                                  dataKey,\n                                                                  item\n                                                                )\n                                                              }\n                                                            }\n                                                          }),\n                                                          _vm._v(\" \"),\n                                                          _c(\"div\")\n                                                        ],\n                                                        1\n                                                      )\n                                                    }\n                                                  }\n                                                ])\n                                              })\n                                            ],\n                                            2\n                                          )\n                                        }\n                                      )\n                                    )\n                                  : _vm._e()\n                              ],\n                              1\n                            )\n                          ]\n                        ],\n                        2\n                      )\n                    ])\n                  ]),\n                  _vm._v(\" \"),\n                  Object.keys(_vm.selectedLayers).length > 0\n                    ? _c(\n                        \"a-button\",\n                        {\n                          attrs: { type: \"primary\" },\n                          on: {\n                            click: function() {\n                              _vm.projectInfoPage()\n                            }\n                          }\n                        },\n                        [_vm._v(\"Next\")]\n                      )\n                    : _vm._e()\n                ],\n                1\n              )\n            ])\n          : _vm._e()\n      ]),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _vm.makingProcess == 3\n          ? _c(\n              \"div\",\n              { staticClass: \"making making3\" },\n              [\n                _c(\n                  \"span\",\n                  {\n                    staticClass: \"unselectProject\",\n                    on: {\n                      click: function() {\n                        _vm.unselectProject(2)\n                      }\n                    }\n                  },\n                  [_c(\"a-icon\", { attrs: { type: \"close\" } })],\n                  1\n                ),\n                _vm._v(\" \"),\n                _c(\"div\", { staticClass: \"making3-wrapper\" }, [\n                  _c(\"div\", { staticClass: \"col-left\" }, [\n                    _c(\"div\", { staticClass: \"col-left-title\" }, [\n                      _c(\"strong\", [\n                        _vm._v(\n                          _vm._s(\n                            _vm.mydataset[_vm.selectedDatasetIndex].filename\n                          )\n                        )\n                      ])\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"div\",\n                      { staticClass: \"map-wrapper\" },\n                      [\n                        true\n                          ? _c(\"a-icon\", {\n                              staticClass: \"loading\",\n                              attrs: { type: \"loading\" }\n                            })\n                          : _vm._e(),\n                        _vm._v(\" \"),\n                        _vm.selectedGeometries != null\n                          ? _c(\n                              \"l-map\",\n                              {\n                                attrs: {\n                                  zoom: _vm.zoom,\n                                  center: _vm.getMapCenter(\n                                    _vm.mydataset[_vm.selectedDatasetIndex]\n                                  ),\n                                  bounds: _vm.getBbox(\n                                    _vm.mydataset[_vm.selectedDatasetIndex]\n                                  )\n                                }\n                              },\n                              [\n                                _c(\"l-tile-layer\", {\n                                  attrs: {\n                                    url: _vm.url,\n                                    attribution: _vm.attribution\n                                  }\n                                }),\n                                _vm._v(\" \"),\n                                _vm.selectedGeoType == \"Polygon\"\n                                  ? _vm._l(_vm.selectedGeometries, function(\n                                      geometry,\n                                      index\n                                    ) {\n                                      return _c(\"l-polygon\", {\n                                        key: index,\n                                        attrs: {\n                                          \"lat-lngs\": geometry,\n                                          weight: 1,\n                                          color: \"black\",\n                                          \"fill-color\": \"rgb(255,255,255)\"\n                                        }\n                                      })\n                                    })\n                                  : _vm._e(),\n                                _vm._v(\" \"),\n                                _vm.selectedGeoType == \"Point\"\n                                  ? _vm._l(_vm.selectedGeometries, function(\n                                      geometry,\n                                      index\n                                    ) {\n                                      return _c(\"l-marker\", {\n                                        key: index,\n                                        attrs: { \"lat-lng\": geometry }\n                                      })\n                                    })\n                                  : _vm._e()\n                              ],\n                              2\n                            )\n                          : _vm._e()\n                      ],\n                      1\n                    )\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\"div\", { staticClass: \"col-right\" }, [\n                    _c(\"div\", { staticClass: \"col-right-title\" }, [\n                      _c(\"strong\", [_vm._v(\"Select Property\")])\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"div\",\n                      { staticClass: \"property-wrapper\" },\n                      [\n                        [\n                          _c(\"a-table\", {\n                            attrs: {\n                              \"row-selection\": _vm.rowSelection,\n                              columns: _vm.columns,\n                              \"data-source\": _vm.formatProperties(\n                                _vm.mydataset[_vm.selectedDatasetIndex]\n                                  .Datalayers[0].properties\n                              ),\n                              pagination: false\n                            },\n                            scopedSlots: _vm._u([\n                              {\n                                key: \"name\",\n                                fn: function(text) {\n                                  return _c(\"a\", { attrs: { href: \"#\" } }, [\n                                    _vm._v(_vm._s(text))\n                                  ])\n                                }\n                              }\n                            ])\n                          })\n                        ]\n                      ],\n                      2\n                    )\n                  ])\n                ]),\n                _vm._v(\" \"),\n                _c(\n                  \"a-button\",\n                  {\n                    attrs: { type: \"primary\" },\n                    on: {\n                      click: function() {\n                        _vm.selectProperties()\n                      }\n                    }\n                  },\n                  [_vm._v(\"Add To Selection\")]\n                )\n              ],\n              1\n            )\n          : _vm._e()\n      ]),\n      _vm._v(\" \"),\n      _c(\"transition\", [\n        _vm.makingProcess == 4\n          ? _c(\"div\", { staticClass: \"making making4\" }, [\n              _c(\n                \"span\",\n                {\n                  staticClass: \"unselectProject\",\n                  on: {\n                    click: function() {\n                      _vm.pageJumper(2)\n                    }\n                  }\n                },\n                [_c(\"a-icon\", { attrs: { type: \"close\" } })],\n                1\n              ),\n              _vm._v(\" \"),\n              _c(\n                \"div\",\n                { staticClass: \"making4-wrapper\" },\n                [\n                  !_vm.submitting\n                    ? [\n                        _c(\n                          \"a-form\",\n                          {\n                            attrs: {\n                              \"auto-form-create\": function() {\n                                _vm.formInit()\n                              }\n                            },\n                            on: { submit: _vm.handleSubmit }\n                          },\n                          [\n                            _c(\n                              \"a-form-item\",\n                              {\n                                attrs: {\n                                  \"label-col\": { span: 5 },\n                                  \"wrapper-col\": { span: 12 },\n                                  \"field-decorator-options\": {\n                                    rules: [\n                                      {\n                                        required: true,\n                                        message:\n                                          \"Please input your project name!\"\n                                      }\n                                    ]\n                                  },\n                                  label: \"Project Name\",\n                                  \"field-decorator-id\": \"name\"\n                                }\n                              },\n                              [\n                                _c(\"a-input\", {\n                                  model: {\n                                    value: _vm.formName,\n                                    callback: function($$v) {\n                                      _vm.formName = $$v\n                                    },\n                                    expression: \"formName\"\n                                  }\n                                })\n                              ],\n                              1\n                            ),\n                            _vm._v(\" \"),\n                            _c(\n                              \"a-form-item\",\n                              {\n                                attrs: {\n                                  \"label-col\": { span: 5 },\n                                  \"wrapper-col\": { span: 12 },\n                                  label: \"Voxel Density\",\n                                  \"field-decorator-id\": \"density\"\n                                }\n                              },\n                              [\n                                _c(\n                                  \"a-col\",\n                                  { attrs: { span: 26 } },\n                                  [\n                                    _c(\"a-slider\", {\n                                      attrs: { min: 10000, max: 40000 },\n                                      model: {\n                                        value: _vm.formDensity,\n                                        callback: function($$v) {\n                                          _vm.formDensity = $$v\n                                        },\n                                        expression: \"formDensity\"\n                                      }\n                                    })\n                                  ],\n                                  1\n                                )\n                              ],\n                              1\n                            ),\n                            _vm._v(\" \"),\n                            _c(\n                              \"a-form-item\",\n                              {\n                                attrs: {\n                                  \"label-col\": { span: 5 },\n                                  \"wrapper-col\": { span: 12 },\n                                  label: \"Publicity\",\n                                  \"field-decorator-id\": \"public\"\n                                }\n                              },\n                              [\n                                _c(\"a-switch\", {\n                                  attrs: {\n                                    \"checked-children\": \"Public\",\n                                    \"un-checked-children\": \"Private\"\n                                  },\n                                  model: {\n                                    value: _vm.formPublicity,\n                                    callback: function($$v) {\n                                      _vm.formPublicity = $$v\n                                    },\n                                    expression: \"formPublicity\"\n                                  }\n                                })\n                              ],\n                              1\n                            ),\n                            _vm._v(\" \"),\n                            _c(\n                              \"a-form-item\",\n                              {\n                                attrs: {\n                                  \"wrapper-col\": { span: 12, offset: 5 }\n                                }\n                              },\n                              [\n                                _vm.formName != null &&\n                                _vm.formName != \"\" &&\n                                !_vm.submitting\n                                  ? _c(\n                                      \"a-button\",\n                                      {\n                                        attrs: {\n                                          type: \"danger\",\n                                          \"html-type\": \"submit\"\n                                        }\n                                      },\n                                      [\n                                        _vm._v(\n                                          \"\\n                  Submit\\n                \"\n                                        )\n                                      ]\n                                    )\n                                  : _vm._e()\n                              ],\n                              1\n                            )\n                          ],\n                          1\n                        )\n                      ]\n                    : _vm._e(),\n                  _vm._v(\" \"),\n                  _vm.submitting\n                    ? [\n                        _c(\"a-icon\", {\n                          staticClass: \"loading\",\n                          attrs: { type: \"loading\" }\n                        })\n                      ]\n                    : _vm._e()\n                ],\n                2\n              )\n            ])\n          : _vm._e()\n      ])\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-93c73dc6\", { render: render, staticRenderFns: staticRenderFns })\n  }\n}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9wcml2YXRlL3Z1ZS9Qcm9qZWN0cy52dWU/NTVjZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQSxTQUFTLG9DQUFvQztBQUM3QztBQUNBLG9CQUFvQiw0QkFBNEI7QUFDaEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUIsa0NBQWtDO0FBQ25EO0FBQ0EsOEJBQThCLHdCQUF3QjtBQUN0RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHFCQUFxQjtBQUNyQjtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0EsbUJBQW1CO0FBQ25CO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw4QkFBOEIsZ0JBQWdCO0FBQzlDO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUJBQXlCO0FBQ3pCO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckI7QUFDQTtBQUNBLGdDQUFnQyw4Q0FBOEM7QUFDOUU7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBLGdDQUFnQyw4Q0FBOEM7QUFDOUU7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMEJBQTBCLGlCQUFpQjtBQUMzQyxvQkFBb0IsbUNBQW1DO0FBQ3ZELGlCQUFpQjtBQUNqQixXQUFXO0FBQ1g7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxXQUFXLDhCQUE4QjtBQUN6QztBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1Qix1QkFBdUI7QUFDOUM7QUFDQTtBQUNBLGVBQWU7QUFDZjtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtDQUErQztBQUMvQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQTtBQUNBLGlDQUFpQyxTQUFTLGdCQUFnQixFQUFFO0FBQzVEO0FBQ0EsNkNBQTZDLDZCQUE2QjtBQUMxRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQ0FBMkM7QUFDM0M7QUFDQSx5Q0FBeUM7QUFDekM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHNEQUFzRDtBQUN0RCw2Q0FBNkM7QUFDN0M7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtDQUErQztBQUMvQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsbUNBQW1DO0FBQ25DO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkIsNkNBQTZDO0FBQzFFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwwQ0FBMEMsaUJBQWlCO0FBQzNEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQ0FBaUM7QUFDakM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIsOEJBQThCO0FBQ3JEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxtQkFBbUI7QUFDbkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQjtBQUNqQiwrQkFBK0IsU0FBUyxnQkFBZ0IsRUFBRTtBQUMxRDtBQUNBO0FBQ0E7QUFDQSx5QkFBeUIsNEJBQTRCO0FBQ3JEO0FBQ0E7QUFDQSxtQkFBbUIseUNBQXlDO0FBQzVEO0FBQ0EsK0JBQStCLDRCQUE0QjtBQUMzRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIseUJBQXlCO0FBQ2hEO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQixTQUFTLGtCQUFrQixtQkFBbUI7QUFDekU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwrQkFBK0I7QUFDL0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtCQUErQixXQUFXO0FBQzFDO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHFDQUFxQztBQUNyQyx5Q0FBeUM7QUFDekMsbUNBQW1DO0FBQ25DO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMENBQTBDLFNBQVMsZUFBZSxFQUFFO0FBQ3BFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsdUJBQXVCO0FBQ3ZCO0FBQ0E7QUFDQTtBQUNBLCtCQUErQixrQ0FBa0M7QUFDakU7QUFDQTtBQUNBLG9DQUFvQywyQkFBMkI7QUFDL0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG9DQUFvQyw2QkFBNkI7QUFDakU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG1CQUFtQiwwQ0FBMEM7QUFDN0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUJBQXlCLHlDQUF5QztBQUNsRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHNDQUFzQztBQUN0QztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHlDQUF5QztBQUN6QztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esc0RBQXNELGdCQUFnQjtBQUN0RTtBQUNBLDZDQUE2QztBQUM3QztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwrQ0FBK0M7QUFDL0M7QUFDQSw2Q0FBNkM7QUFDN0M7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QixnQ0FBZ0M7QUFDdkQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCO0FBQ2pCLCtCQUErQixTQUFTLGdCQUFnQixFQUFFO0FBQzFEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUIsaUNBQWlDO0FBQ2xEO0FBQ0EsOEJBQThCLDhCQUE4QjtBQUM1RDtBQUNBO0FBQ0E7QUFDQSw4QkFBOEIsOEJBQThCO0FBQzVEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw4QkFBOEIsa0JBQWtCO0FBQ2hEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QixnQ0FBZ0M7QUFDdkQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCO0FBQ2pCLCtCQUErQixTQUFTLGdCQUFnQixFQUFFO0FBQzFEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUIsaUNBQWlDO0FBQ2xEO0FBQ0EsOEJBQThCLDhCQUE4QjtBQUM1RDtBQUNBO0FBQ0E7QUFDQSw2QkFBNkIsd0NBQXdDO0FBQ3JFLCtCQUErQiwwQ0FBMEM7QUFDekUsaUNBQWlDLDRCQUE0QjtBQUM3RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkIsaUNBQWlDO0FBQzlEO0FBQ0E7QUFDQSx3Q0FBd0MsK0JBQStCO0FBQ3ZFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2Q0FBNkM7QUFDN0M7QUFDQTtBQUNBO0FBQ0EsaURBQWlELFNBQVMsa0JBQWtCLEVBQUU7QUFDOUU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDhEQUE4RCxnQkFBZ0I7QUFDOUU7QUFDQSxxREFBcUQ7QUFDckQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVEQUF1RDtBQUN2RDtBQUNBLHFEQUFxRDtBQUNyRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esd0NBQXdDO0FBQ3hDLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsK0JBQStCLDBDQUEwQztBQUN6RSxpQ0FBaUMsNEJBQTRCO0FBQzdEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUIsaUNBQWlDO0FBQzFEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUNBQXlDO0FBQ3pDLDZDQUE2QztBQUM3Qyx1Q0FBdUM7QUFDdkM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDZDQUE2QyxlQUFlO0FBQzVEO0FBQ0E7QUFDQTtBQUNBLGlEQUFpRCxpQkFBaUI7QUFDbEU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDREQUE0RCxpQkFBaUI7QUFDN0U7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG1EQUFtRDtBQUNuRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaURBQWlEO0FBQ2pEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDBEQUEwRDtBQUMxRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDZEQUE2RDtBQUM3RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsbUVBQW1FO0FBQ25FO0FBQ0EsaUVBQWlFO0FBQ2pFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG1FQUFtRTtBQUNuRTtBQUNBLGlFQUFpRTtBQUNqRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2REFBNkQ7QUFDN0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJEQUEyRDtBQUMzRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsK0NBQStDO0FBQy9DO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtDQUFrQyxrQkFBa0I7QUFDcEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZUFBZSxnQ0FBZ0M7QUFDL0M7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxtQkFBbUI7QUFDbkIsaUNBQWlDLFNBQVMsZ0JBQWdCLEVBQUU7QUFDNUQ7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCLGlDQUFpQztBQUM1RCw2QkFBNkIsMEJBQTBCO0FBQ3ZELCtCQUErQixnQ0FBZ0M7QUFDL0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1Qiw2QkFBNkI7QUFDcEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQSxzQ0FBc0M7QUFDdEMsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQ0FBaUM7QUFDakM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVDQUF1QztBQUN2QyxxQ0FBcUM7QUFDckM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0RBQWdEO0FBQ2hELHVDQUF1QztBQUN2QyxxQ0FBcUM7QUFDckM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkIsMkJBQTJCO0FBQ3hELCtCQUErQixpQ0FBaUM7QUFDaEU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QixrQ0FBa0M7QUFDekQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDZCQUE2QjtBQUM3QjtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtEQUFrRCxTQUFTLFlBQVksRUFBRTtBQUN6RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNEJBQTRCLGtCQUFrQjtBQUM5QztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsbUJBQW1CO0FBQ25CO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsdUJBQXVCLGdDQUFnQztBQUN2RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUI7QUFDakIsK0JBQStCLFNBQVMsZ0JBQWdCLEVBQUU7QUFDMUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQixpQ0FBaUM7QUFDbEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkI7QUFDN0IsaUNBQWlDO0FBQ2pDLDJCQUEyQjtBQUMzQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0RBQWdELFVBQVU7QUFDMUQsa0RBQWtELFdBQVc7QUFDN0Q7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG1DQUFtQztBQUNuQztBQUNBO0FBQ0E7QUFDQSwrQkFBK0I7QUFDL0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EscUNBQXFDO0FBQ3JDO0FBQ0E7QUFDQSxpQ0FBaUM7QUFDakM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGdEQUFnRCxVQUFVO0FBQzFELGtEQUFrRCxXQUFXO0FBQzdEO0FBQ0E7QUFDQTtBQUNBLCtCQUErQjtBQUMvQjtBQUNBO0FBQ0E7QUFDQSxtQ0FBbUMsU0FBUyxXQUFXLEVBQUU7QUFDekQ7QUFDQTtBQUNBLDhDQUE4Qyx5QkFBeUI7QUFDdkU7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5Q0FBeUM7QUFDekM7QUFDQTtBQUNBLHFDQUFxQztBQUNyQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0RBQWdELFVBQVU7QUFDMUQsa0RBQWtELFdBQVc7QUFDN0Q7QUFDQTtBQUNBO0FBQ0EsK0JBQStCO0FBQy9CO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxtQ0FBbUM7QUFDbkM7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQ0FBcUM7QUFDckM7QUFDQTtBQUNBLGlDQUFpQztBQUNqQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esa0RBQWtEO0FBQ2xEO0FBQ0EsK0JBQStCO0FBQy9CO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1Q0FBdUM7QUFDdkM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtDQUFrQztBQUNsQyx5QkFBeUI7QUFDekI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNrQztBQUNsQyxJQUFJLEtBQVU7QUFDZDtBQUNBO0FBQ0EscUVBQXFFLG1EQUFtRDtBQUN4SDtBQUNBIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtOTNjNzNkYzZcIixcImhhc1Njb3BlZFwiOnRydWUsXCJvcHRpb25zSWRcIjpcIjBcIixcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vcHJpdmF0ZS92dWUvUHJvamVjdHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIHJlbmRlciA9IGZ1bmN0aW9uKCkge1xuICB2YXIgX3ZtID0gdGhpc1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gIHJldHVybiBfYyhcbiAgICBcImRpdlwiLFxuICAgIHtcbiAgICAgIHN0YXRpY0NsYXNzOiBcIm1haW5Db250YWluZXJcIixcbiAgICAgIGNsYXNzOiB7XG4gICAgICAgIHNxdWVlemVkQ29udGFpbmVyOiBfdm0uc2VsZWN0ZWRQcm9qZWN0ICE9IG51bGwgfHwgX3ZtLm1ha2luZ1Byb2Nlc3MgIT0gMFxuICAgICAgfVxuICAgIH0sXG4gICAgW1xuICAgICAgX2MoXG4gICAgICAgIFwiZGl2XCIsXG4gICAgICAgIHsgc3RhdGljQ2xhc3M6IFwicGFnZS10aXRsZS1zZWN0aW9uXCIgfSxcbiAgICAgICAgW1xuICAgICAgICAgIF9jKFwiaDFcIiwgeyBzdGF0aWNDbGFzczogXCJwYWdlLXRpdGxlXCIgfSwgW192bS5fdihcIlByb2plY3RzXCIpXSksXG4gICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICBfdm0uZGF0YXZveGVscy5sZW5ndGggPiAwXG4gICAgICAgICAgICA/IF9jKFxuICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJzb3J0aW5nLVN3aXRjaGVzXCIgfSxcbiAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICBfYyhcInNwYW5cIiwgeyBzdGF0aWNDbGFzczogXCJzd2l0Y2hcIiB9LCBbX3ZtLl92KFwiU29ydCBCeVwiKV0pLFxuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgIF9jKFwiYS1zd2l0Y2hcIiwge1xuICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJzd2l0Y2hcIixcbiAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICBcImNoZWNrZWQtY2hpbGRyZW5cIjogXCJkYXRlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgXCJ1bi1jaGVja2VkLWNoaWxkcmVuXCI6IFwibmFtZVwiLFxuICAgICAgICAgICAgICAgICAgICAgIHNpemU6IFwic21hbGxcIlxuICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uc29ydERhdGUsXG4gICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLnNvcnREYXRlID0gJCR2XG4gICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcInNvcnREYXRlXCJcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgIFwiYS1zd2l0Y2hcIixcbiAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInN3aXRjaFwiLFxuICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IHNpemU6IFwic21hbGxcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLnNvcnREb3duLFxuICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uc29ydERvd24gPSAkJHZcbiAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcInNvcnREb3duXCJcbiAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcImEtaWNvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyBzbG90OiBcImNoZWNrZWRDaGlsZHJlblwiLCB0eXBlOiBcImFycm93LWRvd25cIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJjaGVja2VkQ2hpbGRyZW5cIlxuICAgICAgICAgICAgICAgICAgICAgIH0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJhLWljb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgc2xvdDogXCJ1bkNoZWNrZWRDaGlsZHJlblwiLCB0eXBlOiBcImFycm93LXVwXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgIHNsb3Q6IFwidW5DaGVja2VkQ2hpbGRyZW5cIlxuICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgIF9jKFwiYS1pbnB1dC1zZWFyY2hcIiwge1xuICAgICAgICAgICAgc3RhdGljU3R5bGU6IHsgd2lkdGg6IFwiMjAwcHhcIiB9LFxuICAgICAgICAgICAgYXR0cnM6IHsgcGxhY2Vob2xkZXI6IFwiaW5wdXQgc2VhcmNoIHRleHRcIiB9LFxuICAgICAgICAgICAgb246IHsgc2VhcmNoOiBfdm0ub25TZWFyY2ggfVxuICAgICAgICAgIH0pXG4gICAgICAgIF0sXG4gICAgICAgIDFcbiAgICAgICksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXCJ0cmFuc2l0aW9uXCIsIFtcbiAgICAgICAgX2MoXG4gICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImRhdGFzZXQtbGlzdFwiIH0sXG4gICAgICAgICAgW1xuICAgICAgICAgICAgX2MoXCJhLWxpc3RcIiwge1xuICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJwcm9qLWxpc3RcIixcbiAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICBncmlkOiB7IGd1dHRlcjogMSwgY29sdW1uOiAzIH0sXG4gICAgICAgICAgICAgICAgXCJkYXRhLXNvdXJjZVwiOiBfdm0ucHJvamVjdExpc3QsXG4gICAgICAgICAgICAgICAgcGFnaW5hdGlvbjogX3ZtLnBhZ2luYXRpb25cbiAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgc2NvcGVkU2xvdHM6IF92bS5fdShbXG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAga2V5OiBcInJlbmRlckl0ZW1cIixcbiAgICAgICAgICAgICAgICAgIGZuOiBmdW5jdGlvbihkYXRhZmlsZSwgaW5kZXgpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF9jKFwiYS1saXN0LWl0ZW1cIiwge30sIFtcbiAgICAgICAgICAgICAgICAgICAgICBkYXRhZmlsZS5sYWJlbCAhPSBcImFkZGluZ1wiXG4gICAgICAgICAgICAgICAgICAgICAgICA/IF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwic3BhblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcImNhcmRcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlbGVjdGVkOiBkYXRhZmlsZS5pZCA9PT0gX3ZtLnNlbGVjdGVkUHJvamVjdFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uc2V0QWN0aXZlUHJvaklkKGRhdGFmaWxlLmlkLCBpbmRleClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1jYXJkXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsgYXR0cnM6IHsgaG92ZXJhYmxlOiBcIlwiIH0gfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY2FyZC1pbWFnZXNcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkYXRhZmlsZS5EYXRhdm94ZWxpbWFnZSAhPSBudWxsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gX2MoXCJpbWdcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidGh1bWJuYWlsLWltZ1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJjb3ZlclwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzcmM6IF92bS5wYXJzZVByZXZpZXdJbWcoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGF0YWZpbGUuRGF0YXZveGVsaW1hZ2VcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5EYXRhdm94ZWxJZFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApWzBdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJjb3ZlclwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOiBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1pY29uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJwcmV2aWV3LXBoXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJwaWN0dXJlXCIgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJzcGFuXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwicHJldmlldy1waC10ZXh0XCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJQcmV2aWV3IG5vdCBhdmFpbGFibGUgeWV0LlwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1jYXJkLW1ldGFcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGl0bGU6IGRhdGFmaWxlLnZveGVsbmFtZVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gZGF0YWZpbGUudm94ZWxuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOiBcIlVudGl0bGVkXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOiBfdm0ucGFyc2VUaW1lKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGFmaWxlLmNyZWF0ZWRBdFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICA6IF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwic3BhblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY2FyZCBjb2wtc20tMTIgYWRkaW5nLXBhbmVsXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwiYWRkaW5nLWJ0blwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IHR5cGU6IFwiZGFzaGVkXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uc3RhcnRNYWtpbmcoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgICAgIENyZWF0ZSBBIE5ldyBQcm9qZWN0XFxuICAgICAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICBdLFxuICAgICAgICAgIDFcbiAgICAgICAgKVxuICAgICAgXSksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXCJ0cmFuc2l0aW9uXCIsIFtcbiAgICAgICAgX3ZtLnNlbGVjdGVkUHJvamVjdCAhPSBudWxsXG4gICAgICAgICAgPyBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcInByb2plY3QtaW5mb1wiIH0sIFtcbiAgICAgICAgICAgICAgX3ZtLnNlbGVjdGVkSXRlbS5EYXRhdm94ZWxpbWFnZSAhPSBudWxsXG4gICAgICAgICAgICAgICAgPyBfYyhcImltZ1wiLCB7XG4gICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInByZXZpZXctaW1nXCIsXG4gICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgc3JjOiBfdm0ucGFyc2VQcmV2aWV3SW1nKFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLnNlbGVjdGVkSXRlbS5EYXRhdm94ZWxpbWFnZS5EYXRhdm94ZWxJZFxuICAgICAgICAgICAgICAgICAgICAgIClbMV1cbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICA6IF92bS5fZSgpLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICBcInNwYW5cIixcbiAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJ1bnNlbGVjdFByb2plY3RcIixcbiAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgICBfdm0udW5zZWxlY3RQcm9qZWN0KClcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgW19jKFwiYS1pY29uXCIsIHsgYXR0cnM6IHsgdHlwZTogXCJjbG9zZVwiIH0gfSldLFxuICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJpbmZvLXRleHQgXCIgfSwgW1xuICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLXNtLTYgaW5mby10ZXh0LWxlZnRcIiB9LFxuICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImluZm8tdGl0bGVcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgXCJcXG4gICAgICAgICAgICAgIFwiICtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl9zKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5zZWxlY3RlZEl0ZW0udm94ZWxuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/IF92bS5zZWxlY3RlZEl0ZW0udm94ZWxuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IFwiVW50aXRsZWRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgXCJhLWRyb3Bkb3duXCIsXG4gICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJhY3Rpb25zXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLW1lbnVcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgeyBhdHRyczogeyBzbG90OiBcIm92ZXJsYXlcIiB9LCBzbG90OiBcIm92ZXJsYXlcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtbWVudS1pdGVtXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCIxXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5hdGl2ZU9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmhhbmRsZURlbGV0ZUNsaWNrKF92bS5zZWxlY3RlZFByb2plY3QpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW192bS5fdihcIkRlbGV0ZSBQcm9qZWN0XCIpXVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1tZW51LWl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsga2V5OiBcIjJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtY2hlY2tib3hcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImRlZmF1bHQtY2hlY2tlZFwiOiBfdm0uc2VsZWN0ZWRJdGVtLnB1YmxpY1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7IGNoYW5nZTogX3ZtLmhhbmRsZVB1YmxpY2l0eSB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbX3ZtLl92KFwiUHVibGljXCIpXVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiXFxuICAgICAgICAgICAgICAgIEFjdGlvbnMgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1pY29uXCIsIHsgYXR0cnM6IHsgdHlwZTogXCJkb3duXCIgfSB9KVxuICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiYS1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJvcGVuLWJ0blwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5vcGVuUHJvamVjdChfdm0uc2VsZWN0ZWRQcm9qZWN0KVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbX3ZtLl92KFwiT3BlbiBQcm9qZWN0XCIpXVxuICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImluZm8tYm90dG9tLWxlZnRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJkaXZcIiwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiQ3JlYXRlZCBhdDogIFxcbiAgICAgICAgICAgICAgICBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcInNwYW5cIiwgeyBzdGF0aWNDbGFzczogXCJpbmZvLXRpbWVcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoX3ZtLnBhcnNlVGltZShfdm0uc2VsZWN0ZWRJdGVtLmNyZWF0ZWRBdCkpXG4gICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJMYXN0IHVwZGF0ZWQgYXQ6ICBcXG4gICAgICAgICAgICAgICAgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJzcGFuXCIsIHsgc3RhdGljQ2xhc3M6IFwiaW5mby1kaWdpdHNcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoX3ZtLnBhcnNlVGltZShfdm0uc2VsZWN0ZWRJdGVtLnVwZGF0ZWRBdCkpXG4gICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFwiYnJcIilcbiAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLXNtLTYgaW5mby10ZXh0LXJpZ2h0XCIgfSxcbiAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgX2MoXCJkaXZcIiwgW19jKFwic3Ryb25nXCIsIFtfdm0uX3YoXCJMYXllcnNcIildKV0pLFxuICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJkZW1vLWluZmluaXRlLWNvbnRhaW5lclwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1saXN0XCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJwcm9wLWxpc3RcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJkYXRhLXNvdXJjZVwiOiBfdm0uc2VsZWN0ZWRJdGVtLkRhdGFqc29uc1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgc2NvcGVkU2xvdHM6IF92bS5fdShbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCJyZW5kZXJJdGVtXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZuOiBmdW5jdGlvbihpdGVtLCBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1saXN0LWl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHt9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtbGlzdC1pdGVtLW1ldGFcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbjogaXRlbS5yYXN0ZXJQcm9wZXJ0eVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBpdGVtLmRhdGFmaWxlSWQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgc2xvdDogXCJ0aXRsZVwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJ0aXRsZVwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtfdm0uX3YoX3ZtLl9zKGl0ZW0ubGF5ZXJuYW1lKSldXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtYnV0dG9uXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJhdmF0YXJcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNoYXBlOiBcImNpcmNsZVwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbG90OiBcImF2YXRhclwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0ubGF5ZXJuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLmNoYXJBdCgwKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC50b1VwcGVyQ2FzZSgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgMlxuICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgIF0pXG4gICAgICAgICAgOiBfdm0uX2UoKVxuICAgICAgXSksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXCJ0cmFuc2l0aW9uXCIsIFtcbiAgICAgICAgX3ZtLm1ha2luZ1Byb2Nlc3MgPT0gMVxuICAgICAgICAgID8gX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJtYWtpbmcgbWFraW5nMVwiIH0sIFtcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJzcGFuXCIsXG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidW5zZWxlY3RQcm9qZWN0XCIsXG4gICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLnVuc2VsZWN0UHJvamVjdCgpXG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgIFtfYyhcImEtaWNvblwiLCB7IGF0dHJzOiB7IHR5cGU6IFwiY2xvc2VcIiB9IH0pXSxcbiAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJtYWtpbmcxLXdyYXBwZXJcIiB9LFxuICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgIF9jKFwic3BhblwiLCB7IHN0YXRpY0NsYXNzOiBcIm1ha2luZy10aXRsZVwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiQ3JlYXRlIFByb2plY3RcIilcbiAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgIF9jKFwic3BhblwiLCB7IHN0YXRpY0NsYXNzOiBcIm1ha2luZzEtZGVzY1wiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgV2l0aCBQYWludGluZyB3aXRoIERhdGEsIHVzZXJzIGNhbiBjcmVhdGUgYW4gaW50ZXJhY3RpdmUgbWFwIGFuZCBleHBsb3JlIHJlbGF0aW9uc2hpcHMgYmV0d2VlbiBnZW9yZWZlcmVuY2VkIGRhdGFzZXRzIGxlYWRpbmcgdG8gc291bmQsIGluZm9ybWVkIHBvbGljeSBvciBidXNpbmVzcyBkZWNpc2lvbnMuIFBhaW50aW5nIHdpdGggRGF0YSB1dGlsaXplcyB2b3hlbHMsIHdoaWNoIGFyZSBhIHR3by1kaW1lbnNpb25hbCByZXByZXNlbnRhdGlvbiBvZiBhIHRocmVlLWRpbWVuc2lvbmFsIG92ZXJsYXksIHRvIGNvbXB1dGUgZGlmZmVyZW50IHZhcmlhYmxlcyBpbnRvIGEgc2luZ2xlIG1hcC4gVGhyb3VnaCBhbiBlYXN5LXRvLXVzZSBvbmxpbmUgaW50ZXJmYWNlLCB1c2VycyBjYW4gdXBsb2FkIHNwYXRpYWwgZGF0YXNldHMsIG9yIHVzZSB0aGUgZGF0YXNldHMgYXZhaWxhYmxlIGluIHRoZSBwbGF0Zm9ybSwgY3JlYXRpbmcgc3BhdGlhbCBtb2RlbHMgdGhhdCBhbGxvdyB0aGVtIHRvIGl0ZXJhdGl2ZWx5IHRoaW5rIGFib3V0IHRoZSBjb3JyZWxhdGlvbnMgYW1vbmcgZGF0YXNldHMsIGFuZCBidWlsZCBzcGF0aWFsIG1vZGVscyBvbiB0aGUgZmx5LiBUaGUgc3BhdGlhbCBtb2RlbHMgY2FuIHRoZW4gYmUgZWFzaWx5IHNoYXJlZCBhbmQgYnVpbHQgaW4gY29sbGFib3JhdGlvbiB3aXRoIG51bWVyb3VzIHVzZXJzIG9yIGNpdGl6ZW5zLlxcbiAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgXCJhLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJwcmltYXJ5XCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uY3JlYXRlUHJvamVjdE1vZGUoKVxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgW192bS5fdihcIkNyZWF0ZSBQcm9qZWN0XCIpXVxuICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICApXG4gICAgICAgICAgICBdKVxuICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgIF0pLFxuICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgIF9jKFwidHJhbnNpdGlvblwiLCBbXG4gICAgICAgIF92bS5tYWtpbmdQcm9jZXNzID49IDJcbiAgICAgICAgICA/IF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwibWFraW5nIG1ha2luZzJcIiB9LCBbXG4gICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgIFwic3BhblwiLFxuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInVuc2VsZWN0UHJvamVjdFwiLFxuICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgICAgICAgICAgIF92bS51bnNlbGVjdFByb2plY3QoKVxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICBbX2MoXCJhLWljb25cIiwgeyBhdHRyczogeyB0eXBlOiBcImNsb3NlXCIgfSB9KV0sXG4gICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwibWFraW5nMi13cmFwcGVyXCIgfSxcbiAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICBfYyhcInNwYW5cIiwgeyBzdGF0aWNDbGFzczogXCJtYWtpbmctdGl0bGVcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIlNlbGVjdCBEYXRhc2V0XCIpXG4gICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbnRhaW5lciBtYWtpbmcyLWNvbHNcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLXNtLTYgbWFraW5nMi1zZWN0aW9uXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLWhlYWRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwic3BhblwiLCBbX3ZtLl92KFwiRGF0YXNldHNcIildKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLm15ZGF0YXNldCAmJiBfdm0ubXlkYXRhc2V0Lmxlbmd0aCA+IDBcbiAgICAgICAgICAgICAgICAgICAgICAgID8gX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImRhdGFzZXQtd3JhcHBlclwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJhLWxpc3RcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyBcImRhdGEtc291cmNlXCI6IF92bS5teWRhdGFzZXQgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2NvcGVkU2xvdHM6IF92bS5fdShbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBcInJlbmRlckl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZuOiBmdW5jdGlvbihpdGVtLCBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gaXRlbS5kZWxldGVkICE9PSBmYWxzZSAmJlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0uRGF0YWxheWVycy5sZW5ndGggIT0gMFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1saXN0LWl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5kYXRhc2V0U2VsZWN0aW9uKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5kZXhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWxpc3QtaXRlbS1tZXRhXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7IGF0dHJzOiB7IGRlc2NyaXB0aW9uOiBcIlwiIH0gfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBpdGVtLmZpbGVuYW1lLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgc2xvdDogXCJ0aXRsZVwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbG90OiBcInRpdGxlXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl9zKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGl0ZW0udXNlckZpbGVOYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/IGl0ZW0udXNlckZpbGVOYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IGl0ZW0uZmlsZW5hbWVcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb3Q6IFwiYXZhdGFyXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNoYXBlOiBcImNpcmNsZVwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2xvdDogXCJhdmF0YXJcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXRlbS5maWxlbmFtZVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLmNoYXJBdCgwKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLnRvVXBwZXJDYXNlKClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJkaXZcIilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICA6IF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJhLWljb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJsb2FkaW5nXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IHR5cGU6IFwibG9hZGluZ1wiIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLXNtLTYgbWFraW5nMi1zZWN0aW9uXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLWhlYWRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwic3BhblwiLCBbX3ZtLl92KFwiU2VsZWN0ZWQgUHJvcGVydGllc1wiKV0pXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcInByb3BlcnR5LXZpZXdlclwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE9iamVjdC5rZXlzKF92bS5zZWxlY3RlZExheWVycykubGVuZ3RoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPyBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWNvbGxhcHNlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhY3RpdmUta2V5XCI6IE9iamVjdC5rZXlzKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uc2VsZWN0ZWRMYXllcnNcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7IGNoYW5nZTogX3ZtLl9vbkNoYW5nZSB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fbChcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBPYmplY3Qua2V5cyhfdm0uc2VsZWN0ZWRMYXllcnMpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZ1bmN0aW9uKGRhdGFLZXkpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWNvbGxhcHNlLXBhbmVsXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsga2V5OiBkYXRhS2V5IH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidGVtcGxhdGVcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsgc2xvdDogXCJoZWFkZXJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwiICtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fcyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmRhdGFCeUlkKGRhdGFLZXkpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLmZpbGVuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApICtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgICAgICAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImEtaWNvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwiZGVsZXRlLWRhdGFcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB0eXBlOiBcImRlbGV0ZVwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmRlbGV0ZURhdGEoZGF0YUtleSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImEtbGlzdFwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImRhdGEtc291cmNlXCI6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLnNlbGVjdGVkTGF5ZXJzW2RhdGFLZXldXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2NvcGVkU2xvdHM6IF92bS5fdShbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwicmVuZGVySXRlbVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZuOiBmdW5jdGlvbihpdGVtLCBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtbGlzdC1pdGVtXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHt9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImEtbGlzdC1pdGVtLW1ldGFcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbjogXCJcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImFcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IGl0ZW0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbG90OlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidGl0bGVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNsb3Q6IFwidGl0bGVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoaXRlbSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbG90OlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYXZhdGFyXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNoYXBlOlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiY2lyY2xlXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzbG90OiBcImF2YXRhclwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fcyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpdGVtXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAuY2hhckF0KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAudG9VcHBlckNhc2UoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImEtaWNvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczpcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJkZWxldGUtcHJvcFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJkZWxldGVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uZGVsZXRlUHJvcChcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGFLZXksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpdGVtXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImRpdlwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgIDJcbiAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICBPYmplY3Qua2V5cyhfdm0uc2VsZWN0ZWRMYXllcnMpLmxlbmd0aCA+IDBcbiAgICAgICAgICAgICAgICAgICAgPyBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJwcmltYXJ5XCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0ucHJvamVjdEluZm9QYWdlKClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBbX3ZtLl92KFwiTmV4dFwiKV1cbiAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgXSlcbiAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICBdKSxcbiAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICBfYyhcInRyYW5zaXRpb25cIiwgW1xuICAgICAgICBfdm0ubWFraW5nUHJvY2VzcyA9PSAzXG4gICAgICAgICAgPyBfYyhcbiAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJtYWtpbmcgbWFraW5nM1wiIH0sXG4gICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgIFwic3BhblwiLFxuICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJ1bnNlbGVjdFByb2plY3RcIixcbiAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0udW5zZWxlY3RQcm9qZWN0KDIpXG4gICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgW19jKFwiYS1pY29uXCIsIHsgYXR0cnM6IHsgdHlwZTogXCJjbG9zZVwiIH0gfSldLFxuICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcIm1ha2luZzMtd3JhcHBlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLWxlZnRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLWxlZnQtdGl0bGVcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJzdHJvbmdcIiwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLm15ZGF0YXNldFtfdm0uc2VsZWN0ZWREYXRhc2V0SW5kZXhdLmZpbGVuYW1lXG4gICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcIm1hcC13cmFwcGVyXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICB0cnVlXG4gICAgICAgICAgICAgICAgICAgICAgICAgID8gX2MoXCJhLWljb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwibG9hZGluZ1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJsb2FkaW5nXCIgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgIDogX3ZtLl9lKCksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLnNlbGVjdGVkR2VvbWV0cmllcyAhPSBudWxsXG4gICAgICAgICAgICAgICAgICAgICAgICAgID8gX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImwtbWFwXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgem9vbTogX3ZtLnpvb20sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2VudGVyOiBfdm0uZ2V0TWFwQ2VudGVyKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLm15ZGF0YXNldFtfdm0uc2VsZWN0ZWREYXRhc2V0SW5kZXhdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBib3VuZHM6IF92bS5nZXRCYm94KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLm15ZGF0YXNldFtfdm0uc2VsZWN0ZWREYXRhc2V0SW5kZXhdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImwtdGlsZS1sYXllclwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVybDogX3ZtLnVybCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJpYnV0aW9uOiBfdm0uYXR0cmlidXRpb25cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uc2VsZWN0ZWRHZW9UeXBlID09IFwiUG9seWdvblwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPyBfdm0uX2woX3ZtLnNlbGVjdGVkR2VvbWV0cmllcywgZnVuY3Rpb24oXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdlb21ldHJ5LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbmRleFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcImwtcG9seWdvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBpbmRleCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJsYXQtbG5nc1wiOiBnZW9tZXRyeSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHdlaWdodDogMSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbG9yOiBcImJsYWNrXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImZpbGwtY29sb3JcIjogXCJyZ2IoMjU1LDI1NSwyNTUpXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogX3ZtLl9lKCksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5zZWxlY3RlZEdlb1R5cGUgPT0gXCJQb2ludFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPyBfdm0uX2woX3ZtLnNlbGVjdGVkR2VvbWV0cmllcywgZnVuY3Rpb24oXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdlb21ldHJ5LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbmRleFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcImwtbWFya2VyXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IGluZGV4LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IFwibGF0LWxuZ1wiOiBnZW9tZXRyeSB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLXJpZ2h0XCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbC1yaWdodC10aXRsZVwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInN0cm9uZ1wiLCBbX3ZtLl92KFwiU2VsZWN0IFByb3BlcnR5XCIpXSlcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJwcm9wZXJ0eS13cmFwcGVyXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS10YWJsZVwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwicm93LXNlbGVjdGlvblwiOiBfdm0ucm93U2VsZWN0aW9uLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29sdW1uczogX3ZtLmNvbHVtbnMsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImRhdGEtc291cmNlXCI6IF92bS5mb3JtYXRQcm9wZXJ0aWVzKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0ubXlkYXRhc2V0W192bS5zZWxlY3RlZERhdGFzZXRJbmRleF1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAuRGF0YWxheWVyc1swXS5wcm9wZXJ0aWVzXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGFnaW5hdGlvbjogZmFsc2VcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNjb3BlZFNsb3RzOiBfdm0uX3UoW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwibmFtZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmbjogZnVuY3Rpb24odGV4dCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcImFcIiwgeyBhdHRyczogeyBocmVmOiBcIiNcIiB9IH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3ModGV4dCkpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAyXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgIFwiYS1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJwcmltYXJ5XCIgfSxcbiAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uc2VsZWN0UHJvcGVydGllcygpXG4gICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgW192bS5fdihcIkFkZCBUbyBTZWxlY3Rpb25cIildXG4gICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAxXG4gICAgICAgICAgICApXG4gICAgICAgICAgOiBfdm0uX2UoKVxuICAgICAgXSksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXCJ0cmFuc2l0aW9uXCIsIFtcbiAgICAgICAgX3ZtLm1ha2luZ1Byb2Nlc3MgPT0gNFxuICAgICAgICAgID8gX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJtYWtpbmcgbWFraW5nNFwiIH0sIFtcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJzcGFuXCIsXG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidW5zZWxlY3RQcm9qZWN0XCIsXG4gICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oKSB7XG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLnBhZ2VKdW1wZXIoMilcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgW19jKFwiYS1pY29uXCIsIHsgYXR0cnM6IHsgdHlwZTogXCJjbG9zZVwiIH0gfSldLFxuICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcIm1ha2luZzQtd3JhcHBlclwiIH0sXG4gICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgIV92bS5zdWJtaXR0aW5nXG4gICAgICAgICAgICAgICAgICAgID8gW1xuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1mb3JtXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhdXRvLWZvcm0tY3JlYXRlXCI6IGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uZm9ybUluaXQoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgb246IHsgc3VibWl0OiBfdm0uaGFuZGxlU3VibWl0IH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWZvcm0taXRlbVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwibGFiZWwtY29sXCI6IHsgc3BhbjogNSB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwid3JhcHBlci1jb2xcIjogeyBzcGFuOiAxMiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiZmllbGQtZGVjb3JhdG9yLW9wdGlvbnNcIjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnVsZXM6IFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlcXVpcmVkOiB0cnVlLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2U6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIlBsZWFzZSBpbnB1dCB5b3VyIHByb2plY3QgbmFtZSFcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbDogXCJQcm9qZWN0IE5hbWVcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImZpZWxkLWRlY29yYXRvci1pZFwiOiBcIm5hbWVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImEtaW5wdXRcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm1OYW1lLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uZm9ybU5hbWUgPSAkJHZcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm1OYW1lXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1mb3JtLWl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImxhYmVsLWNvbFwiOiB7IHNwYW46IDUgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIndyYXBwZXItY29sXCI6IHsgc3BhbjogMTIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbDogXCJWb3hlbCBEZW5zaXR5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJmaWVsZC1kZWNvcmF0b3ItaWRcIjogXCJkZW5zaXR5XCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWNvbFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHsgYXR0cnM6IHsgc3BhbjogMjYgfSB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1zbGlkZXJcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyBtaW46IDEwMDAwLCBtYXg6IDQwMDAwIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtRGVuc2l0eSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uZm9ybURlbnNpdHkgPSAkJHZcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybURlbnNpdHlcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiYS1mb3JtLWl0ZW1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImxhYmVsLWNvbFwiOiB7IHNwYW46IDUgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIndyYXBwZXItY29sXCI6IHsgc3BhbjogMTIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbDogXCJQdWJsaWNpdHlcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImZpZWxkLWRlY29yYXRvci1pZFwiOiBcInB1YmxpY1wiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1zd2l0Y2hcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImNoZWNrZWQtY2hpbGRyZW5cIjogXCJQdWJsaWNcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidW4tY2hlY2tlZC1jaGlsZHJlblwiOiBcIlByaXZhdGVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybVB1YmxpY2l0eSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmZvcm1QdWJsaWNpdHkgPSAkJHZcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm1QdWJsaWNpdHlcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWZvcm0taXRlbVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwid3JhcHBlci1jb2xcIjogeyBzcGFuOiAxMiwgb2Zmc2V0OiA1IH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmZvcm1OYW1lICE9IG51bGwgJiZcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLmZvcm1OYW1lICE9IFwiXCIgJiZcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIV92bS5zdWJtaXR0aW5nXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPyBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJhLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU6IFwiZGFuZ2VyXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcImh0bWwtdHlwZVwiOiBcInN1Ym1pdFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJcXG4gICAgICAgICAgICAgICAgICBTdWJtaXRcXG4gICAgICAgICAgICAgICAgXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICBfdm0uc3VibWl0dGluZ1xuICAgICAgICAgICAgICAgICAgICA/IFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYS1pY29uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwibG9hZGluZ1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB0eXBlOiBcImxvYWRpbmdcIiB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgOiBfdm0uX2UoKVxuICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgMlxuICAgICAgICAgICAgICApXG4gICAgICAgICAgICBdKVxuICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgIF0pXG4gICAgXSxcbiAgICAxXG4gIClcbn1cbnZhciBzdGF0aWNSZW5kZXJGbnMgPSBbXVxucmVuZGVyLl93aXRoU3RyaXBwZWQgPSB0cnVlXG5leHBvcnQgeyByZW5kZXIsIHN0YXRpY1JlbmRlckZucyB9XG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmIChtb2R1bGUuaG90LmRhdGEpIHtcbiAgICByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpICAgICAgLnJlcmVuZGVyKFwiZGF0YS12LTkzYzczZGM2XCIsIHsgcmVuZGVyOiByZW5kZXIsIHN0YXRpY1JlbmRlckZuczogc3RhdGljUmVuZGVyRm5zIH0pXG4gIH1cbn1cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlcj97XCJpZFwiOlwiZGF0YS12LTkzYzczZGM2XCIsXCJoYXNTY29wZWRcIjp0cnVlLFwib3B0aW9uc0lkXCI6XCIwXCIsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL3ByaXZhdGUvdnVlL1Byb2plY3RzLnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi05M2M3M2RjNlwiLFwiaGFzU2NvcGVkXCI6dHJ1ZSxcIm9wdGlvbnNJZFwiOlwiMFwiLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9wcml2YXRlL3Z1ZS9Qcm9qZWN0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-93c73dc6\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue\n");
 
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-79280fae\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-93c73dc6\",\"scoped\":true,\"sourceMap\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-79280fae\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue");
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("43bc650f", content, true, {});
 
 /***/ }),
 
@@ -62340,42 +61469,7 @@ new _Vue2.default({
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__ = __webpack_require__("./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Projects.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__);
-/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79280fae_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-79280fae\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/component-normalizer.js");
-function injectStyle (context) {
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-79280fae\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue")
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?minimize!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Projects.vue")
-}
-/* script */
-
-
-/* template */
-
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-79280fae"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-
-var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79280fae_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__["a" /* render */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79280fae_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__["b" /* staticRenderFns */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
-
+eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Projects.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__);\n/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_93c73dc6_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-93c73dc6\\\",\\\"hasScoped\\\":true,\\\"optionsId\\\":\\\"0\\\",\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__(\"./node_modules/vue-loader/lib/runtime/component-normalizer.js\");\nvar disposed = false\nfunction injectStyle (context) {\n  if (disposed) return\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"optionsId\\\":\\\"0\\\",\\\"vue\\\":true,\\\"id\\\":\\\"data-v-93c73dc6\\\",\\\"scoped\\\":true,\\\"sourceMap\\\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue\")\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"optionsId\\\":\\\"0\\\",\\\"vue\\\":true,\\\"scoped\\\":false,\\\"sourceMap\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Projects.vue\")\n}\n/* script */\n\n\n/* template */\n\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = injectStyle\n/* scopeId */\nvar __vue_scopeId__ = \"data-v-93c73dc6\"\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\n\nvar Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__[\"a\" /* default */])(\n  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default.a,\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_93c73dc6_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__[\"a\" /* render */],\n  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_93c73dc6_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__[\"b\" /* staticRenderFns */],\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"private/vue/Projects.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-93c73dc6\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-93c73dc6\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Component.exports);\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9wcml2YXRlL3Z1ZS9Qcm9qZWN0cy52dWU/MDFhMiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBO0FBQ0E7QUFDQSxFQUFFLG1CQUFPLENBQUMsc1dBQWlSO0FBQzNSLEVBQUUsbUJBQU8sQ0FBQyw2U0FBcVA7QUFDL1A7QUFDQTtBQUM0RztBQUNhO0FBQ3pIO0FBQ29VO0FBQ3BVO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDZ0c7QUFDaEcsZ0JBQWdCLGtIQUFrQjtBQUNsQyxFQUFFLDJIQUFjO0FBQ2hCLEVBQUUsMk9BQWM7QUFDaEIsRUFBRSxvUEFBeUI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRWMsZ0ZBQWlCIiwiZmlsZSI6Ii4vcHJpdmF0ZS92dWUvUHJvamVjdHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGRpc3Bvc2VkID0gZmFsc2VcbmZ1bmN0aW9uIGluamVjdFN0eWxlIChjb250ZXh0KSB7XG4gIGlmIChkaXNwb3NlZCkgcmV0dXJuXG4gIHJlcXVpcmUoXCIhIXZ1ZS1zdHlsZS1sb2FkZXIhY3NzLWxvYWRlciEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXg/e1xcXCJvcHRpb25zSWRcXFwiOlxcXCIwXFxcIixcXFwidnVlXFxcIjp0cnVlLFxcXCJpZFxcXCI6XFxcImRhdGEtdi05M2M3M2RjNlxcXCIsXFxcInNjb3BlZFxcXCI6dHJ1ZSxcXFwic291cmNlTWFwXFxcIjp0cnVlfSFzYXNzLWxvYWRlciEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL1Byb2plY3RzLnZ1ZVwiKVxuICByZXF1aXJlKFwiISF2dWUtc3R5bGUtbG9hZGVyIWNzcy1sb2FkZXI/c291cmNlTWFwIS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleD97XFxcIm9wdGlvbnNJZFxcXCI6XFxcIjBcXFwiLFxcXCJ2dWVcXFwiOnRydWUsXFxcInNjb3BlZFxcXCI6ZmFsc2UsXFxcInNvdXJjZU1hcFxcXCI6dHJ1ZX0hLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c3R5bGVzJmluZGV4PTEhLi9Qcm9qZWN0cy52dWVcIilcbn1cbi8qIHNjcmlwdCAqL1xuZXhwb3J0ICogZnJvbSBcIiEhYmFiZWwtbG9hZGVyIS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vUHJvamVjdHMudnVlXCJcbmltcG9ydCBfX3Z1ZV9zY3JpcHRfXyBmcm9tIFwiISFiYWJlbC1sb2FkZXIhLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9Qcm9qZWN0cy52dWVcIlxuLyogdGVtcGxhdGUgKi9cbmltcG9ydCB7cmVuZGVyIGFzIF9fdnVlX3JlbmRlcl9fLCBzdGF0aWNSZW5kZXJGbnMgYXMgX192dWVfc3RhdGljX3JlbmRlcl9mbnNfX30gZnJvbSBcIiEhLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4P3tcXFwiaWRcXFwiOlxcXCJkYXRhLXYtOTNjNzNkYzZcXFwiLFxcXCJoYXNTY29wZWRcXFwiOnRydWUsXFxcIm9wdGlvbnNJZFxcXCI6XFxcIjBcXFwiLFxcXCJidWJsZVxcXCI6e1xcXCJ0cmFuc2Zvcm1zXFxcIjp7fX19IS4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9Qcm9qZWN0cy52dWVcIlxuLyogdGVtcGxhdGUgZnVuY3Rpb25hbCAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyA9IGZhbHNlXG4vKiBzdHlsZXMgKi9cbnZhciBfX3Z1ZV9zdHlsZXNfXyA9IGluamVjdFN0eWxlXG4vKiBzY29wZUlkICovXG52YXIgX192dWVfc2NvcGVJZF9fID0gXCJkYXRhLXYtOTNjNzNkYzZcIlxuLyogbW9kdWxlSWRlbnRpZmllciAoc2VydmVyIG9ubHkpICovXG52YXIgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfXyA9IG51bGxcbmltcG9ydCBub3JtYWxpemVDb21wb25lbnQgZnJvbSBcIiEuLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvcnVudGltZS9jb21wb25lbnQtbm9ybWFsaXplclwiXG52YXIgQ29tcG9uZW50ID0gbm9ybWFsaXplQ29tcG9uZW50KFxuICBfX3Z1ZV9zY3JpcHRfXyxcbiAgX192dWVfcmVuZGVyX18sXG4gIF9fdnVlX3N0YXRpY19yZW5kZXJfZm5zX18sXG4gIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyxcbiAgX192dWVfc3R5bGVzX18sXG4gIF9fdnVlX3Njb3BlSWRfXyxcbiAgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfX1xuKVxuQ29tcG9uZW50Lm9wdGlvbnMuX19maWxlID0gXCJwcml2YXRlL3Z1ZS9Qcm9qZWN0cy52dWVcIlxuXG4vKiBob3QgcmVsb2FkICovXG5pZiAobW9kdWxlLmhvdCkgeyhmdW5jdGlvbiAoKSB7XG4gIHZhciBob3RBUEkgPSByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpXG4gIGhvdEFQSS5pbnN0YWxsKHJlcXVpcmUoXCJ2dWVcIiksIGZhbHNlKVxuICBpZiAoIWhvdEFQSS5jb21wYXRpYmxlKSByZXR1cm5cbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAoIW1vZHVsZS5ob3QuZGF0YSkge1xuICAgIGhvdEFQSS5jcmVhdGVSZWNvcmQoXCJkYXRhLXYtOTNjNzNkYzZcIiwgQ29tcG9uZW50Lm9wdGlvbnMpXG4gIH0gZWxzZSB7XG4gICAgaG90QVBJLnJlbG9hZChcImRhdGEtdi05M2M3M2RjNlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfVxuICBtb2R1bGUuaG90LmRpc3Bvc2UoZnVuY3Rpb24gKGRhdGEpIHtcbiAgICBkaXNwb3NlZCA9IHRydWVcbiAgfSlcbn0pKCl9XG5cbmV4cG9ydCBkZWZhdWx0IENvbXBvbmVudC5leHBvcnRzXG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL3ByaXZhdGUvdnVlL1Byb2plY3RzLnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9wcml2YXRlL3Z1ZS9Qcm9qZWN0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./private/vue/Projects.vue\n");
 
 /***/ }),
 
@@ -62414,3 +61508,1075 @@ exports.default = _vue2.default;
 
 /******/ });
 //# sourceMappingURL=Projects.js.map
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _vue2Leaflet = __webpack_require__("./node_modules/vue2-leaflet/dist/vue2-leaflet.min.js");
+
+var _vue2Leaflet2 = _interopRequireDefault(_vue2Leaflet);
+
+var _leaflet = __webpack_require__("./node_modules/leaflet/dist/leaflet-src.js");
+
+var _leaflet2 = _interopRequireDefault(_leaflet);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var LMap = _vue2Leaflet2.default.LMap,
+    LTileLayer = _vue2Leaflet2.default.LTileLayer,
+    LPolygon = _vue2Leaflet2.default.LPolygon,
+    LMarker = _vue2Leaflet2.default.LMarker;
+
+
+delete _leaflet2.default.Icon.Default.prototype._getIconUrl;
+
+_leaflet2.default.Icon.Default.mergeOptions({
+  iconRetinaUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-icon.png"),
+  shadowUrl: __webpack_require__("./node_modules/leaflet/dist/images/marker-shadow.png")
+});
+
+var columns = [{
+  title: 'Property',
+  dataIndex: 'name',
+  scopedSlots: { customRender: 'name' }
+}];
+
+exports.default = {
+  name: 'Projects',
+
+  components: {
+    LMap: LMap,
+    LTileLayer: LTileLayer,
+    LPolygon: LPolygon,
+    LMarker: LMarker
+  },
+  data: function data() {
+    return Object.assign(server, {
+      maps: {},
+      sortDate: true,
+      sortDown: true,
+      selectedProject: null,
+      selectedIndex: null,
+      selectedDatasetIndex: null,
+      makingProcess: 0,
+      mydataset: null,
+      zoom: 13,
+      selectedGeometries: null,
+      selectedGeoType: null,
+      attribution: '',
+      columns: columns,
+      selectedLayers: {},
+      currentDatasetId: null,
+      currentProperties: [],
+      formName: null,
+      formPublicity: false,
+      formDensity: 10000,
+      submitting: false,
+      searchKey: '',
+      editing: false,
+      editTitle: '',
+      editTime: '',
+      editSubmitting: false,
+      pagination: {
+        onChange: function onChange(page) {
+          console.log(page);
+        },
+        pageSize: 6
+      },
+
+      url: 'https://api.tiles.mapbox.com/v4/mapbox.light/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWJvdWNoYXVkIiwiYSI6ImNpdTA5bWw1azAyZDIyeXBqOWkxOGJ1dnkifQ.qha33VjEDTqcHQbibgHw3w',
+
+      text: 'this is a test data\n        ',
+      customStyle: 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden'
+    });
+  },
+
+
+  computed: {
+    projectList: function projectList() {
+      var _this = this;
+
+      var tempList = null;
+      if (this.sortDate) {
+        if (this.sortDown) {
+          tempList = _.sortBy(this.datavoxels, [function (o) {
+            return o.createdAt;
+          }]).reverse();
+        } else {
+          tempList = _.sortBy(this.datavoxels, [function (o) {
+            return o.createdAt;
+          }]);
+        }
+      } else {
+        if (this.sortDown) {
+          tempList = _.sortBy(this.datavoxels, [function (o) {
+            return o.voxelname[0];
+          }]);
+        } else {
+          tempList = _.sortBy(this.datavoxels, [function (o) {
+            return o.voxelname[0];
+          }]).reverse();
+        }
+      }
+
+      if (this.searchKey.length == 0) return this.addAddingItem(this.removeDeleted(tempList));else {
+        return this.addAddingItem(this.removeDeleted(tempList.filter(function (item) {
+          return item.voxelname.toLowerCase().indexOf(_this.searchKey.toLowerCase()) > -1;
+        })));
+      }
+    },
+    rowSelection: function rowSelection() {
+      var _this2 = this;
+
+      /* eslint-disable */
+      return {
+        onChange: function onChange(selectedRowKeys, selectedRows) {
+          _this2.currentProperties = selectedRows.map(function (item) {
+            return item.name;
+          });
+        }
+      };
+    },
+    encodedLayers: function encodedLayers() {
+      var _this3 = this;
+
+      var output = {};
+      Object.keys(this.selectedLayers).forEach(function (k) {
+        output[k] = _this3.selectedLayers[k].join(';');
+      });
+
+      return JSON.stringify(output);
+    },
+    selectedItem: function selectedItem() {
+      var _this4 = this;
+
+      return this.projectList.filter(function (item) {
+        return item.id == _this4.selectedProject;
+      })[0];
+    }
+  },
+  created: function created() {},
+
+  methods: {
+    addAddingItem: function addAddingItem(dataList) {
+      var item = Object.assign({}, dataList[0]);
+      item.label = 'adding';
+      dataList.unshift(item);
+
+      // console.log(dataList)
+      return dataList;
+    },
+    removeDeleted: function removeDeleted(dataList) {
+      return dataList;
+      // return dataList.filter(item => {
+      //   return item.deleted !== false && item.Datalayers.length != 0
+      // })
+    },
+    onSearch: function onSearch(value) {
+      console.log('searching', value);
+      this.searchKey = value;
+    },
+    formInit: function formInit() {
+      console.log('form created');
+    },
+    handleSubmit: function handleSubmit(e) {
+      e.preventDefault();
+
+      var req = {
+        voxelname: this.formName,
+        datalayerIds: this.encodedLayers,
+        voxelDensity: this.formDensity,
+        public: this.formPublicity,
+        layerButton: 'compute'
+      };
+
+      this.submitting = true;
+      this.$http.post('/datasets', req).then(function (response) {
+        console.log('submitted', req, response);
+        document.location.reload();
+      });
+    },
+    handleSelectChange: function handleSelectChange(type, value) {
+      console.log(type, value);
+    },
+    _onChange: function _onChange(index) {
+      console.log(index);
+    },
+    getBbox: function getBbox(datafile) {
+      return datafile.bbox.coordinates[0].map(function (data) {
+        return [data[1], data[0]];
+      });
+    },
+    getMapCenter: function getMapCenter(datafile) {
+      return _leaflet2.default.latLng(datafile.centroid.coordinates[1], datafile.centroid.coordinates[0]);
+    },
+    setActiveProjId: function setActiveProjId(id, index) {
+      console.log('click ' + id);
+      console.log('selectedIndex ' + index);
+
+      this.selectedProject = id;
+      this.selectedIndex = index;
+    },
+    parseTime: function parseTime(timeStr) {
+      var timeLst = timeStr.split('T');
+      var date = timeLst[0];
+      var time = timeLst[1].split('.')[0];
+      return date + ' ' + time;
+    },
+    unselectProject: function unselectProject(num) {
+      this.selectedProject = null;
+      this.selectedIndex = null;
+      this.selectedDatasetIndex = null;
+      this.currentProperties = [];
+      this.currentDatasetId = null;
+      this.makingProcess = num ? num : 0;
+      num ? null : this.selectedLayers = {};
+      this.selectedGeometries = null;
+      this.selectedGeoType = null;
+      this.formName = null;
+      this.formPublicity = false;
+      this.formDensity = 10000;
+    },
+    pageJumper: function pageJumper(num) {
+      this.makingProcess = num;
+    },
+    handleDeleteClick: function handleDeleteClick(projectId) {
+      var _this5 = this;
+
+      var req = { userId: this.id, dataVoxelId: projectId };
+      this.$http.post('/delete/project/', req).then(function (response) {
+        console.log('deleted', req, response);
+        if (response.data.success) {
+          // deletion in the UI
+          _this5.unselectProject();
+          _this5.datavoxels = _this5.datavoxels.filter(function (item) {
+            return item.id != projectId;
+          });
+        } else {
+          // TODO: handle delete fail
+        }
+      });
+    },
+    handlePublicity: function handlePublicity(e) {
+      // `req: {userId: integer, datavoxelId: integer, public: boolean}`
+      // projectList[selectedIndex].public
+
+      var req = {
+        userId: +this.id,
+        datavoxelId: this.selectedProject,
+        public: e.target.checked
+      };
+
+      this.$http.post('/voxelPrivacy/', req).then(function (response) {
+        console.log('publicity', req, response);
+      });
+    },
+    openProject: function openProject(projectId) {
+      window.location = '/app/' + projectId;
+    },
+    parsePreviewImg: function parsePreviewImg(ThumbnailId) {
+      var thumbnailBase = 'https://s3.amazonaws.com/data-voxel-images/';
+      var previewBase = 'https://s3.amazonaws.com/data-voxel-preview/';
+
+      return [thumbnailBase + ThumbnailId + '.jpg', previewBase + ThumbnailId + '.jpg'];
+    },
+    dataById: function dataById(id) {
+      var data = this.mydataset.filter(function (item) {
+        return item.id == id;
+      });
+      return data.length > 0 ? data[0] : null;
+    },
+    deleteData: function deleteData(id) {
+      var dupSelectedLayers = Object.assign({}, this.selectedLayers);
+      delete dupSelectedLayers[id];
+      this.selectedLayers = dupSelectedLayers;
+    },
+    deleteProp: function deleteProp(dataid, prop) {
+      this.selectedLayers[dataid].splice(this.selectedLayers[dataid].indexOf(prop), 1);
+
+      if (this.selectedLayers[dataid].length == 0) {
+        this.deleteData(dataid);
+      }
+    },
+
+
+    // show project-making landing page
+    startMaking: function startMaking() {
+      this.makingProcess = 1;
+      this.selectedDatasetIndex = null;
+      this.currentProperties = [];
+      this.currentDatasetId = null;
+      this.mydataset = null;
+    },
+
+
+    // show project-making page
+    createProjectMode: function createProjectMode() {
+      this.makingProcess = 2;
+      this.selectedDatasetIndex = null;
+      this.currentProperties = [];
+      this.currentDatasetId = null;
+      this.mydataset = null;
+      this.queryDatasets();
+    },
+
+
+    // query dataset api
+    queryDatasets: function queryDatasets() {
+      var _this6 = this;
+
+      if (!this.mydataset) this.$http.get('/datasets/').then(function (response) {
+        _this6.mydataset = response.data.datafiles;
+      });
+    },
+
+
+    // open up the dataset selection pop-up box
+    datasetSelection: function datasetSelection(data, index) {
+      this.makingProcess = 3;
+      this.selectedDatasetIndex = index;
+      this.currentProperties = [];
+      this.currentDatasetId = data.id;
+      this.selectedGeoType = data.geometryType;
+
+      this.queryMapGeometry(data.id);
+    },
+    selectProperties: function selectProperties() {
+      if (this.currentProperties.length > 0) {
+        this.selectedLayers[this.currentDatasetId] = this.currentProperties;
+      }
+
+      this.unselectProject(2);
+      console.log(this.dataById(46), this.selectedLayers);
+    },
+    projectInfoPage: function projectInfoPage() {
+      if (Object.keys(this.selectedLayers).length > 0) {
+        this.makingProcess = 4;
+      }
+    },
+    queryMapGeometry: function queryMapGeometry(datasetId) {
+      var _this7 = this;
+
+      this.$http.get('/getThumbnailData/' + datasetId).then(function (response) {
+        if (_this7.selectedGeoType == 'Polygon') _this7.selectedGeometries = response.data.geoJSON.map(function (obj) {
+          return obj.coordinates[0].map(function (item) {
+            return [item[1], item[0]];
+          });
+        });else if (_this7.selectedGeoType == 'Point') {
+          _this7.selectedGeometries = response.data.geoJSON.map(function (obj) {
+            return [obj.coordinates[1], obj.coordinates[0]];
+          });
+        } else {
+          //TODO: Load map of other type of data
+        }
+      });
+    },
+    formatProperties: function formatProperties(properties) {
+      return Object.keys(properties).map(function (item) {
+        return { name: item };
+      });
+    },
+    openEditForm: function openEditForm() {
+      console.log('edit');
+      this.editing = true;
+      console.log(this.selectedItem);
+
+      this.editTitle = this.selectedItem.voxelname;
+      this.editTime = new Date().toISOString();
+    },
+    closeEditingForm: function closeEditingForm() {
+      this.editing = false;
+    },
+    handleEditSubmit: function handleEditSubmit(e) {
+      var _this8 = this;
+
+      e.preventDefault();
+
+      var formData = {
+        userFileName: this.editTitle,
+        updatedAt: this.editTime,
+        voxelId: this.selectedItem.voxelId,
+        id: this.selectedItem.id
+      };
+
+      console.log(formData);
+      this.$http.post('/editVoxelName', formData).then(function (response) {
+        console.log('submitted', response); //req
+
+        if (response.data.updated) {
+          document.location.reload();
+        } else {
+          _this8.errorMessage = response.data.alert;
+          _this8.file = null;
+          _this8.submitting = false;
+        }
+      });
+    }
+  }
+};
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__("./node_modules/lodash/lodash.js")))
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-f1eb2e28\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
+
+// module
+exports.push([module.i, ".making-form[data-v-f1eb2e28]{position:absolute;width:500px;top:50%;left:50%;transform:translate(-50%,-50%)}a[data-v-f1eb2e28]{color:#000}.ant-btn-danger[data-v-f1eb2e28]{color:#fff;background-color:#e75332;border-color:#e75332}.ant-btn-primary[data-v-f1eb2e28]{position:absolute;background-color:#e75332;border-color:#e75332;left:50%;bottom:70px;transform:translate(-50%)}.making[data-v-f1eb2e28]{position:absolute;left:0;top:0;bottom:0;right:0;background-color:#fff;z-index:1000}.making-title[data-v-f1eb2e28]{text-align:center;font-size:26px;display:inherit;font-weight:500;margin-bottom:0}.adding-icon[data-v-f1eb2e28]{left:50%;position:absolute;top:50%;border-radius:0;transform:scale(3) translate(-50%,-50%);transform-origin:0 0;padding:15px;opacity:.4}.adding-icon[data-v-f1eb2e28]:hover{opacity:1!important;cursor:pointer}.preview-ph[data-v-f1eb2e28]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.preview-ph-text[data-v-f1eb2e28]{position:absolute;opacity:.6;font-size:14px;bottom:10px;text-align:center;width:100%}.preview-img[data-v-f1eb2e28]{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;opacity:.3}.open-btn[data-v-f1eb2e28]{position:absolute;right:15px;border:none;top:50px;color:#e75332}.page-title-section[data-v-f1eb2e28]{margin-top:80px}.mainContainer[data-v-f1eb2e28]{min-height:calc(100vh - 130px)}.squeezedContainer[data-v-f1eb2e28]{height:0;min-height:0}.unselectProject[data-v-f1eb2e28]{z-index:1000;position:absolute;right:10px;top:90px;transform:scale(2);cursor:pointer}.unselectProject[data-v-f1eb2e28]:hover{opacity:.6}.project-info[data-v-f1eb2e28]{position:absolute;top:0;left:0;right:0;height:99%;background:#fff;z-index:1000}.actions[data-v-f1eb2e28]{position:absolute;left:15px;top:50px;border:none;padding:0;background:none}.card-images[data-v-f1eb2e28]{height:200px;overflow:hidden;position:relative;background-color:rgba(0,0,0,.03);margin-bottom:10px}.ant-switch-checked[data-v-f1eb2e28],.ant-switch[data-v-f1eb2e28]{background-color:rgba(0,0,0,.4)}.sorting-Switches[data-v-f1eb2e28]{display:inline-block;float:right;margin-top:30px}.no-data[data-v-f1eb2e28]{position:absolute;text-align:center;font-size:20px;left:50%;top:50%;transform:translate(-50%,-50%)}.page-title[data-v-f1eb2e28]{margin:20px;margin-left:0;display:inline-block}.card[data-v-f1eb2e28]{padding:0!important;height:268.5px!important}.dataset-list[data-v-f1eb2e28]{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;float:left}.switch[data-v-f1eb2e28]{float:left;margin-left:12px;font-size:12px}.dataset-info[data-v-f1eb2e28]{position:relative;width:40%;float:left;border:1px solid rgba(0,0,0,.1);min-height:calc(100vh - 300px);margin-bottom:20px;box-shadow:4px 4px 6px 0 rgba(0,0,0,.1)}.datainfo-content[data-v-f1eb2e28]{height:calc(100% - 20px);overflow-y:auto}.squeezeddatasetlist[data-v-f1eb2e28]{width:60%}.ant-card[data-v-f1eb2e28] .ant-card-body{padding:10px}.ant-card[data-v-f1eb2e28] .ant-card-meta-title{font-size:14px}.ant-card[data-v-f1eb2e28] .ant-card-meta-description{font-size:11px}.unsqueeze[data-v-f1eb2e28]{cursor:pointer;position:absolute;top:10px;right:10px}.unsqueeze[data-v-f1eb2e28]:hover{opacity:.6}.selected[data-v-f1eb2e28]{background:rgba(231,83,50,.8)}.selected[data-v-f1eb2e28] .ant-card{transform:scale(.95)}.info-cover-wrapper[data-v-f1eb2e28]{width:100%;padding:10px;margin-top:30px}.thumbnail-img[data-v-f1eb2e28]{object-fit:cover;width:100%;height:100%;position:absolute;left:0;top:0;transform:scale(1.3)}.info-cover[data-v-f1eb2e28]{width:100%}.info-text[data-v-f1eb2e28]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:350px;width:80%;height:60%;min-height:400px}.info-text[data-v-f1eb2e28] .info-title{font-weight:700;font-size:30px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.info-text[data-v-f1eb2e28] .info-time{font-size:13px;color:rgba(0,0,0,.45)}.info-text[data-v-f1eb2e28] .info-digits{color:rgba(0,0,0,.45)}.info-text[data-v-f1eb2e28] .info-text-left{height:100%}.info-text[data-v-f1eb2e28] .info-text-right{border-left:1px solid rgba(0,0,0,.1);height:100%;overflow-y:auto}.info-text[data-v-f1eb2e28] .info-bottom-left{position:absolute;left:15px;bottom:0}.demo-infinite-container[data-v-f1eb2e28]{border-radius:4px;overflow:auto;padding:8px 24px}.demo-loading[data-v-f1eb2e28]{position:absolute;bottom:40px;width:100%;text-align:center}.loading[data-v-f1eb2e28]{position:absolute;left:50%;top:50%;transform:scale(3) translate(-50%,-50%);transform-origin:0 0}.demo-infinite-container[data-v-f1eb2e28]{height:auto}.proj-list[data-v-f1eb2e28] .ant-list-item{margin-bottom:1px;background-color:hsla(0,0%,100%,.7)}.proj-list[data-v-f1eb2e28] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.proj-list[data-v-f1eb2e28] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.prop-list[data-v-f1eb2e28] .ant-list-item{background-color:hsla(0,0%,100%,.7);padding:12px}.prop-list[data-v-f1eb2e28] .ant-list-item /deep/ .ant-list-item-meta-description{font-size:12px}.prop-list[data-v-f1eb2e28] .ant-list-item /deep/ .ant-list-item-meta-title{margin-top:5px}.making1-wrapper[data-v-f1eb2e28]{padding:20px;width:70%;height:70%;min-width:300px;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%)}.making2-wrapper[data-v-f1eb2e28]{position:absolute;top:80px;left:0;right:0;bottom:0;padding:50px}.making3-wrapper[data-v-f1eb2e28],.making4-wrapper[data-v-f1eb2e28]{position:absolute;top:80px;left:0;right:0;bottom:100px;padding:50px}.making2-section[data-v-f1eb2e28]{background-color:rgba(0,0,0,.01);border:1px solid rgba(0,0,0,.1);height:100%}.making2-cols[data-v-f1eb2e28]{height:calc(100% - 120px)}.col-header[data-v-f1eb2e28]{font-size:20px;margin:10px;margin-bottom:10px;text-align:center}.dataset-wrapper[data-v-f1eb2e28]{height:calc(100% - 50px);overflow-y:auto}.dataset-wrapper[data-v-f1eb2e28] .ant-list-item:hover{cursor:pointer;opacity:.7}.col-left[data-v-f1eb2e28],.col-right[data-v-f1eb2e28]{width:50%;float:left;height:100%;position:relative}.col-right[data-v-f1eb2e28]{padding-left:20px}.col-right-title[data-v-f1eb2e28]{position:absolute;z-index:1;left:20px}.col-left-title[data-v-f1eb2e28]{position:absolute;z-index:1;left:0;font-size:20px}.property-wrapper[data-v-f1eb2e28]{height:calc(100% - 40px);margin-top:40px;overflow-y:auto}.map-wrapper[data-v-f1eb2e28]{position:absolute;height:calc(100% - 40px);width:100%;top:40px;background-color:rgba(0,0,0,.1)}.property-viewer[data-v-f1eb2e28]{overflow:auto;height:calc(100% - 50px)}.delete-data[data-v-f1eb2e28]{position:absolute;right:29px;top:15px}.delete-prop[data-v-f1eb2e28]{cursor:pointer}.adding-btn[data-v-f1eb2e28]{width:100%;height:100%}.ant-input-search[data-v-f1eb2e28]{float:right;margin-top:22px}.editingForm[data-v-f1eb2e28]{z-index:1000;position:fixed;left:50%;top:50%;border:1px solid rgba(0,0,0,.1);padding:20px;transform:translate(-50%,-50%);border-radius:10px;background:#fff;width:50%;box-shadow:0 0 8px 8px rgba(0,0,0,.1)}.closeEditingForm[data-v-f1eb2e28]{font-size:20px;position:absolute;right:10px;top:10px}.closeEditingForm[data-v-f1eb2e28]:hover{opacity:.6;cursor:pointer}", ""]);
+
+// exports
+
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-f1eb2e28\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue":
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"mainContainer",class:{
+      squeezedContainer: _vm.selectedProject != null || _vm.makingProcess != 0,
+    }},[_c('div',{staticClass:"page-title-section"},[_c('h1',{staticClass:"page-title"},[_vm._v("Projects")]),_vm._v(" "),(_vm.datavoxels.length > 0)?_c('div',{staticClass:"sorting-Switches"},[_c('span',{staticClass:"switch"},[_vm._v("Sort By")]),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"checked-children":"date","un-checked-children":"name","size":"small"},model:{value:(_vm.sortDate),callback:function ($$v) {_vm.sortDate=$$v},expression:"sortDate"}}),_vm._v(" "),_c('a-switch',{staticClass:"switch",attrs:{"size":"small"},model:{value:(_vm.sortDown),callback:function ($$v) {_vm.sortDown=$$v},expression:"sortDown"}},[_c('a-icon',{attrs:{"slot":"checkedChildren","type":"arrow-down"},slot:"checkedChildren"}),_vm._v(" "),_c('a-icon',{attrs:{"slot":"unCheckedChildren","type":"arrow-up"},slot:"unCheckedChildren"})],1)],1):_vm._e(),_vm._v(" "),_c('a-input-search',{staticStyle:{"width":"200px"},attrs:{"placeholder":"input search text"},on:{"search":_vm.onSearch}})],1),_vm._v(" "),_c('transition',[_c('div',{staticClass:"dataset-list"},[_c('a-list',{staticClass:"proj-list",attrs:{"grid":{ gutter: 1, column: 3 },"data-source":_vm.projectList,"pagination":_vm.pagination},scopedSlots:_vm._u([{key:"renderItem",fn:function(datafile, index){return _c('a-list-item',{},[(datafile.label != 'adding')?_c('span',{staticClass:"card",class:{ selected: datafile.id === _vm.selectedProject },on:{"click":function () {
+                  _vm.setActiveProjId(datafile.id, index)
+                }}},[_c('a-card',{attrs:{"hoverable":""}},[_c('div',{staticClass:"card-images"},[(datafile.Datavoxelimage != null)?_c('img',{staticClass:"thumbnail-img",attrs:{"slot":"cover","src":_vm.parsePreviewImg(datafile.Datavoxelimage.DatavoxelId)[0]},slot:"cover"}):_c('div',[_c('a-icon',{staticClass:"preview-ph",attrs:{"type":"picture"}}),_vm._v(" "),_c('span',{staticClass:"preview-ph-text"},[_vm._v("Preview not available yet.")])],1)]),_vm._v(" "),_c('a-card-meta',{attrs:{"title":datafile.voxelname ? datafile.voxelname : 'Untitled',"description":_vm.parseTime(datafile.createdAt)}})],1)],1):_c('span',{staticClass:"card col-sm-12 adding-panel"},[_c('a-button',{staticClass:"adding-btn",attrs:{"type":"dashed"},on:{"click":function () {
+                    _vm.startMaking()
+                  }}},[_vm._v("\n                Create A New Project\n              ")])],1)])}}])})],1)]),_vm._v(" "),_c('transition',[(_vm.selectedProject != null)?_c('div',{staticClass:"project-info"},[(_vm.selectedItem.Datavoxelimage != null)?_c('img',{staticClass:"preview-img",attrs:{"src":_vm.parsePreviewImg(_vm.selectedItem.Datavoxelimage.DatavoxelId)[1]}}):_vm._e(),_vm._v(" "),_c('span',{staticClass:"unselectProject",on:{"click":function () {
+              _vm.unselectProject()
+            }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"info-text "},[_c('div',{staticClass:"col-sm-6 info-text-left"},[_c('div',{staticClass:"info-title"},[_vm._v("\n              "+_vm._s(_vm.selectedItem.voxelname ? _vm.selectedItem.voxelname : 'Untitled')+"\n            ")]),_vm._v(" "),_c('a-dropdown',{staticClass:"actions"},[_c('a-menu',{attrs:{"slot":"overlay"},slot:"overlay"},[_c('a-menu-item',{key:"1",nativeOn:{"click":function($event){_vm.openEditForm()}}},[_vm._v("Edit")]),_vm._v(" "),_c('a-menu-item',{key:"2",nativeOn:{"click":function($event){_vm.handleDeleteClick(_vm.selectedProject)}}},[_vm._v("Delete Project")]),_vm._v(" "),_c('a-menu-item',{key:"3"},[_c('a-checkbox',{attrs:{"default-checked":_vm.selectedItem.public},on:{"change":_vm.handlePublicity}},[_vm._v("Public")])],1)],1),_vm._v(" "),_c('a-button',[_vm._v(" Actions "),_c('a-icon',{attrs:{"type":"down"}})],1)],1),_vm._v(" "),_c('a-button',{staticClass:"open-btn",on:{"click":function($event){_vm.openProject(_vm.selectedProject)}}},[_vm._v("Open Project")]),_vm._v(" "),_c('div',{staticClass:"info-bottom-left"},[_c('div',[_vm._v("\n                Created at:\n                "),_c('span',{staticClass:"info-time"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.createdAt)))])]),_vm._v(" "),_c('div',[_vm._v("\n                Last updated at:\n                "),_c('span',{staticClass:"info-digits"},[_vm._v(_vm._s(_vm.parseTime(_vm.selectedItem.updatedAt)))])])]),_vm._v(" "),_c('br')],1),_vm._v(" "),_c('div',{staticClass:"col-sm-6 info-text-right"},[_c('div',[_c('strong',[_vm._v("Layers")])]),_vm._v(" "),[_c('div',{staticClass:"demo-infinite-container"},[_c('a-list',{staticClass:"prop-list",attrs:{"data-source":_vm.selectedItem.Datajsons},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":item.rasterProperty}},[_c('a',{key:item.datafileId,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item.layername))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.layername.charAt(0).toUpperCase()))])],1)],1)}}])})],1)]],2)])]):_vm._e()]),_vm._v(" "),(_vm.editing == true)?_c('div',{staticClass:"editingForm"},[_c('span',{staticClass:"closeEditingForm",on:{"click":function () {
+            _vm.closeEditingForm()
+          }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),(!_vm.editSubmitting)?[_c('a-form',{on:{"submit":_vm.handleEditSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 16 },"field-decorator-options":{
+              rules: [{ required: true, message: 'Please input your title!' }],
+            },"label":"Title","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.editTitle),callback:function ($$v) {_vm.editTitle=$$v},expression:"editTitle"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(!_vm.submitting)?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n              Submit\n            ")]):_vm._e()],1)],1)]:_vm._e()],2):_vm._e(),_vm._v(" "),_c('transition',[(_vm.makingProcess == 1)?_c('div',{staticClass:"making making1"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+              _vm.unselectProject()
+            }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making1-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Create Project")]),_vm._v(" "),_c('span',{staticClass:"making1-desc"},[_vm._v("\n            With Painting with Data, users can create an interactive map and\n            explore relationships between georeferenced datasets leading to\n            sound, informed policy or business decisions. Painting with Data\n            utilizes voxels, which are a two-dimensional representation of a\n            three-dimensional overlay, to compute different variables into a\n            single map. Through an easy-to-use online interface, users can\n            upload spatial datasets, or use the datasets available in the\n            platform, creating spatial models that allow them to iteratively\n            think about the correlations among datasets, and build spatial\n            models on the fly. The spatial models can then be easily shared and\n            built in collaboration with numerous users or citizens.\n          ")]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {
+                _vm.createProjectMode()
+              }}},[_vm._v("Create Project")])],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess >= 2)?_c('div',{staticClass:"making making2"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+              _vm.unselectProject()
+            }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making2-wrapper"},[_c('span',{staticClass:"making-title"},[_vm._v("Select Dataset")]),_vm._v(" "),_c('div',{staticClass:"container making2-cols"},[_c('div',{staticClass:"col-sm-6 making2-section"},[_c('div',{staticClass:"col-header"},[_c('span',[_vm._v("Datasets")])]),_vm._v(" "),(_vm.mydataset && _vm.mydataset.length > 0)?_c('div',{staticClass:"dataset-wrapper"},[_c('a-list',{attrs:{"data-source":_vm.mydataset},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return (item.deleted !== false && item.Datalayers.length != 0)?_c('a-list-item',{on:{"click":function () {
+                        _vm.datasetSelection(item, index)
+                      }}},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item.filename,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item.userFileName ? item.userFileName : item.filename))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.filename.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('div')],1):_vm._e()}}])})],1):_c('div',[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})],1)]),_vm._v(" "),_c('div',{staticClass:"col-sm-6 making2-section"},[_c('div',{staticClass:"col-header"},[_c('span',[_vm._v("Selected Properties")])]),_vm._v(" "),_c('div',{staticClass:"property-viewer"},[[_c('div',[(Object.keys(_vm.selectedLayers).length)?_c('a-collapse',{attrs:{"active-key":Object.keys(_vm.selectedLayers)},on:{"change":_vm._onChange}},_vm._l((Object.keys(_vm.selectedLayers)),function(dataKey){return _c('a-collapse-panel',{key:dataKey},[_c('template',{slot:"header"},[_vm._v("\n                          "+_vm._s(_vm.dataById(dataKey).filename)+"\n                          "),_c('a-icon',{staticClass:"delete-data",attrs:{"type":"delete"},on:{"click":function () {
+                                _vm.deleteData(dataKey)
+                              }}})],1),_vm._v(" "),_c('a-list',{attrs:{"data-source":_vm.selectedLayers[dataKey]},scopedSlots:_vm._u([{key:"renderItem",fn:function(item, index){return _c('a-list-item',{},[_c('a-list-item-meta',{attrs:{"description":""}},[_c('a',{key:item,attrs:{"slot":"title"},slot:"title"},[_vm._v(_vm._s(item))]),_vm._v(" "),_c('a-button',{attrs:{"slot":"avatar","shape":"circle"},slot:"avatar"},[_vm._v(_vm._s(item.charAt(0).toUpperCase()))])],1),_vm._v(" "),_c('a-icon',{staticClass:"delete-prop",attrs:{"type":"delete"},on:{"click":function () {
+                                  _vm.deleteProp(dataKey, item)
+                                }}}),_vm._v(" "),_c('div')],1)}}])})],2)})):_vm._e()],1)]],2)])]),_vm._v(" "),(Object.keys(_vm.selectedLayers).length > 0)?_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {
+                _vm.projectInfoPage()
+              }}},[_vm._v("Next")]):_vm._e()],1)]):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess == 3)?_c('div',{staticClass:"making making3"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+              _vm.unselectProject(2)
+            }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making3-wrapper"},[_c('div',{staticClass:"col-left"},[_c('div',{staticClass:"col-left-title"},[_c('strong',[_vm._v(_vm._s(_vm.mydataset[_vm.selectedDatasetIndex].filename))])]),_vm._v(" "),_c('div',{staticClass:"map-wrapper"},[(true)?_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}}):_vm._e(),_vm._v(" "),(_vm.selectedGeometries != null)?_c('l-map',{attrs:{"zoom":_vm.zoom,"center":_vm.getMapCenter(_vm.mydataset[_vm.selectedDatasetIndex]),"bounds":_vm.getBbox(_vm.mydataset[_vm.selectedDatasetIndex])}},[_c('l-tile-layer',{attrs:{"url":_vm.url,"attribution":_vm.attribution}}),_vm._v(" "),(_vm.selectedGeoType == 'Polygon')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-polygon',{key:index,attrs:{"lat-lngs":geometry,"weight":1,"color":"black","fill-color":"rgb(255,255,255)"}})}):_vm._e(),_vm._v(" "),(_vm.selectedGeoType == 'Point')?_vm._l((_vm.selectedGeometries),function(geometry,index){return _c('l-marker',{key:index,attrs:{"lat-lng":geometry}})}):_vm._e()],2):_vm._e()],1)]),_vm._v(" "),_c('div',{staticClass:"col-right"},[_c('div',{staticClass:"col-right-title"},[_c('strong',[_vm._v("Select Property")])]),_vm._v(" "),_c('div',{staticClass:"property-wrapper"},[[_c('a-table',{attrs:{"row-selection":_vm.rowSelection,"columns":_vm.columns,"data-source":_vm.formatProperties(
+                      _vm.mydataset[_vm.selectedDatasetIndex].Datalayers[0].properties
+                    ),"pagination":false},scopedSlots:_vm._u([{key:"name",fn:function(text){return _c('a',{attrs:{"href":"#"}},[_vm._v(_vm._s(text))])}}])})]],2)])]),_vm._v(" "),_c('a-button',{attrs:{"type":"primary"},on:{"click":function () {
+              _vm.selectProperties()
+            }}},[_vm._v("Add To Selection")])],1):_vm._e()]),_vm._v(" "),_c('transition',[(_vm.makingProcess == 4)?_c('div',{staticClass:"making making4"},[_c('span',{staticClass:"unselectProject",on:{"click":function () {
+              _vm.pageJumper(2)
+            }}},[_c('a-icon',{attrs:{"type":"close"}})],1),_vm._v(" "),_c('div',{staticClass:"making4-wrapper"},[_c('div',{staticClass:"making-form"},[(!_vm.submitting)?[_c('a-form',{attrs:{"auto-form-create":function () {
+                    _vm.formInit()
+                  }},on:{"submit":_vm.handleSubmit}},[_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"field-decorator-options":{
+                    rules: [
+                      {
+                        required: true,
+                        message: 'Please input your project name!',
+                      } ],
+                  },"label":"Project Name","field-decorator-id":"name"}},[_c('a-input',{model:{value:(_vm.formName),callback:function ($$v) {_vm.formName=$$v},expression:"formName"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Voxel Density","field-decorator-id":"density"}},[_c('a-col',{attrs:{"span":26}},[_c('a-slider',{attrs:{"min":10000,"max":40000},model:{value:(_vm.formDensity),callback:function ($$v) {_vm.formDensity=$$v},expression:"formDensity"}})],1)],1),_vm._v(" "),_c('a-form-item',{attrs:{"label-col":{ span: 5 },"wrapper-col":{ span: 12 },"label":"Publicity","field-decorator-id":"public"}},[_c('a-switch',{attrs:{"checked-children":"Public","un-checked-children":"Private"},model:{value:(_vm.formPublicity),callback:function ($$v) {_vm.formPublicity=$$v},expression:"formPublicity"}})],1),_vm._v(" "),_c('a-form-item',{attrs:{"wrapper-col":{ span: 12, offset: 5 }}},[(_vm.formName != null && _vm.formName != '' && !_vm.submitting)?_c('a-button',{attrs:{"type":"danger","html-type":"submit"}},[_vm._v("\n                    Submit\n                  ")]):_vm._e()],1)],1)]:_vm._e()],2),_vm._v(" "),(_vm.submitting)?[_c('a-icon',{staticClass:"loading",attrs:{"type":"loading"}})]:_vm._e()],2)]):_vm._e()])],1)}
+var staticRenderFns = []
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-f1eb2e28\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue":
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-f1eb2e28\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var add = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js").default
+var update = add("f7228b24", content, true, {});
+
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__ = __webpack_require__("./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./private/vue/Projects.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__);
+/* harmony namespace reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f1eb2e28_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-f1eb2e28\",\"hasScoped\":true,\"optionsId\":\"0\",\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./private/vue/Projects.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/component-normalizer.js");
+function injectStyle (context) {
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"id\":\"data-v-f1eb2e28\",\"scoped\":true,\"sourceMap\":false}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./private/vue/Projects.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?minimize!./node_modules/vue-loader/lib/style-compiler/index.js?{\"optionsId\":\"0\",\"vue\":true,\"scoped\":false,\"sourceMap\":false}!./node_modules/vue-loader/lib/selector.js?type=styles&index=1!./private/vue/Projects.vue")
+}
+/* script */
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-f1eb2e28"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+
+var Component = Object(__WEBPACK_IMPORTED_MODULE_2__node_modules_vue_loader_lib_runtime_component_normalizer__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_Projects_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f1eb2e28_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_f1eb2e28_hasScoped_true_optionsId_0_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Projects_vue__["b" /* staticRenderFns */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
