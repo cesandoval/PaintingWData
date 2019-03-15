@@ -10,6 +10,7 @@ var passport = require('passport'),
     deleteController = require('../controllers/deleteController'),
     saveUserfile = require('../controllers/userFileController'),
     editController = require('../controllers/editController'),
+    projectController = require('../controllers/projectController'),
     isAuthenticatedOrPublicVoxel = require('../controllers/signupController').isAuthenticatedOrPublicVoxel,
     router = require('express').Router();
 //var jwt = require('jsonwebtoken');
@@ -51,7 +52,6 @@ var passport = require('passport'),
     res.render('uploadViewer', {id: id, userSignedIn: req.isAuthenticated(), user: req.user, size: size, accountAlert: req.flash('accountAlert')[0]});
   });
   
-  // Wenzhe
   // Actually saves the files into datalayers
   router.post('/uploadViewer', isAuthenticated, fileViewerController.saveShapes);
 
@@ -64,7 +64,6 @@ var passport = require('passport'),
   router.get('/layers/:id/:datafileId', isAuthenticated, datalayerController.show);
   router.post('/layers', isAuthenticated, datalayerController.computeVoxels);
 
-  // Wenzhe
   // Middleware for getting datasets
   router.get('/datasets/', isAuthenticated, datalayerController.getDatasets);
   router.get('/datasets/:id', isAuthenticated, datalayerController.showDatasets);
@@ -77,9 +76,11 @@ var passport = require('passport'),
   router.get('/voxels/:id/:datalayerId', isAuthenticated, datalayerController.showVoxels);
   router.post('/voxels', isAuthenticated, datalayerController.transformVoxels);
 
+  // Project routes
   router.get('/projects/:id', isAuthenticated, datalayerController.showProjects);
   router.get('/projects/:id/:datalayerId', isAuthenticated, datalayerController.showProjects);
   router.post('/projects', isAuthenticated, datalayerController.transformProjects);
+  router.get('/projects/getAllPublic', isAuthenticated, projectController.showAllPublicProjects)
 
   // vue test page
   router.get('/vue', function (req, res) { 
