@@ -1,7 +1,7 @@
 var Model = require('./app/models'),
     async = require('async')
 
-
+/* eslint-disable */
 // UPDATE DATAFILE NAME 
 function updateDatafiles(callback){
     console.log("inside updateDatafiles");
@@ -19,6 +19,7 @@ function updateDatafiles(callback){
             for (let i in datafiles) {
                 let currDatafile = datafiles[i]
                 if (currDatafile.userFileName == null) {
+
                     if (typeof currDatafile.Datalayers[0] != 'undefined'){
                         var description = currDatafile.Datalayers[0].description
                         var userLayerName = currDatafile.Datalayers[0].userLayerName
