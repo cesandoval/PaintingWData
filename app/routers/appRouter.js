@@ -80,7 +80,7 @@ var passport = require('passport'),
   router.get('/projects/:id', isAuthenticated, datalayerController.showProjects);
   router.get('/projects/:id/:datalayerId', isAuthenticated, datalayerController.showProjects);
   router.post('/projects', isAuthenticated, datalayerController.transformProjects);
-  router.get('/projects/getAllPublic', isAuthenticated, projectController.showAllPublicProjects)
+  router.get('/projects/getAllPublic', projectController.showAllPublicProjects)
 
   // vue test page
   router.get('/vue', function (req, res) { 
