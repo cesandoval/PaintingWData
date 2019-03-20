@@ -60,6 +60,7 @@ export default class Pixels {
         // Pixels (Geometry)
         this.geometry = this.initGeometry()
         this.setGeometry(this.geometry, geometryObject)
+        console.log(this.geometry, 9393939339393949494949)
         this.startColor = new THREE.Color(startColor)
         this.endColor = new THREE.Color(endColor)
         this.layerN = n
@@ -102,6 +103,7 @@ export default class Pixels {
         // Pixels.vlangBuildPixels();
         this.addToScene(graph.scene)
     }
+
     /**
      * Puts the camera back into its original position when we opened up the app.
      * @param {PaintGraph.Graph} canvas The map canvas.
@@ -620,6 +622,42 @@ export default class Pixels {
         })
         material.transparent = true
         return material
+    }
+
+    static initHover(canvas) {
+        this.raycaster = new THREE.Raycaster()
+        let view = d3.select(canvas.renderer.domElement)
+        view.on('mousemove', () => {
+            let [mouseX, mouseY] = d3.mouse(view.node())
+            let mouse_position = [mouseX, mouseY]
+            console.log(mouse_position)
+            this.checkIntersects(mouse_position, canvas.camera)
+        })
+    }
+
+    mouseToThree(mouseX, mouseY) {
+        return new THREE.Vector3(
+            mouseX / this.clientWidth * 2 - 1,
+            -(mouseY / this.clientHeight) * 2 + 1,
+            1
+        )
+    }
+
+    checkIntersects(mouse_position, camera) {
+        let mouse_vector = this.mouseToThree(...mouse_position)
+        this.raycaster.setFromCamera(mouse_vector, camera)
+        // let intersects = this.raycaster.intersectObject(points)
+        // if (intersects[0]) {
+        //     let sorted_intersects = sortIntersectsByDistanceToRay(intersects)
+        //     let intersect = sorted_intersects[0]
+        //     let index = intersect.index
+        //     let datum = generated_points[index]
+        //     highlightPoint(datum)
+        //     showTooltip(mouse_position, datum)
+        // } else {
+        //     removeHighlights()
+        //     hideTooltip()
+        // }
     }
 
     get mesh() {

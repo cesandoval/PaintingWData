@@ -1,5 +1,6 @@
 import axios from 'axios'
 let crypto = require('crypto')
+// let d3 = require('https://d3js.org/d3.v5.min.js')
 /**
  * Summary. (use period)
  *
@@ -72,7 +73,45 @@ export default class Graph {
          * @member {Boolean}
          */
         this.rendering = false
+        this.raycaster = new THREE.Raycaster()
+        // this.initHover()
     }
+
+    // initHover() {
+    //     let view = d3.select(this.renderer.domElement)
+    //     view.on('mousemove', () => {
+    //         let [mouseX, mouseY] = d3.mouse(view.node())
+    //         let mouse_position = [mouseX, mouseY]
+    //         console.log(mouse_position)
+    //         // this.checkIntersects(mouse_position)
+    //     })
+    // }
+
+    // mouseToThree(mouseX, mouseY) {
+    //     return new THREE.Vector3(
+    //         mouseX / this.clientWidth * 2 - 1,
+    //         -(mouseY / this.clientHeight) * 2 + 1,
+    //         1
+    //     )
+    // }
+
+    // // checkIntersects(mouse_position) {
+    // //     let mouse_vector = this.mouseToThree(...mouse_position)
+    // //     this.raycaster.setFromCamera(mouse_vector, this.camera)
+    // //     let intersects = this.raycaster.intersectObject(points)
+    // //     if (intersects[0]) {
+    // //         let sorted_intersects = sortIntersectsByDistanceToRay(intersects)
+    // //         let intersect = sorted_intersects[0]
+    // //         let index = intersect.index
+    // //         let datum = generated_points[index]
+    // //         highlightPoint(datum)
+    // //         showTooltip(mouse_position, datum)
+    // //     } else {
+    // //         removeHighlights()
+    // //         hideTooltip()
+    // //     }
+    // // }
+
     /**
      * Creates a new three.js Scene object for the canvas.
      * @return {THREE.Scene}

@@ -23,6 +23,7 @@ export default (state = initialMapState, action) => {
 
             // Add the map to the canvas
             PaintGraph.Pixels.buildMapbox(instance, bbox, state.getScreenshot)
+            PaintGraph.Pixels.initHover(instance)
 
             let geometries = Object.assign({}, state.geometries)
 
