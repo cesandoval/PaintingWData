@@ -52,6 +52,10 @@ const style = {
         background: 'none',
         cursor: 'pointer',
     },
+    nodeAddButton: {
+        height: '32px',
+        width: '16px',
+    },
 }
 
 function observer(label = '') {
@@ -1114,6 +1118,7 @@ class VPL extends React.Component {
                 {/* Adding more nodes */}
                 {_.get(classOptions, 'increaseInput', false) && (
                     <foreignObject
+                        style={style.nodeAddButton}
                         transform={`translate(${2}, ${Style.plug.height / 2 +
                             Style.topOffset +
                             Style.plug.marginTop *
@@ -1144,6 +1149,7 @@ class VPL extends React.Component {
                 {_.get(classOptions, 'increaseInput', false) &&
                     Object.entries(inputs).length > 2 && (
                         <foreignObject
+                            style={style.nodeAddButton}
                             transform={`translate(${2}, ${Style.plug.height /
                                 2 +
                                 Style.topOffset +
