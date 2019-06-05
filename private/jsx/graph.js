@@ -170,10 +170,10 @@ export default class Graph {
 
             // scale to the target width
             var scaleX1 = targetwidth
-            var scaleY1 = (srcheight * targetwidth) / srcwidth
+            var scaleY1 = srcheight * targetwidth / srcwidth
 
             // scale to the target height
-            var scaleX2 = (srcwidth * targetheight) / srcheight
+            var scaleX2 = srcwidth * targetheight / srcheight
             var scaleY2 = targetheight
 
             // now figure out which one we should use
@@ -423,7 +423,7 @@ export default class Graph {
      * Updates the aspect ratio of the camera, and the size of the renderer.
      */
     onResize() {
-        this.camera.aspect = (window.innerWidth * 0.799) / window.innerHeight
+        this.camera.aspect = window.innerWidth * 0.799 / window.innerHeight
         this.camera.updateProjectionMatrix()
         this.renderer.setSize(
             Math.floor(window.innerWidth * 0.799),
