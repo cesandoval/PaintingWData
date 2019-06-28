@@ -207,6 +207,10 @@ module.exports.getDatasets = function(req, res) {
             userId : req.user.id,
             deleted: {$not: true}
         },
+        include: [{
+            model: Model.Datalayer,
+            where: {deleted: {$not: true}},
+            limit: 1}]
         }).then(function(datafiles){
             res.json({id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, });
         });
