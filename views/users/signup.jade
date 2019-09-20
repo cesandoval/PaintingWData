@@ -9,10 +9,25 @@ block pageTitle
         form(method="post", action="/users/signup", id="signup_form")
           h2.spacing.prompt Create an account.
           div.basicForm.col-md-offset-3
+
+            div(id='hiddendiv',data-role='fieldcontain')
+              fieldset(data-role='controlgroup')
+                input(type="checkbox" class = "term-check" id = "agreement")
+                w By signing up I accept the 
+                  span.terms(id="show-terms")
+                    b terms and conditions
+                w  of the service and the 
+                  span.terms(id="show-policy")
+                    b privacy policy
+                w .
+                br
+                br
+                br
+
             div(data-role='fieldcontain').form-group
               fieldset(data-role='controlgroup')
                 label(for="email").
-                  Username
+                  Email
                 input(type="text", id="email", class="form-control form-input-line", name="username", placeholder="newuser@gmail.com")
                 br
             div(id='hiddendiv',data-role='fieldcontain')
@@ -27,15 +42,17 @@ block pageTitle
                   Confirm Password
                 input(type="password", id="confirm_password", class="form-control form-input-line", name="confirm_password")
                 br
-            div(data-role='fieldcontain').spacing  
+            
+            div(data-role='fieldcontain').spacing.signup-btn.hidden-btn
               div(class="btn btn-outline-primary" id="trigger_survey").
                 Sign Up
               //- input(type='submit',value='Sign Up',data-transition='fade', data-theme='c', class="btn btn-outline-primary")
 
-        a.btn.btn-block.btn-social.btn-google(href="./google_oauth")
-            span.fa.fa-google
-            |  Sign up with Google
-        br
-        a.btn.btn-block.btn-social.btn-facebook(href="./facebook_oauth")
-          span.fa.fa-facebook
-          |  Sign up with Facebook
+        div.basicForm.col-md-offset-3.signup-btn.hidden-btn
+          a.btn.btn-block.btn-social.btn-google(href="./google_oauth")
+              span.fa.fa-google
+              |  Sign up with Google
+          br
+          a.btn.btn-block.btn-social.btn-facebook(href="./facebook_oauth")
+            span.fa.fa-facebook
+            |  Sign up with Facebook

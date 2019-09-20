@@ -3,20 +3,28 @@
     <h1>Layers</h1>
     <a-rate :default-value="3" />
     <label>sort by date</label>
-    <a-switch v-model="sortDate"/>
-    <span v-show="acitveDataset" id="datasetPreview"> <h3>Hover Card {{ acitveDataset }}</h3> </span>
-    <hr>
+    <a-switch v-model="sortDate" />
+    <span v-show="acitveDataset" id="datasetPreview">
+      <h3>Hover Card {{ acitveDataset }}</h3>
+    </span>
+    <hr >
     <span
       v-for="datafile in datefileList"
-      v-if="datafile.visible" :key="datafile.filename"
+      v-if="datafile.visible"
+      :key="datafile.filename"
       class="card"
-      @mouseover="()=> {setActiveDatasetId(datafile.filename)}"
-      @mouseout="()=> {setActiveDatasetId('')}"
+      @mouseover="
+        () => {
+          setActiveDatasetId(datafile.filename)
+        }
+      "
+      @mouseout="
+        () => {
+          setActiveDatasetId('')
+        }
+      "
     >
-      <a-card
-        hoverable
-        style="width: 300px"
-      >
+      <a-card hoverable style="width: 300px">
         <img
           slot="cover"
           alt="example"
@@ -25,18 +33,20 @@
         <ul slot="actions" class="ant-card-actions">
           <li style="width: 33.3333%;"><a-icon type="setting" /></li>
           <li style="width: 33.3333%;"><a-icon type="edit" /></li>
-          <li style="width: 33.3333%;"> <a-icon type="ellipsis" /></li>
+          <li style="width: 33.3333%;"><a-icon type="ellipsis" /></li>
         </ul>
         <a-card-meta
           :title="datafile.filename"
-          :description="`This is the description. The Date ${datafile.date}`">
-          <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+          :description="`This is the description. The Date ${datafile.date}`"
+        >
+          <a-avatar
+            slot="avatar"
+            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+          />
         </a-card-meta>
       </a-card>
     </span>
-
   </div>
-  
 </template>
 
 <script>

@@ -1,252 +1,408 @@
 <template>
-  <div :class="{ squeezedContainer:selectedDataset!=null||uploadProcess!=0, }"
-       class = "mainContainer"
+  <div
+    :class="{
+      squeezedContainer: selectedDataset != null || uploadProcess != 0,
+    }"
+    class="mainContainer"
   >
-    <div class = "page-title-section">
-      <h1 class = "page-title">Datasets</h1>
+    <div class="page-title-section">
+      <h1 class="page-title">Datasets</h1>
 
-      <div v-if="datafiles.length>0"
-           class = "sorting-switches"
-      >
-        <span class = "switch">Sort By</span>
-        <a-switch v-model="sortDate" checked-children="date" un-checked-children="name" 
-                  size="small" class = "switch"/>
-        <a-switch v-model="sortDown" 
-                  size="small" class = "switch">
-          <a-icon slot="checkedChildren" type="arrow-down"/>
-          <a-icon slot="unCheckedChildren" type="arrow-up"/>
+      <div v-if="datafiles.length > 0" class="sorting-switches">
+        <span class="switch">Sort By</span>
+        <a-switch
+          v-model="sortDate"
+          checked-children="date"
+          un-checked-children="name"
+          size="small"
+          class="switch"
+        />
+        <a-switch v-model="sortDown" size="small" class="switch">
+          <a-icon slot="checkedChildren" type="arrow-down" />
+          <a-icon slot="unCheckedChildren" type="arrow-up" />
         </a-switch>
       </div>
 
+      <a-input-search
+        placeholder="input search text"
+        style="width: 200px"
+        @search="onSearch"
+      />
     </div>
 
-
-    <div v-if="datafiles.length===0"
-         class = "no-data"
-    >
-      No Data Uploaded.
-    </div>
-    
-
+    <div v-if="datafiles.length === 0" class="no-data">No Data Uploaded.</div>
 
     <transition>
-      <div 
-        :class="{ squeezeddatasetlist: isSqueezed, }"
-        class = "dataset-list">
-
-        <span class="card col-sm-4 adding-panel">
-          <a-button type="dashed" class="adding-btn" @click="()=> {startUploading()}">
-            <a-icon type="plus" class="adding-icon"
-          /></a-button>
-        </span>
-
-        <span
-          v-for="(datafile,index) in datafileList"
-          v-if="datafile.deleted!==false&&datafile.Datalayers.length!=0"
-          :key="datafile.id"
-          :class="{selected:datafile.id===selectedDataset}"
-          class="card col-sm-4"
-          @click="()=> {setActiveDatasetId(datafile.id,index)}"
+      <div :class="{ squeezeddatasetlist: isSqueezed }" class="dataset-list">
+        <a-list
+          :grid="{ gutter: 1, column: 3 }"
+          :data-source="datafileList"
+          :pagination="pagination"
+          class="proj-list"
         >
-          <a-card
-            hoverable
-          >
-
-            <div class="map-thumbnail">
-
-              <l-map :zoom="zoom" :center="getMapCenter(datafile)" :bounds="getBbox(datafile)">
-                <l-tile-layer :url="url" :attribution="attribution"/>
-                <l-polygon :lat-lngs="getBbox(datafile)" :weight="2" color="black" fill-color="rgb(255,255,255)"/>
-              </l-map>
-            </div>
-            <a-card-meta
-              :title="datafile.filename"
-              :description="parseTime(datafile.createdAt)"/>
-              
-          </a-card>
-        </span>
+          <a-list-item slot="renderItem" slot-scope="datafile, index">
+            <span
+              v-if="datafile.label != 'adding'"
+              :class="{ selected: datafile.id === selectedDataset }"
+              class="card"
+              @click="
+                () => {
+                  setActiveDatasetId(datafile.id, index)
+                }
+              "
+            >
+              <a-card hoverable>
+                <div class="map-thumbnail">
+                  <l-map
+                    :zoom="zoom"
+                    :center="getMapCenter(datafile)"
+                    :bounds="getBbox(datafile)"
+                  >
+                    <l-tile-layer :url="url" :attribution="attribution" />
+                    <l-polygon
+                      :lat-lngs="getBbox(datafile)"
+                      :weight="2"
+                      color="black"
+                      fill-color="rgb(255,255,255)"
+                    />
+                  </l-map>
+                </div>
+                <a-card-meta
+                  :title="
+                    datafile.userFileName
+                      ? datafile.userFileName
+                      : datafile.filename
+                  "
+                  :description="parseTime(datafile.createdAt)"
+                />
+              </a-card>
+            </span>
+            <span v-else class="card col-sm-12 adding-panel">
+              <a-button
+                type="dashed"
+                class="adding-btn"
+                @click="
+                  () => {
+                    startUploading()
+                  }
+                "
+              >
+                Upload A New Dataset
+              </a-button>
+            </span>
+          </a-list-item>
+        </a-list>
       </div>
     </transition>
 
-    
-    <div 
-      v-if="isSqueezed"
-      class = "dataset-info">
+    <div v-if="isSqueezed" class="dataset-info">
       <span
         class="unsqueeze"
-        @click="()=> {unSqueezeTiles()}">
+        @click="
+          () => {
+            unSqueezeTiles()
+          }
+        "
+      >
         <a-icon type="close" />
       </span>
-       
 
-      <div class = "datainfo-content">
-
-        <div class = "col-sm-6 left-col">
-          <a-dropdown class = "actions">
-            <a-menu slot="overlay" @click="handleDeleteClick(selectedDataset)">
-              <a-menu-item key="1" >Delete Dataset</a-menu-item>
+      <div class="datainfo-content">
+        <div class="col-sm-6 left-col">
+          <a-dropdown class="actions">
+            <a-menu slot="overlay">
+              <a-menu-item key="1" @click.native="openEditForm()"
+              >Edit</a-menu-item
+              >
+              <a-menu-item
+                key="2"
+                @click.native="handleDeleteClick(selectedDataset)"
+              >Delete Dataset</a-menu-item
+              >
             </a-menu>
-            <a-button>
-              Actions <a-icon type="down" />
-            </a-button>
+            <a-button> Actions <a-icon type="down" /> </a-button>
           </a-dropdown>
 
-          <div class = "info-cover-wrapper">
-            <a-icon v-if="selectedGeometries==null" 
-                    type="loading"
-                    class = "map-loading"/>
+          <div class="info-cover-wrapper">
+            <a-icon
+              v-if="selectedGeometries == null"
+              type="loading"
+              class="map-loading"
+            />
             <div class="map-thumbnail-preview">
-              <l-map v-if="selectedGeometries!=null" 
-                     :zoom="zoom" 
-                     :center="getMapCenter(datafileList[selectedIndex])"
-                     :bounds="getBbox(datafileList[selectedIndex])">
-                <l-tile-layer :url="url" :attribution="attribution"/>
+              <l-map
+                v-if="selectedGeometries != null"
+                :zoom="zoom"
+                :center="getMapCenter(selectedItem)"
+                :bounds="getBbox(selectedItem)"
+              >
+                <l-tile-layer :url="url" :attribution="attribution" />
 
                 <!-- polygons -->
-                <template v-if="selectedGeoType=='Polygon'">
-                  <l-polygon v-for="(geometry,index) in selectedGeometries"
-                             :key="index"
-                             :lat-lngs="geometry" :weight="1" color="black" 
-                             fill-color="rgb(255,255,255)"/>
+                <template v-if="selectedGeoType == 'Polygon'">
+                  <l-polygon
+                    v-for="(geometry, index) in selectedGeometries"
+                    :key="index"
+                    :lat-lngs="geometry"
+                    :weight="1"
+                    color="black"
+                    fill-color="rgb(255,255,255)"
+                  />
                 </template>
 
-                <template v-if="selectedGeoType=='Point'">
-                  <l-marker v-for="(geometry,index) in selectedGeometries" :key="index"
-                            :lat-lng="geometry"/>
+                <template v-if="selectedGeoType == 'Point'">
+                  <l-marker
+                    v-for="(geometry, index) in selectedGeometries"
+                    :key="index"
+                    :lat-lng="geometry"
+                  />
                 </template>
-
-
               </l-map>
             </div>
           </div>
 
-          <div class = "info-text bottom-info">
-            <div class = "info-title">File name:  
-              <span class = "info-digits"
-            >{{ datafileList[selectedIndex].filename.split(".")[0] }}</span></div>
-            <div>Created at:  
-              <span class = "info-time"
-            >{{ parseTime(datafileList[selectedIndex].createdAt) }}</span></div>
-            <br>
-            <div>Last updated at:  
-              <span class = "info-digits"
-            >{{ parseTime(datafileList[selectedIndex].updatedAt) }}</span></div>
-            <div>Latitude:  
-              <span class = "info-digits"
-            >{{ (datafileList[selectedIndex].centroid.coordinates[0].toFixed(2)) }}</span></div>
-            <div>Longitude:  
-              <span class = "info-digits"
-            >{{ (datafileList[selectedIndex].centroid.coordinates[1].toFixed(2)) }}</span></div>
-            <div>Type of Geometry:  
-              <span class = "info-digits"
-            >{{ datafileList[selectedIndex].geometryType }}</span></div>
-          </div> 
-        </div> 
+          <div class="info-text bottom-info">
+            <div class="info-title">
+              Title:
+              <span class="info-digits">{{ selectedItem.userFileName }}</span>
+            </div>
 
-        <div class = "col-sm-6 right-col">
-          <div class = "info-text">
+            <div class="info-title">
+              File name:
+              <span class="info-digits">{{ selectedItem.filename }}</span>
+            </div>
+            <div>
+              Created at:
+              <span class="info-time">{{
+                parseTime(selectedItem.createdAt)
+              }}</span>
+            </div>
+            <br >
+            <div>
+              Last updated at:
+              <span class="info-digits">{{
+                parseTime(selectedItem.updatedAt)
+              }}</span>
+            </div>
+            <div>
+              Latitude:
+              <span class="info-digits">{{
+                selectedItem.centroid.coordinates[0].toFixed(2)
+              }}</span>
+            </div>
+            <div>
+              Longitude:
+              <span class="info-digits">{{
+                selectedItem.centroid.coordinates[1].toFixed(2)
+              }}</span>
+            </div>
+            <div>
+              Type of Geometry:
+              <span class="info-digits">{{ selectedItem.geometryType }}</span>
+            </div>
+            <br >
+            <div>
+              Description:
+              <span class="info-digits">{{ selectedItem.description }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 right-col">
+          <div class="info-text">
             <div><strong>Properties</strong></div>
             <template>
-              <div 
-                class="demo-infinite-container"
-              >
+              <div class="demo-infinite-container">
                 <a-list
-                  :data-source="Object.keys(datafileList[selectedIndex].Datalayers[0].properties)"
+                  :data-source="
+                    Object.keys(selectedItem.Datalayers[0].properties)
+                  "
                 >
                   <a-list-item slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta description="">
                       <a slot="title" :key="item">{{ item }}</a>
-                      <a-button slot="avatar" shape="circle">{{ item.charAt(0).toUpperCase() }}</a-button>
+                      <a-button slot="avatar" shape="circle">{{
+                        item.charAt(0).toUpperCase()
+                      }}</a-button>
                     </a-list-item-meta>
-                    <div/>
+                    <div />
                   </a-list-item>
                   <a-spin v-if="loading && !busy" class="demo-loading" />
                 </a-list>
               </div>
             </template>
-
-          </div> 
-        </div> 
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- data editing form -->
+    <div v-if="editing == true" class="editingForm">
+      <span
+        class="closeEditingForm"
+        @click="
+          () => {
+            closeEditingForm()
+          }
+        "
+      >
+        <a-icon type="close" />
+      </span>
 
+      <template v-if="!editSubmitting">
+        <a-form @submit="handleEditSubmit">
+          <a-form-item
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 16 }"
+            :field-decorator-options="{
+              rules: [{ required: true, message: 'Please input your title!' }],
+            }"
+            label="Title"
+            field-decorator-id="name"
+          >
+            <a-input v-model="editTitle" />
+          </a-form-item>
+
+          <a-form-item
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 16 }"
+            :field-decorator-options="{
+              rules: [{ required: true, message: '' }],
+            }"
+            label="File info"
+            field-decorator-id="name"
+          >
+            <a-textarea
+              v-model="editDesc"
+              :autosize="{ minRows: 3, maxRows: 6 }"
+              placeholder="File Info"
+            />
+          </a-form-item>
+
+          <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+            <a-button v-if="!submitting" type="danger" html-type="submit">
+              Submit
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </template>
+    </div>
 
     <!-- project creation page 1 -->
     <transition>
-      <div v-if="uploadProcess==1"
-           class="making making1">
+      <div v-if="uploadProcess == 1" class="making making1">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="
+            () => {
+              unselectProject()
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
         <div class="making1-wrapper">
           <span class="making-title">Upload Data</span>
           <span class="making1-desc">
-            Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
-          </span>
-          <span class="making1-desc">
-            Upload a shapefile* to create a new data layer. The shapefile should include numerical attribute data that you’d like to visualize. After you upload the file, you will be prompted to provide a name, location and description of your layer and to select a data attribute for your layer to represent. Each layer can represent one attribute.
+            Upload a shapefile* to create a new data layer. The shapefile should
+            include numerical attribute data that you’d like to visualize. After
+            you upload the file, you will be prompted to provide a name,
+            location and description of your layer and to select a data
+            attribute for your layer to represent. Each layer can represent one
+            attribute.
           </span>
 
-
-          <a-button type="primary" @click="() => {unselectProject(2)}">Upload Data</a-button>
+          <a-button
+            type="primary"
+            @click="
+              () => {
+                unselectProject(2)
+              }
+            "
+          >Upload Data</a-button
+          >
         </div>
       </div>
     </transition>
 
-
     <!-- file upload page 2 -->
     <transition>
-      <div v-if="uploadProcess==2"
-           class="making making1">
+      <div v-if="uploadProcess == 2" class="making making1">
         <span
           class="unselectProject"
-          @click="()=> {unselectProject()}">
+          @click="
+            () => {
+              unselectProject()
+            }
+          "
+        >
           <a-icon type="close" />
         </span>
-
 
         <div class="making-wrapper">
           <template v-if="!submitting">
             <a-form @submit="handleSubmit">
-
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
-                :field-decorator-options="{rules: [{ required: true, message: 'Please input your dataset name!' }]}"
+                :field-decorator-options="{
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your dataset name!',
+                    },
+                  ],
+                }"
                 label="Dataset Name"
                 field-decorator-id="name"
               >
-                <a-input v-model="formName"/>
+                <a-input v-model="formName" />
               </a-form-item>
 
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
-                :field-decorator-options="{rules: [{ required: true, message: 'Please input your dataset description!' }]}"
+                :field-decorator-options="{
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input your dataset description!',
+                    },
+                  ],
+                }"
                 label="Description"
                 field-decorator-id="desc"
               >
-                <a-textarea v-model="formDesc" :rows="2" placeholder="Data Description"/>
+                <a-textarea
+                  v-model="formDesc"
+                  :rows="2"
+                  placeholder="Data Description"
+                />
               </a-form-item>
 
               <a-form-item
                 :label-col="{ span: 5 }"
                 :wrapper-col="{ span: 12 }"
                 label="Keywords"
-
               >
                 <template>
                   <div>
-                    <template v-for="(tag) in tags">
+                    <template v-for="tag in tags">
                       <a-tooltip v-if="tag.length > 20" :key="tag" :title="tag">
-                        <a-tag :key="tag" :closable="true" @afterClose="() => handleCloseTag(tag)">
+                        <a-tag
+                          :key="tag"
+                          :closable="true"
+                          @afterClose="() => handleCloseTag(tag)"
+                        >
                           {{ `${tag.slice(0, 20)}...` }}
                         </a-tag>
                       </a-tooltip>
-                      <a-tag v-else :key="tag" :closable="true" @afterClose="() => handleCloseTag(tag)">
+                      <a-tag
+                        v-else
+                        :key="tag"
+                        :closable="true"
+                        @afterClose="() => handleCloseTag(tag)"
+                      >
                         {{ tag }}
                       </a-tag>
                     </template>
@@ -261,7 +417,11 @@
                       @blur="handleInputConfirm"
                       @keyup.enter="handleInputConfirm"
                     />
-                    <a-tag v-else style="background: #fff; borderStyle: dashed;" @click="showInput">
+                    <a-tag
+                      v-else
+                      style="background: #fff; borderStyle: dashed;"
+                      @click="showInput"
+                    >
                       <a-icon type="plus" /> New Tag
                     </a-tag>
                   </div>
@@ -274,7 +434,11 @@
                 label="Publicity"
                 field-decorator-id="public"
               >
-                <a-switch v-model="formPublicity" checked-children="Public" un-checked-children="Private"/>
+                <a-switch
+                  v-model="formPublicity"
+                  checked-children="Public"
+                  un-checked-children="Private"
+                />
               </a-form-item>
 
               <a-form-item
@@ -282,68 +446,64 @@
                 :wrapper-col="{ span: 12 }"
                 label="Dataset"
                 field-decorator-id="zipfile"
-
               >
                 <div class="dropbox">
-
-                  <a-upload-dragger 
+                  <a-upload-dragger
                     :file="file"
                     :before-upload="beforeUpload"
+                    :multiple="false"
                     name="file"
                     action=""
                     items=""
                     @change="handleFileUpload()"
                     @remove="handleRemove"
                   >
-                    <p class="ant-upload-drag-icon">
-                      <a-icon type="inbox" />
+                    <p class="ant-upload-drag-icon"><a-icon type="inbox" /></p>
+                    <p class="ant-upload-text">
+                      Click or drag file to this area to upload
                     </p>
-                    <p class="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p class="ant-upload-hint">*Currently, Painting with Data supports polygon shapefiles only. Shapefiles must be compressed in a ZIP file. The ZIP file should include these files:.dbf file, .prj file, .shp file, .shx files. Do not include /shd.xml file in the ZIP.</p>
+                    <p class="ant-upload-hint">
+                      *Currently, Painting with Data supports polygon shapefiles
+                      only. Shapefiles must be compressed in a ZIP file. The ZIP
+                      file should include these files:.dbf file, .prj file, .shp
+                      file, .shx files. Do not include /shd.xml file in the ZIP.
+                    </p>
                   </a-upload-dragger>
-
                 </div>
               </a-form-item>
-              
-              <a-form-item
-                :wrapper-col="{ span: 12, offset: 5 }"
-              >
+
+              <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
                 <div>
-                  <a-alert v-if="errorMessage.length!=0" type="error" message="Error text" banner />
+                  <a-alert
+                    v-if="errorMessage.length != 0"
+                    type="error"
+                    message="Error text"
+                    banner
+                  />
                 </div>
               </a-form-item>
 
-
-              <a-form-item
-                :wrapper-col="{ span: 12, offset: 5 }"
-              >
-                <a-button v-if="file && formName!=null && formName!='' && !submitting" type="danger" html-type="submit">
+              <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+                <a-button
+                  v-if="
+                    file && formName != null && formName != '' && !submitting
+                  "
+                  type="danger"
+                  html-type="submit"
+                >
                   Submit
                 </a-button>
               </a-form-item>
-
             </a-form>
           </template>
 
           <template v-if="submitting">
-            <a-icon type="loading" class="loading"/>
+            <a-icon type="loading" class="loading" />
           </template>
-
-
         </div>
-
-
-
       </div>
     </transition>
-
-
-
-
-
   </div>
-
-
 </template>
 
 <script>
@@ -399,19 +559,32 @@ export default {
       inputVisible: false,
       inputValue: '',
       errorMessage: '',
+      searchKey: '',
+      editing: false,
+      editSubmitting: false,
+      editTitle: '',
+      editDesc: '',
+      editTime: '',
+      pagination: {
+        onChange: page => {
+          console.log(page)
+        },
+        pageSize: 6,
+      },
     })
   },
   computed: {
     datafileList() {
+      let tempData = null
       if (this.sortDate) {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
           ]).reverse()
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.createdAt
             },
@@ -419,19 +592,41 @@ export default {
         }
       } else {
         if (this.sortDown) {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ])
         } else {
-          return _.sortBy(this.datafiles, [
+          tempData = _.sortBy(this.datafiles, [
             function(o) {
               return o.filename[0]
             },
           ]).reverse()
         }
       }
+
+      if (this.searchKey.length == 0)
+        return this.addAddingItem(this.removeDeleted(tempData))
+      else {
+        return this.addAddingItem(
+          this.removeDeleted(
+            tempData.filter(item => {
+              return (
+                (item.userFileName ? item.userFileName : item.filename)
+                  .toLowerCase()
+                  .indexOf(this.searchKey.toLowerCase()) > -1
+              )
+            })
+          )
+        )
+      }
+    },
+
+    selectedItem() {
+      return this.datafileList.filter(item => {
+        return item.id == this.selectedDataset
+      })[0]
     },
   },
   created() {
@@ -440,7 +635,27 @@ export default {
     //   console.log(response)
     // })
   },
+
   methods: {
+    addAddingItem(dataList) {
+      let item = Object.assign({}, dataList[0])
+      item.label = 'adding'
+      dataList.unshift(item)
+
+      // console.log(dataList)
+      return dataList
+    },
+
+    removeDeleted(dataList) {
+      return dataList.filter(item => {
+        return item.deleted !== false && item.Datalayers.length != 0
+      })
+    },
+
+    onSearch(value) {
+      console.log('searching', value)
+      this.searchKey = value
+    },
     handleCloseTag(removedTag) {
       const tags = this.tags.filter(tag => tag !== removedTag)
       console.log(tags)
@@ -472,6 +687,7 @@ export default {
     },
 
     handleRemove(file) {
+      console.log(file)
       this.file = null
     },
     beforeUpload(file) {
@@ -491,11 +707,6 @@ export default {
       this.errorMessage = ''
 
       const { file } = this
-      console.log('file', file)
-      console.log('dataset_name', this.formName)
-      console.log('dataset_desc', this.formDesc)
-      console.log('dataset_public', this.formPublicity)
-      console.log('tags', this.tags)
 
       let formData = new FormData()
       formData.append('file', file)
@@ -507,8 +718,6 @@ export default {
       formData.append('dataset_desc', this.formDesc)
       formData.append('dataset_public', this.formPublicity)
       formData.append('dataset_tags', this.tags)
-
-      console.log('formData', formData, formData.getAll('file'))
 
       this.$http.post('/upload', formData).then(response => {
         console.log('submitted', response) //req
@@ -525,6 +734,34 @@ export default {
       })
     },
 
+    handleEditSubmit(e) {
+      e.preventDefault()
+      this.submitting = true
+
+      let formData = {
+        userFileName: this.editTitle,
+        description: this.editDesc,
+        updatedAt: this.editTime,
+        id: this.selectedItem.id,
+      }
+
+      console.log('formData', formData)
+
+      // TO DO: call middleware API below
+
+      this.$http.post('/editUserfile', formData).then(response => {
+        console.log('submitted', response) //req
+
+        if (response.data.updated) {
+          document.location.reload()
+        } else {
+          this.errorMessage = response.data.alert
+          this.file = null
+          this.submitting = false
+        }
+      })
+    },
+
     startUploading() {
       console.log('upload data')
       this.uploadProcess = 1
@@ -533,6 +770,7 @@ export default {
     unselectProject(num) {
       this.uploadProcess = num ? num : 0
       this.submitting = false
+      this.editing = false
     },
 
     getBbox(datafile) {
@@ -563,6 +801,7 @@ export default {
 
     queryMapGeometry(datasetId) {
       this.$http.get('/getThumbnailData/' + datasetId).then(response => {
+        console.log(response)
         if (this.selectedGeoType == 'Polygon')
           this.selectedGeometries = response.data.geoJSON.map(obj =>
             obj.coordinates[0].map(item => [item[1], item[0]])
@@ -593,6 +832,7 @@ export default {
       this.selectedIndex = null
       this.selectedGeometries = null
       this.selectedGeoType = null
+      this.editing = false
     },
     parseCoord(coord) {
       return coord[0].toFixed(2) + ', ' + coord[1].toFixed(2)
@@ -610,6 +850,17 @@ export default {
           // TODO: handle delete fail
         }
       })
+    },
+    openEditForm() {
+      console.log('edit data', this.selectedItem)
+      this.editing = true
+
+      this.editTitle = this.selectedItem.userFileName
+      this.editDesc = this.selectedItem.description
+      this.editTime = new Date().toISOString()
+    },
+    closeEditingForm() {
+      this.editing = false
     },
   },
 }
@@ -682,7 +933,7 @@ export default {
 .card {
   padding: 0px !important;
 
-  height: 269.5px;
+  height: 268.5px;
 }
 
 .dataset-list {
@@ -690,6 +941,8 @@ export default {
   height: 100%;
   overflow-y: auto;
   float: left;
+
+  overflow-x: hidden;
 }
 
 .left-col {
@@ -875,9 +1128,8 @@ export default {
 }
 
 .adding-btn {
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
-  margin: 10px;
+  width: 100%;
+  height: 100%;
 }
 
 .making {
@@ -956,6 +1208,61 @@ export default {
 
 .ant-upload-drag-icon .anticon {
   color: #e75332 !important;
+}
+
+.ant-input-search {
+  float: right;
+  margin-top: 22px;
+}
+
+.proj-list {
+  /deep/ {
+    .ant-list-item {
+      background-color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-bottom: none;
+
+      /deep/ {
+        .ant-list-item-meta-content {
+        }
+
+        .ant-list-item-meta-description {
+          font-size: 12px;
+        }
+
+        .ant-list-item-meta-title {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+}
+
+.editingForm {
+  z-index: 1000;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background: white;
+  width: 50%;
+  box-shadow: 0px 0px 8px 8px rgba(0, 0, 0, 0.1);
+}
+
+.closeEditingForm {
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.closeEditingForm:hover {
+  opacity: 0.6;
+  cursor: pointer;
 }
 </style>
 

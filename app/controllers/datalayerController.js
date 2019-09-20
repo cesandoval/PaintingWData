@@ -209,30 +209,13 @@ module.exports.getDatasets = function(req, res) {
         },
         include: [{
             model: Model.Datalayer,
+            where: {deleted: {$not: true}},
             limit: 1}]
         }).then(function(datafiles){
-
             res.json({id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, });
         });
 }
 
-
-/* TODO(CreateProject)
-module.exports.showDatasets = function(req, res) {
-    Model.Datafile.findAll({
-        where : {
-            userId : req.user.id,
-            deleted: {$not: true}
-        },
-        include: [{
-            model: Model.Datalayer,
-            limit: 1}]
-        }).then(function(datafiles){
-
-            res.render('createProject', {id: req.params.id, datafiles : datafiles, userSignedIn: req.isAuthenticated(), user: req.user, layerAlert: req.flash('layerAlert')[0]});
-        });
-}
-*/
 
 /**
  * Handles displaying all voxels that

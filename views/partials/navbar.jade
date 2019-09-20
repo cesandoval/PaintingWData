@@ -20,16 +20,13 @@ nav(class='navbar navbar-inverse navbar-fixed-top', role='navigation')
       //- li
       //-   a(href='/documentation') Resources
       li
-        a(href='/blogs') Blog
-      if userSignedIn
-        li
-          a(href='/voxels/#{user.id}') Application
+        a(href='https://medium.com/painting-with-data' target="_blank") Blog
+      li
+        a(href='/tutorials') Tutorials
 
       
     ul.nav.navbar-nav.navbar-right
       if userSignedIn
-       li
-        a(href='#').progress-tracker Progress Tracker
        li.dropdown
         a(href='/' id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 150px").dropdown-toggle My Account
           <span class="caret"></span>

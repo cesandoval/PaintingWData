@@ -8,9 +8,6 @@ import * as Act from '../store/actions'
 // the hover style like: http://bl.ocks.org/eesur/1a2514440351ec22f176
 
 class PCoords extends React.Component {
-    // TODO.... ADD THE NAME OF THE LAYERS TO THE DICTIONARY INSTEAD OF PASSING AN ARRAYY
-    // THIS WAY, WE CAN DISPLAY THE NAME INSTEAD OF THE INDEX....
-
     constructor(props) {
         super(props)
 
@@ -29,15 +26,15 @@ class PCoords extends React.Component {
             Object.keys(this.props.geometries).length !== 0 &&
             this.props.geometries.constructor === Object
         ) {
-            // TODO: should be renamed to 'datasetNodes'
-            let nodeLayers = Object.values(nprops.nodes).filter(
+            const datasetNodes = Object.values(nprops.nodes).filter(
                 f => f.type == 'DATASET'
             )
-            let visibleNodes = nodeLayers.filter(l => l.visibility)
+            const visibleNodes = datasetNodes.filter(l => l.visibility)
+            const visibleLayersLength = visibleNodes.length
 
-            this.setState({ visibleLayers: visibleNodes.length })
+            this.setState({ visibleLayers: visibleLayersLength })
             if (
-                visibleNodes.length != this.state.visibleLayers &&
+                visibleLayersLength != this.state.visibleLayers &&
                 this.state.started
             ) {
                 let visibleNames = {}
@@ -123,12 +120,11 @@ class PCoords extends React.Component {
                     pcContainer.removeChild(pcContainer.firstChild)
                 }
 
-                this.setState({ visibleLayers: visibleNodes.length })
+                this.setState({ visibleLayers: visibleLayersLength })
 
                 // var visibleIndices = Object.values(visibleNodes).map(i => i.name).reduce((a, e) => (a[e] = layerIndeces[e], a), {});
                 // let visibleLayers = Object.values(visibleIndices).map(i => nprops.layers[i])
-                let numLayers = visibleNodes.length
-                // TODO: should be reuse, so rename numLayer to visibleLayersLength
+                let numLayers = visibleLayersLength
 
                 let dictBuild = Array(maxVoxels)
                 for (let j = 0; j < numLayers; j++) {
@@ -296,6 +292,12 @@ class PCoords extends React.Component {
                     nodeKey: layer.layerKey,
                     attr: 'filter',
                     value: filter,
+                })
+
+                Act.nodeUpdate({
+                    nodeKey: layer.layerKey,
+                    attr: 'updateStatus',
+                    value: 1,
                 })
             }
         }

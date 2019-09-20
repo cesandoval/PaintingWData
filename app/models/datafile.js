@@ -40,6 +40,10 @@ module.exports = function(sequelize, DataTypes) {
       public: {
         type: DataTypes.BOOLEAN
       },
+      userFileName: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
   }, {
 
     classMethods: {

@@ -5,6 +5,7 @@ const TabPane = Tabs.TabPane
 
 import Layers from './Layers'
 import Controls from './Controls'
+import Share from './Share'
 
 export default class Sidebar extends React.Component {
     constructor(props) {
@@ -14,17 +15,34 @@ export default class Sidebar extends React.Component {
         return (
             <div className="sidebar">
                 <Tabs>
-                    <TabPane tab="Layers" key="1">
+                    <TabPane tab={<i className="fas fa-database" />} key="1">
                         <Layers />
                     </TabPane>
-                    <TabPane tab="Controls" key="2">
+                    <TabPane tab={<i className="fas fa-wrench" />} key="2">
                         <Controls />
+                    </TabPane>
+                    <TabPane tab={<i className="fas fa-share-alt" />} key="3">
+                        <Share />
                     </TabPane>
                 </Tabs>
 
                 <style jsx>{`
                     :global(.ant-tabs-nav-scroll) {
                         text-align: center;
+                    }
+
+                    .sidebar {
+                        :global(.ant-tabs) {
+                            height: 100%;
+                            > :global(.ant-tabs-content) {
+                                height: calc(
+                                    100% - 50px
+                                ); // - height of .ant-tabs-bar
+                            }
+                            :global(.ant-tabs-bar) {
+                                margin-bottom: 6px;
+                            }
+                        }
                     }
                 `}</style>
             </div>

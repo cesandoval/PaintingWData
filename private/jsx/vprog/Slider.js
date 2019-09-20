@@ -122,7 +122,11 @@ class Slider extends React.Component {
         )
            */
         return (
-            <foreignObject x={20} y={65}>
+            <foreignObject
+                x={20}
+                y={65}
+                style={{ width: '100%', height: '100%' }}
+            >
                 <div style={{ width: '157px' }}>
                     <ASlider
                         min={0}

@@ -5,22 +5,28 @@ block pageTitle
   div.container.spacing-large.spacing-blog
     div.container
       .row.spacing-large.spacing-blog
-         h1.center Resources
-//- .row
-//-  p This has some useful documentation about Painting with Data. 
-          Video: How to Sign up for Painting with Data
+         h1.center Tutorials
 
 block content
   div.section_content.row(id="post1")
     div.container.ifwrapper.video-iframe
-      h3.center How to Upload Data
-      iframe(src="https://player.vimeo.com/video/269992410" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
-
-  div.section_content.row
-    div.container.ifwrapper.video-iframe
       h3.center How to Sign up to Painting with Data
-      iframe(src="https://player.vimeo.com/video/265052541" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
+      iframe( src="https://player.vimeo.com/video/265052541" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
+
+  div.section_content.row(id="post2")
+    div.container.ifwrapper.video-iframe
+      h3.center How to Upload a Dataset
+      iframe( src="https://player.vimeo.com/video/297608777" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
+
+  div.section_content.row(id="post3")
+    div.container.ifwrapper.video-iframe
+      h3.center How to Create a Project
+      iframe(src="https://player.vimeo.com/video/293871649" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen)
 
 
-//- <iframe src="https://player.vimeo.com/video/265052541" width="640" height="303" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-//- <p><a href="https://vimeo.com/265052541">How to Sign up to Painting with Data</a> from <a href="https://vimeo.com/user84072877">Painting with Data</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+
+  script.
+    $("#post1").load(function () {
+      fixiframe("#post1");
+      expand_function("post1",);
+    });
