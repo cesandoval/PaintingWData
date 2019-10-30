@@ -326,7 +326,7 @@ function createRaster(bbox, props, req, callback) {
 function pushPromise(geomJson, req, rasterVal, newName, epsg, featuresJSON, rasterShapeId) {
     if (geomJson != null) {
         // Create a spatial reference object within the geometry object
-        geomJson.crs = { type: 'name', properties: { name: 'EPSG:'+4326}}
+        geomJson.geometry.crs = { type: 'name', properties: { name: 'EPSG:'+4326}}
         var rasterProperty = req.body.rasterProperty;
 
         console.log(featuresJSON);
@@ -431,11 +431,11 @@ function loopIDWPromises(epsg, newDatafile, req, idwCells) {
             var currCell = idwCells[cell]
             // Get the geometry representation
             // var geomJson = currCell.geometry;
-            console.log(currCell);
+            // console.log(currCell, 5555445454545454);
 
             // This function saves every geometry as a row on the Datalayers table, and its properties in the Datadbfs table
             // TODO: We are currently only saving the geometry, but we should also pass the properties of each one of the cell geometries, that way the featuresJSON would not be empty as it currently is
-            await pushPromise(currCell, newReq, rasterVal, newDatafile.userFileName, epsg, {rasterVal: rasterVal}, rasterShapeId);
+            await pushPromise(currCell, newReq, rasterVal, newDatafile.layername, epsg, {rasterVal: rasterVal}, rasterShapeId);
             // Once the record is saved, add a number to the counter
             rasterShapeId = rasterShapeId + 1;
             console.log('Saving Raster shape id...', rasterShapeId);
@@ -572,6 +572,7 @@ function isPoint(prop, rowsCols, bbox, req, callback){
                         req.body.datalayerIdsAndProps = layerPropIds;
 
                         prop.datafileId = newDatafile.id;
+                        newDatafile.layername = prop.layername
 
                         // Loop through the geometries and insert them into the DB
                         let promise = loopIDWPromises(epsg, newDatafile, req, idwCells);
@@ -583,7 +584,7 @@ function isPoint(prop, rowsCols, bbox, req, callback){
                         // TODO: Save Raster with new datalayers
 
                         promise.then(() => {
-
+                            console.log('SAVING RASTER..........', 2342342342342345235)
                             saveRaster(prop, rowsCols, bbox, req, function(results){
                                 callback(results);
                             });
@@ -629,6 +630,8 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
+            console.log(rasterQuery)
+            console.log(results)
             callback(results);
         })
 }
@@ -776,6 +779,8 @@ function cargoLoad(props, req, rowsCols, ptDistance, callback){
 }
 
 function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callback) {
+    console.log('TESTSTSTSTSTSTSTWTSTS')
+    console.log(results, objProps, req, rowsCols, ptDistance)
     // All indices might not be upating everytime, since it might not be recurssively passed to async.cargo
     var allIndices = [];
     var currIndex = 0;
