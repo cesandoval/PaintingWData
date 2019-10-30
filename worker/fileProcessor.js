@@ -4,7 +4,24 @@ var async = require('async'),
     mailer = require('../app/controllers/mailController');
     fileViewerHelper = require('../lib/fileViewerHelper');
     model = require('../app/models');
+    interpolate = require('@turf/interpolate'),
     fs_extra = require('fs-extra');
+    pgp = require('pg-promise')();
+
+var host = process.env === 'production' ? 'pwd.cvyt4sv5tkgm.us-west-1.rds.amazonaws.com' : 'pwd-develop.cpynefgvbqsq.us-east-1.rds.amazonaws.com';
+console.log(host, process.env.NODE_ENV)
+
+// we set some values for the db, user, and pw
+const cn = {
+    host: host,
+    database: 'PaintingWithData_Riyadh',
+    user: 'postgres',
+    password: 'postgrespass'
+};
+
+// Opens up a Postgres connection with pgpromise,
+const db = pgp(cn);
+
 
 // function startVoxelWorker(datalayerIds, req, callback){
 //     async.waterfall([
@@ -287,7 +304,7 @@ function createRaster(bbox, props, req, callback) {
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
-            saveRaster(tasks[i], rowsCols, bbox, req, function(results){
+            isPoint(tasks[i], rowsCols, bbox, req, function(results){
                 callback(results);
             });
         }
@@ -306,15 +323,307 @@ function createRaster(bbox, props, req, callback) {
     });
 }
 
+function pushPromise(geomJson, req, rasterVal, newName, epsg, featuresJSON, rasterShapeId) {
+    if (geomJson != null) {
+        // Create a spatial reference object within the geometry object
+        geomJson.crs = { type: 'name', properties: { name: 'EPSG:'+4326}}
+        var rasterProperty = req.body.rasterProperty;
+
+        console.log(featuresJSON);
+
+        console.log(typeof geomJson);
+        console.log(geomJson);
+        console.log(geomJson.properties);
+
+        // Insert an individual record through a raw query
+        db.one('INSERT INTO public."Datalayers" (layername, "userId", "datafileId", epsg, "userLayerName", geometry, description, location, properties, rasterval, "rasterProperty", "createdAt", "updatedAt") VALUES (${layername}, ${userId}, ${datafileId}, ${epsg}, ${userLayerName}, ST_GeomFromGeoJSON(${geometry}), ${description}, ${location}, ${properties}, ${rasterval}, ${rasterProperty}, current_timestamp, current_timestamp) RETURNING id',
+            // Parse the values into the raw query
+            {
+                layername: newName,
+                userId: req.user.id,
+                datafileId: req.body.datafileId,
+                epsg: epsg,
+                userLayerName: req.body.layername,
+                geometry: JSON.stringify(geomJson.geometry),
+                description: req.body.description,
+                location: req.body.location,
+                properties: geomJson.properties,
+                rasterval: rasterShapeId,
+                rasterProperty: rasterProperty
+            })
+        // One the geometry record is saved, save the properties of the geometry
+            .then(data => {
+                // success, all records inserted
+                // Make a datadbf connected to the datalayer
+                dataDbf = Model.Datadbf.build();
+                dataDbf.userId = req.user.id;
+                dataDbf.datalayerId = data.id;
+                // dataDbf.datalayerId = rasterShapeId;
+                dataDbf.datafileId = req.body.datafileId;
+                dataDbf.properties = JSON.stringify(featuresJSON);
+                dataDbf.save();
+                // console.log('saving....', rasterShapeId)
+
+            })
+            .catch(error => {
+                // error
+                console.log('DB ERROR:', error);
+            });
+
+    }
+}
+
+function transformPoints(layer, d_srs, rasterProperty) {
+    var features = [];
+    // Loop though all the geometries until finished
+    while(feature = layer.features.next()) {
+        // Obtain the geometry from the individual feature
+        // A feature is composed of geometry and properties aka fields
+        // More info here: http://naturalatlas.github.io/node-gdal/classes/gdal.Feature.html
+        var geom = feature.getGeometry();
+        // Cast the GDAL geometry into a JS object
+        var geomJson = geom.toObject();
+        var fields = feature.fields.toObject()
+
+        // Structure the geometry and its properties as a geoJSON
+        var currPt = {
+            type: 'Feature',
+            properties: fields,
+            geometry: geomJson
+        }
+        features.push(currPt);
+    }
+    // Add the collection of features to the geoJSON
+    var geoJSON = {
+        type: "FeatureCollection",
+        features: features
+    }
+    return geoJSON;
+}
+
+function loopIDWPromises(epsg, newDatafile, req, idwCells) {
+    // Create a new promise
+    return new Promise(async function(resolve, reject) {
+        //Initialize for each datafile to start counting the number of geometries
+        var rasterShapeId = 0;
+        // console.log(req.body);
+        var dataIds = JSON.parse(req.body.datalayerIds);
+        var rasterVal = dataIds[newDatafile.id.toString()];
+
+        // console.log(newDatafile.id);
+        // console.log(dataIds);
+        // console.log(typeof dataIds);
+        // console.log(Object.keys(dataIds));
+        // console.log(rasterVal);
+
+        // console.log('hold me closer');
+        // Loop through all the geometries that were returned by the IDW function
+
+        newReq = {user: {id : req.user.id}, body : {
+            datafileId: newDatafile.id,
+            epsg: epsg,
+            userLayerName: newDatafile.layername,
+            description: newDatafile.description,
+            location: newDatafile.location}};
+
+        for (cell in idwCells) {
+            // Get the current cell with a given index
+            var currCell = idwCells[cell]
+            // Get the geometry representation
+            // var geomJson = currCell.geometry;
+            console.log(currCell);
+
+            // This function saves every geometry as a row on the Datalayers table, and its properties in the Datadbfs table
+            // TODO: We are currently only saving the geometry, but we should also pass the properties of each one of the cell geometries, that way the featuresJSON would not be empty as it currently is
+            await pushPromise(currCell, newReq, rasterVal, newDatafile.userFileName, epsg, {rasterVal: rasterVal}, rasterShapeId);
+            // Once the record is saved, add a number to the counter
+            rasterShapeId = rasterShapeId + 1;
+            console.log('Saving Raster shape id...', rasterShapeId);
+        }
+        // after all the records are saved, return a req
+        resolve(req)
+    })
+}
+
+function processPoints(geoJSON, bbox, rasterProperty) {
+    // Divides the area by a constant to get the size of cells in the grid of hexagons that will be used to compute the IDW function
+    // TODO: Determine the size of the cells in a better way
+    var area = Math.abs(bbox.coordinates[0][1][1] - bbox.coordinates[0][0][1])*Math.abs(bbox.coordinates[0][2][0] - bbox.coordinates[0][1][0]);
+    var cellSize = area / 20;
+    // Sets up some options for the functions
+    // TODO: The options should get updated with the different properties. This can be run on a loop to compute the IDW function for all the properties
+    // property is currently a harcoded value
+
+    // Interpolate the point geometries using an IDW function
+    /**
+     * SG TODO: run this function for all the properties, and save the different properties as new properties of the geometries
+     * "properties": {
+     *      "prop0": "value0",
+     *      "prop1": { "this": "that" }
+     * }
+     */
+    // console.log(geoJSON.features);
+    let props = geoJSON.features[0].properties; // key and val
+    // call for first prop to instantiate grid
+
+    var options = {gridType: 'hex', property: rasterProperty, units: 'degrees'};
+    let grid = interpolate(geoJSON, cellSize, options);
+
+    // const asyncForEach = async (props, callback) => {
+    //     // console.log(props);
+    //     for (prop of props) {
+    //         // console.log(prop)
+    //         console.log('I feel cool.');
+    //         await callback(prop, grid)
+    //     }
+    // }
+    //
+    // const start = async () => {
+    //     await asyncForEach(props, async (prop, grid) => {
+    //         var options = {gridType: 'hex', property: prop, units: 'degrees'};
+    //         var new_grid = interpolate(geoJSON, cellSize, options);
+    //         // put new_grid vals in to grid
+    //         for (let i = 0; i < new_grid.features.length; i++){ // iterate through each geo
+    //             var new_prop = new_grid.features[i].properties[0]; //gives us {key: val}
+    //             grid.features[i].properties = Object.assign(grid.features[i].properties, new_prop)
+    //         }
+    //     })
+    //     debugger
+    // }
+    // done - console.log("Done")
+    // start();
+
+    // Return all the geometries computed as an array
+    // It will currently return the geometry and a single property
+    // Object {type: "Feature", Object {id: 565.143268670556}, geometry: Object}
+    console.log(grid);
+    return grid.features
+}
+
+
+function isPoint(prop, rowsCols, bbox, req, callback){
+    Model.Datafile.findById(prop.datafileId).then(function(datafile){
+        // console.log(datafile);
+        var epsg = 4326;
+        if (datafile.geometryType == 'Point'){
+            // console.log(datalayers) to see if datalayers are actually accessed
+            Model.Datalayer.findAll({
+                where : {
+                    datafileId: prop.datafileId,
+                },
+                include: [{
+                    model: Model.Datadbf,
+                }]
+                }).then(function(datalayers){
+                    var features = [];
+                    for (datalayer in datalayers){
+
+                        var currGeometry = datalayers[datalayer].geometry;
+                        var currPt = {
+                            type: 'Feature',
+                            properties: datalayers[datalayer].properties,
+                            geometry: currGeometry
+                        };
+                        features.push(currPt);
+                    }
+                    var transformedPts = {
+                        type: "FeatureCollection",
+                        features: features
+                    };
+                    var dataIds = JSON.parse(req.body.datalayerIds);
+                    // make sure features are an actual array of geometries because asynchronous nature may have interrupting function
+                    // Transform the points into a new spatial reference system, and return them as a geoJSON
+                    // TODO: here there is no need for passing a raster property anymore, instead, we are going to loop through all the properties in the geometry and add them to the geoJSON
+                    // var transformedPts = transformPoints(layer, d_srs, req.body.rasterProperty);
+                    // Use the points to compute a spatial distribution of a property. Returns new polygons reflecting this distribution
+
+                    //copy and paste process points and loopPointPromises
+                    //functions may not be completed before previous functions called - polygons may not get saved
+
+                    var idwCells = processPoints(transformedPts, bbox, dataIds[prop.datafileId.toString()]);
+
+                    var newDatafile = Model.Datafile.build();
+                    newDatafile.filename = datafile.filename;
+                    newDatafile.location = datafile.location;
+                    newDatafile.epsg = 4326;
+                    newDatafile.userId = datafile.userId;
+                    newDatafile.bbox = datafile.bbox;
+                    newDatafile.centroid = datafile.centroid;
+                    newDatafile.deleted = datafile.deleted;
+                    newDatafile.description = datafile.description;
+                    newDatafile.public = datafile.public;
+                    newDatafile.userFileName = datafile.userFileName;
+                    newDatafile.geometryType = 'Polygon';
+
+                    newDatafile.save().then(function(newDatafile){
+
+                        var layerIds = JSON.parse(req.body.datalayerIds);
+                        var layerPropIds = req.body.datalayerIdsAndProps;
+
+                        var layerProp = layerIds[prop.datafileId.toString()];
+
+                        delete layerIds[prop.datafileId.toString()];
+                        delete layerPropIds[prop.datafileId.toString() + '..0'];
+
+                        layerIds[newDatafile.id.toString()] = layerProp;
+                        layerPropIds[newDatafile.id.toString() + '..0'] = layerProp;
+
+                        req.body.datalayerIds = JSON.stringify(layerIds);
+                        req.body.datalayerIdsAndProps = layerPropIds;
+
+                        prop.datafileId = newDatafile.id;
+
+                        // Loop through the geometries and insert them into the DB
+                        let promise = loopIDWPromises(epsg, newDatafile, req, idwCells);
+                        // Once the promise is done, send a callback function
+
+
+                        // TODO: Save datafile before datalayers in fileViewerHelper.js
+                        // TODO: Update datafileId
+                        // TODO: Save Raster with new datalayers
+
+                        promise.then(() => {
+
+                            saveRaster(prop, rowsCols, bbox, req, function(results){
+                                callback(results);
+                            });
+                            //callback(null, req)
+                        });
+
+                        // callback(null, 'STOPPPPPPPP');
+                    });
+
+                })
+        }else{
+            saveRaster(prop, rowsCols, bbox, req, function (results) {
+                callback(results);
+            });
+        }
+    })
+}
 
 
 function saveRaster(prop, rowsCols, bbox, req, callback) {
     var epsg = 4326;
 
+    //make function before save raster uses data layer ids to query datafiles
+    //prop.datafileID is the datafileID
+
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
+    console.log(req);
+    console.log(prop);
+
+    console.log('Retreiving Properties...');
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
     var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= '` + req.voxelRandomId + `')`;
-    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, ` + req.voxelId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+
+    // if is call idw function
+    // if not continue
+
+    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) 
+    SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, `
+        + prop.datafileId + `, ` + req.voxelId +
+        ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
     var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
     var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
 
@@ -471,8 +780,14 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
     var allIndices = [];
     var currIndex = 0;
     var newDataJsons = {};
-    // var _keys = Object.keys(results);
-    console.log("objProps: ", objProps);
+    // var _key = Object.keys(objProps)[0];
+    // var _key_old = Object.values(req.body.datalayerIdsAndProps)[0];
+    // console.log(results);
+    // console.log(req.body.datalayerIdsAndProps);
+    // console.log(typeof req.body.datalayerIdsAndProps);
+    // console.log("objProps: ", objProps);
+    // req.body.datalayerIdsAndProps = {};
+    // req.body.datalayerIdsAndProps[_key.concat('..0')] = _key_old;
 
     var maxLength = 1,
     processedProps = 0;
@@ -481,6 +796,7 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
     var cargo = async.cargo(function(tasks, callback) {
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
+            // console.log(tasks[i]);
             findRaster(tasks[i], results, objProps, req, rowsCols, ptDistance, allIndices, function(result) {
                 callback(result);
             });
@@ -510,6 +826,11 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
 function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, allIndices, callback){
     var key = keyAndIndex.key;
     var keyWithouHash = key.split("..")[0];
+
+    console.log(key);
+    console.log(typeof objProps);
+    console.log(keyWithouHash);
+    console.log(objProps[keyWithouHash]);
 
     var layername = objProps[keyWithouHash].layername;
     var currGeojson = results[keyWithouHash];

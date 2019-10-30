@@ -908,7 +908,7 @@ class VPL extends React.Component {
                 const newScale = node.remap.max - dataMin
 
                 const remap = x =>
-                    x ? x * newScale / originScale + dataMin : 0
+                    x ? (x * newScale) / originScale + dataMin : 0
 
                 if (originScale > 0) sizeArray = sizeArray.map(remap)
             }
@@ -1390,19 +1390,18 @@ class VPL extends React.Component {
         )
         const NodeMenu = (
             <Menu onClick={({ key }) => this.addNode(key)}>
-                {Object.entries(nodeTypeGroupByClass).map(
-                    ([key, types]) =>
-                        key != 'dataset' ? (
-                            <Menu.SubMenu title={key.toUpperCase()} key={key}>
-                                {types.map(({ fullName, typeKey }) => (
-                                    <Menu.Item key={typeKey}>
-                                        {fullName + ' Node'}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        ) : (
-                            ''
-                        )
+                {Object.entries(nodeTypeGroupByClass).map(([key, types]) =>
+                    key != 'dataset' ? (
+                        <Menu.SubMenu title={key.toUpperCase()} key={key}>
+                            {types.map(({ fullName, typeKey }) => (
+                                <Menu.Item key={typeKey}>
+                                    {fullName + ' Node'}
+                                </Menu.Item>
+                            ))}
+                        </Menu.SubMenu>
+                    ) : (
+                        ''
+                    )
                 )}
             </Menu>
         )
