@@ -542,6 +542,8 @@ function isPoint(prop, rowsCols, bbox, req, callback){
 
                     var idwCells = processPoints(transformedPts, bbox, dataIds[prop.datafileId.toString()]);
 
+
+
                     var newDatafile = Model.Datafile.build();
                     newDatafile.filename = datafile.filename;
                     newDatafile.location = datafile.location;
@@ -584,11 +586,19 @@ function isPoint(prop, rowsCols, bbox, req, callback){
                         // TODO: Save Raster with new datalayers
 
                         promise.then(() => {
-                            console.log('SAVING RASTER..........', 2342342342342345235)
-                            saveRaster(prop, rowsCols, bbox, req, function(results){
-                                callback(results);
-                            });
-                            //callback(null, req)
+                            console.log('SAVING RASTER..........', 2342342342342345235);
+                            Model.Datalayer.count({
+                                where : {
+                                    datafileId: newDatafile.id,
+                                }}).then(function(count) {
+                                console.log(count);
+                                if (count > 0) {
+                                    saveRaster(prop, rowsCols, bbox, req, function (results) {
+                                        callback(results)
+                                    });
+                                }
+
+                            })
                         });
 
                         // callback(null, 'STOPPPPPPPP');
@@ -618,13 +628,14 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
     var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= '` + req.voxelRandomId + `')`;
 
-    // if is call idw function
-    // if not continue
+    // replace p.rasterval with 'zip' parameter
+    // r.datafileId should be old datafileId not new one being created recently
+
 
     var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) 
-    SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, `
-        + prop.datafileId + `, ` + req.voxelId +
-        ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    SELECT ST_Union(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON(`JSON.stringify(idwCells)`), ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, `
+        + prop.datafileId + `, ` + req.voxelId
+        // ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
     var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
     var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
 
