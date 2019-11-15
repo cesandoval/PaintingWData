@@ -542,67 +542,69 @@ function isPoint(prop, rowsCols, bbox, req, callback){
 
                     var idwCells = processPoints(transformedPts, bbox, dataIds[prop.datafileId.toString()]);
 
+                    saveRasterPoint(prop, rowsCols, bbox, req, idwCells, function (results) {
+                        callback(results)
+                    })
+                    //
+                    // var newDatafile = Model.Datafile.build();
+                    // newDatafile.filename = datafile.filename;
+                    // newDatafile.location = datafile.location;
+                    // newDatafile.epsg = 4326;
+                    // newDatafile.userId = datafile.userId;
+                    // newDatafile.bbox = datafile.bbox;
+                    // newDatafile.centroid = datafile.centroid;
+                    // newDatafile.deleted = datafile.deleted;
+                    // newDatafile.description = datafile.description;
+                    // newDatafile.public = datafile.public;
+                    // newDatafile.userFileName = datafile.userFileName;
+                    // newDatafile.geometryType = 'Polygon';
 
-
-                    var newDatafile = Model.Datafile.build();
-                    newDatafile.filename = datafile.filename;
-                    newDatafile.location = datafile.location;
-                    newDatafile.epsg = 4326;
-                    newDatafile.userId = datafile.userId;
-                    newDatafile.bbox = datafile.bbox;
-                    newDatafile.centroid = datafile.centroid;
-                    newDatafile.deleted = datafile.deleted;
-                    newDatafile.description = datafile.description;
-                    newDatafile.public = datafile.public;
-                    newDatafile.userFileName = datafile.userFileName;
-                    newDatafile.geometryType = 'Polygon';
-
-                    newDatafile.save().then(function(newDatafile){
-
-                        var layerIds = JSON.parse(req.body.datalayerIds);
-                        var layerPropIds = req.body.datalayerIdsAndProps;
-
-                        var layerProp = layerIds[prop.datafileId.toString()];
-
-                        delete layerIds[prop.datafileId.toString()];
-                        delete layerPropIds[prop.datafileId.toString() + '..0'];
-
-                        layerIds[newDatafile.id.toString()] = layerProp;
-                        layerPropIds[newDatafile.id.toString() + '..0'] = layerProp;
-
-                        req.body.datalayerIds = JSON.stringify(layerIds);
-                        req.body.datalayerIdsAndProps = layerPropIds;
-
-                        prop.datafileId = newDatafile.id;
-                        newDatafile.layername = prop.layername
-
-                        // Loop through the geometries and insert them into the DB
-                        let promise = loopIDWPromises(epsg, newDatafile, req, idwCells);
-                        // Once the promise is done, send a callback function
-
-
-                        // TODO: Save datafile before datalayers in fileViewerHelper.js
-                        // TODO: Update datafileId
-                        // TODO: Save Raster with new datalayers
-
-                        promise.then(() => {
-                            console.log('SAVING RASTER..........', 2342342342342345235);
-                            Model.Datalayer.count({
-                                where : {
-                                    datafileId: newDatafile.id,
-                                }}).then(function(count) {
-                                console.log(count);
-                                if (count > 0) {
-                                    saveRaster(prop, rowsCols, bbox, req, function (results) {
-                                        callback(results)
-                                    });
-                                }
-
-                            })
-                        });
-
-                        // callback(null, 'STOPPPPPPPP');
-                    });
+                    // newDatafile.save().then(function(newDatafile){
+                    //
+                    //     var layerIds = JSON.parse(req.body.datalayerIds);
+                    //     var layerPropIds = req.body.datalayerIdsAndProps;
+                    //
+                    //     var layerProp = layerIds[prop.datafileId.toString()];
+                    //
+                    //     delete layerIds[prop.datafileId.toString()];
+                    //     delete layerPropIds[prop.datafileId.toString() + '..0'];
+                    //
+                    //     layerIds[newDatafile.id.toString()] = layerProp;
+                    //     layerPropIds[newDatafile.id.toString() + '..0'] = layerProp;
+                    //
+                    //     req.body.datalayerIds = JSON.stringify(layerIds);
+                    //     req.body.datalayerIdsAndProps = layerPropIds;
+                    //
+                    //     prop.datafileId = newDatafile.id;
+                    //     newDatafile.layername = prop.layername
+                    //
+                    //     // Loop through the geometries and insert them into the DB
+                    //     let promise = loopIDWPromises(epsg, newDatafile, req, idwCells);
+                    //     // Once the promise is done, send a callback function
+                    //
+                    //
+                    //     // TODO: Save datafile before datalayers in fileViewerHelper.js
+                    //     // TODO: Update datafileId
+                    //     // TODO: Save Raster with new datalayers
+                    //
+                    //     promise.then(() => {
+                    //         console.log('SAVING RASTER..........', 2342342342342345235);
+                    //         Model.Datalayer.count({
+                    //             where : {
+                    //                 datafileId: newDatafile.id,
+                    //             }}).then(function(count) {
+                    //             console.log(count);
+                    //             if (count > 0) {
+                    //                 saveRaster(prop, rowsCols, bbox, req, function (results) {
+                    //                     callback(results)
+                    //                 });
+                    //             }
+                    //
+                    //         })
+                    //     });
+                    //
+                    //     // callback(null, 'STOPPPPPPPP');
+                    // });
 
                 })
         }else{
@@ -613,8 +615,7 @@ function isPoint(prop, rowsCols, bbox, req, callback){
     })
 }
 
-
-function saveRaster(prop, rowsCols, bbox, req, callback) {
+function saveRasterPoint(prop, rowsCols, bbox, req, idwCells, callback) {
     var epsg = 4326;
 
     //make function before save raster uses data layer ids to query datafiles
@@ -623,6 +624,7 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
     console.log(req);
     console.log(prop);
+    console.log(idwCells);
 
     console.log('Retreiving Properties...');
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
@@ -630,21 +632,59 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
 
     // replace p.rasterval with 'zip' parameter
     // r.datafileId should be old datafileId not new one being created recently
+    //ST_SetRID(st_geomfromgeomjson, epsg)
 
+    var geoJs = [];
 
-    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) 
-    SELECT ST_Union(ST_SetSRID(ST_AsRaster(ST_GeomFromGeoJSON(`JSON.stringify(idwCells)`), ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, `
-        + prop.datafileId + `, ` + req.voxelId
-        // ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    for (i in idwCells){
+
+        geoJs.push({geometry: {type: "Polygon", coordinates: idwCells[i].geometry.coordinates}, props: idwCells[i].properties.zip});
+
+    }
+
+    console.log(geoJs);
+
+    // create TYPE final AS (geometry varchar(7000), props float);
+
+    var rasterCreationQuery = `
+    INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid)
+    SELECT ST_Union(ST_SetSRID(ST_AsRaster(ST_SetSRID(ST_GeomFromGeoJSON(geometry), 4326), ` + bboxSelect + `, '32BF', props, -999999), 4326)), '` + prop.layername + `', '`
+        + prop.datafileId + `', '` + req.voxelId + `'` +
+        ` FROM json_populate_recordset(null::final, '` + JSON.stringify(geoJs) + `');`;
+
     var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
     var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
-            console.log(rasterQuery)
-            console.log(results)
-            callback(results);
-        })
+        // console.log(rasterQuery);
+        console.log(results);
+        callback(results);
+    })
+}
+
+function saveRaster(prop, rowsCols, bbox, req, callback) {
+    //make function before save raster uses data layer ids to query datafiles
+    //prop.datafileID is the datafileID
+
+    console.log("\n\n saving raster for " + prop.datafileId + "\n");
+    console.log(req);
+    console.log(prop);
+
+    console.log('Retreiving Properties...');
+    var epsg = 4326;
+
+    console.log("\n\n saving raster for " + prop.datafileId + "\n");
+    var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
+    var bboxSelect = `(SELECT b.rast FROM public."Datavoxelbbox" as b WHERE voxelid= '` + req.voxelRandomId + `')`;
+    var rasterCreationQuery = `INSERT INTO public."Datarasters" (rast, layername, datafileid, voxelid) SELECT ST_Union(ST_SetSRID(ST_AsRaster(p.geometry, ` + bboxSelect + `, '32BF', p.rasterval, -999999), ` + epsg + `)), layername, ` + prop.datafileId + `, ` + req.voxelId + ` FROM public."Datalayers" AS p, public."Datafiles" AS g WHERE layername='`+ prop.layername +`' AND g.id=` + prop.datafileId + ` AND p."datafileId"=` + prop.datafileId +  ` GROUP BY p.layername; `;
+    var mapAlgebraQuery = `ST_Resample(ST_SetSRID(r.rast, ` + epsg + `), b.rast)`;
+    var centroidValueQuery = `SELECT (ST_PixelasCentroids(` + mapAlgebraQuery + `)).* FROM public."Datarasters" as r, public."Datavoxelbbox" as b WHERE r.datafileid=` + prop.datafileId + ` AND b.voxelid= '` + req.voxelRandomId + `'; `;
+
+    var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
+    connection.query(rasterQuery).spread(function(results, metadata){
+        callback(results);
+    })
 }
 
 // This function creates a Datanet around the BBox that has been computed
