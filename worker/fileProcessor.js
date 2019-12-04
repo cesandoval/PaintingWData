@@ -505,6 +505,7 @@ function isPoint(prop, rowsCols, bbox, req, callback){
     Model.Datafile.findById(prop.datafileId).then(function(datafile){
         // console.log(datafile);
         var epsg = 4326;
+        prop.geomType = datafile.geometryType;
         if (datafile.geometryType == 'Point'){
             // console.log(datalayers) to see if datalayers are actually accessed
             Model.Datalayer.findAll({
@@ -622,9 +623,6 @@ function saveRasterPoint(prop, rowsCols, bbox, req, idwCells, callback) {
     //prop.datafileID is the datafileID
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
-    console.log(req);
-    console.log(prop);
-    console.log(idwCells);
 
     console.log('Retreiving Properties...');
     var tableQuery = 'CREATE TABLE IF NOT EXISTS public."Datarasters" (id serial primary key, rast raster, layername text, datafileid integer, voxelid integer); ';
@@ -638,11 +636,9 @@ function saveRasterPoint(prop, rowsCols, bbox, req, idwCells, callback) {
 
     for (i in idwCells){
 
-        geoJs.push({geometry: {type: "Polygon", coordinates: idwCells[i].geometry.coordinates}, props: idwCells[i].properties.zip});
+        geoJs.push({geometry: {type: "Polygon", coordinates: idwCells[i].geometry.coordinates}, props: idwCells[i].properties[JSON.stringify(JSON.parse(req.body.datalayerIds)[prop.datafileId])]});
 
     }
-
-    console.log(geoJs);
 
     // create TYPE final AS (geometry varchar(7000), props float);
 
@@ -657,8 +653,8 @@ function saveRasterPoint(prop, rowsCols, bbox, req, idwCells, callback) {
 
     var rasterQuery = tableQuery + rasterCreationQuery + centroidValueQuery;
     connection.query(rasterQuery).spread(function(results, metadata){
-        // console.log(rasterQuery);
-        console.log(results);
+        // console.log('Results...');
+        // console.log(results);
         callback(results);
     })
 }
@@ -668,8 +664,6 @@ function saveRaster(prop, rowsCols, bbox, req, callback) {
     //prop.datafileID is the datafileID
 
     console.log("\n\n saving raster for " + prop.datafileId + "\n");
-    console.log(req);
-    console.log(prop);
 
     console.log('Retreiving Properties...');
     var epsg = 4326;
@@ -853,6 +847,7 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
         for (var i=0; i<tasks.length; i++) {
             processedProps+=1;
             // console.log(tasks[i]);
+            // console.log(results);
             findRaster(tasks[i], results, objProps, req, rowsCols, ptDistance, allIndices, function(result) {
                 callback(result);
             });
@@ -861,7 +856,7 @@ function parseRasterGeoJSON(results, objProps, req, rowsCols, ptDistance, callba
 
     // Add to queue and handle callback
     var _keys = Object.keys(req.body.datalayerIdsAndProps);
-    console.log("_keys: ", _keys);    
+    // console.log("_keys: ", _keys);
     _keys.forEach(function(key, index){
         var keyAndIndex = {};
         keyAndIndex.key = key;
@@ -883,43 +878,19 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, a
     var key = keyAndIndex.key;
     var keyWithouHash = key.split("..")[0];
 
-    console.log(key);
-    console.log(typeof objProps);
-    console.log(keyWithouHash);
-    console.log(objProps[keyWithouHash]);
+    // console.log(key);
+    // console.log(typeof objProps);
+    // console.log(keyWithouHash);
+    // console.log(objProps[keyWithouHash]);
 
     var layername = objProps[keyWithouHash].layername;
     var currGeojson = results[keyWithouHash];
     var features = [];
     var currIndex = 0;
 
-    // console.log("req.body.datalayerIdsAndProps: ", req.body.datalayerIdsAndProps);
-    // console.log("key: ", key);
-    // console.log(req.body.datalayerIdsAndProps[key]);
-    // console.log(req.body.datalayerIdsAndProps[key].split(";"));
+    var geomType = objProps[keyWithouHash].geomType;
 
-    // for (var singleProperty in req.datalayerIdsAndProps[key].split(";")) {
-    //     console.log("***************");
-    //     console.log(key, singleProperty);
-    // }
-
-
-    Model.Datadbf.findAll({
-        where : {
-            datafileId: objProps[keyWithouHash].datafileId,
-        }
-    }).then(function(datadbf) {
-
-        
-        var dataDbfObject = {};
-        for (var i = 0; i < datadbf.length; i++){
-            var userSelectedProperty = req.body.datalayerIdsAndProps[key]
-            var props = JSON.parse(datadbf[i].properties);
-            var propertyValue = props[userSelectedProperty]
-            var datalayerId = datadbf[i].datalayerId
-            dataDbfObject[datalayerId] = propertyValue;
-        }
-        // console.log("dataDbfObject: ", dataDbfObject);
+    if (geomType == 'Point'){
 
         for (i = 0; i <currGeojson.length; i++){
             var currentResult = currGeojson[i],
@@ -934,9 +905,10 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, a
                 currIndex +=1;
             }
 
-            // voxel['properties'][layername] = currentResult.val; //OLD vrsion
-            voxel['properties'][layername] = dataDbfObject[currentResult.val]; //DATADBF.DATALAYYERID.PROPS.USERSELECTEDPROPERTY ex: ObjectId => 31
-            // voxel['properties'][layername] = JSON.parse(Datadbf.get(datalayerid).properties)[userSelectedProperty];
+            console.log('Current Result');
+            console.log(currentResult.val);
+
+            voxel['properties'][layername] = currentResult.val; //DATADBF.DATALAYYERID.PROPS.USERSELECTEDPROPERTY ex: ObjectId => 31
 
 
             voxel['properties']['neighborhood'] = {
@@ -950,13 +922,14 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, a
             // console.log("voxel: " + JSON.stringify(voxel, null, 4));
             features.push(voxel);
 
-            
+
         }
-    
+
+
         var geoJSON = {
             type: "FeatureCollection",
             features: features
-        }
+        };
         var newDataJSON = {
             layername: objProps[keyWithouHash].layername,
             userId: req.user.id,
@@ -964,9 +937,78 @@ function findRaster(keyAndIndex, results, objProps, req, rowsCols, ptDistance, a
             datafileId: objProps[keyWithouHash].datafileId,
             epsg: 4326,
             geojson: geoJSON,
-        }
-        callback({newDataJSON: newDataJSON, allIndices:allIndices});
-     });
+        };
+        callback({newDataJSON: newDataJSON, allIndices: allIndices});
+
+    }else {
+
+        Model.Datadbf.findAll({
+            where: {
+                datafileId: objProps[keyWithouHash].datafileId,
+            }
+        }).then(function (datadbf) {
+
+
+            var dataDbfObject = {};
+            for (var i = 0; i < datadbf.length; i++) {
+                var userSelectedProperty = req.body.datalayerIdsAndProps[key];
+                var props = JSON.parse(datadbf[i].properties);
+                var propertyValue = props[userSelectedProperty];
+                var datalayerId = datadbf[i].datalayerId;
+                dataDbfObject[datalayerId] = propertyValue;
+            }
+            // console.log("dataDbfObject: ", dataDbfObject);
+
+            for (i = 0; i < currGeojson.length; i++) {
+                var currentResult = currGeojson[i],
+                    voxel = {
+                        type: 'Feature',
+                        geometry: currentResult.geom,
+                        properties: {}
+                    };
+                var index = currentResult.x + rowsCols.rows * currentResult.y;
+                if (allIndices.indexOf(index) === -1) {
+                    allIndices[currIndex] = index;
+                    currIndex += 1;
+                }
+
+                // console.log('Current Result');
+                // console.log(currentResult.val);
+
+                // voxel['properties'][layername] = currentResult.val; //OLD vrsion
+                voxel['properties'][layername] = dataDbfObject[currentResult.val]; //DATADBF.DATALAYYERID.PROPS.USERSELECTEDPROPERTY ex: ObjectId => 31
+                // voxel['properties'][layername] = JSON.parse(Datadbf.get(datalayerid).properties)[userSelectedProperty];
+
+
+                voxel['properties']['neighborhood'] = {
+                    column: currentResult.y,
+                    row: currentResult.x
+                };
+                // voxel['properties']['property'] = objProps[key].rasterProperty; //TODO: change this to the rasterprop user selects
+                voxel['properties']['property'] = req.body.datalayerIdsAndProps[key];
+                voxel['properties']['pointIndex'] = index;
+
+                // console.log("voxel: " + JSON.stringify(voxel, null, 4));
+                features.push(voxel);
+
+
+            }
+
+            var geoJSON = {
+                type: "FeatureCollection",
+                features: features
+            };
+            var newDataJSON = {
+                layername: objProps[keyWithouHash].layername,
+                userId: req.user.id,
+                datavoxelId: objProps[keyWithouHash].datavoxelId,
+                datafileId: objProps[keyWithouHash].datafileId,
+                epsg: 4326,
+                geojson: geoJSON,
+            }
+            callback({newDataJSON: newDataJSON, allIndices: allIndices});
+        });
+    }
 
 }
 
