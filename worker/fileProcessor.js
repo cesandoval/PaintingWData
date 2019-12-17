@@ -247,7 +247,7 @@ function getBboxRC(bbox, req) {
     var coords = bbox.coordinates[0],
         length = Math.abs(coords[3][0]-coords[0][0])*1000000,
         width = Math.abs(coords[2][1]-coords[0][1])*1000000,
-        area = length*width; 
+        area = length*width;
     var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
     var columns = Math.floor(length/stepSize),
         rows = Math.floor(width/stepSize);
@@ -256,7 +256,6 @@ function getBboxRC(bbox, req) {
 
     return rowsCols;
 }
-
 
 function createDatavoxel(bbox, props, req, callback){
     var voxelname = req.body.voxelname;
@@ -294,7 +293,7 @@ function createRaster(bbox, props, req, callback) {
     var objProps = {};
 
     var rowsCols = getBboxRC(bbox, req);
-
+    
     var ptDistance =  req.ptDistance;
 
     var maxLength = 1,
@@ -812,10 +811,7 @@ function processVoxel(currGeojson, features, currIndex, allIndices, keyWithouHas
         voxel['properties']['property'] = req.body.datalayerIdsAndProps[key];
         voxel['properties']['pointIndex'] = index;
 
-        console.log(voxel.properties);
-
         features.push(voxel);
-
 
     }
 
@@ -831,8 +827,6 @@ function processVoxel(currGeojson, features, currIndex, allIndices, keyWithouHas
         epsg: 4326,
         geojson: geoJSON,
     };
-
-    // console.log(features);
 
     return {newDataJSON: newDataJSON, allIndices: allIndices};
 
