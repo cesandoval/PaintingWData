@@ -228,12 +228,13 @@ function getBboxRC(bbox, req) {
     var numOfVoxels = req.body.voxelDensity;
 
     var coords = bbox.coordinates[0],
-        length = Math.abs(coords[3][0]-coords[0][0])*1000000,
-        width = Math.abs(coords[2][1]-coords[0][1])*1000000,
-        area = length*width; 
-    var stepSize = Math.floor(Math.sqrt(area/numOfVoxels));
-    var columns = Math.floor(length/stepSize),
-        rows = Math.floor(width/stepSize);
+        length = Math.abs(coords[3][0]-coords[0][0]),
+        width = Math.abs(coords[2][1]-coords[0][1]);
+
+    var step = Math.sqrt(numOfVoxels*width/length + Math.pow(width - length, 2)/(4*Math.pow(length, 2)));
+
+    var columns = Math.round(step - (width - length)/(2*length)),
+        rows = Math.round(numOfVoxels/columns);
 
     var rowsCols = {rows: rows, cols: columns};
 
